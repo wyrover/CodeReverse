@@ -157,8 +157,8 @@ public:
     BOOL DisAsm32(CR_DisAsmInfo32& info);
     BOOL DisAsm64(CR_DisAsmInfo64& info);
 
-    BOOL FixupAsm32(CR_DisAsmInfo32& info);
-    BOOL FixupAsm64(CR_DisAsmInfo64& info);
+    BOOL FixupAsm32(CR_DisAsmInfo32& info, CR_NameScope& ns);
+    BOOL FixupAsm64(CR_DisAsmInfo64& info, CR_NameScope& ns);
 
     BOOL DecompileAddr32(CR_DisAsmInfo32& info, CR_Addr32 va);
     BOOL DecompileAddr64(CR_DisAsmInfo64& info, CR_Addr64 va);

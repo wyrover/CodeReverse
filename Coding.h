@@ -28,30 +28,21 @@ enum CR_CondCode {
 ////////////////////////////////////////////////////////////////////////////
 // CR_FuncFlags - function flags
 
-enum CR_FuncFlags {
-    FF_NOTSTDCALL               = (1 << 0), // not __stdcall
-    FF_DONTDECOMPBUTDISASM      = (1 << 1), // don't decompile but disasm
-    FF_IGNORE                   = (1 << 2), // ignore
-    FF_HASSTACKFRAME            = (1 << 3), // has stack frame
-    FF_FUNCINFUNC               = (1 << 4), // function in function
-};
+typedef unsigned long CR_FuncFlags;
 
-////////////////////////////////////////////////////////////////////////////
-// CR_FuncType - function type
-
-enum CR_FuncType {
-    FT_UNKNOWN,             // unknown type
-
-    FT_CDECL,               // __cdecl
-    FT_STDCALL,             // __stdcall
-    FT_FASTCALL,            // __fastcall
-    FT_THISCALL,            // thiscall
-
-    FT_64BITFUNC,           // 64-bit function
-
-    FT_JUMPERFUNC,          // jumper function
-    FT_RETURNONLY           // return-only function
-};
+static const CR_FuncFlags FF_UNKNOWN                = 0;            // unknown
+static const CR_FuncFlags FF_CDECL                  = (1 << 1);     // __cdecl
+static const CR_FuncFlags FF_STDCALL                = (1 << 2);     // __stdcall
+static const CR_FuncFlags FF_FASTCALL               = (1 << 3);     // __fastcall
+static const CR_FuncFlags FF_THISCALL               = (1 << 4);     // thiscall
+static const CR_FuncFlags FF_64BITFUNC              = (1 << 5);     // 64-bit function
+static const CR_FuncFlags FF_JUMPERFUNC             = (1 << 6);     // jumper function
+static const CR_FuncFlags FF_FUNCINFUNC             = (1 << 7);     // function in function
+static const CR_FuncFlags FF_LEAFFUNC               = (1 << 8);     // leaf function
+static const CR_FuncFlags FF_RETURNONLY             = (1 << 9);     // return-only function
+static const CR_FuncFlags FF_NOTSTDCALL             = (1 << 10);    // not __stdcall
+static const CR_FuncFlags FF_DONTDECOMPBUTDISASM    = (1 << 11);    // don't decompile but disasm
+static const CR_FuncFlags FF_IGNORE                 = (1 << 12);    // ignore
 
 ////////////////////////////////////////////////////////////////////////////
 // x86 registers
@@ -342,9 +333,8 @@ public:
     // accessors
     CR_Addr32&                          Addr();
     std::string&                        Name();
-    CR_FuncType&                        FuncType();
+    CR_FuncFlags&                       FuncFlags();
     CR_Range&                           ArgSizeRange();
-    DWORD&                              Flags();
     CR_Addr32Set&                       Jumpees();
     CR_Addr32Set&                       Jumpers();
     CR_Addr32Set&                       Callees();
@@ -352,9 +342,8 @@ public:
     // const accessors
     const CR_Addr32&                    Addr() const;
     const std::string&                  Name() const;
-    const CR_FuncType&                  FuncType() const;
+    const CR_FuncFlags&                 FuncFlags() const;
     const CR_Range&                     ArgSizeRange() const;
-    const DWORD&                        Flags() const;
     const CR_Addr32Set&                 Jumpees() const;
     const CR_Addr32Set&                 Jumpers() const;
     const CR_Addr32Set&                 Callees() const;
@@ -363,9 +352,8 @@ public:
 protected:
     CR_Addr32                           m_addr;
     std::string                         m_name;
-    CR_FuncType                         m_ft;
+    CR_FuncFlags                        m_dwFuncFlags;
     CR_Range                            m_ArgSizeRange;
-    DWORD                               m_flags;
     CR_Addr32Set                        m_jumpees;
     CR_Addr32Set                        m_jumpers;
     CR_Addr32Set                        m_callees;
@@ -391,9 +379,8 @@ public:
     // accessors
     CR_Addr64&                          Addr();
     std::string&                        Name();
-    CR_FuncType&                        FuncType();
+    CR_FuncFlags&                       FuncFlags();
     CR_Range&                           ArgSizeRange();
-    DWORD&                              Flags();
     CR_Addr64Set&                       Jumpees();
     CR_Addr64Set&                       Jumpers();
     CR_Addr64Set&                       Callees();
@@ -401,9 +388,8 @@ public:
     // const accessors
     const CR_Addr64&                    Addr() const;
     const std::string&                  Name() const;
-    const CR_FuncType&                  FuncType() const;
+    const CR_FuncFlags&                 FuncFlags() const;
     const CR_Range&                     ArgSizeRange() const;
-    const DWORD&                        Flags() const;
     const CR_Addr64Set&                 Jumpees() const;
     const CR_Addr64Set&                 Jumpers() const;
     const CR_Addr64Set&                 Callees() const;
@@ -412,9 +398,8 @@ public:
 protected:
     CR_Addr64                           m_addr;
     std::string                         m_name;
-    CR_FuncType                         m_ft;
+    CR_FuncFlags                        m_dwFuncFlags;
     CR_Range                            m_ArgSizeRange;
-    DWORD                               m_flags;
     CR_Addr64Set                        m_jumpees;
     CR_Addr64Set                        m_jumpers;
     CR_Addr64Set                        m_callees;

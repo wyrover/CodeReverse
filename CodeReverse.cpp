@@ -330,9 +330,9 @@ int main(int argc, char **argv) {
     shared_ptr<CR_ErrorInfo> error_info = make_shared<CR_ErrorInfo>();
 
     if (modes[MODE_64BIT]) {
-        CR_NameScope namescope(error_info, true);
+        CR_NameScope ns(error_info, true);
         fprintf(stderr, "Loading type info...\n");
-        if (!namescope.LoadFromFiles(prefix, suffix)) {
+        if (!ns.LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: Wonders API is required.\n");
             fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
         } else {
@@ -342,7 +342,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Disassembling...\n");
         CR_DisAsmInfo64 info;
         module.DisAsm64(info);
-        module.FixupAsm64(info);
+        module.FixupAsm64(info, ns);
         fprintf(stderr, "Disassembled.\n");
 
         if (modes[MODE_DUMP_DISASM]) {
@@ -351,9 +351,9 @@ int main(int argc, char **argv) {
             fprintf(stderr, "Dumped.\n");
         }
     } else {
-        CR_NameScope namescope(error_info, false);
+        CR_NameScope ns(error_info, false);
         fprintf(stderr, "Loading type info...\n");
-        if (!namescope.LoadFromFiles(prefix, suffix)) {
+        if (!ns.LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: Wonders API is required.\n");
             fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
         } else {
@@ -363,7 +363,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Disassembling...\n");
         CR_DisAsmInfo32 info;
         module.DisAsm32(info);
-        module.FixupAsm32(info);
+        module.FixupAsm32(info, ns);
         fprintf(stderr, "Disassembled.\n");
 
         if (modes[MODE_DUMP_DISASM]) {

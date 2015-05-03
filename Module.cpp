@@ -503,7 +503,7 @@ BOOL CR_Module::DisAsmAddr32(
         // add function address for this op.code
         oc->FuncAddrs().emplace(func);
         if (oc->FuncAddrs().size() > 1) {
-            cf->Flags() |= FF_FUNCINFUNC;   // function in function
+            cf->FuncFlags() |= FF_FUNCINFUNC;   // function in function
         }
 
         // disassemble
@@ -515,7 +515,7 @@ BOOL CR_Module::DisAsmAddr32(
             oc->Name() = "???";
             oc->OpCodeType() = OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
-            cf->Flags() |= FF_DONTDECOMPBUTDISASM;
+            cf->FuncFlags() |= FF_DONTDECOMPBUTDISASM;
         } else {
             oc->ParseText(outbuf);
         }
@@ -547,7 +547,7 @@ BOOL CR_Module::DisAsmAddr32(
             case OT_IMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncType() = FT_JUMPERFUNC;
+                    cf->FuncFlags() |= FF_JUMPERFUNC;
 
                     addr = oc->Operand(0)->Value32();
                     info.Entrances().emplace(addr);
@@ -572,7 +572,7 @@ BOOL CR_Module::DisAsmAddr32(
             case OT_FUNCNAME:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncType() = FT_JUMPERFUNC;
+                    cf->FuncFlags() |= FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
@@ -581,7 +581,7 @@ BOOL CR_Module::DisAsmAddr32(
             case OT_MEMIMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncType() = FT_JUMPERFUNC;
+                    cf->FuncFlags() |= FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
@@ -622,13 +622,13 @@ BOOL CR_Module::DisAsmAddr32(
             // return
             if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
                 // func is __stdcall
-                cf->FuncType() = FT_STDCALL;
+                cf->FuncFlags() |= FF_STDCALL;
                 cf->ArgSizeRange().Set(oc->Operand(0)->Value32());
             } else {
                 // func is not __stdcall
-                cf->Flags() |= FF_NOTSTDCALL;
+                cf->FuncFlags() |= FF_NOTSTDCALL;
                 if (func == va) {
-                    cf->FuncType() = FT_RETURNONLY;
+                    cf->FuncFlags() |= FF_RETURNONLY;
                 }
             }
             bBreak = TRUE;
@@ -693,7 +693,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
         // add function address for this op.code
         oc->FuncAddrs().emplace(func);
         if (oc->FuncAddrs().size() > 1) {
-            cf->Flags() |= FF_FUNCINFUNC;   // function in function
+            cf->FuncFlags() |= FF_FUNCINFUNC;   // function in function
         }
 
         // disassemble
@@ -705,7 +705,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             oc->Name() = "???";
             oc->OpCodeType() = OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
-            cf->Flags() |= FF_DONTDECOMPBUTDISASM;
+            cf->FuncFlags() |= FF_DONTDECOMPBUTDISASM;
         } else {
             oc->ParseText(outbuf);
         }
@@ -738,7 +738,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             case OT_IMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncType() = FT_JUMPERFUNC;
+                    cf->FuncFlags() |= FF_JUMPERFUNC;
 
                     addr = oc->Operand(0)->Value64();
                     info.Entrances().emplace(addr);
@@ -762,7 +762,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             case OT_FUNCNAME:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncType() = FT_JUMPERFUNC;
+                    cf->FuncFlags() |= FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
@@ -771,7 +771,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             case OT_MEMIMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncType() = FT_JUMPERFUNC;
+                    cf->FuncFlags() |= FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
@@ -812,13 +812,13 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             // return
             if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
                 // func is __stdcall
-                cf->FuncType() = FT_STDCALL;
+                cf->FuncFlags() |= FF_STDCALL;
                 cf->ArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {
                 // func is not __stdcall
-                cf->Flags() |= FF_NOTSTDCALL;
+                cf->FuncFlags() |= FF_NOTSTDCALL;
                 if (func == va) {
-                    cf->FuncType() = FT_RETURNONLY;
+                    cf->FuncFlags() |= FF_RETURNONLY;
                 }
             }
             bBreak = TRUE;
@@ -853,8 +853,8 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info) {
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
         codefunc->ArgSizeRange().Set(0);
-        codefunc->Flags() = FF_NOTSTDCALL;
-        codefunc->FuncType() = FT_CDECL;
+        codefunc->FuncFlags() |= FF_NOTSTDCALL;
+        codefunc->FuncFlags() |= FF_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
         MapFuncNameToRVA().emplace(codefunc->Name(), RVA);
@@ -914,8 +914,8 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info) {
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
         codefunc->ArgSizeRange().Set(0);
-        codefunc->Flags() = FF_NOTSTDCALL;
-        codefunc->FuncType() = FT_CDECL;
+        codefunc->FuncFlags() |= FF_NOTSTDCALL;
+        codefunc->FuncFlags() |= FF_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
         MapFuncNameToRVA().emplace(codefunc->Name(), RVA);
@@ -961,7 +961,7 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info) {
     return TRUE;
 } // CR_Module::DisAsm64
 
-BOOL CR_Module::FixupAsm32(CR_DisAsmInfo32& info) {
+BOOL CR_Module::FixupAsm32(CR_DisAsmInfo32& info, CR_NameScope& ns) {
     bool must_retry;
 
 retry:;
@@ -972,14 +972,14 @@ retry:;
         for (auto& opr : operands) {
             if (opr.OperandType() == OT_MEMIMM) {
                 CR_Addr32 addr = opr.Value32();
-                if (AddressInData32(addr)) {
-                    opr.Text() = "M" + Cr8Hex(addr);
-                } else if (AddressInCode32(addr)) {
-                    auto name = FuncNameFromRVA(addr);
-                    if (name) {
-                        opr.SetFuncName(name);
-                        must_retry = true;
-                    } else {
+                auto name = FuncNameFromRVA(addr);
+                if (name) {
+                    opr.SetFuncName(name);
+                    must_retry = true;
+                } else {
+                    if (AddressInData32(addr)) {
+                        opr.Text() = "M" + Cr8Hex(addr);
+                    } else if (AddressInCode32(addr)) {
                         opr.Text() = "L" + Cr8Hex(addr);
                     }
                 }
@@ -1043,7 +1043,7 @@ retry:;
         CR_CodeFunc32 *cf = it.second.get();
         assert(cf);
 
-        if (cf->FuncType() == FT_JUMPERFUNC && cf->Name().empty()) {
+        if ((cf->FuncFlags() & FF_JUMPERFUNC) && cf->Name().empty()) {
             CR_Addr32 addr = cf->Addr();
             CR_OpCode32 *oc = info.MapAddrToOpCode(addr);
             assert(oc);
@@ -1054,6 +1054,24 @@ retry:;
             MapRVAToFuncName().emplace(RVA, cf->Name());
             MapFuncNameToRVA().emplace(cf->Name(), RVA);
             must_retry = true;
+
+            auto it = ns.MapNameToVarID().find(operands[0].Text());
+            if (it != ns.MapNameToVarID().end()) {
+                auto vid = it->second;
+                auto& var = ns.LogVar(vid);
+                auto tid = var.m_typed_value.m_type_id;
+                if (ns.IsFuncType(tid)) {
+                    auto rtid = ns.ResolveAliasAndCV(tid);
+                    auto& rtype = ns.LogType(rtid);
+                    auto& func = ns.LogFunc(rtype.m_sub_id);
+
+                    if (func.m_ellipsis) {
+                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 8);
+                    } else {
+                        cf->ArgSizeRange().Set(func.m_params.size() * 8);
+                    }
+                }
+            }
         }
 
         DWORD rva = RVAFromVA32(cf->Addr());
@@ -1070,25 +1088,26 @@ retry:;
     return TRUE;
 } // CR_Module::FixupAsm32
 
-BOOL CR_Module::FixupAsm64(CR_DisAsmInfo64& info) {
+BOOL CR_Module::FixupAsm64(CR_DisAsmInfo64& info, CR_NameScope& ns) {
     bool must_retry;
 
 retry:;
     must_retry = false;
 
+    // convert addresses
     for (auto it : info.MapAddrToOpCode()) {
         auto& operands = it.second.get()->Operands();
         for (auto& opr : operands) {
             if (opr.OperandType() == OT_MEMIMM) {
                 CR_Addr64 addr = opr.Value64();
-                if (AddressInData64(addr)) {
-                    opr.Text() = "M" + Cr16Hex(addr);
-                } else if (AddressInCode64(addr)) {
-                    auto name = FuncNameFromVA64(addr);
-                    if (name) {
-                        opr.SetFuncName(name);
-                        must_retry = true;
-                    } else {
+                auto name = FuncNameFromVA64(addr);
+                if (name) {
+                    opr.SetFuncName(name);
+                    must_retry = true;
+                } else {
+                    if (AddressInData64(addr)) {
+                        opr.Text() = "M" + Cr16Hex(addr);
+                    } else if (AddressInCode64(addr)) {
                         opr.Text() = "L" + Cr16Hex(addr);
                     }
                 }
@@ -1122,12 +1141,9 @@ retry:;
             break;
 
         case OCT_MISC:
-            if (it.second->Name() == "mov" ||
-                it.second->Name() == "cmp" ||
-                it.second->Name() == "test" ||
-                it.second->Name() == "and" ||
-                it.second->Name() == "sub" ||
-                it.second->Name().find("cmov") == 0)
+            if (it.second->Name() == "mov" || it.second->Name() == "cmp" ||
+                it.second->Name() == "test" || it.second->Name() == "and" ||
+                it.second->Name() == "sub" || it.second->Name().find("cmov") == 0)
             {
                 if (operands[0].Size() == 0)
                     operands[0].Size() = operands[1].Size();
@@ -1148,16 +1164,47 @@ retry:;
         }
     }
 
+    // fix up jumper functions
     for (auto it : info.MapAddrToCodeFunc()) {
         CR_CodeFunc64 *cf = it.second.get();
         assert(cf);
 
-        if (cf->FuncType() == FT_JUMPERFUNC && cf->Name().empty()) {
+        if ((cf->FuncFlags() & FF_JUMPERFUNC) && cf->Name().empty()) {
             CR_Addr64 addr = cf->Addr();
             CR_OpCode64 *oc = info.MapAddrToOpCode(addr);
             assert(oc);
             auto& operands = oc->Operands();
             cf->Name() = std::string("__imp") + operands[0].Text();
+
+            auto it = ns.MapNameToVarID().find(operands[0].Text());
+            if (it != ns.MapNameToVarID().end()) {
+                auto vid = it->second;
+                auto& var = ns.LogVar(vid);
+                auto tid = var.m_typed_value.m_type_id;
+                if (ns.IsFuncType(tid)) {
+                    auto rtid = ns.ResolveAliasAndCV(tid);
+                    auto& rtype = ns.LogType(rtid);
+                    auto& func = ns.LogFunc(rtype.m_sub_id);
+
+                    switch (func.m_convention) {
+                    case CR_LogFunc::FT_CDECL:
+                        cf->FuncFlags() |= FF_CDECL;
+                        break;
+                    case CR_LogFunc::FT_STDCALL:
+                        cf->FuncFlags() |= FF_STDCALL;
+                        break;
+                    case CR_LogFunc::FT_FASTCALL:
+                        cf->FuncFlags() |= FF_FASTCALL;
+                        break;
+                    }
+
+                    if (func.m_ellipsis) {
+                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 4);
+                    } else {
+                        cf->ArgSizeRange().Set(func.m_params.size() * 4);
+                    }
+                }
+            }
 
             auto RVA = RVAFromVA64(addr);
             MapRVAToFuncName().emplace(RVA, cf->Name());

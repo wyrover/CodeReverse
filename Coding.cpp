@@ -912,17 +912,15 @@ void CR_OpCode64::ParseText(const char *text) {
 void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
     Addr() = cf.Addr();
     Name() = cf.Name();
-    FuncType() = cf.FuncType();
+    FuncFlags() = cf.FuncFlags();
     ArgSizeRange() = cf.ArgSizeRange();
-    Flags() = cf.Flags();
 }
 
 void CR_CodeFunc32::clear() {
     Addr() = 0;
     Name().clear();
-    FuncType() = FT_UNKNOWN;
+    FuncFlags() = FF_UNKNOWN;
     ArgSizeRange().clear();
-    Flags() = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -931,17 +929,15 @@ void CR_CodeFunc32::clear() {
 void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
     Addr() = cf.Addr();
     Name() = cf.Name();
-    FuncType() = cf.FuncType();
+    FuncFlags() = cf.FuncFlags();
     ArgSizeRange() = cf.ArgSizeRange();
-    Flags() = cf.Flags();
 }
 
 void CR_CodeFunc64::clear() {
     Addr() = 0;
     Name().clear();
-    FuncType() = FT_UNKNOWN;
+    FuncFlags() = FF_UNKNOWN;
     ArgSizeRange().clear();
-    Flags() = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////

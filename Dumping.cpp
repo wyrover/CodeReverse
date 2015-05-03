@@ -966,7 +966,7 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
     for (auto& entrance : info.Entrances()) {
         CR_CodeFunc32 *cf = info.MapAddrToCodeFunc(entrance);
         assert(cf);
-        if (cf->Flags() & FF_IGNORE)
+        if (cf->FuncFlags() & FF_IGNORE)
             continue;
 
         const char *pszName = FuncNameFromVA32(cf->Addr());
@@ -975,30 +975,21 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
         else
             fprintf(fp, ";; Function L%08lX\n", cf->Addr());
 
-        switch (cf->FuncType()) {
-        case FT_JUMPERFUNC:
-            fprintf(fp, "ft = FT_JUMPERFUNC, ");
-            break;
-
-        case FT_CDECL:
-            fprintf(fp, "ft = FT_CDECL, ");
-            break;
-
-        case FT_STDCALL:
-            fprintf(fp, "ft = FT_STDCALL, ");
-            break;
-
-        case FT_FASTCALL:
-            fprintf(fp, "ft = FT_FASTCALL, ");
-            break;
-
-        case FT_RETURNONLY:
-            fprintf(fp, "ft = FT_RETURNONLY, ");
-            break;
-
-        default:
-            fprintf(fp, "ft = FT_UNKNOWN, ");
-            break;
+        fprintf(fp, "flags =");
+        if (cf->FuncFlags() & FF_JUMPERFUNC) {
+            fprintf(fp, " FF_JUMPERFUNC");
+        }
+        if (cf->FuncFlags() & FF_CDECL) {
+            fprintf(fp, " FF_CDECL");
+        }
+        if (cf->FuncFlags() & FF_STDCALL) {
+            fprintf(fp, " FF_STDCALL");
+        }
+        if (cf->FuncFlags() & FF_FASTCALL) {
+            fprintf(fp, " FF_FASTCALL");
+        }
+        if (cf->FuncFlags() & FF_RETURNONLY) {
+            fprintf(fp, " FF_RETURNONLY");
         }
         auto& range = cf->ArgSizeRange();
         if (!range.whole()) {
@@ -1065,7 +1056,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
     for (auto& entrance : info.Entrances()) {
         CR_CodeFunc64 *cf = info.MapAddrToCodeFunc(entrance);
         assert(cf);
-        if (cf->Flags() & FF_IGNORE)
+        if (cf->FuncFlags() & FF_IGNORE)
             continue;
 
         const char *pszName = FuncNameFromVA64(cf->Addr());
@@ -1076,12 +1067,14 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
         else
             fprintf(fp, ";; Function L%08lX%08lX\n", HILONG(cf->Addr()), LOLONG(cf->Addr()));
 
-        if (cf->FuncType() == FT_JUMPERFUNC)
-            fprintf(fp, "ft = FT_JUMPERFUNC, ");
-        else if (cf->FuncType() == FT_RETURNONLY)
-            fprintf(fp, "ft = FT_RETURNONLY, ");
-        else
-            fprintf(fp, "ft = FT_64BITFUNC, ");
+        fprintf(fp, "flags = ");
+        if (cf->FuncFlags() & FF_JUMPERFUNC)
+            fprintf(fp, " FF_JUMPERFUNC");
+        if (cf->FuncFlags() & FF_RETURNONLY)
+            fprintf(fp, " FF_RETURNONLY");
+        if (cf->FuncFlags() & FF_64BITFUNC)
+            fprintf(fp, " FF_64BITFUNC");
+        fprintf(fp, "\n");
 
         auto& range = cf->ArgSizeRange();
         if (!range.whole()) {

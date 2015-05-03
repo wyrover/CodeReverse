@@ -327,16 +327,12 @@ inline std::string& CR_CodeFunc32::Name() {
     return m_name;
 }
 
-inline CR_FuncType& CR_CodeFunc32::FuncType() {
-    return m_ft;
+inline CR_FuncFlags& CR_CodeFunc32::FuncFlags() {
+    return m_dwFuncFlags;
 }
 
 inline CR_Range& CR_CodeFunc32::ArgSizeRange() {
     return m_ArgSizeRange;
-}
-
-inline DWORD& CR_CodeFunc32::Flags() {
-    return m_flags;
 }
 
 inline CR_Addr32Set& CR_CodeFunc32::Jumpees() {
@@ -366,16 +362,12 @@ inline const std::string& CR_CodeFunc32::Name() const {
     return m_name;
 }
 
-inline const CR_FuncType& CR_CodeFunc32::FuncType() const {
-    return m_ft;
+inline const CR_FuncFlags& CR_CodeFunc32::FuncFlags() const {
+    return m_dwFuncFlags;
 }
 
 inline const CR_Range& CR_CodeFunc32::ArgSizeRange() const {
     return m_ArgSizeRange;
-}
-
-inline const DWORD& CR_CodeFunc32::Flags() const {
-    return m_flags;
 }
 
 inline const CR_Addr32Set& CR_CodeFunc32::Jumpees() const {
@@ -405,16 +397,12 @@ inline std::string& CR_CodeFunc64::Name() {
     return m_name;
 }
 
-inline CR_FuncType& CR_CodeFunc64::FuncType() {
-    return m_ft;
+inline CR_FuncFlags& CR_CodeFunc64::FuncFlags() {
+    return m_dwFuncFlags;
 }
 
 inline CR_Range& CR_CodeFunc64::ArgSizeRange() {
     return m_ArgSizeRange;
-}
-
-inline DWORD& CR_CodeFunc64::Flags() {
-    return m_flags;
 }
 
 inline CR_Addr64Set& CR_CodeFunc64::Jumpees() {
@@ -444,16 +432,12 @@ inline const std::string& CR_CodeFunc64::Name() const {
     return m_name;
 }
 
-inline const CR_FuncType& CR_CodeFunc64::FuncType() const {
-    return m_ft;
+inline const CR_FuncFlags& CR_CodeFunc64::FuncFlags() const {
+    return m_dwFuncFlags;
 }
 
 inline const CR_Range& CR_CodeFunc64::ArgSizeRange() const {
     return m_ArgSizeRange;
-}
-
-inline const DWORD& CR_CodeFunc64::Flags() const {
-    return m_flags;
 }
 
 inline const CR_Addr64Set& CR_CodeFunc64::Jumpees() const {
