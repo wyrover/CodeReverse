@@ -125,7 +125,7 @@ CR_FlagType CrFlagGetType(const char *name, int bits);
 const char * CrFlagGetName(CR_FlagType type, int bits);
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_OpCodeType - op. code type
+// CR_OpCodeType - op.code type
 
 enum CR_OpCodeType {
     OCT_MISC,    // misc
@@ -178,47 +178,47 @@ public:
 
 public:
     // accessors
-    CR_String&              Text();
+    std::string&            Text();
     CR_OperandType&         OperandType();
     DWORD&                  Size();
     CR_Addr32&              Value32();
     CR_Addr64&              Value64();
-    CR_String&              MemExpr();
+    std::string&            MemExpr();
     CR_TriBool&             IsInteger();
     CR_TriBool&             IsPointer();
     CR_TriBool&             IsFunction();
     // const accessors
-    const CR_String&        Text() const;
+    const std::string&      Text() const;
     const CR_OperandType&   OperandType() const;
     const DWORD&            Size() const;
     const CR_Addr32&        Value32() const;
     const CR_Addr64&        Value64() const;
-    const CR_String&        MemExpr() const;
+    const std::string&      MemExpr() const;
     const CR_TriBool&       IsInteger() const;
     const CR_TriBool&       IsPointer() const;
     const CR_TriBool&       IsFunction() const;
 
 protected:
-    CR_String               m_text;
+    std::string             m_text;
     CR_OperandType          m_ot;
     DWORD                   m_size;
     union {
         CR_Addr64           m_value64;
         CR_Addr32           m_value32;
     };
-    CR_String               m_memexpr;
+    std::string             m_memexpr;
     CR_TriBool              m_is_integer;
     CR_TriBool              m_is_pointer;
     CR_TriBool              m_is_function;
 }; // class CR_Operand
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_OperandSet - set of operands
+// CR_Operands - set of operands
 
-typedef CR_VecSet<CR_Operand> CR_OperandSet;
+typedef CR_VecSet<CR_Operand> CR_Operands;
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_OpCode32 - op. code for 32-bit mode
+// CR_OpCode32 - op.code for 32-bit mode
 
 class CR_OpCode32 {
 public:
@@ -233,18 +233,18 @@ public:
 public:
     // accessors
     CR_Addr32&                  Addr();         // address of assembly
-    CR_String&                  Name();         // name of instruction
-    CR_OperandSet&              Operands();     // operands
+    std::string&                Name();         // name of instruction
+    CR_Operands&              Operands();     // operands
     CR_Operand*                 Operand(std::size_t index);
     CR_DataBytes&               Codes();        // code of instruction
-    CR_OpCodeType&              OpCodeType(); // type of instruction
+    CR_OpCodeType&              OpCodeType();   // type of instruction
     CR_CondCode&                CondCode();     // condition type
     CR_Addr32Set&               FuncAddrs();
 
     // const accessors
     const CR_Addr32&            Addr() const;
-    const CR_String&            Name() const;
-    const CR_OperandSet&        Operands() const;
+    const std::string&          Name() const;
+    const CR_Operands&        Operands() const;
     const CR_Operand*           Operand(std::size_t index) const;
     const CR_DataBytes&         Codes() const;
     const CR_OpCodeType&        OpCodeType() const;
@@ -253,8 +253,8 @@ public:
 
 protected:
     CR_Addr32                   m_addr;
-    CR_String                   m_name;
-    CR_OperandSet               m_operands;
+    std::string                 m_name;
+    CR_Operands               m_operands;
     CR_DataBytes                m_codes;
     CR_OpCodeType               m_oct;
     CR_CondCode                 m_ccode;
@@ -266,7 +266,7 @@ protected:
 typedef shared_ptr<CR_OpCode32> CR_SharedOpCode32;
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_OpCode64 - op. code for 64-bit mode
+// CR_OpCode64 - op.code for 64-bit mode
 
 class CR_OpCode64 {
 public:
@@ -281,8 +281,8 @@ public:
 public:
     // accessors
     CR_Addr64&                  Addr();         // address of assembly
-    CR_String&                  Name();         // name of instruction
-    CR_OperandSet&              Operands();     // operands
+    std::string&                Name();         // name of instruction
+    CR_Operands&                Operands();     // operands
     CR_Operand*                 Operand(std::size_t index);
     CR_DataBytes&               Codes();        // code of instruction
     CR_OpCodeType&              OpCodeType(); // type of instruction
@@ -291,8 +291,8 @@ public:
 
     // const accessors
     const CR_Addr64&            Addr() const;
-    const CR_String&            Name() const;
-    const CR_OperandSet&        Operands() const;
+    const std::string&          Name() const;
+    const CR_Operands&          Operands() const;
     const CR_Operand*           Operand(std::size_t index) const;
     const CR_DataBytes&         Codes() const;
     const CR_OpCodeType&        OpCodeType() const;
@@ -301,8 +301,8 @@ public:
 
 protected:
     CR_Addr64                   m_addr;
-    CR_String                   m_name;
-    CR_OperandSet               m_operands;
+    std::string                 m_name;
+    CR_Operands                 m_operands;
     CR_DataBytes                m_codes;
     CR_OpCodeType               m_oct;
     CR_CondCode                 m_ccode;
@@ -318,7 +318,7 @@ typedef shared_ptr<CR_OpCode64> CR_SharedOpCode64;
 
 struct CR_DataMemberEntry {
     std::size_t     m_index;
-    CR_String       m_name;
+    std::string     m_name;
     CR_TypeID       m_typeid;
     std::size_t     m_size;
 };
@@ -341,7 +341,7 @@ public:
 public:
     // accessors
     CR_Addr32&                          Addr();
-    CR_String&                          Name();
+    std::string&                        Name();
     CR_FuncType&                        FuncType();
     int&                                SizeOfStackArgs();
     DWORD&                              Flags();
@@ -351,7 +351,7 @@ public:
     CR_Addr32Set&                       Callers();
     // const accessors
     const CR_Addr32&                    Addr() const;
-    const CR_String&                    Name() const;
+    const std::string&                  Name() const;
     const CR_FuncType&                  FuncType() const;
     const int&                          SizeOfStackArgs() const;
     const DWORD&                        Flags() const;
@@ -362,7 +362,7 @@ public:
 
 protected:
     CR_Addr32                           m_addr;
-    CR_String                           m_name;
+    std::string                         m_name;
     CR_FuncType                         m_ft;
     int                                 m_SizeOfStackArgs;
     DWORD                               m_flags;
@@ -390,7 +390,7 @@ public:
 public:
     // accessors
     CR_Addr64&                          Addr();
-    CR_String&                          Name();
+    std::string&                        Name();
     CR_FuncType&                        FuncType();
     int&                                SizeOfStackArgs();
     DWORD&                              Flags();
@@ -400,7 +400,7 @@ public:
     CR_Addr64Set&                       Callers();
     // const accessors
     const CR_Addr64&                    Addr() const;
-    const CR_String&                    Name() const;
+    const std::string&                  Name() const;
     const CR_FuncType&                  FuncType() const;
     const int&                          SizeOfStackArgs() const;
     const DWORD&                        Flags() const;
@@ -411,7 +411,7 @@ public:
 
 protected:
     CR_Addr64                           m_addr;
-    CR_String                           m_name;
+    std::string                         m_name;
     CR_FuncType                         m_ft;
     int                                 m_SizeOfStackArgs;
     DWORD                               m_flags;

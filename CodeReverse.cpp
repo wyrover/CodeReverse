@@ -13,15 +13,15 @@ const char * const cr_logo =
     "///////////////////////////////////////////////\n"
 #ifdef _WIN64
 # ifdef __GNUC__
-    "// CodeReverse 0.1.7 (64-bit) for gcc        //\n"
+    "// CodeReverse 0.1.9 (64-bit) for gcc        //\n"
 # elif defined(_MSC_VER)
-    "// CodeReverse 0.1.7 (64-bit) for cl         //\n"
+    "// CodeReverse 0.1.9 (64-bit) for cl         //\n"
 # endif
 #else   // ndef _WIN64
 # ifdef __GNUC__
-    "// CodeReverse 0.1.7 (32-bit) for gcc        //\n"
+    "// CodeReverse 0.1.9 (32-bit) for gcc        //\n"
 # elif defined(_MSC_VER)
-    "// CodeReverse 0.1.7 (32-bit) for cl         //\n"
+    "// CodeReverse 0.1.9 (32-bit) for cl         //\n"
 # endif
 #endif  // ndef _WIN64
     "// https://github.com/katahiromz/CodeReverse //\n"

@@ -95,10 +95,10 @@ public:
     DWORD  RVAOfEntryPoint() const;
 
     DWORD NumberOfSections() const;
-          PREAL_IMAGE_SECTION_HEADER SectionHeader(DWORD index);
+          REAL_IMAGE_SECTION_HEADER *SectionHeader(DWORD index);
     const REAL_IMAGE_SECTION_HEADER *SectionHeader(DWORD index) const;
 
-          PREAL_IMAGE_DATA_DIRECTORY DataDirectory(DWORD index);
+          REAL_IMAGE_DATA_DIRECTORY *DataDirectory(DWORD index);
     const REAL_IMAGE_DATA_DIRECTORY *DataDirectory(DWORD index) const;
 
     DWORD LastError() const;
@@ -119,12 +119,12 @@ public:
     DWORD VA32FromRVA(DWORD rva) const;
     DWORDLONG VA64FromRVA(DWORD rva) const;
 
-    PIMAGE_IMPORT_DESCRIPTOR    ImportDescriptors();
-    PIMAGE_EXPORT_DIRECTORY     ExportDirectory();
-    PIMAGE_RESOURCE_DIRECTORY   ResourceDirectory();
+    IMAGE_IMPORT_DESCRIPTOR *   ImportDescriptors();
+    IMAGE_EXPORT_DIRECTORY *    ExportDirectory();
+    IMAGE_RESOURCE_DIRECTORY *  ResourceDirectory();
 
-          CR_StringSet& ImportDllNames();
-    const CR_StringSet& ImportDllNames() const;
+          CR_Strings& ImportDllNames();
+    const CR_Strings& ImportDllNames() const;
 
           CR_VecSet<CR_ImportSymbol>& ImportSymbols();
     const CR_VecSet<CR_ImportSymbol>& ImportSymbols() const;
@@ -137,10 +137,10 @@ public:
           CR_VecSet<ImgDelayDescr>& DelayLoadDescriptors();
     const CR_VecSet<ImgDelayDescr>& DelayLoadDescriptors() const;
 
-          std::unordered_map<DWORD,CR_String>& MapRVAToFuncName();
-    const std::unordered_map<DWORD,CR_String>& MapRVAToFuncName() const;
-          std::unordered_map<CR_String,DWORD>& MapFuncNameToRVA();
-    const std::unordered_map<CR_String,DWORD>& MapFuncNameToRVA() const;
+          std::unordered_map<DWORD,std::string>& MapRVAToFuncName();
+    const std::unordered_map<DWORD,std::string>& MapRVAToFuncName() const;
+          std::unordered_map<std::string,DWORD>& MapFuncNameToRVA();
+    const std::unordered_map<std::string,DWORD>& MapFuncNameToRVA() const;
 
     BOOL AddressInCode32(CR_Addr32 va) const;
     BOOL AddressInCode64(CR_Addr64 va) const;
@@ -193,32 +193,32 @@ protected:
     LPBYTE                          m_pFileImage;
     DWORD                           m_dwFileSize;
     LPBYTE                          m_pLoadedImage;
-    PIMAGE_DOS_HEADER               m_pDOSHeader;
+    IMAGE_DOS_HEADER *              m_pDOSHeader;
     union {
-        PIMAGE_NT_HEADERS           m_pNTHeaders;
-        PIMAGE_NT_HEADERS32         m_pNTHeaders32;
-        PIMAGE_NT_HEADERS64         m_pNTHeaders64;
+        IMAGE_NT_HEADERS *          m_pNTHeaders;
+        IMAGE_NT_HEADERS32 *        m_pNTHeaders32;
+        IMAGE_NT_HEADERS64 *        m_pNTHeaders64;
     };
-    PIMAGE_FILE_HEADER              m_pFileHeader;
-    PIMAGE_OPTIONAL_HEADER32        m_pOptional32;
-    PIMAGE_OPTIONAL_HEADER64        m_pOptional64;
+    IMAGE_FILE_HEADER *             m_pFileHeader;
+    IMAGE_OPTIONAL_HEADER32 *       m_pOptional32;
+    IMAGE_OPTIONAL_HEADER64 *       m_pOptional64;
     DWORD                           m_dwLastError;
     DWORD                           m_dwHeaderSum;
     DWORD                           m_dwCheckSum;
-    PREAL_IMAGE_SECTION_HEADER      m_pSectionHeaders;
-    PREAL_IMAGE_DATA_DIRECTORY      m_pDataDirectories;
+    REAL_IMAGE_SECTION_HEADER *     m_pSectionHeaders;
+    REAL_IMAGE_DATA_DIRECTORY *     m_pDataDirectories;
 
-    CR_StringSet                    m_vecImportDllNames;
+    CR_Strings                      m_vecImportDllNames;
     CR_VecSet<CR_ImportSymbol>      m_vecImportSymbols;
     CR_VecSet<CR_ExportSymbol>      m_vecExportSymbols;
     CR_VecSet<ImgDelayDescr>        m_vecDelayLoadDescriptors;
 
-    std::unordered_map<DWORD,CR_String> m_mRVAToFuncNameMap;
-    std::unordered_map<CR_String,DWORD> m_mFuncNameToRVAMap;
+    std::unordered_map<DWORD,std::string> m_mRVAToFuncNameMap;
+    std::unordered_map<std::string,DWORD> m_mFuncNameToRVAMap;
 
     BOOL _LoadImage(LPVOID Data);
     BOOL _LoadNTHeaders(LPVOID Data);
-    BOOL _GetImportDllNames(CR_StringSet& names);
+    BOOL _GetImportDllNames(CR_Strings& names);
     BOOL _GetImportSymbols(DWORD dll_index, CR_VecSet<CR_ImportSymbol>& symbols);
     BOOL _GetExportSymbols(CR_VecSet<CR_ExportSymbol>& symbols);
 }; // class CR_Module

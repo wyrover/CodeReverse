@@ -948,7 +948,7 @@ void CR_CodeFunc64::clear() {
 // CrGetAsmIO16, CrGetAsmIO32, CrGetAsmIO64
 
 void CrStrSplitToSet(
-    std::set<CR_String>& s, const char *psz, const char *seps)
+    std::set<std::string>& s, const char *psz, const char *seps)
 {
     s.clear();
     char *str = _strdup(psz);
@@ -988,8 +988,8 @@ static int CrCompareAsmIO(const void *a, const void *b) {
 }
 
 BOOL CrGetAsmIO16(
-    X86ASMIO *key, std::set<CR_String>& in, 
-    std::set<CR_String>& out, int osize)
+    X86ASMIO *key, std::set<std::string>& in, 
+    std::set<std::string>& out, int osize)
 {
     static const X86ASMIO s_table[] = {
         {"aaa", 0, "al,ah,AF", "al,ah,AF,CF,OF,SF,ZF,PF,SFeqOF", 0},
@@ -1129,8 +1129,8 @@ BOOL CrGetAsmIO16(
     return TRUE;
 }
 
-BOOL CrGetAsmIO32(X86ASMIO *key, std::set<CR_String>& in, 
-    std::set<CR_String>& out, int osize)
+BOOL CrGetAsmIO32(X86ASMIO *key, std::set<std::string>& in, 
+    std::set<std::string>& out, int osize)
 {
     static const X86ASMIO s_table[] = {
         {"aaa", 0, "al,ah,AF", "al,ah,AF,CF,OF,SF,ZF,PF,SFeqOF", 0},
@@ -1368,8 +1368,8 @@ BOOL CrGetAsmIO32(X86ASMIO *key, std::set<CR_String>& in,
 }
 
 BOOL CrGetAsmIO64(
-    X86ASMIO *key, std::set<CR_String>& in, 
-    std::set<CR_String>& out, int osize)
+    X86ASMIO *key, std::set<std::string>& in, 
+    std::set<std::string>& out, int osize)
 {
     static const X86ASMIO s_table[] = {
         {"adc", 2, "$0,$1,CF", "$0,OF,ZF,SF,CF,AF,PF,SFeqOF", 0},
@@ -1620,102 +1620,6 @@ BOOL CrGetAsmIO64(
     CrStrSplitToSet(in, p->in, ",");
     CrStrSplitToSet(out, p->out, ",");
     return TRUE;
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_DisAsmInfo32
-
-void CR_DisAsmInfo32::Copy(const CR_DisAsmInfo32& info) {
-    MapAddrToOpCode() = info.MapAddrToOpCode();
-    Entrances() = info.Entrances();
-    MapAddrToCodeFunc() = info.MapAddrToCodeFunc();
-}
-
-void CR_DisAsmInfo32::clear() {
-    MapAddrToOpCode().clear();
-    Entrances().clear();
-    MapAddrToCodeFunc().clear();
-}
-
-CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) {
-    auto it = MapAddrToCodeFunc().find(addr);
-    if (it != MapAddrToCodeFunc().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-const CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const {
-    auto it = MapAddrToCodeFunc().find(addr);
-    if (it != MapAddrToCodeFunc().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) {
-    auto it = MapAddrToOpCode().find(addr);
-    if (it != MapAddrToOpCode().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-const CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) const {
-    auto it = MapAddrToOpCode().find(addr);
-    if (it != MapAddrToOpCode().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) {
-    auto it = MapAddrToCodeFunc().find(addr);
-    if (it != MapAddrToCodeFunc().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-const CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const {
-    auto it = MapAddrToCodeFunc().find(addr);
-    if (it != MapAddrToCodeFunc().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) {
-    auto it = MapAddrToOpCode().find(addr);
-    if (it != MapAddrToOpCode().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-const CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) const {
-    auto it = MapAddrToOpCode().find(addr);
-    if (it != MapAddrToOpCode().end())
-        return it->second.get();
-    else
-        return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_DisAsmInfo64
-
-void CR_DisAsmInfo64::Copy(const CR_DisAsmInfo64& info) {
-    MapAddrToOpCode() = info.MapAddrToOpCode();
-    Entrances() = info.Entrances();
-    m_mAddrToCodeFunc = info.m_mAddrToCodeFunc;
-}
-
-void CR_DisAsmInfo64::clear() {
-    MapAddrToOpCode().clear();
-    Entrances().clear();
-    m_mAddrToCodeFunc.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////

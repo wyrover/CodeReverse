@@ -50,18 +50,18 @@ inline DWORD CR_Module::LastError() const {
     return m_dwLastError;
 }
 
-inline PIMAGE_IMPORT_DESCRIPTOR CR_Module::ImportDescriptors() {
-    return reinterpret_cast<PIMAGE_IMPORT_DESCRIPTOR>(
+inline IMAGE_IMPORT_DESCRIPTOR *CR_Module::ImportDescriptors() {
+    return reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR *>(
         DirEntryData(IMAGE_DIRECTORY_ENTRY_IMPORT));
 }
 
-inline PIMAGE_EXPORT_DIRECTORY CR_Module::ExportDirectory() {
-    return reinterpret_cast<PIMAGE_EXPORT_DIRECTORY>(
+inline IMAGE_EXPORT_DIRECTORY *CR_Module::ExportDirectory() {
+    return reinterpret_cast<IMAGE_EXPORT_DIRECTORY *>(
         DirEntryData(IMAGE_DIRECTORY_ENTRY_EXPORT));
 }
 
-inline PIMAGE_RESOURCE_DIRECTORY CR_Module::ResourceDirectory() {
-    return reinterpret_cast<PIMAGE_RESOURCE_DIRECTORY>(
+inline IMAGE_RESOURCE_DIRECTORY *CR_Module::ResourceDirectory() {
+    return reinterpret_cast<IMAGE_RESOURCE_DIRECTORY *>(
         DirEntryData(IMAGE_DIRECTORY_ENTRY_RESOURCE));
 }
 
@@ -103,7 +103,7 @@ inline DWORDLONG CR_Module::VA64FromRVA(DWORD rva) const {
     return m_pOptional64->ImageBase + rva;
 }
 
-inline PREAL_IMAGE_SECTION_HEADER CR_Module::SectionHeader(DWORD index) {
+inline REAL_IMAGE_SECTION_HEADER *CR_Module::SectionHeader(DWORD index) {
     assert(m_pSectionHeaders);
     if (index < NumberOfSections())
         return &m_pSectionHeaders[index];
@@ -118,7 +118,7 @@ CR_Module::SectionHeader(DWORD index) const {
     return NULL;
 }
 
-inline PREAL_IMAGE_DATA_DIRECTORY CR_Module::DataDirectory(DWORD index) {
+inline REAL_IMAGE_DATA_DIRECTORY *CR_Module::DataDirectory(DWORD index) {
     assert(m_pDataDirectories);
     assert(index < IMAGE_NUMBEROF_DIRECTORY_ENTRIES);
     return &m_pDataDirectories[index];
@@ -280,30 +280,30 @@ inline const char *CR_Module::FuncNameFromVA64(CR_Addr64 addr) const {
     return FuncNameFromRVA(RVAFromVA64(addr));
 }
 
-inline std::unordered_map<DWORD,CR_String>&
+inline std::unordered_map<DWORD,std::string>&
 CR_Module::MapRVAToFuncName() {
     return m_mRVAToFuncNameMap;
 }
 
-inline const std::unordered_map<DWORD,CR_String>&
+inline const std::unordered_map<DWORD,std::string>&
 CR_Module::MapRVAToFuncName() const {
     return m_mRVAToFuncNameMap;
 }
 
-inline std::unordered_map<CR_String,DWORD>& CR_Module::MapFuncNameToRVA() {
+inline std::unordered_map<std::string,DWORD>& CR_Module::MapFuncNameToRVA() {
     return m_mFuncNameToRVAMap;
 }
 
-inline const std::unordered_map<CR_String,DWORD>&
+inline const std::unordered_map<std::string,DWORD>&
 CR_Module::MapFuncNameToRVA() const {
     return m_mFuncNameToRVAMap;
 }
 
-inline CR_StringSet& CR_Module::ImportDllNames() {
+inline CR_Strings& CR_Module::ImportDllNames() {
     return m_vecImportDllNames;
 }
 
-inline const CR_StringSet& CR_Module::ImportDllNames() const {
+inline const CR_Strings& CR_Module::ImportDllNames() const {
     return m_vecImportDllNames;
 }
 

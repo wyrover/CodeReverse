@@ -199,28 +199,23 @@ typedef std::unordered_set<CR_Addr32> CR_Addr32Set;
 typedef std::unordered_set<CR_Addr64> CR_Addr64Set;
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_String
+// CR_Strings
 
-typedef std::string CR_String;
-
-////////////////////////////////////////////////////////////////////////////
-// CR_StringSet
-
-typedef CR_VecSet<CR_String> CR_StringSet;
+typedef CR_VecSet<std::string> CR_Strings;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_DataByte, CR_DataBytes
 
 typedef unsigned char CR_DataByte;
 
-typedef CR_VecSet<CR_DataByte> CR_DataBytes;
+typedef std::vector<CR_DataByte> CR_DataBytes;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_ErrorInfo
 
 class CR_ErrorInfo {
 public:
-    typedef CR_StringSet error_container;
+    typedef CR_Strings error_container;
     enum Type {
         NOTHING = 0, NOTICE, WARN, ERR
     };

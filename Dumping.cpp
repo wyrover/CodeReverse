@@ -452,7 +452,7 @@ void CrDumpDataDirectory(std::FILE *fp, LPVOID Data, DWORD index) {
     #define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14
 #endif
 
-    PIMAGE_DATA_DIRECTORY Directory = (PIMAGE_DATA_DIRECTORY)Data;
+    auto Directory = reinterpret_cast<IMAGE_DATA_DIRECTORY *>(Data);
     fprintf(fp, "    ");
     switch(index) {
     case IMAGE_DIRECTORY_ENTRY_EXPORT: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_EXPORT"); break;
@@ -477,7 +477,7 @@ void CrDumpDataDirectory(std::FILE *fp, LPVOID Data, DWORD index) {
 } // CrDumpDataDirectory
 
 void CrDumpDOSHeader(std::FILE *fp, LPVOID Data) {
-    PIMAGE_DOS_HEADER DOSHeader = (PIMAGE_DOS_HEADER)Data;
+    auto DOSHeader = reinterpret_cast<IMAGE_DOS_HEADER *>(Data);
     fprintf(fp, "\n### DOS Header ###\n");
     fprintf(fp, "  e_magic: 0x%04X\n", DOSHeader->e_magic);
     fprintf(fp, "  e_cblp: 0x%04X\n", DOSHeader->e_cblp);
@@ -513,7 +513,7 @@ void CrDumpDOSHeader(std::FILE *fp, LPVOID Data) {
 } // CrDumpDOSHeader
 
 void CrDumpFileHeader(std::FILE *fp, LPVOID Data) {
-    PIMAGE_FILE_HEADER FileHeader = (PIMAGE_FILE_HEADER)Data;
+    auto FileHeader = reinterpret_cast<IMAGE_FILE_HEADER *>(Data);
     fprintf(fp, "\n### IMAGE_FILE_HEADER ###\n");
     fprintf(fp, "  Machine: 0x%04X (%s)\n", FileHeader->Machine, CrGetMachineString(FileHeader->Machine));
     fprintf(fp, "  NumberOfSections: 0x%04X (%u)\n", FileHeader->NumberOfSections, FileHeader->NumberOfSections);
@@ -526,8 +526,8 @@ void CrDumpFileHeader(std::FILE *fp, LPVOID Data) {
 
 void CrDumpOptionalHeader32(std::FILE *fp, LPVOID Data, DWORD CheckSum) {
     DWORD i;
-    PIMAGE_OPTIONAL_HEADER32 Optional32 = (PIMAGE_OPTIONAL_HEADER32)Data;
-    PIMAGE_DATA_DIRECTORY DataDirectories, DataDirectory;
+    auto Optional32 = reinterpret_cast<IMAGE_OPTIONAL_HEADER32 *>(Data);
+    IMAGE_DATA_DIRECTORY *DataDirectories, *DataDirectory;
 
     fprintf(fp, "\n### IMAGE_OPTIONAL_HEADER32 ###\n");
     fprintf(fp, "  Magic: 0x%04X\n", Optional32->Magic);
@@ -573,8 +573,8 @@ void CrDumpOptionalHeader32(std::FILE *fp, LPVOID Data, DWORD CheckSum) {
 
 void CrDumpOptionalHeader64(std::FILE *fp, LPVOID Data, DWORD CheckSum) {
     DWORD i;
-    PIMAGE_OPTIONAL_HEADER64 Optional64 = (PIMAGE_OPTIONAL_HEADER64)Data;
-    PIMAGE_DATA_DIRECTORY DataDirectories, DataDirectory;
+    auto Optional64 = reinterpret_cast<IMAGE_OPTIONAL_HEADER64 *>(Data);
+    IMAGE_DATA_DIRECTORY *DataDirectories, *DataDirectory;
 
     fprintf(fp, "\n### IMAGE_OPTIONAL_HEADER64 ###\n");
     fprintf(fp, "  Magic: 0x%04X\n", Optional64->Magic);
@@ -625,12 +625,9 @@ void CrDumpOptionalHeader64(std::FILE *fp, LPVOID Data, DWORD CheckSum) {
 } // CrDumpOptionalHeader64
 
 void CrDumpSectionHeader(std::FILE *fp, LPVOID Data) {
-    PREAL_IMAGE_SECTION_HEADER SectionHeader;
-    DWORD i;
-
-    SectionHeader = (PREAL_IMAGE_SECTION_HEADER)Data;
+    auto SectionHeader = reinterpret_cast<REAL_IMAGE_SECTION_HEADER *>(Data);
     fprintf(fp, "  Name: ");
-    for (i = 0; i < 8 && SectionHeader->Name[i] != 0; ++i)
+    for (DWORD i = 0; i < 8 && SectionHeader->Name[i] != 0; ++i)
         fprintf(fp, "%c", SectionHeader->Name[i]);
     fprintf(fp, "\n");
 
@@ -752,7 +749,7 @@ void CR_Module::_DumpImportSymbols64(std::FILE *fp) {
 } // CR_Module::_DumpImportSymbols32
 
 void CR_Module::DumpImportSymbols(std::FILE *fp) {
-    PIMAGE_IMPORT_DESCRIPTOR descs = ImportDescriptors();
+    auto descs = ImportDescriptors();
     if (descs == NULL)
         return;
 
@@ -820,7 +817,7 @@ void CR_Module::_DumpExportSymbols64(std::FILE *fp) {
 } // CR_Module::_DumpExportSymbols64
 
 void CR_Module::DumpExportSymbols(std::FILE *fp) {
-    PIMAGE_EXPORT_DIRECTORY pDir = ExportDirectory();
+    auto pDir = ExportDirectory();
     if (pDir == NULL)
         return;
 

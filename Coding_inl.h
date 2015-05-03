@@ -51,7 +51,7 @@ inline void CR_Operand::SetMemExpr(const char *exp) {
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand accessors
 
-inline CR_String& CR_Operand::Text() {
+inline std::string& CR_Operand::Text() {
     return m_text;
 }
 
@@ -71,7 +71,7 @@ inline CR_Addr64& CR_Operand::Value64() {
     return m_value64;
 }
 
-inline CR_String& CR_Operand::MemExpr() {
+inline std::string& CR_Operand::MemExpr() {
     return m_memexpr;
 }
 
@@ -90,7 +90,7 @@ inline CR_TriBool& CR_Operand::IsFunction() {
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand const accessors
 
-inline const CR_String& CR_Operand::Text() const {
+inline const std::string& CR_Operand::Text() const {
     return m_text;
 }
 
@@ -110,7 +110,7 @@ inline const CR_Addr64& CR_Operand::Value64() const {
     return m_value64;
 }
 
-inline const CR_String& CR_Operand::MemExpr() const {
+inline const std::string& CR_Operand::MemExpr() const {
     return m_memexpr;
 }
 
@@ -154,11 +154,11 @@ inline CR_Addr32& CR_OpCode32::Addr() {
     return m_addr;
 }
 
-inline CR_String& CR_OpCode32::Name() {
+inline std::string& CR_OpCode32::Name() {
     return m_name;
 }
 
-inline CR_OperandSet& CR_OpCode32::Operands() {
+inline CR_Operands& CR_OpCode32::Operands() {
     return m_operands;
 }
 
@@ -193,11 +193,11 @@ inline const CR_Addr32& CR_OpCode32::Addr() const {
     return m_addr;
 }
 
-inline const CR_String& CR_OpCode32::Name() const {
+inline const std::string& CR_OpCode32::Name() const {
     return m_name;
 }
 
-inline const CR_OperandSet& CR_OpCode32::Operands() const {
+inline const CR_Operands& CR_OpCode32::Operands() const {
     return m_operands;
 }
 
@@ -249,11 +249,11 @@ inline CR_Addr64& CR_OpCode64::Addr() {
     return m_addr;
 }
 
-inline CR_String& CR_OpCode64::Name() {
+inline std::string& CR_OpCode64::Name() {
     return m_name;
 }
 
-inline CR_OperandSet& CR_OpCode64::Operands() {
+inline CR_Operands& CR_OpCode64::Operands() {
     return m_operands;
 }
 
@@ -288,11 +288,11 @@ inline const CR_Addr64& CR_OpCode64::Addr() const {
     return m_addr;
 }
 
-inline const CR_String& CR_OpCode64::Name() const {
+inline const std::string& CR_OpCode64::Name() const {
     return m_name;
 }
 
-inline const CR_OperandSet& CR_OpCode64::Operands() const {
+inline const CR_Operands& CR_OpCode64::Operands() const {
     return m_operands;
 }
 
@@ -323,7 +323,7 @@ inline CR_Addr32& CR_CodeFunc32::Addr() {
     return m_addr;
 }
 
-inline CR_String& CR_CodeFunc32::Name() {
+inline std::string& CR_CodeFunc32::Name() {
     return m_name;
 }
 
@@ -362,7 +362,7 @@ inline const CR_Addr32& CR_CodeFunc32::Addr() const {
     return m_addr;
 }
 
-inline const CR_String& CR_CodeFunc32::Name() const {
+inline const std::string& CR_CodeFunc32::Name() const {
     return m_name;
 }
 
@@ -401,7 +401,7 @@ inline CR_Addr64& CR_CodeFunc64::Addr() {
     return m_addr;
 }
 
-inline CR_String& CR_CodeFunc64::Name() {
+inline std::string& CR_CodeFunc64::Name() {
     return m_name;
 }
 
@@ -440,7 +440,7 @@ inline const CR_Addr64& CR_CodeFunc64::Addr() const {
     return m_addr;
 }
 
-inline const CR_String& CR_CodeFunc64::Name() const {
+inline const std::string& CR_CodeFunc64::Name() const {
     return m_name;
 }
 
@@ -609,6 +609,104 @@ inline const CR_Addr64Set& CR_DisAsmInfo64::Entrances() const {
 inline const std::map<CR_Addr64, CR_SharedCodeFunc64>&
 CR_DisAsmInfo64::MapAddrToCodeFunc() const {
     return m_mAddrToCodeFunc;
+}
+
+////////////////////////////////////////////////////////////////////////////
+// CR_DisAsmInfo32
+
+inline CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) {
+    auto it = MapAddrToCodeFunc().find(addr);
+    if (it != MapAddrToCodeFunc().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline const CR_CodeFunc32 *
+CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const {
+    auto it = MapAddrToCodeFunc().find(addr);
+    if (it != MapAddrToCodeFunc().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) {
+    auto it = MapAddrToOpCode().find(addr);
+    if (it != MapAddrToOpCode().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline const CR_OpCode32 *
+CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) const {
+    auto it = MapAddrToOpCode().find(addr);
+    if (it != MapAddrToOpCode().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline void CR_DisAsmInfo32::Copy(const CR_DisAsmInfo32& info) {
+    MapAddrToOpCode() = info.MapAddrToOpCode();
+    Entrances() = info.Entrances();
+    MapAddrToCodeFunc() = info.MapAddrToCodeFunc();
+}
+
+inline void CR_DisAsmInfo32::clear() {
+    MapAddrToOpCode().clear();
+    Entrances().clear();
+    MapAddrToCodeFunc().clear();
+}
+
+////////////////////////////////////////////////////////////////////////////
+// CR_DisAsmInfo64
+
+inline CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) {
+    auto it = MapAddrToCodeFunc().find(addr);
+    if (it != MapAddrToCodeFunc().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline const CR_CodeFunc64 *
+CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const {
+    auto it = MapAddrToCodeFunc().find(addr);
+    if (it != MapAddrToCodeFunc().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) {
+    auto it = MapAddrToOpCode().find(addr);
+    if (it != MapAddrToOpCode().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline const CR_OpCode64 *
+CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) const {
+    auto it = MapAddrToOpCode().find(addr);
+    if (it != MapAddrToOpCode().end())
+        return it->second.get();
+    else
+        return NULL;
+}
+
+inline void CR_DisAsmInfo64::Copy(const CR_DisAsmInfo64& info) {
+    MapAddrToOpCode() = info.MapAddrToOpCode();
+    Entrances() = info.Entrances();
+    m_mAddrToCodeFunc = info.m_mAddrToCodeFunc;
+}
+
+inline void CR_DisAsmInfo64::clear() {
+    MapAddrToOpCode().clear();
+    Entrances().clear();
+    m_mAddrToCodeFunc.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
