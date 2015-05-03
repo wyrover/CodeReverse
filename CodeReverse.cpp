@@ -63,17 +63,6 @@ void CR_TriBool::Equal(const CR_TriBool& tb1, const CR_TriBool& tb2) {
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_PREFIX, CR_SUFFIX
-
-#define CR_PREFIX "Wonders8.1\\"
-
-#ifdef _WIN64
-    #define CR_SUFFIX "-cl-64-w.dat"
-#else
-    #define CR_SUFFIX "-cl-32-w.dat"
-#endif
-
-////////////////////////////////////////////////////////////////////////////
 
 void CrShowHelp(void) {
 #ifdef _WIN64
@@ -85,6 +74,7 @@ void CrShowHelp(void) {
 #endif
     fprintf(stderr, "\n");
     fprintf(stderr, "Options:\n");
+    fprintf(stderr, " -a    ANSI mode (not Unicode)\n");
     fprintf(stderr, " -h    Dump headers\n");
     fprintf(stderr, " -i    Dump import table\n");
     fprintf(stderr, " -e    Dump export table\n");
@@ -99,8 +89,9 @@ void CrShowHelp(void) {
     fprintf(stderr, " -32   32-bit mode (default)\n");
     fprintf(stderr, " -64   64-bit mode\n");
 #endif
-    fprintf(stderr, " --prefix PREFIX   Wonders API prefix (default: " CR_PREFIX ")\n");
-    fprintf(stderr, " --suffix SUFFIX   Wonders API suffix (default: " CR_SUFFIX ")\n");
+    fprintf(stderr, " --prefix PREFIX   Wonders API prefix\n");
+    fprintf(stderr, " --suffix SUFFIX   Wonders API suffix\n");
+    fprintf(stderr, " --wonders VER     Wonders API version (98/Me/2000/XP/Vista/7/8.1)\n");
 }
 
 void CrDumpCommandLine(int argc, char **argv) {
@@ -124,6 +115,8 @@ void CrDumpCommandLine(int argc, char **argv) {
     fflush(stdout);
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 /* hacked by katahiromz */
 extern "C"
 int katahiromz_snprintf(char *buffer, int buf_size, const char *format, ...) {
@@ -132,6 +125,16 @@ int katahiromz_snprintf(char *buffer, int buf_size, const char *format, ...) {
     int n = std::vsnprintf(buffer, buf_size, format, va);
     va_end(va);
     return n;
+}
+
+std::string CrGetExePath(void) {
+    CHAR szPath[MAX_PATH];
+    ::GetModuleFileNameA(NULL, szPath, MAX_PATH);
+    char *p = strrchr(szPath, '\\');
+    if (p) {
+        *p = 0;
+    }
+    return std::string(szPath);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -148,19 +151,20 @@ int main(int argc, char **argv) {
     puts(cr_logo);
 
     if (argc <= 1 || strcmp(argv[1], "/?") == 0 ||
-        _stricmp(argv[1], "--help") == 0)
+        lstrcmpiA(argv[1], "--help") == 0)
     {
         CrShowHelp();
         return cr_exit_ok;
     }
 
-    if (_stricmp(argv[1], "--version") == 0) {
+    if (lstrcmpiA(argv[1], "--version") == 0) {
         return cr_exit_ok;
     }
 
     CrDumpCommandLine(argc, argv);
 
     enum MODE_INDEXES {
+        MODE_ANSI,
         MODE_DUMP_HEADERS,
         MODE_DUMP_IMPORT,
         MODE_DUMP_EXPORT,
@@ -170,11 +174,11 @@ int main(int argc, char **argv) {
         MODE_64BIT
     };
 
-    std::string prefix = CR_PREFIX;
-    std::string suffix = CR_SUFFIX;
+    std::string prefix, suffix, wonders_ver = "8.1";
 
     bool modes[8];
     memset(modes, 0, sizeof(modes));
+    modes[MODE_ANSI] = false;
     #ifdef _WIN64
         modes[MODE_64BIT] = true;
     #else
@@ -185,15 +189,32 @@ int main(int argc, char **argv) {
     bool defaulted = true;
     for (int i = 1; i < argc; ++i) {
         arg = argv[i];
-        if (strcmp(arg, "--prefix") == 0) {
+        if (lstrcmpiA(arg, "--prefix") == 0) {
             ++i;
             prefix = argv[i];
-        } else if (strcmp(arg, "--suffix") == 0) {
+        } else if (lstrcmpiA(arg, "--suffix") == 0) {
             ++i;
             suffix = argv[i];
+        } else if (lstrcmpiA(arg, "--wonders") == 0) {
+            ++i;
+            if (lstrcmpiA(argv[i], "98") == 0 ||
+                lstrcmpiA(argv[i], "Me") == 0 ||
+                lstrcmpiA(argv[i], "2000") == 0 ||
+                lstrcmpiA(argv[i], "XP") == 0 ||
+                lstrcmpiA(argv[i], "Vista") == 0 ||
+                lstrcmpiA(argv[i], "7") == 0 ||
+                lstrcmpiA(argv[i], "8.1") == 0)
+            {
+                wonders_ver = argv[i];
+            } else {
+                fprintf(stderr, "ERROR: Wonders API version must be 98, Me, 2000, XP, Vista, 7 or 8.1.\n");
+                return cr_exit_invalid_option;
+            }
         } else if (*arg == '-') {
             char ch = arg[1];
-            if (ch == 'h' || ch == 'H') {
+            if (ch == 'a' || ch == 'A') {
+                modes[MODE_ANSI] = true;
+            } else if (ch == 'h' || ch == 'H') {
                 modes[MODE_DUMP_HEADERS] = true;
                 defaulted = false;
             } else if (ch == 'i' || ch == 'I') {
@@ -227,6 +248,36 @@ int main(int argc, char **argv) {
     if (defaulted) {
         for (int i = 0; i <= MODE_DUMP_DISASM; ++i) {
             modes[i] = true;
+        }
+    }
+
+    if (prefix.empty()) {
+        prefix = CrGetExePath();
+        #ifdef _DEBUG
+            #ifdef _WIN64
+                prefix += "\\..\\..";
+            #else
+                prefix += "\\..";
+            #endif
+        #endif
+        prefix += "\\Wonders";
+        prefix += wonders_ver;
+        prefix += "\\";
+    }
+
+    if (suffix.empty()) {
+        if (modes[MODE_ANSI]) {
+            if (modes[MODE_64BIT]) {
+                suffix = "-cl-64-a.dat";
+            } else {
+                suffix = "-cl-32-a.dat";
+            }
+        } else {
+            if (modes[MODE_64BIT]) {
+                suffix = "-cl-64-w.dat";
+            } else {
+                suffix = "-cl-32-w.dat";
+            }
         }
     }
 
@@ -280,7 +331,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Loading type info...\n");
         if (!namescope.LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: Wonders API is required.\n");
-            fprintf(stderr, "Download it from http://katahiromz.esy.es/wonders/\n");
+            fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
         } else {
             fprintf(stderr, "Loaded.\n");
         }
@@ -301,7 +352,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Loading type info...\n");
         if (!namescope.LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: Wonders API is required.\n");
-            fprintf(stderr, "Download it from http://katahiromz.esy.es/wonders/\n");
+            fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
         } else {
             fprintf(stderr, "Loaded.\n");
         }
