@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // asmpat64.dat
-// Copyright (C) 2013-2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
@@ -12,7 +12,7 @@ pattern {
     updated al;
 } code {
 	xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     ax := (ah << 8) | al;
     eax := (eax & 0xFFFF0000) | ax;
     rax := (rax & 0xFFFFFFFF00000000) | eax;
@@ -45,7 +45,7 @@ pattern {
     updated dl;
 } code {
 	xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     dx := (dh << 8) | dl;
     edx := (edx & 0xFFFF0000) | dx;
     rdx := (rdx & 0xFFFFFFFF00000000) | edx;
@@ -157,7 +157,7 @@ pattern {
     updated ah;
 } code {
 	xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     ax := (ah << 8) | al;
     eax := (eax & 0xFFFF0000) | ax;
     rax := (rax & 0xFFFFFFFF00000000) | eax;
@@ -190,7 +190,7 @@ pattern {
     updated dh;
 } code {
 	xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     dx := (dh << 8) | dl;
     edx := (edx & 0xFFFF0000) | dx;
     rdx := (rdx & 0xFFFFFFFF00000000) | edx;
@@ -207,7 +207,7 @@ pattern {
     updated ax;
 } code {
 	xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     al := ax & 0xFF;
     ah := (ax >> 8) & 0xFF;
     eax := (eax & 0xFFFF0000) | ax;
@@ -243,7 +243,7 @@ pattern {
     updated dx;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     dl := dx & 0xFF;
     dh := (dx >> 8) & 0xFF;
     edx := (edx & 0xFFFF0000) | dx;
@@ -357,9 +357,9 @@ pattern {
     updated eax;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     al := eax & 0xFF;
-    ah := (eax >>> 8) & 0xFF;
+    ah := (eax >> 8) & 0xFF;
     ax := eax & 0xFFFF;
     rax := (rax & 0xFFFFFFFF00000000) | eax;
     dx:ax := (dx << 16) | ax;
@@ -375,7 +375,7 @@ pattern {
     updated ebx;
 } code {
     bl := ebx & 0xFF;
-    bh := (ebx >>> 8) & 0xFF;
+    bh := (ebx >> 8) & 0xFF;
     bx := ebx & 0xFFFF;
     rbx := (rbx & 0xFFFFFFFF00000000) | ebx;
 }
@@ -384,7 +384,7 @@ pattern {
     updated ecx;
 } code {
     cl := ecx & 0xFF;
-    ch := (ecx >>> 8) & 0xFF;
+    ch := (ecx >> 8) & 0xFF;
     cx := ecx & 0xFFFF;
     rcx := (rcx & 0xFFFFFFFF00000000) | ecx;
 }
@@ -393,9 +393,9 @@ pattern {
     updated edx;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     dl := edx & 0xFF;
-    dh := (edx >>> 8) & 0xFF;
+    dh := (edx >> 8) & 0xFF;
     dx := edx & 0xFFFF;
     edx := (edx & 0xFFFF0000) | dx;
     rdx := (rdx & 0xFFFFFFFF00000000) | edx;
@@ -508,7 +508,7 @@ pattern {
     updated rax;
 } code {
     al := rax & 0xFF;
-    ah := (rax >>> 8) & 0xFF;
+    ah := (rax >> 8) & 0xFF;
     ax := rax & 0xFFFF;
     eax := rax & 0xFFFFFFFF;
 }
@@ -517,7 +517,7 @@ pattern {
     updated rbx;
 } code {
     bl := rbx & 0xFF;
-    bh := (rbx >>> 8) & 0xFF;
+    bh := (rbx >> 8) & 0xFF;
     bx := rbx & 0xFFFF;
     ebx := rbx & 0xFFFFFFFF;
 }
@@ -526,7 +526,7 @@ pattern {
     updated rcx;
 } code {
     cl := rcx & 0xFF;
-    ch := (rcx >>> 8) & 0xFF;
+    ch := (rcx >> 8) & 0xFF;
     cx := rcx & 0xFFFF;
     ecx := rcx & 0xFFFFFFFF;
 }
@@ -535,7 +535,7 @@ pattern {
     updated rdx;
 } code {
     dl := rdx & 0xFF;
-    dh := (rdx >>> 8) & 0xFF;
+    dh := (rdx >> 8) & 0xFF;
     dx := rdx & 0xFFFF;
     edx := rdx & 0xFFFFFFFF;
 }
@@ -641,7 +641,7 @@ pattern {
 } code {
     xsigned long $n;
     xsigned long long $m;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     ax := (ah << 8) | al;
     eax := (eax & 0xFFFF0000) | ax;
     rax := (rax & 0xFFFFFFFF00000000) | eax;
@@ -675,7 +675,7 @@ pattern {
     updated dl, dh;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     dx := (dh << 8) | dl;
     edx := (edx & 0xFFFF0000) | dx;
     rdx := (rdx & 0xFFFFFFFF00000000) | edx;
@@ -692,7 +692,7 @@ pattern {
     updated ax, dx;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     al := ax & 0xFF;
     ah := (ax >> 8) & 0xFF;
     eax := (eax & 0xFFFF0000) | ax;
@@ -714,7 +714,7 @@ pattern {
     updated dx:ax;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     al := dx:ax & 0xFF;
     ah := (dx:ax >> 8) & 0xFF;
     ax := dx:ax & 0xFFFF;
@@ -737,7 +737,7 @@ pattern {
     updated eax, edx;
 } code {
     xsigned long long $n;
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     al := eax & 0xFF;
     ah := (eax >> 8) & 0xFF;
     ax := eax & 0xFFFF;
@@ -758,7 +758,7 @@ pattern {
 pattern {
     updated edx:eax;
 } code {
-    xsigned int128_t $k;
+    xsigned __int128 $k;
     al := ax & 0xFF;
     ah := (ax >> 8) & 0xFF;
     eax := edx:eax & 0xFFFFFFFF;
@@ -3229,7 +3229,7 @@ pattern {
     div $1;
     assume sizeof($1) == 8;
 } code {
-    assume rdx:rax as unsigned int128_t;
+    assume rdx:rax as unsigned __int128;
     rax := rdx:rax / $1;
     rdx := rdx:rax % $1;
     updated rax, rdx;
@@ -3297,7 +3297,7 @@ pattern {
     idiv $1;
     assume sizeof($1) == 8;
 } code {
-    assume rdx:rax as int128_t;
+    assume rdx:rax as __int128;
     rax := rdx:rax / $1;
     rdx := rdx:rax % $1;
     assume rax as long long;
@@ -3371,7 +3371,7 @@ pattern {
 } code {
     long long $n;
     assume rax as long long;
-    assume rdx:rax as int128_t;
+    assume rdx:rax as __int128;
     $n := rax;
     rdx:rax := rax * $1;
     CF := $1 != 0 && rdx:rax / $1 != $n;
@@ -4177,14 +4177,15 @@ pattern {
     unsigned long $d1;
     unsigned long $d2;
     unsigned long long $q;
+    assume $2 as unsigned long long;
     $b1 := $2 & 0xFF;
-    $b2 := ($2 >>> 8) & 0xFF;
-    $b3 := ($2 >>> 16) & 0xFF;
-    $b4 := ($2 >>> 24) & 0xFF;
-    $b5 := ($2 >>> 32) & 0xFF;
-    $b6 := ($2 >>> 40) & 0xFF;
-    $b7 := ($2 >>> 48) & 0xFF;
-    $b8 := ($2 >>> 56) & 0xFF;
+    $b2 := ($2 >> 8) & 0xFF;
+    $b3 := ($2 >> 16) & 0xFF;
+    $b4 := ($2 >> 24) & 0xFF;
+    $b5 := ($2 >> 32) & 0xFF;
+    $b6 := ($2 >> 40) & 0xFF;
+    $b7 := ($2 >> 48) & 0xFF;
+    $b8 := ($2 >> 56) & 0xFF;
     $w1 := ($b1 << 8) | $b2;
     $w2 := ($b3 << 8) | $b4;
     $w3 := ($b5 << 8) | $b6;
@@ -4208,10 +4209,11 @@ pattern {
     unsigned char $b4;
     unsigned short $w1;
     unsigned short $w2;
+    assume $2 as unsigned long;
     $b1 := $2 & 0xFF;
-    $b2 := ($2 >>> 8) & 0xFF;
-    $b3 := ($2 >>> 16) & 0xFF;
-    $b4 := ($2 >>> 24) & 0xFF;
+    $b2 := ($2 >> 8) & 0xFF;
+    $b3 := ($2 >> 16) & 0xFF;
+    $b4 := ($2 >> 24) & 0xFF;
     $w1 := ($b1 << 8) | $b2;
     $w2 := ($b3 << 8) | $b4;
     $1 := ($w1 << 16) | $w2;
@@ -4225,8 +4227,9 @@ pattern {
     unsigned char $b1;
     unsigned char $b2;
     unsigned short $w1;
+    assume $2 as short;
     $b1 := $2 & 0xFF;
-    $b2 := ($2 >>> 8) & 0xFF;
+    $b2 := ($2 >> 8) & 0xFF;
     $1 := ($b1 << 8) | $b2;
     updated $1;
 }
@@ -4564,13 +4567,13 @@ pattern {
     mul $1;
     assume sizeof($1) == 8;
 } code {
-    unsigned int128_t $n;
+    unsigned __int128 $n;
     $n := rax;
     rdx:rax := $n * $1;
     OF := rdx:rax != rax;
     CF := rdx:rax != rax;
     updated rdx:rax;
-    assume rdx:rax as unsigned int128_t;
+    assume rdx:rax as unsigned __int128;
     dead SF;
     dead ZF;
     dead AF;

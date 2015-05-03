@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // stdafx.h
-// Copyright (C) 2013-2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
@@ -20,13 +20,24 @@
 #include <ctime>            // for std::time_t, std::asctime, std::gmtime
 
 #include <vector>           // for std::vector
-#include <string>           // for std::string
+#include <string>           // for std::string, std::wstring
+
+#ifndef tstring
+    #ifdef _UNICODE
+        #define tstring std::wstring
+    #else
+        #define tstring std::string
+    #endif
+#endif
+
 #include <set>              // for std::set
 #include <map>              // for std::map
 #include <unordered_map>    // for std::unordered_map
-#include <stack>            // for std::stack
-#include <deque>            // for std::deque
 #include <algorithm>        // for std::sort, std::unique
+#include <iostream>         // for std::cout, std::cerr
+#include <iomanip>          // for std::setfill, std::setw
+#include <fstream>          // for std::ifstream
+#include <sstream>          // for std::stringstream
 
 #include <memory>
 using std::shared_ptr;
@@ -34,12 +45,16 @@ using std::dynamic_pointer_cast;
 using std::static_pointer_cast;
 using std::make_shared;
 
+#define EXTENDS_MOBJECT
+
 #include "Location.h"       // CR_Location
 #include "CodeReverse.h"
 #include "TypeSystem.h"
 #include "Coding.h"
 #include "Module.h"
-#include "mzc2mini.h"
+
+#include "TextToText.hpp"
+#include "StringAssortNew.h"
 
 #if !defined(NO_CHECKSUM) && defined(_MSC_VER)
     #pragma comment(lib, "imagehlp.lib")

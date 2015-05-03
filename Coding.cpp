@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // Coding.cpp
-// Copyright (C) 2013-2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
@@ -10,12 +10,9 @@
 ////////////////////////////////////////////////////////////////////////////
 // x86 flags
 
-CR_FlagType CrFlagGetType(const char *name, int bits)
-{
-    if (name[0] != '\0' && name[1] == 'F' && name[2] == '\0')
-    {
-        switch (name[0])
-        {
+CR_FlagType CrFlagGetType(const char *name, int bits) {
+    if (name[0] != '\0' && name[1] == 'F' && name[2] == '\0') {
+        switch (name[0]) {
         case 'C': return cr_x86_FLAG_CF;
         case 'P': return cr_x86_FLAG_PF;
         case 'A': return cr_x86_FLAG_AF;
@@ -30,10 +27,8 @@ CR_FlagType CrFlagGetType(const char *name, int bits)
     return cr_x86_FLAG_NONE;
 }
 
-const char *CrFlagGetName(CR_FlagType type, int bits)
-{
-    switch (type)
-    {
+const char *CrFlagGetName(CR_FlagType type, int bits) {
+    switch (type) {
     case cr_x86_FLAG_CF: return "CF";
     case cr_x86_FLAG_PF: return "PF";
     case cr_x86_FLAG_AF: return "AF";
@@ -51,15 +46,13 @@ const char *CrFlagGetName(CR_FlagType type, int bits)
 ////////////////////////////////////////////////////////////////////////////
 // x86 registers
 
-struct CR_X86RegInfo
-{
+struct CR_X86RegInfo {
     const char *name;
     CR_RegType  type;
     int         bits;
 };
 
-const CR_X86RegInfo cr_reg_entries[] =
-{
+static const CR_X86RegInfo cr_reg_entries[] = {
     {"cr0", cr_x86_CRREG, 0},
     {"cr1", cr_x86_CRREG, 0},
     {"cr2", cr_x86_CRREG, 0},
@@ -214,12 +207,10 @@ const CR_X86RegInfo cr_reg_entries[] =
     {"SFeqOF", cr_x86_FLAG, 0}  // extension (means SF == OF)
 };
 
-CR_RegType CrRegGetType(const char *name, int bits)
-{
+CR_RegType CrRegGetType(const char *name, int bits) {
     const std::size_t size =
         sizeof(cr_reg_entries) / sizeof(cr_reg_entries[0]);
-    for (std::size_t i = 0; i < size; ++i)
-    {
+    for (std::size_t i = 0; i < size; ++i) {
         if (bits >= cr_reg_entries[i].bits &&
             _stricmp(cr_reg_entries[i].name, name) == 0)
         {
@@ -229,10 +220,8 @@ CR_RegType CrRegGetType(const char *name, int bits)
     return cr_x86_REGNONE;
 }
 
-DWORD CrRegGetSize(const char *name, int bits)
-{
-    switch (CrRegGetType(name, bits))
-    {
+DWORD CrRegGetSize(const char *name, int bits) {
+    switch (CrRegGetType(name, bits)) {
     case cr_x86_CRREG:
         if (bits == 64)
             return 64 / 8;
@@ -259,13 +248,11 @@ DWORD CrRegGetSize(const char *name, int bits)
     return 0;
 }
 
-BOOL CrRegInReg(const char *reg1, const char *reg2)
-{
+BOOL CrRegInReg(const char *reg1, const char *reg2) {
     if (std::strcmp(reg1, reg2) == 0)
         return TRUE;
 
-    static const char *s[][4] =
-    {
+    static const char *s[][4] = {
         {"al", "ax", "eax", "rax"},
         {"bl", "bx", "ebx", "rbx"},
         {"cl", "cx", "ecx", "rcx"},
@@ -296,10 +283,8 @@ BOOL CrRegInReg(const char *reg1, const char *reg2)
     };
 
     const std::size_t size = sizeof(s) / sizeof(s[0]);
-    for (std::size_t i = 0; i < size; ++i)
-    {
-        if (std::strcmp(reg1, s[i][0]) == 0)
-        {
+    for (std::size_t i = 0; i < size; ++i) {
+        if (std::strcmp(reg1, s[i][0]) == 0) {
             if ((s[i][1] && std::strcmp(reg2, s[i][1]) == 0) ||
                 (s[i][2] && std::strcmp(reg2, s[i][2]) == 0) ||
                 (s[i][3] && std::strcmp(reg2, s[i][3]) == 0))
@@ -307,16 +292,14 @@ BOOL CrRegInReg(const char *reg1, const char *reg2)
                 return TRUE;
             }
         }
-        if (std::strcmp(reg1, s[i][1]) == 0)
-        {
+        if (std::strcmp(reg1, s[i][1]) == 0) {
             if ((s[i][2] && std::strcmp(reg2, s[i][2]) == 0) ||
                 (s[i][3] && std::strcmp(reg2, s[i][3]) == 0))
             {
                 return TRUE;
             }
         }
-        if (std::strcmp(reg1, s[i][2]) == 0)
-        {
+        if (std::strcmp(reg1, s[i][2]) == 0) {
             if (s[i][3] && std::strcmp(reg2, s[i][3]) == 0)
                 return TRUE;
         }
@@ -325,16 +308,14 @@ BOOL CrRegInReg(const char *reg1, const char *reg2)
     return FALSE;
 }
 
-BOOL CrRegOverlapsReg(const char *reg1, const char *reg2)
-{
+BOOL CrRegOverlapsReg(const char *reg1, const char *reg2) {
     return CrRegInReg(reg1, reg2) || CrRegInReg(reg2, reg1);
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand
 
-void CR_Operand::Copy(const CR_Operand& opr)
-{
+void CR_Operand::Copy(const CR_Operand& opr) {
     Text() = opr.Text();
     OperandType() = opr.OperandType();
     Size() = opr.Size();
@@ -345,8 +326,7 @@ void CR_Operand::Copy(const CR_Operand& opr)
     IsFunction() = opr.IsFunction();
 }
 
-void CR_Operand::clear()
-{
+void CR_Operand::clear() {
     Text().clear();
     OperandType() = OT_NONE;
     Size() = 0;
@@ -357,23 +337,20 @@ void CR_Operand::clear()
     IsFunction().clear();
 }
 
-void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed)
-{
+void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed) {
     CHAR buf[64];
 
-    if (is_signed)
+    if (is_signed) {
         sprintf(buf, "%ld", (LONG)val);
-    else
-    {
-        if (HIWORD(val) == 0)
-        {
+    } else {
+        if (HIWORD(val) == 0) {
             if (HIBYTE(LOWORD(LOLONG(val))) == 0)
                 sprintf(buf, "0x%02X", (BYTE)(val));
             else
                 sprintf(buf, "0x%04X", LOWORD(val));
-        }
-        else
+        } else {
             sprintf(buf, "0x%08lX", val);
+        }
     }
 
     Text() = buf;
@@ -381,34 +358,30 @@ void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed)
     Value64() = val;
 }
 
-void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed)
-{
+void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed) {
     CHAR buf[64];
 
-    if (is_signed)
+    if (is_signed) {
         sprintf(buf, "%ld", (LONG)(LONGLONG)val);
-    else if (HILONG(val) == 0)
-    {
-        if (HIWORD(LOLONG(val)) == 0)
-        {
+    } else if (HILONG(val) == 0) {
+        if (HIWORD(LOLONG(val)) == 0) {
             if (HIBYTE(LOWORD(LOLONG(val))) == 0)
                 sprintf(buf, "0x%02X", (BYTE)(val));
             else
                 sprintf(buf, "0x%04X", LOWORD(LOLONG(val)));
-        }
-        else
+        } else {
             sprintf(buf, "0x%08lX", LOLONG(val));
-    }
-    else
+        }
+    } else {
         sprintf(buf, "0x%08lX%08lX", HILONG(val), LOLONG(val));
+    }
 
     Text() = buf;
     OperandType() = OT_IMM;
     Value64() = val;
 }
 
-bool CR_Operand::operator==(const CR_Operand& opr) const
-{
+bool CR_Operand::operator==(const CR_Operand& opr) const {
     return
         Text() == opr.Text() &&
         OperandType() == opr.OperandType() &&
@@ -417,8 +390,7 @@ bool CR_Operand::operator==(const CR_Operand& opr) const
         MemExpr() == opr.MemExpr();
 }
 
-bool CR_Operand::operator!=(const CR_Operand& opr) const
-{
+bool CR_Operand::operator!=(const CR_Operand& opr) const {
     return
         Text() != opr.Text() ||
         OperandType() != opr.OperandType() ||
@@ -430,62 +402,43 @@ bool CR_Operand::operator!=(const CR_Operand& opr) const
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand::ParseText
 
-void CR_Operand::ParseText(int bits)
-{
+void CR_Operand::ParseText(int bits) {
     char buf[64];
     strcpy(buf, Text().c_str());
     char *p = buf;
 
     DWORD size = CrRegGetSize(p, bits);
-    if (size != 0)
-    {
+    if (size != 0) {
         OperandType() = OT_REG;
         Size() = size;
         return;
     }
 
-    if (strncmp(p, "byte ", 5) == 0)
-    {
+    if (strncmp(p, "byte ", 5) == 0) {
         p += 5;
         Size() = 1;
-    }
-    else if (strncmp(p, "word ", 5) == 0)
-    {
+    } else if (strncmp(p, "word ", 5) == 0) {
         p += 5;
         Size() = 2;
-    }
-    else if (strncmp(p, "dword ", 6) == 0)
-    {
+    } else if (strncmp(p, "dword ", 6) == 0) {
         p += 6;
         Size() = 4;
-    }
-    else if (strncmp(p, "qword ", 6) == 0)
-    {
+    } else if (strncmp(p, "qword ", 6) == 0) {
         p += 6;
         Size() = 8;
-    }
-    else if (strncmp(p, "tword ", 6) == 0)
-    {
+    } else if (strncmp(p, "tword ", 6) == 0) {
         p += 6;
         Size() = 10;
-    }
-    else if (strncmp(p, "oword ", 6) == 0)
-    {
+    } else if (strncmp(p, "oword ", 6) == 0) {
         p += 6;
         Size() = 16;
-    }
-    else if (strncmp(p, "yword ", 6) == 0)
-    {
+    } else if (strncmp(p, "yword ", 6) == 0) {
         p += 6;
         Size() = 32;
-    }
-    else if (strncmp(p, "short ", 6) == 0)
-    {
+    } else if (strncmp(p, "short ", 6) == 0) {
         p += 6;
         Size() = 1;
-    }
-    else if (strncmp(p, "near ", 5) == 0)
-    {
+    } else if (strncmp(p, "near ", 5) == 0) {
         p += 5;
         Size() = 2;
     }
@@ -496,58 +449,43 @@ void CR_Operand::ParseText(int bits)
     else if (strncmp(p, "far ", 4) == 0)
         p += 4;
 
-    if (p[0] == '+' || p[0] == '-')
-    {
+    if (p[0] == '+' || p[0] == '-') {
         char *endptr;
         long long value = _strtoi64(p, &endptr, 16);
         SetImm64(value, true);
-    }
-    else if (p[0] == '0' && p[1] == 'x')
-    {
+    } else if (p[0] == '0' && p[1] == 'x') {
         char *endptr;
         unsigned long long value = _strtoui64(p, &endptr, 16);
         Value64() = value;
         SetImm64(value, false);
-    }
-    else if (p[0] == '[')
-    {
+    } else if (p[0] == '[') {
         p++;
         *strchr(p, ']') = '\0';
 
-        if (strncmp(p, "word ", 5) == 0)
-        {
+        if (strncmp(p, "word ", 5) == 0) {
             p += 5;
-        }
-        else if (strncmp(p, "dword ", 6) == 0)
-        {
+        } else if (strncmp(p, "dword ", 6) == 0) {
             p += 6;
-        }
-        else if (strncmp(p, "qword ", 6) == 0)
-        {
+        } else if (strncmp(p, "qword ", 6) == 0) {
             p += 6;
         }
 
-        if (strncmp(p, "rel ", 4) == 0)
-        {
+        if (strncmp(p, "rel ", 4) == 0) {
             p += 4;
         }
 
         DWORD size;
-        if ((size = CrRegGetSize(p, bits)) != 0)
-        {
+        if ((size = CrRegGetSize(p, bits)) != 0) {
             OperandType() = OT_MEMREG;
             return;
         }
 
         CR_Addr64 addr;
         char *endptr;
-        if (isdigit(*p))
-        {
+        if (isdigit(*p)) {
             addr = _strtoui64(p, &endptr, 16);
             SetMemImm(addr);
-        }
-        else
-        {
+        } else {
             SetMemExpr(p);
         }
     }
@@ -556,8 +494,7 @@ void CR_Operand::ParseText(int bits)
 ////////////////////////////////////////////////////////////////////////////
 // cr_rep_insns, cr_ccentries
 
-const char * const cr_rep_insns[] =
-{
+static const char * const cr_rep_insns[] = {
     "rep insb", "rep insw", "rep insd",
     "rep movsb", "rep movsw", "rep movsd", "rep movsq",
     "rep outsb", "rep outsw", "rep outsd",
@@ -569,14 +506,12 @@ const char * const cr_rep_insns[] =
     "repne scasb", "repne scasw", "repne scasd", "repne scasq",
 };
 
-struct CR_CCEntry
-{
+struct CR_CCEntry {
     const char *name;
     CR_CondCode cc;
 };
 
-const CR_CCEntry cr_ccentries[] =
-{
+static const CR_CCEntry cr_ccentries[] = {
     { "call", C_NONE },
 
     { "loop", C_NONE },
@@ -620,8 +555,7 @@ const CR_CCEntry cr_ccentries[] =
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode32
 
-void CR_OpCode32::Copy(const CR_OpCode32& oc)
-{
+void CR_OpCode32::Copy(const CR_OpCode32& oc) {
     FuncAddrs() = oc.FuncAddrs();
     Addr() = oc.Addr();
     Name() = oc.Name();
@@ -631,8 +565,7 @@ void CR_OpCode32::Copy(const CR_OpCode32& oc)
     CondCode() = oc.CondCode();
 }
 
-void CR_OpCode32::clear()
-{
+void CR_OpCode32::clear() {
     FuncAddrs().clear();
     Addr() = 0;
     Name().clear();
@@ -642,8 +575,7 @@ void CR_OpCode32::clear()
     CondCode() = C_NONE;
 }
 
-void CR_OpCode32::ParseText(const char *text)
-{
+void CR_OpCode32::ParseText(const char *text) {
     char buf[128];
     strcpy(buf, text);
 
@@ -667,13 +599,11 @@ void CR_OpCode32::ParseText(const char *text)
         q += 4;
     }
 
-    if (q[0] == 'r' && q[1] == 'e')
-    {
-        const std::size_t size = sizeof(cr_rep_insns) / sizeof(cr_rep_insns[0]);
-        for (std::size_t i = 0; i < size; ++i)
-        {
-            if (_stricmp(q, cr_rep_insns[i]) == 0)
-            {
+    if (q[0] == 'r' && q[1] == 'e') {
+        const std::size_t size =
+            sizeof(cr_rep_insns) / sizeof(cr_rep_insns[0]);
+        for (std::size_t i = 0; i < size; ++i) {
+            if (_stricmp(q, cr_rep_insns[i]) == 0) {
                 Name() = q;
                 char *p = q + strlen(q) - 1;
 
@@ -704,11 +634,9 @@ void CR_OpCode32::ParseText(const char *text)
     if (strncmp(q, "repne ", 6) == 0)
         q += 6;
 
-    if (strncmp(q, "ret", 3) == 0 || strncmp(q, "iret", 4) == 0)
-    {
+    if (strncmp(q, "ret", 3) == 0 || strncmp(q, "iret", 4) == 0) {
         char *p = strchr(q, ' ');
-        if (p)
-        {
+        if (p) {
             *p = '\0';
             CR_Operand opr;
             opr.Text() = p + 1;
@@ -721,31 +649,26 @@ void CR_OpCode32::ParseText(const char *text)
         return;
     }
 
-    if (q[0] == 'c' || q[0] == 'l' || q[0] == 'j')
-    {
-        const std::size_t size = sizeof(cr_ccentries) / sizeof(cr_ccentries[0]);
-        for (std::size_t i = 0; i < size; ++i)
-        {
-            if (strncmp(q, cr_ccentries[i].name, strlen(cr_ccentries[i].name)) == 0)
-            {
+    if (q[0] == 'c' || q[0] == 'l' || q[0] == 'j') {
+        const std::size_t size =
+            sizeof(cr_ccentries) / sizeof(cr_ccentries[0]);
+        for (std::size_t i = 0; i < size; ++i) {
+            if (strncmp(q, cr_ccentries[i].name, strlen(cr_ccentries[i].name)) == 0) {
                 char *p = strchr(q, ' ');
                 *p = '\0';
                 Name() = cr_ccentries[i].name;
                 CondCode() = cr_ccentries[i].cc;
 
-                if (strncmp(cr_ccentries[i].name, "loop", 4) == 0)
-                {
+                if (strncmp(cr_ccentries[i].name, "loop", 4) == 0) {
                     OpCodeType() = OCT_LOOP;
-                }
-                else if (CondCode() == C_NONE)
-                {
+                } else if (CondCode() == C_NONE) {
                     if (_stricmp(cr_ccentries[i].name, "call") == 0)
                         OpCodeType() = OCT_CALL;
                     else
                         OpCodeType() = OCT_JMP;
-                }
-                else
+                } else {
                     OpCodeType() = OCT_JCC;
+                }
 
                 p++;
                 CR_Operand opr;
@@ -759,8 +682,7 @@ void CR_OpCode32::ParseText(const char *text)
     }
 
     char *p = strchr(q, ' ');
-    if (p == NULL)
-    {
+    if (p == NULL) {
         Name() = q;
         return;
     }
@@ -778,19 +700,16 @@ void CR_OpCode32::ParseText(const char *text)
 
     Operands().clear();
     p = strtok(p + 1, ",");
-    if (p)
-    {
+    if (p) {
         CR_Operand opr;
         opr.Text() = p;
         Operands().insert(opr);
         p = strtok(NULL, ",");
-        if (p)
-        {
+        if (p) {
             opr.Text() = p;
             Operands().insert(opr);
             p = strtok(NULL, ",");
-            if (p)
-            {
+            if (p) {
                 opr.Text() = p;
                 Operands().insert(opr);
                 Operand(2)->ParseText(32);
@@ -804,8 +723,7 @@ void CR_OpCode32::ParseText(const char *text)
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64
 
-void CR_OpCode64::Copy(const CR_OpCode64& oc)
-{
+void CR_OpCode64::Copy(const CR_OpCode64& oc) {
     FuncAddrs() = oc.FuncAddrs();
     Addr() = oc.Addr();
     Name() = oc.Name();
@@ -815,8 +733,7 @@ void CR_OpCode64::Copy(const CR_OpCode64& oc)
     CondCode() = oc.CondCode();
 }
 
-void CR_OpCode64::clear()
-{
+void CR_OpCode64::clear() {
     FuncAddrs().clear();
     Addr() = 0;
     Name().clear();
@@ -826,8 +743,7 @@ void CR_OpCode64::clear()
     CondCode() = C_NONE;
 }
 
-void CR_OpCode64::ParseText(const char *text)
-{
+void CR_OpCode64::ParseText(const char *text) {
     char buf[128];
     strcpy(buf, text);
 
@@ -840,13 +756,11 @@ void CR_OpCode64::ParseText(const char *text)
         q += 4;
     }
 
-    if (q[0] == 'r' && q[1] == 'e')
-    {
-        const std::size_t size = sizeof(cr_rep_insns) / sizeof(cr_rep_insns[0]);
-        for (std::size_t i = 0; i < size; ++i)
-        {
-            if (_stricmp(q, cr_rep_insns[i]) == 0)
-            {
+    if (q[0] == 'r' && q[1] == 'e') {
+        const std::size_t size =
+            sizeof(cr_rep_insns) / sizeof(cr_rep_insns[0]);
+        for (std::size_t i = 0; i < size; ++i) {
+            if (_stricmp(q, cr_rep_insns[i]) == 0) {
                 Name() = q;
                 char *p = q + strlen(q) - 1;
 
@@ -874,11 +788,9 @@ void CR_OpCode64::ParseText(const char *text)
         }
     }
 
-    if (strncmp(q, "ret", 3) == 0 || strncmp(q, "iret", 4) == 0)
-    {
+    if (strncmp(q, "ret", 3) == 0 || strncmp(q, "iret", 4) == 0) {
         char *p = strchr(q, ' ');
-        if (p)
-        {
+        if (p) {
             *p = '\0';
             CR_Operand opr;
             opr.Text() = p + 1;
@@ -891,31 +803,26 @@ void CR_OpCode64::ParseText(const char *text)
         return;
     }
 
-    if (q[0] == 'c' || q[0] == 'l' || q[0] == 'j')
-    {
-        const std::size_t size = sizeof(cr_ccentries) / sizeof(cr_ccentries[0]);
-        for (std::size_t i = 0; i < size; ++i)
-        {
-            if (strncmp(q, cr_ccentries[i].name, strlen(cr_ccentries[i].name)) == 0)
-            {
+    if (q[0] == 'c' || q[0] == 'l' || q[0] == 'j') {
+        const std::size_t size =
+            sizeof(cr_ccentries) / sizeof(cr_ccentries[0]);
+        for (std::size_t i = 0; i < size; ++i) {
+            if (strncmp(q, cr_ccentries[i].name, strlen(cr_ccentries[i].name)) == 0) {
                 char *p = strchr(q, ' ');
                 *p = '\0';
                 Name() = cr_ccentries[i].name;
                 CondCode() = cr_ccentries[i].cc;
 
-                if (strncmp(cr_ccentries[i].name, "loop", 4) == 0)
-                {
+                if (strncmp(cr_ccentries[i].name, "loop", 4) == 0) {
                     OpCodeType() = OCT_LOOP;
-                }
-                else if (CondCode() == C_NONE)
-                {
+                } else if (CondCode() == C_NONE) {
                     if (_stricmp(cr_ccentries[i].name, "call") == 0)
                         OpCodeType() = OCT_CALL;
                     else
                         OpCodeType() = OCT_JMP;
-                }
-                else
+                } else {
                     OpCodeType() = OCT_JCC;
+                }
 
                 p++;
                 CR_Operand opr;
@@ -929,8 +836,7 @@ void CR_OpCode64::ParseText(const char *text)
     }
 
     char *p = strchr(q, ' ');
-    if (p == NULL)
-    {
+    if (p == NULL) {
         Name() = q;
         return;
     }
@@ -948,19 +854,16 @@ void CR_OpCode64::ParseText(const char *text)
 
     Operands().clear();
     p = strtok(p + 1, ",");
-    if (p)
-    {
+    if (p) {
         CR_Operand opr;
         opr.Text() = p;
         Operands().insert(opr);
         p = strtok(NULL, ",");
-        if (p)
-        {
+        if (p) {
             opr.Text() = p;
             Operands().insert(opr);
             p = strtok(NULL, ",");
-            if (p)
-            {
+            if (p) {
                 opr.Text() = p;
                 Operands().insert(opr);
                 Operand(2)->ParseText(64);
@@ -972,241 +875,9 @@ void CR_OpCode64::ParseText(const char *text)
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_LogBinary
-
-void CR_LogBinary::clear()
-{
-    TopOffset().clear();
-    LogBytes().clear();
-    DataBytes().clear();
-    Entries().clear();
-}
-
-CR_DataMemberEntry *CR_LogBinary::EntryFromName(const CR_String& name)
-{
-    for (auto& entry : Entries())
-    {
-        if (entry.m_name == name)
-            return &entry;
-    }
-    return NULL;
-}
-
-const CR_DataMemberEntry *
-CR_LogBinary::EntryFromName(const CR_String& name) const
-{
-    for (auto& entry : Entries())
-    {
-        if (entry.m_name == name)
-            return &entry;
-    }
-    return NULL;
-}
-
-CR_DataMemberEntries CR_LogBinary::EntriesFromIndex(std::size_t index) const
-{
-    CR_DataMemberEntries entries;
-    for (auto& entry : Entries())
-    {
-        if (entry.m_index == index)
-        {
-            entries.AddTail(entry);
-        }
-    }
-    return entries;
-}
-
-void CR_LogBinary::AddHead(std::size_t siz)
-{
-    CR_LogBinary lb;
-    lb.resize(siz);
-    AddHead(lb);
-}
-
-void CR_LogBinary::AddTail(std::size_t siz)
-{
-    CR_LogBinary lb;
-    lb.resize(siz);
-    AddTail(lb);
-}
-
-void CR_LogBinary::RemoveHead(std::size_t siz)
-{
-    LogBytes().erase(LogBytes().begin(), LogBytes().begin() + siz);
-}
-
-void CR_LogBinary::RemoveTail(std::size_t siz)
-{
-    LogBytes().erase(LogBytes().end() - siz, LogBytes().end());
-}
-
-void CR_LogBinary::AddHead(const CR_LogBinary& bin)
-{
-    auto siz = bin.size();
-    LogBytes().AddHead(bin.LogBytes());
-    DataBytes().AddHead(bin.DataBytes());
-    for (auto& entry : Entries())
-    {
-        entry.m_index += siz;
-    }
-    Entries().AddHead(bin.Entries());
-}
-
-void CR_LogBinary::AddTail(const CR_LogBinary& bin)
-{
-    auto siz = bin.size();
-    LogBytes().AddTail(bin.LogBytes());
-    DataBytes().AddTail(bin.DataBytes());
-
-    CR_LogBinary bin2(bin);
-    for (auto& entry : bin2.Entries())
-    {
-        entry.m_index += siz;
-    }
-    Entries().AddTail(bin2.Entries());
-}
-
-void CR_LogBinary::AddNamePrefix(const CR_String& prefix)
-{
-    for (auto& entry : Entries())
-    {
-        if (!entry.m_name.empty())
-            entry.m_name = prefix + entry.m_name;
-    }
-}
-
-void CR_LogBinary::SetContinuousArea(std::size_t index, std::size_t count)
-{
-    const std::size_t index2 = index + count - 1;
-    assert(index <= size());
-    assert(index2 <= size());
-    for (std::size_t i = index; i < index2; ++i)
-    {
-        assert(LogBytes()[i].IsContinuous().CanBeTrue());
-        LogBytes()[i].IsContinuous().SetTrue();
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CrTypeToLogBinary -- convert type to logical binary
-
-void CrTypeToLogBinary(
-    CR_NameScope&       ns,
-    const CR_String&    name,
-    CR_TypeID           tid,
-    CR_LogBinary&       bin)
-{
-    bin.clear();
-    auto rtid = ns.ResolveAlias(tid);
-    auto siz = ns.GetSizeofType(rtid);
-    auto& type = ns.LogType(rtid);
-    bin.resize(siz);
-
-    CR_DataMemberEntry entry;
-    entry.m_index = 0;
-    entry.m_typeid = tid;
-    entry.m_name = name;
-    entry.m_size = siz;
-    bin.Entries().AddTail(entry);
-
-    if (type.m_flags & TF_ARRAY)
-    {
-        CR_LogBinary bin2;
-        for (int i = 0; i < type.m_count; ++i)
-        {
-            char buf[64];
-            std::sprintf(buf, "[%d]", i);
-            CR_String name2 = name + buf;
-            CrTypeToLogBinary(ns, name2, type.m_id, bin2);
-            bin.Entries().AddTail(bin2.Entries());
-        }
-    }
-    else if (type.m_flags & TF_STRUCT)
-    {
-        auto& ls = ns.LogStruct(type.m_id);
-        assert(ls.m_types.size() == ls.m_names.size());
-        int size = 0, align = 0, bitremain = 0, oldtypesize = 0;
-        CR_TypeID oldtid = cr_invalid_id;
-        const std::size_t count = ls.m_types.size();
-        for (std::size_t i = 0; i < count; ++i)
-        {
-            auto tid = ls.m_types[i];
-            int typesize = ns.GetSizeofType(tid);
-            int bits = ls.m_bitfield[i];
-            if (bits)
-            {
-                // bitfield
-                assert(bits <= typesize * 8);
-                if ((oldtid == cr_invalid_id || tid == oldtid) && bitremain >= bits)
-                {
-                    bitremain -= bits;
-                }
-                else if (bitremain == 0)
-                {
-                    bitremain += typesize * 8;
-                    bitremain -= bits;
-                }
-                else
-                {
-                    size += oldtypesize;
-                    bitremain += oldtypesize * 8;
-                    bitremain -= bits;
-                }
-            }
-            else
-            {
-                if (bitremain)
-                    size += oldtypesize;
-
-                CR_LogBinary bin2;
-                CrTypeToLogBinary(ns, ls.m_names[i], tid, bin2);
-                if (!name.empty())
-                    bin2.AddNamePrefix(name + ".");
-                bin.Entries().AddTail(bin2.Entries());
-
-                size += typesize;
-
-                // consider struct packing...
-                if (align && typesize >= ls.m_pack)
-                {
-                    size += ls.m_pack - (typesize + align) % ls.m_pack;
-                    align = typesize % ls.m_pack;
-                }
-                else
-                {
-                    align += typesize;
-                    align %= ls.m_pack;
-                }
-
-                bitremain = 0;
-            }
-            oldtid = tid;
-            oldtypesize = typesize;
-        }
-    }
-    else if (type.m_flags & TF_UNION)
-    {
-        auto& ls = ns.LogStruct(type.m_id);
-        assert(ls.m_types.size() == ls.m_names.size());
-        const std::size_t count = ls.m_types.size();
-        for (std::size_t i = 0; i < count; ++i)
-        {
-            auto tid = ls.m_types[i];
-
-            CR_LogBinary bin2;
-            CrTypeToLogBinary(ns, ls.m_names[i], tid, bin2);
-            if (!name.empty())
-                bin2.AddNamePrefix(name + ".");
-            bin.Entries().AddTail(bin2.Entries());
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc32
 
-void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf)
-{
+void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
     Addr() = cf.Addr();
     Name() = cf.Name();
     FuncType() = cf.FuncType();
@@ -1214,8 +885,7 @@ void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf)
     Flags() = cf.Flags();
 }
 
-void CR_CodeFunc32::clear()
-{
+void CR_CodeFunc32::clear() {
     Addr() = 0;
     Name().clear();
     FuncType() = FT_UNKNOWN;
@@ -1226,8 +896,7 @@ void CR_CodeFunc32::clear()
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc64
 
-void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf)
-{
+void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
     Addr() = cf.Addr();
     Name() = cf.Name();
     FuncType() = cf.FuncType();
@@ -1235,8 +904,7 @@ void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf)
     Flags() = cf.Flags();
 }
 
-void CR_CodeFunc64::clear()
-{
+void CR_CodeFunc64::clear() {
     Addr() = 0;
     Name().clear();
     FuncType() = FT_UNKNOWN;
@@ -1253,8 +921,7 @@ void CrStrSplitToSet(
     s.clear();
     char *str = _strdup(psz);
     char *p = strtok(str, seps);
-    while (p != NULL)
-    {
+    while (p != NULL) {
         s.insert(p);
         p = strtok(NULL, seps);
     }
@@ -1262,8 +929,7 @@ void CrStrSplitToSet(
 }
 
 // assembly instruction input/output information
-struct X86ASMIO
-{
+struct X86ASMIO {
     const char *name;
     int num_args;
     const char *in;
@@ -1271,8 +937,7 @@ struct X86ASMIO
     int osize;
 };
 
-static int CrCompareAsmIO(const void *a, const void *b)
-{
+static int CrCompareAsmIO(const void *a, const void *b) {
     const X86ASMIO *x = (const X86ASMIO *)a;
     const X86ASMIO *y = (const X86ASMIO *)b;
     int cmp = strcmp(x->name, y->name);
@@ -1294,8 +959,7 @@ BOOL CrGetAsmIO16(
     X86ASMIO *key, std::set<CR_String>& in, 
     std::set<CR_String>& out, int osize)
 {
-    static const X86ASMIO s_table[] =
-    {
+    static const X86ASMIO s_table[] = {
         {"aaa", 0, "al,ah,AF", "al,ah,AF,CF,OF,SF,ZF,PF,SFeqOF", 0},
         {"aad", 0, "al,ah", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
         {"aam", 0, "al", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
@@ -1417,8 +1081,8 @@ BOOL CrGetAsmIO16(
 
     const std::size_t size = sizeof(s_table) / sizeof(s_table[0]);
     const X86ASMIO *p = 
-        (const X86ASMIO *)bsearch(key, s_table, size, sizeof(X86ASMIO),
-                                  CrCompareAsmIO);
+        reinterpret_cast<const X86ASMIO *>(
+            bsearch(key, s_table, size, sizeof(X86ASMIO), CrCompareAsmIO));
     if (p == NULL)
         return FALSE;
 
@@ -1436,8 +1100,7 @@ BOOL CrGetAsmIO16(
 BOOL CrGetAsmIO32(X86ASMIO *key, std::set<CR_String>& in, 
     std::set<CR_String>& out, int osize)
 {
-    static const X86ASMIO s_table[] =
-    {
+    static const X86ASMIO s_table[] = {
         {"aaa", 0, "al,ah,AF", "al,ah,AF,CF,OF,SF,ZF,PF,SFeqOF", 0},
         {"aad", 0, "al,ah", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
         {"aam", 0, "al", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
@@ -1654,8 +1317,8 @@ BOOL CrGetAsmIO32(X86ASMIO *key, std::set<CR_String>& in,
 
     const std::size_t size = sizeof(s_table) / sizeof(s_table[0]);
     const X86ASMIO *p =
-        (const X86ASMIO *)bsearch(key, s_table, size, sizeof(X86ASMIO),
-                                  CrCompareAsmIO);
+        reinterpret_cast<const X86ASMIO *>(
+            bsearch(key, s_table, size, sizeof(X86ASMIO), CrCompareAsmIO));
     if (p == NULL)
         return FALSE;
 
@@ -1676,8 +1339,7 @@ BOOL CrGetAsmIO64(
     X86ASMIO *key, std::set<CR_String>& in, 
     std::set<CR_String>& out, int osize)
 {
-    static const X86ASMIO s_table[] =
-    {
+    static const X86ASMIO s_table[] = {
         {"adc", 2, "$0,$1,CF", "$0,OF,ZF,SF,CF,AF,PF,SFeqOF", 0},
         {"add", 2, "$0,$1", "$0,OF,ZF,SF,CF,AF,PF,SFeqOF", 0},
         {"and", 2, "$0,$1", "$0,ZF,SF,CF,OF,AF,PF,SFeqOF", 0},
@@ -1910,8 +1572,8 @@ BOOL CrGetAsmIO64(
 
     const std::size_t size = sizeof(s_table) / sizeof(s_table[0]);
     const X86ASMIO *p =
-        (const X86ASMIO *)bsearch(key, s_table, size, sizeof(X86ASMIO),
-                                  CrCompareAsmIO);
+        reinterpret_cast<const X86ASMIO *>(
+            bsearch(key, s_table, size, sizeof(X86ASMIO), CrCompareAsmIO));
     if (p == NULL)
         return FALSE;
 
@@ -1931,22 +1593,19 @@ BOOL CrGetAsmIO64(
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo32
 
-void CR_DisAsmInfo32::Copy(const CR_DisAsmInfo32& info)
-{
+void CR_DisAsmInfo32::Copy(const CR_DisAsmInfo32& info) {
     MapAddrToOpCode() = info.MapAddrToOpCode();
     Entrances() = info.Entrances();
     MapAddrToCodeFunc() = info.MapAddrToCodeFunc();
 }
 
-void CR_DisAsmInfo32::clear()
-{
+void CR_DisAsmInfo32::clear() {
     MapAddrToOpCode().clear();
     Entrances().clear();
     MapAddrToCodeFunc().clear();
 }
 
-CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr)
-{
+CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -1954,8 +1613,7 @@ CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr)
         return NULL;
 }
 
-const CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const
-{
+const CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -1963,8 +1621,7 @@ const CR_CodeFunc32 *CR_DisAsmInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const
         return NULL;
 }
 
-CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr)
-{
+CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -1972,8 +1629,7 @@ CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr)
         return NULL;
 }
 
-const CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) const
-{
+const CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) const {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -1983,8 +1639,7 @@ const CR_OpCode32 *CR_DisAsmInfo32::MapAddrToOpCode(CR_Addr32 addr) const
 
 ////////////////////////////////////////////////////////////////////////////
 
-CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr)
-{
+CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -1992,8 +1647,7 @@ CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr)
         return NULL;
 }
 
-const CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const
-{
+const CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -2001,8 +1655,7 @@ const CR_CodeFunc64 *CR_DisAsmInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const
         return NULL;
 }
 
-CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr)
-{
+CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -2010,8 +1663,7 @@ CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr)
         return NULL;
 }
 
-const CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) const
-{
+const CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) const {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -2022,15 +1674,13 @@ const CR_OpCode64 *CR_DisAsmInfo64::MapAddrToOpCode(CR_Addr64 addr) const
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo64
 
-void CR_DisAsmInfo64::Copy(const CR_DisAsmInfo64& info)
-{
+void CR_DisAsmInfo64::Copy(const CR_DisAsmInfo64& info) {
     MapAddrToOpCode() = info.MapAddrToOpCode();
     Entrances() = info.Entrances();
     m_mAddrToCodeFunc = info.m_mAddrToCodeFunc;
 }
 
-void CR_DisAsmInfo64::clear()
-{
+void CR_DisAsmInfo64::clear() {
     MapAddrToOpCode().clear();
     Entrances().clear();
     m_mAddrToCodeFunc.clear();

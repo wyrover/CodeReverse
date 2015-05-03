@@ -992,6 +992,10 @@ static const char * const condition_name[16] = {
     "s", "ns", "pe", "po", "l", "nl", "ng", "g"
 };
 
+/* hacked by katahiromz */
+int katahiromz_snprintf(char *, int, const char *, ...);
+#define snprintf katahiromz_snprintf
+
 int32_t disasm(uint8_t *data, char *output, int outbufsize, int segsize,
                int64_t offset, int autosync, uint32_t prefer)
 {

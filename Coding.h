@@ -3,7 +3,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // Coding.h
-// Copyright (C) 2013-2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
@@ -11,8 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////
 // CR_CondCode - condition code
 
-enum CR_CondCode
-{
+enum CR_CondCode {
     C_A, C_AE, C_B, C_BE, C_C, C_E, C_G, C_GE, C_L, C_LE, C_NA, C_NAE,
     C_NB, C_NBE, C_NC, C_NE, C_NG, C_NGE, C_NL, C_NLE, C_NO, C_NP,
     C_NS, C_NZ, C_O, C_P, C_PE, C_PO, C_S, C_Z,
@@ -22,8 +21,7 @@ enum CR_CondCode
 ////////////////////////////////////////////////////////////////////////////
 // CR_FuncFlags - function flags
 
-enum CR_FuncFlags
-{
+enum CR_FuncFlags {
     FF_NOTSTDCALL               = (1 << 0), // not __stdcall
     FF_DONTDECOMPBUTDISASM      = (1 << 1), // don't decompile but disasm
     FF_IGNORE                   = (1 << 2), // ignore
@@ -34,8 +32,7 @@ enum CR_FuncFlags
 ////////////////////////////////////////////////////////////////////////////
 // CR_FuncType - function type
 
-enum CR_FuncType
-{
+enum CR_FuncType {
     FT_UNKNOWN,             // unknown type
 
     FT_CDECL,               // __cdecl
@@ -52,8 +49,7 @@ enum CR_FuncType
 ////////////////////////////////////////////////////////////////////////////
 // x86 registers
 
-enum CR_RegType
-{
+enum CR_RegType {
     cr_x86_CRREG = 0,
     cr_x86_DRREG,
     cr_x86_FPUREG,
@@ -81,8 +77,7 @@ BOOL        CrRegOverlapsReg(const char *reg1, const char *reg2);
 ////////////////////////////////////////////////////////////////////////////
 // x86 flags
 
-enum CR_FlagType
-{
+enum CR_FlagType {
     cr_x86_FLAG_NONE = 0,
     cr_x86_FLAG_CF = (1 << 0),     // carry flag
     cr_x86_FLAG_PF = (1 << 2),     // parity flag
@@ -95,15 +90,12 @@ enum CR_FlagType
     cr_x86_FLAG_OF = (1 << 11),    // overflow flag
 };
 
-struct CR_X86Flags
-{
-    union
-    {
+struct CR_X86Flags {
+    union {
         WORD flags;
         DWORD eflags;
         ULONGLONG rflags;
-        struct
-        {
+        struct {
             DWORD CF        : 1;    // carry flag
             DWORD ignore1   : 1;
             DWORD PF        : 1;    // parity flag
@@ -128,8 +120,7 @@ const char * CrFlagGetName(CR_FlagType type, int bits);
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCodeType - op. code type
 
-enum CR_OpCodeType
-{
+enum CR_OpCodeType {
     OCT_MISC,    // misc
     OCT_JMP,     // jump
     OCT_JCC,     // conditional jump
@@ -143,8 +134,7 @@ enum CR_OpCodeType
 ////////////////////////////////////////////////////////////////////////////
 // CR_OperandType - type of operand
 
-enum CR_OperandType
-{
+enum CR_OperandType {
     OT_NONE,        // none
     OT_REG,         // registry
     OT_MEMREG,      // memory access by a register
@@ -158,8 +148,7 @@ enum CR_OperandType
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
 
-class CR_Operand
-{
+class CR_Operand {
 public:
     CR_Operand();
     CR_Operand(const CR_Operand& opr);
@@ -206,8 +195,7 @@ protected:
     CR_String               m_text;
     CR_OperandType          m_ot;
     DWORD                   m_size;
-    union
-    {
+    union {
         CR_Addr64           m_value64;
         CR_Addr32           m_value32;
     };
@@ -220,13 +208,12 @@ protected:
 ////////////////////////////////////////////////////////////////////////////
 // CR_OperandSet - set of operands
 
-typedef CR_DeqSet<CR_Operand> CR_OperandSet;
+typedef CR_VecSet<CR_Operand> CR_OperandSet;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode32 - op. code for 32-bit mode
 
-class CR_OpCode32
-{
+class CR_OpCode32 {
 public:
     CR_OpCode32();
     CR_OpCode32(const CR_OpCode32& oc);
@@ -274,8 +261,7 @@ typedef shared_ptr<CR_OpCode32> CR_SharedOpCode32;
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64 - op. code for 64-bit mode
 
-class CR_OpCode64
-{
+class CR_OpCode64 {
 public:
     CR_OpCode64();
     CR_OpCode64(const CR_OpCode64& oc);
@@ -323,133 +309,14 @@ typedef shared_ptr<CR_OpCode64> CR_SharedOpCode64;
 ////////////////////////////////////////////////////////////////////////////
 // CR_DataMemberEntry, CR_DataMemberEntries
 
-struct CR_DataMemberEntry
-{
+struct CR_DataMemberEntry {
     std::size_t     m_index;
     CR_String       m_name;
     CR_TypeID       m_typeid;
     std::size_t     m_size;
-
-    CR_DataMemberEntry() { }
-
-    CR_DataMemberEntry(const CR_DataMemberEntry& dme) :
-        m_index(dme.m_index), m_name(dme.m_name), m_typeid(dme.m_typeid),
-        m_size(dme.m_size)
-    {
-    }
-
-    void operator=(const CR_DataMemberEntry& dme)
-    {
-        m_index = dme.m_index;
-        m_name = dme.m_name;
-        m_typeid = dme.m_typeid;
-        m_size = dme.m_size;
-    }
 };
 
-typedef CR_DeqSet<CR_DataMemberEntry> CR_DataMemberEntries;
-
-////////////////////////////////////////////////////////////////////////////
-// CR_LogByte, CR_LogBytes
-
-class CR_LogByte
-{
-public:
-    CR_LogByte();
-    CR_LogByte(const CR_LogByte& lb);
-    void operator=(const CR_LogByte& lb);
-    virtual ~CR_LogByte();
-
-          bool& IsAccessed();
-    const bool& IsAccessed() const;
-          CR_TriBool& IsAlive();
-    const CR_TriBool& IsAlive() const;
-          CR_TriBool& IsContinuous();
-    const CR_TriBool& IsContinuous() const;
-          CR_TriBool& IsInteger();
-    const CR_TriBool& IsInteger() const;
-          CR_TriBool& IsFloating();
-    const CR_TriBool& IsFloating() const;
-          CR_TriBool& IsPointer();
-    const CR_TriBool& IsPointer() const;
-
-protected:
-    bool        m_is_accessed;
-    CR_TriBool  m_is_alive;
-    CR_TriBool  m_is_continuous;
-    CR_TriBool  m_is_integer;
-    CR_TriBool  m_is_floating;
-    CR_TriBool  m_is_pointer;
-};
-
-typedef CR_DeqSet<CR_LogByte> CR_LogBytes;
-
-////////////////////////////////////////////////////////////////////////////
-// CR_LogBinary -- logical binary
-
-class CR_LogBinary
-{
-public:
-    CR_LogBinary();
-    CR_LogBinary(const CR_LogBinary& bin);
-    void operator=(const CR_LogBinary& bin);
-    virtual ~CR_LogBinary();
-
-    bool empty() const;
-    std::size_t size() const;
-    void resize(std::size_t siz);
-    void clear();
-
-          CR_Operand& TopOffset();
-    const CR_Operand& TopOffset() const;
-
-          CR_LogBytes& LogBytes();
-    const CR_LogBytes& LogBytes() const;
-
-          CR_DataBytes& DataBytes();
-    const CR_DataBytes& DataBytes() const;
-
-          CR_DataMemberEntries& Entries();
-    const CR_DataMemberEntries& Entries() const;
-
-          CR_DataByte *DataPtr();
-    const CR_DataByte *DataPtr() const;
-
-          CR_DataByte *DataPtrAt(std::size_t index);
-    const CR_DataByte *DataPtrAt(std::size_t index) const;
-
-          CR_DataMemberEntry *EntryFromName(const CR_String& name);
-    const CR_DataMemberEntry *EntryFromName(const CR_String& name) const;
-
-    CR_DataMemberEntries EntriesFromIndex(std::size_t index) const;
-
-    void AddHead(std::size_t siz);
-    void AddTail(std::size_t siz);
-
-    void RemoveHead(std::size_t siz);
-    void RemoveTail(std::size_t siz);
-
-    void AddHead(const CR_LogBinary& bin);
-    void AddTail(const CR_LogBinary& bin);
-
-    void AddNamePrefix(const CR_String& prefix);
-    void SetContinuousArea(std::size_t index, std::size_t count);
-
-protected:
-    CR_Operand              m_top_offset;
-    CR_LogBytes             m_logbytes;
-    CR_DataBytes            m_databytes;
-    CR_DataMemberEntries    m_entries;
-};
-
-////////////////////////////////////////////////////////////////////////////
-// CrTypeToLogBinary -- convert type to logical binary
-
-void CrTypeToLogBinary(
-    CR_NameScope&       ns,
-    const CR_String&    name,
-    CR_TypeID           tid,
-    CR_LogBinary&       bin);
+typedef CR_VecSet<CR_DataMemberEntry> CR_DataMemberEntries;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc32 - code function for 32-bit
@@ -568,25 +435,25 @@ public:
 
 public:
     // accessors
-    CR_Map<CR_Addr32, CR_SharedOpCode32>&           MapAddrToOpCode();
+    std::map<CR_Addr32, CR_SharedOpCode32>&         MapAddrToOpCode();
     CR_Addr32Set&                                   Entrances();
-    CR_Map<CR_Addr32, CR_SharedCodeFunc32>&         MapAddrToCodeFunc();
+    std::map<CR_Addr32, CR_SharedCodeFunc32>&       MapAddrToCodeFunc();
     CR_OpCode32 *                                   MapAddrToOpCode(CR_Addr32 addr);
     CR_CodeFunc32 *                                 MapAddrToCodeFunc(CR_Addr32 addr);
     // const accessors
-    const CR_Map<CR_Addr32, CR_SharedOpCode32>&     MapAddrToOpCode() const;
+    const std::map<CR_Addr32, CR_SharedOpCode32>&   MapAddrToOpCode() const;
     const CR_Addr32Set&                             Entrances() const;
-    const CR_Map<CR_Addr32, CR_SharedCodeFunc32>&   MapAddrToCodeFunc() const;
+    const std::map<CR_Addr32, CR_SharedCodeFunc32>& MapAddrToCodeFunc() const;
     const CR_OpCode32 *                             MapAddrToOpCode(CR_Addr32 addr) const;
     const CR_CodeFunc32 *                           MapAddrToCodeFunc(CR_Addr32 addr) const;
 
 protected:
     // map virtual address to asm code
-    CR_Map<CR_Addr32, CR_SharedOpCode32>            m_mAddrToOpCode;
+    std::map<CR_Addr32, CR_SharedOpCode32>          m_mAddrToOpCode;
     // entrances
     CR_Addr32Set                                    m_sEntrances;
     // map addr to code function
-    CR_Map<CR_Addr32, CR_SharedCodeFunc32>          m_mAddrToCodeFunc;
+    std::map<CR_Addr32, CR_SharedCodeFunc32>        m_mAddrToCodeFunc;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -608,25 +475,25 @@ public:
 
 public:
     // accessors
-    CR_Map<CR_Addr64, CR_SharedOpCode64>&           MapAddrToOpCode();
+    std::map<CR_Addr64, CR_SharedOpCode64>&         MapAddrToOpCode();
     CR_Addr64Set&                                   Entrances();
-    CR_Map<CR_Addr64, CR_SharedCodeFunc64>&         MapAddrToCodeFunc();
+    std::map<CR_Addr64, CR_SharedCodeFunc64>&       MapAddrToCodeFunc();
     CR_OpCode64 *                                   MapAddrToOpCode(CR_Addr64 addr);
     CR_CodeFunc64 *                                 MapAddrToCodeFunc(CR_Addr64 addr);
     // const accessors
-    const CR_Map<CR_Addr64, CR_SharedOpCode64>&     MapAddrToOpCode() const;
+    const std::map<CR_Addr64, CR_SharedOpCode64>&   MapAddrToOpCode() const;
     const CR_Addr64Set&                             Entrances() const;
-    const CR_Map<CR_Addr64, CR_SharedCodeFunc64>&   MapAddrToCodeFunc() const;
+    const std::map<CR_Addr64, CR_SharedCodeFunc64>& MapAddrToCodeFunc() const;
     const CR_OpCode64 *                             MapAddrToOpCode(CR_Addr64 addr) const;
     const CR_CodeFunc64 *                           MapAddrToCodeFunc(CR_Addr64 addr) const;
 
 protected:
     // map virtual address to asm code
-    CR_Map<CR_Addr64, CR_SharedOpCode64>            m_mAddrToOpCode;
+    std::map<CR_Addr64, CR_SharedOpCode64>          m_mAddrToOpCode;
     // entrances
     CR_Addr64Set                                    m_sEntrances;
     // map addr to code function
-    CR_Map<CR_Addr64, CR_SharedCodeFunc64>          m_mAddrToCodeFunc;
+    std::map<CR_Addr64, CR_SharedCodeFunc64>        m_mAddrToCodeFunc;
 };
 
 ////////////////////////////////////////////////////////////////////////////

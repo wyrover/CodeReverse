@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // Dumping.cpp
-// Copyright (C) 2013-2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
@@ -9,8 +9,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-const char *CrGetTimeStampString(DWORD TimeStamp)
-{
+const char *CrGetTimeStampString(DWORD TimeStamp) {
     std::time_t t;
     char *p;
     std::size_t len;
@@ -23,10 +22,9 @@ const char *CrGetTimeStampString(DWORD TimeStamp)
     if (len > 0 && p[len - 1] == '\n')
         p[len - 1] = '\0';
     return p;
-}
+} // CrGetTimeStampString
 
-const char *CrGetMachineString(WORD Machine)
-{
+const char *CrGetMachineString(WORD Machine) {
 #ifndef IMAGE_FILE_MACHINE_SH3DSP
     #define IMAGE_FILE_MACHINE_SH3DSP 0x01A3
 #endif
@@ -60,8 +58,7 @@ const char *CrGetMachineString(WORD Machine)
 #ifndef IMAGE_FILE_MACHINE_CEE
     #define IMAGE_FILE_MACHINE_CEE 0xC0EE
 #endif
-    switch(Machine)
-    {
+    switch(Machine) {
     case IMAGE_FILE_MACHINE_UNKNOWN: return "IMAGE_FILE_MACHINE_UNKNOWN";
     case IMAGE_FILE_MACHINE_I386: return "IMAGE_FILE_MACHINE_I386";
     case IMAGE_FILE_MACHINE_R3000: return "IMAGE_FILE_MACHINE_R3000";
@@ -93,10 +90,9 @@ const char *CrGetMachineString(WORD Machine)
     case IMAGE_FILE_MACHINE_CEE: return "IMAGE_FILE_MACHINE_CEE";
     default: return "Unknown Machine";
     }
-}
+} // CrGetMachineString
 
-const char *CrGetFileCharacteristicsString(WORD w)
-{
+const char *CrGetFileCharacteristicsString(WORD w) {
     static char buf[512];
     buf[0] = 0;
     if (IMAGE_FILE_RELOCS_STRIPPED & w) strcat(buf, "IMAGE_FILE_RELOCS_STRIPPED ");
@@ -117,10 +113,9 @@ const char *CrGetFileCharacteristicsString(WORD w)
     if (buf[0])
         buf[strlen(buf) - 1] = 0;
     return buf;
-}
+} // CrGetFileCharacteristicsString
 
-const char *CrGetSectionFlagsString(DWORD dw)
-{
+const char *CrGetSectionFlagsString(DWORD dw) {
 #ifndef IMAGE_SCN_TYPE_DSECT
     #define IMAGE_SCN_TYPE_DSECT 0x00000001
 #endif
@@ -304,10 +299,9 @@ const char *CrGetSectionFlagsString(DWORD dw)
     if (buf[0])
         buf[strlen(buf) - 1] = 0;
     return buf;
-}
+} // CrGetSectionFlagsString
 
-const char *CrGetDllCharacteristicsString(WORD w)
-{
+const char *CrGetDllCharacteristicsString(WORD w) {
 #ifndef IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE
     #define IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE 0x0040
 #endif
@@ -346,10 +340,9 @@ const char *CrGetDllCharacteristicsString(WORD w)
     if (buf[0])
         buf[strlen(buf) - 1] = 0;
     return buf;
-}
+} // CrGetDllCharacteristicsString
 
-const char *CrGetSubsystemString(WORD w)
-{
+const char *CrGetSubsystemString(WORD w) {
 #ifndef IMAGE_SUBSYSTEM_UNKNOWN
     #define IMAGE_SUBSYSTEM_UNKNOWN 0
 #endif
@@ -393,8 +386,7 @@ const char *CrGetSubsystemString(WORD w)
     #define IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION 16
 #endif
 
-    switch(w)
-    {
+    switch(w) {
     case IMAGE_SUBSYSTEM_UNKNOWN: return "IMAGE_SUBSYSTEM_UNKNOWN";
     case IMAGE_SUBSYSTEM_NATIVE: return "IMAGE_SUBSYSTEM_NATIVE";
     case IMAGE_SUBSYSTEM_WINDOWS_GUI: return "IMAGE_SUBSYSTEM_WINDOWS_GUI";
@@ -411,10 +403,9 @@ const char *CrGetSubsystemString(WORD w)
     case IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION: return "IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION";
     default: return "(Unknown)";
     }
-}
+} // CrGetSubsystemString
 
-void CrDumpDataDirectory(LPVOID Data, DWORD index)
-{
+void CrDumpDataDirectory(std::FILE *fp, LPVOID Data, DWORD index) {
 #ifndef IMAGE_DIRECTORY_ENTRY_EXPORT
     #define IMAGE_DIRECTORY_ENTRY_EXPORT 0
 #endif
@@ -462,208 +453,199 @@ void CrDumpDataDirectory(LPVOID Data, DWORD index)
 #endif
 
     PIMAGE_DATA_DIRECTORY Directory = (PIMAGE_DATA_DIRECTORY)Data;
-    printf("    ");
-    switch(index)
-    {
-    case IMAGE_DIRECTORY_ENTRY_EXPORT: printf("IMAGE_DIRECTORY_ENTRY_EXPORT"); break;
-    case IMAGE_DIRECTORY_ENTRY_IMPORT: printf("IMAGE_DIRECTORY_ENTRY_IMPORT"); break;
-    case IMAGE_DIRECTORY_ENTRY_RESOURCE: printf("IMAGE_DIRECTORY_ENTRY_RESOURCE"); break;
-    case IMAGE_DIRECTORY_ENTRY_EXCEPTION: printf("IMAGE_DIRECTORY_ENTRY_EXCEPTION"); break;
-    case IMAGE_DIRECTORY_ENTRY_SECURITY: printf("IMAGE_DIRECTORY_ENTRY_SECURITY"); break;
-    case IMAGE_DIRECTORY_ENTRY_BASERELOC: printf("IMAGE_DIRECTORY_ENTRY_BASERELOC"); break;
-    case IMAGE_DIRECTORY_ENTRY_DEBUG: printf("IMAGE_DIRECTORY_ENTRY_DEBUG"); break;
-    case IMAGE_DIRECTORY_ENTRY_ARCHITECTURE: printf("IMAGE_DIRECTORY_ENTRY_ARCHITECTURE"); break;
-    case IMAGE_DIRECTORY_ENTRY_GLOBALPTR: printf("IMAGE_DIRECTORY_ENTRY_GLOBALPTR"); break;
-    case IMAGE_DIRECTORY_ENTRY_TLS: printf("IMAGE_DIRECTORY_ENTRY_TLS"); break;
-    case IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG: printf("IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG"); break;
-    case IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT: printf("IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT"); break;
-    case IMAGE_DIRECTORY_ENTRY_IAT: printf("IMAGE_DIRECTORY_ENTRY_IAT"); break;
-    case IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT: printf("IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT"); break;
-    case IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR: printf("IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR"); break;
+    fprintf(fp, "    ");
+    switch(index) {
+    case IMAGE_DIRECTORY_ENTRY_EXPORT: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_EXPORT"); break;
+    case IMAGE_DIRECTORY_ENTRY_IMPORT: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_IMPORT"); break;
+    case IMAGE_DIRECTORY_ENTRY_RESOURCE: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_RESOURCE"); break;
+    case IMAGE_DIRECTORY_ENTRY_EXCEPTION: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_EXCEPTION"); break;
+    case IMAGE_DIRECTORY_ENTRY_SECURITY: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_SECURITY"); break;
+    case IMAGE_DIRECTORY_ENTRY_BASERELOC: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_BASERELOC"); break;
+    case IMAGE_DIRECTORY_ENTRY_DEBUG: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_DEBUG"); break;
+    case IMAGE_DIRECTORY_ENTRY_ARCHITECTURE: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_ARCHITECTURE"); break;
+    case IMAGE_DIRECTORY_ENTRY_GLOBALPTR: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_GLOBALPTR"); break;
+    case IMAGE_DIRECTORY_ENTRY_TLS: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_TLS"); break;
+    case IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG"); break;
+    case IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT"); break;
+    case IMAGE_DIRECTORY_ENTRY_IAT: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_IAT"); break;
+    case IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT"); break;
+    case IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR: fprintf(fp, "IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR"); break;
     }
-    printf(" (%lu): V.A.: 0x%08lX, Size: 0x%08lX (%lu)\n", index, Directory->VirtualAddress, Directory->Size, Directory->Size);
-}
+    fprintf(fp,
+        " (%lu): V.A.: 0x%08lX, Size: 0x%08lX (%lu)\n", index,
+        Directory->VirtualAddress, Directory->Size, Directory->Size);
+} // CrDumpDataDirectory
 
-void CrDumpDOSHeader(LPVOID Data)
-{
+void CrDumpDOSHeader(std::FILE *fp, LPVOID Data) {
     PIMAGE_DOS_HEADER DOSHeader = (PIMAGE_DOS_HEADER)Data;
-    printf("\n### DOS Header ###\n");
-    printf("  e_magic: 0x%04X\n", DOSHeader->e_magic);
-    printf("  e_cblp: 0x%04X\n", DOSHeader->e_cblp);
-    printf("  e_cp: 0x%04X\n", DOSHeader->e_cp);
-    printf("  e_crlc: 0x%04X\n", DOSHeader->e_crlc);
-    printf("  e_cparhdr: 0x%04X\n", DOSHeader->e_cparhdr);
-    printf("  e_minalloc: 0x%04X\n", DOSHeader->e_minalloc);
-    printf("  e_maxalloc: 0x%04X\n", DOSHeader->e_maxalloc);
-    printf("  e_ss: 0x%04X\n", DOSHeader->e_ss);
-    printf("  e_sp: 0x%04X\n", DOSHeader->e_sp);
-    printf("  e_csum: 0x%04X\n", DOSHeader->e_csum);
-    printf("  e_ip: 0x%04X\n", DOSHeader->e_ip);
-    printf("  e_cs: 0x%04X\n", DOSHeader->e_cs);
-    printf("  e_lfarlc: 0x%04X\n", DOSHeader->e_lfarlc);
-    printf("  e_ovno: 0x%04X\n", DOSHeader->e_ovno);
-    printf("  e_res[0]: 0x%04X\n", DOSHeader->e_res[0]);
-    printf("  e_res[1]: 0x%04X\n", DOSHeader->e_res[1]);
-    printf("  e_res[2]: 0x%04X\n", DOSHeader->e_res[2]);
-    printf("  e_res[3]: 0x%04X\n", DOSHeader->e_res[3]);
-    printf("  e_oemid: 0x%04X\n", DOSHeader->e_oemid);
-    printf("  e_oeminfo: 0x%04X\n", DOSHeader->e_oeminfo);
-    printf("  e_res2[0]: 0x%04X\n", DOSHeader->e_res2[0]);
-    printf("  e_res2[1]: 0x%04X\n", DOSHeader->e_res2[1]);
-    printf("  e_res2[2]: 0x%04X\n", DOSHeader->e_res2[2]);
-    printf("  e_res2[3]: 0x%04X\n", DOSHeader->e_res2[3]);
-    printf("  e_res2[4]: 0x%04X\n", DOSHeader->e_res2[4]);
-    printf("  e_res2[5]: 0x%04X\n", DOSHeader->e_res2[5]);
-    printf("  e_res2[6]: 0x%04X\n", DOSHeader->e_res2[6]);
-    printf("  e_res2[7]: 0x%04X\n", DOSHeader->e_res2[7]);
-    printf("  e_res2[8]: 0x%04X\n", DOSHeader->e_res2[8]);
-    printf("  e_res2[9]: 0x%04X\n", DOSHeader->e_res2[9]);
-    printf("  e_lfanew: 0x%08lX\n", DOSHeader->e_lfanew);
-}
+    fprintf(fp, "\n### DOS Header ###\n");
+    fprintf(fp, "  e_magic: 0x%04X\n", DOSHeader->e_magic);
+    fprintf(fp, "  e_cblp: 0x%04X\n", DOSHeader->e_cblp);
+    fprintf(fp, "  e_cp: 0x%04X\n", DOSHeader->e_cp);
+    fprintf(fp, "  e_crlc: 0x%04X\n", DOSHeader->e_crlc);
+    fprintf(fp, "  e_cparhdr: 0x%04X\n", DOSHeader->e_cparhdr);
+    fprintf(fp, "  e_minalloc: 0x%04X\n", DOSHeader->e_minalloc);
+    fprintf(fp, "  e_maxalloc: 0x%04X\n", DOSHeader->e_maxalloc);
+    fprintf(fp, "  e_ss: 0x%04X\n", DOSHeader->e_ss);
+    fprintf(fp, "  e_sp: 0x%04X\n", DOSHeader->e_sp);
+    fprintf(fp, "  e_csum: 0x%04X\n", DOSHeader->e_csum);
+    fprintf(fp, "  e_ip: 0x%04X\n", DOSHeader->e_ip);
+    fprintf(fp, "  e_cs: 0x%04X\n", DOSHeader->e_cs);
+    fprintf(fp, "  e_lfarlc: 0x%04X\n", DOSHeader->e_lfarlc);
+    fprintf(fp, "  e_ovno: 0x%04X\n", DOSHeader->e_ovno);
+    fprintf(fp, "  e_res[0]: 0x%04X\n", DOSHeader->e_res[0]);
+    fprintf(fp, "  e_res[1]: 0x%04X\n", DOSHeader->e_res[1]);
+    fprintf(fp, "  e_res[2]: 0x%04X\n", DOSHeader->e_res[2]);
+    fprintf(fp, "  e_res[3]: 0x%04X\n", DOSHeader->e_res[3]);
+    fprintf(fp, "  e_oemid: 0x%04X\n", DOSHeader->e_oemid);
+    fprintf(fp, "  e_oeminfo: 0x%04X\n", DOSHeader->e_oeminfo);
+    fprintf(fp, "  e_res2[0]: 0x%04X\n", DOSHeader->e_res2[0]);
+    fprintf(fp, "  e_res2[1]: 0x%04X\n", DOSHeader->e_res2[1]);
+    fprintf(fp, "  e_res2[2]: 0x%04X\n", DOSHeader->e_res2[2]);
+    fprintf(fp, "  e_res2[3]: 0x%04X\n", DOSHeader->e_res2[3]);
+    fprintf(fp, "  e_res2[4]: 0x%04X\n", DOSHeader->e_res2[4]);
+    fprintf(fp, "  e_res2[5]: 0x%04X\n", DOSHeader->e_res2[5]);
+    fprintf(fp, "  e_res2[6]: 0x%04X\n", DOSHeader->e_res2[6]);
+    fprintf(fp, "  e_res2[7]: 0x%04X\n", DOSHeader->e_res2[7]);
+    fprintf(fp, "  e_res2[8]: 0x%04X\n", DOSHeader->e_res2[8]);
+    fprintf(fp, "  e_res2[9]: 0x%04X\n", DOSHeader->e_res2[9]);
+    fprintf(fp, "  e_lfanew: 0x%08lX\n", DOSHeader->e_lfanew);
+} // CrDumpDOSHeader
 
-void CrDumpFileHeader(LPVOID Data)
-{
+void CrDumpFileHeader(std::FILE *fp, LPVOID Data) {
     PIMAGE_FILE_HEADER FileHeader = (PIMAGE_FILE_HEADER)Data;
-    printf("\n### IMAGE_FILE_HEADER ###\n");
-    printf("  Machine: 0x%04X (%s)\n", FileHeader->Machine, CrGetMachineString(FileHeader->Machine));
-    printf("  NumberOfSections: 0x%04X (%u)\n", FileHeader->NumberOfSections, FileHeader->NumberOfSections);
-    printf("  TimeDateStamp: 0x%08lX (%s)\n", FileHeader->TimeDateStamp, CrGetTimeStampString(FileHeader->TimeDateStamp));
-    printf("  PointerToSymbolTable: 0x%08lX\n", FileHeader->PointerToSymbolTable);
-    printf("  NumberOfSymbols: 0x%08lX (%lu)\n", FileHeader->NumberOfSymbols, FileHeader->NumberOfSymbols);
-    printf("  SizeOfOptionalHeader: 0x%04X (%u)\n", FileHeader->SizeOfOptionalHeader, FileHeader->SizeOfOptionalHeader);
-    printf("  Characteristics: 0x%04X (%s)\n", FileHeader->Characteristics, CrGetFileCharacteristicsString(FileHeader->Characteristics));
-}
+    fprintf(fp, "\n### IMAGE_FILE_HEADER ###\n");
+    fprintf(fp, "  Machine: 0x%04X (%s)\n", FileHeader->Machine, CrGetMachineString(FileHeader->Machine));
+    fprintf(fp, "  NumberOfSections: 0x%04X (%u)\n", FileHeader->NumberOfSections, FileHeader->NumberOfSections);
+    fprintf(fp, "  TimeDateStamp: 0x%08lX (%s)\n", FileHeader->TimeDateStamp, CrGetTimeStampString(FileHeader->TimeDateStamp));
+    fprintf(fp, "  PointerToSymbolTable: 0x%08lX\n", FileHeader->PointerToSymbolTable);
+    fprintf(fp, "  NumberOfSymbols: 0x%08lX (%lu)\n", FileHeader->NumberOfSymbols, FileHeader->NumberOfSymbols);
+    fprintf(fp, "  SizeOfOptionalHeader: 0x%04X (%u)\n", FileHeader->SizeOfOptionalHeader, FileHeader->SizeOfOptionalHeader);
+    fprintf(fp, "  Characteristics: 0x%04X (%s)\n", FileHeader->Characteristics, CrGetFileCharacteristicsString(FileHeader->Characteristics));
+} // CrDumpFileHeader
 
-void CrDumpOptionalHeader32(LPVOID Data, DWORD CheckSum)
-{
+void CrDumpOptionalHeader32(std::FILE *fp, LPVOID Data, DWORD CheckSum) {
     DWORD i;
     PIMAGE_OPTIONAL_HEADER32 Optional32 = (PIMAGE_OPTIONAL_HEADER32)Data;
     PIMAGE_DATA_DIRECTORY DataDirectories, DataDirectory;
 
-    printf("\n### IMAGE_OPTIONAL_HEADER32 ###\n");
-    printf("  Magic: 0x%04X\n", Optional32->Magic);
-    printf("  LinkerVersion: %u.%u\n", Optional32->MajorLinkerVersion, Optional32->MinorLinkerVersion);
-    printf("  SizeOfCode: 0x%08lX (%lu)\n", Optional32->SizeOfCode, Optional32->SizeOfCode);
-    printf("  SizeOfInitializedData: 0x%08lX (%lu)\n", Optional32->SizeOfInitializedData, Optional32->SizeOfInitializedData);
-    printf("  SizeOfUninitializedData: 0x%08lX (%lu)\n", Optional32->SizeOfUninitializedData, Optional32->SizeOfUninitializedData);
-    printf("  AddressOfEntryPoint: 0x%08lX\n", Optional32->AddressOfEntryPoint);
-    printf("  BaseOfCode: 0x%08lX\n", Optional32->BaseOfCode);
-    printf("  BaseOfData: 0x%08lX\n", Optional32->BaseOfData);
-    printf("  ImageBase: 0x%08lX\n", Optional32->ImageBase);
-    printf("  SectionAlignment: 0x%08lX\n", Optional32->SectionAlignment);
-    printf("  FileAlignment: 0x%08lX\n", Optional32->FileAlignment);
-    printf("  OperatingSystemVersion: %u.%u\n", Optional32->MajorOperatingSystemVersion, Optional32->MinorOperatingSystemVersion);
-    printf("  ImageVersion: %u.%u\n", Optional32->MajorImageVersion, Optional32->MinorImageVersion);
-    printf("  SubsystemVersion: %u.%u\n", Optional32->MajorSubsystemVersion, Optional32->MinorSubsystemVersion);
-    printf("  Win32VersionValue: 0x%08lX\n", Optional32->Win32VersionValue);
-    printf("  SizeOfImage: 0x%08lX (%lu)\n", Optional32->SizeOfImage, Optional32->SizeOfImage);
-    printf("  SizeOfHeaders: 0x%08lX (%lu)\n", Optional32->SizeOfHeaders, Optional32->SizeOfHeaders);
+    fprintf(fp, "\n### IMAGE_OPTIONAL_HEADER32 ###\n");
+    fprintf(fp, "  Magic: 0x%04X\n", Optional32->Magic);
+    fprintf(fp, "  LinkerVersion: %u.%u\n", Optional32->MajorLinkerVersion, Optional32->MinorLinkerVersion);
+    fprintf(fp, "  SizeOfCode: 0x%08lX (%lu)\n", Optional32->SizeOfCode, Optional32->SizeOfCode);
+    fprintf(fp, "  SizeOfInitializedData: 0x%08lX (%lu)\n", Optional32->SizeOfInitializedData, Optional32->SizeOfInitializedData);
+    fprintf(fp, "  SizeOfUninitializedData: 0x%08lX (%lu)\n", Optional32->SizeOfUninitializedData, Optional32->SizeOfUninitializedData);
+    fprintf(fp, "  AddressOfEntryPoint: 0x%08lX\n", Optional32->AddressOfEntryPoint);
+    fprintf(fp, "  BaseOfCode: 0x%08lX\n", Optional32->BaseOfCode);
+    fprintf(fp, "  BaseOfData: 0x%08lX\n", Optional32->BaseOfData);
+    fprintf(fp, "  ImageBase: 0x%08lX\n", Optional32->ImageBase);
+    fprintf(fp, "  SectionAlignment: 0x%08lX\n", Optional32->SectionAlignment);
+    fprintf(fp, "  FileAlignment: 0x%08lX\n", Optional32->FileAlignment);
+    fprintf(fp, "  OperatingSystemVersion: %u.%u\n", Optional32->MajorOperatingSystemVersion, Optional32->MinorOperatingSystemVersion);
+    fprintf(fp, "  ImageVersion: %u.%u\n", Optional32->MajorImageVersion, Optional32->MinorImageVersion);
+    fprintf(fp, "  SubsystemVersion: %u.%u\n", Optional32->MajorSubsystemVersion, Optional32->MinorSubsystemVersion);
+    fprintf(fp, "  Win32VersionValue: 0x%08lX\n", Optional32->Win32VersionValue);
+    fprintf(fp, "  SizeOfImage: 0x%08lX (%lu)\n", Optional32->SizeOfImage, Optional32->SizeOfImage);
+    fprintf(fp, "  SizeOfHeaders: 0x%08lX (%lu)\n", Optional32->SizeOfHeaders, Optional32->SizeOfHeaders);
 #ifndef NO_CHECKSUM
-    printf("  CheckSum: 0x%08lX (%s)\n", Optional32->CheckSum, (Optional32->CheckSum == 0 || Optional32->CheckSum == CheckSum ? "valid" : "invalid"));
+    fprintf(fp, "  CheckSum: 0x%08lX (%s)\n", Optional32->CheckSum, (Optional32->CheckSum == 0 || Optional32->CheckSum == CheckSum ? "valid" : "invalid"));
 #else
-    printf("  CheckSum: 0x%08lX\n", Optional32->CheckSum);
+    fprintf(fp, "  CheckSum: 0x%08lX\n", Optional32->CheckSum);
 #endif
-    printf("  Subsystem: 0x%04X (%s)\n", Optional32->Subsystem, CrGetSubsystemString(Optional32->Subsystem));
-    printf("  DllCharacteristics: 0x%04X (%s)\n", Optional32->DllCharacteristics, CrGetDllCharacteristicsString(Optional32->DllCharacteristics));
-    printf("  SizeOfStackReserve: 0x%08lX (%lu)\n", Optional32->SizeOfStackReserve, Optional32->SizeOfStackReserve);
-    printf("  SizeOfStackCommit: 0x%08lX (%lu)\n", Optional32->SizeOfStackCommit, Optional32->SizeOfStackCommit);
-    printf("  SizeOfHeapReserve: 0x%08lX (%lu)\n", Optional32->SizeOfHeapReserve, Optional32->SizeOfHeapReserve);
-    printf("  SizeOfHeapCommit: 0x%08lX (%lu)\n", Optional32->SizeOfHeapCommit, Optional32->SizeOfHeapCommit);
-    printf("  LoaderFlags: 0x%08lX\n", Optional32->LoaderFlags);
-    printf("  NumberOfRvaAndSizes: 0x%08lX (%lu)\n", Optional32->NumberOfRvaAndSizes, Optional32->NumberOfRvaAndSizes);
+    fprintf(fp, "  Subsystem: 0x%04X (%s)\n", Optional32->Subsystem, CrGetSubsystemString(Optional32->Subsystem));
+    fprintf(fp, "  DllCharacteristics: 0x%04X (%s)\n", Optional32->DllCharacteristics, CrGetDllCharacteristicsString(Optional32->DllCharacteristics));
+    fprintf(fp, "  SizeOfStackReserve: 0x%08lX (%lu)\n", Optional32->SizeOfStackReserve, Optional32->SizeOfStackReserve);
+    fprintf(fp, "  SizeOfStackCommit: 0x%08lX (%lu)\n", Optional32->SizeOfStackCommit, Optional32->SizeOfStackCommit);
+    fprintf(fp, "  SizeOfHeapReserve: 0x%08lX (%lu)\n", Optional32->SizeOfHeapReserve, Optional32->SizeOfHeapReserve);
+    fprintf(fp, "  SizeOfHeapCommit: 0x%08lX (%lu)\n", Optional32->SizeOfHeapCommit, Optional32->SizeOfHeapCommit);
+    fprintf(fp, "  LoaderFlags: 0x%08lX\n", Optional32->LoaderFlags);
+    fprintf(fp, "  NumberOfRvaAndSizes: 0x%08lX (%lu)\n", Optional32->NumberOfRvaAndSizes, Optional32->NumberOfRvaAndSizes);
 
-    printf("\n  ### Directory Entries ###\n");
+    fprintf(fp, "\n  ### Directory Entries ###\n");
     DataDirectories = Optional32->DataDirectory;
-    for (i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i)
-    {
+    for (i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i) {
         DataDirectory = &DataDirectories[i];
-        if (DataDirectory->VirtualAddress != 0 || DataDirectory->Size != 0)
-        {
-            CrDumpDataDirectory(DataDirectory, i);
+        if (DataDirectory->VirtualAddress != 0 || DataDirectory->Size != 0) {
+            CrDumpDataDirectory(fp, DataDirectory, i);
         }
     }
-}
+} // CrDumpOptionalHeader32
 
-void CrDumpOptionalHeader64(LPVOID Data, DWORD CheckSum)
-{
+void CrDumpOptionalHeader64(std::FILE *fp, LPVOID Data, DWORD CheckSum) {
     DWORD i;
     PIMAGE_OPTIONAL_HEADER64 Optional64 = (PIMAGE_OPTIONAL_HEADER64)Data;
     PIMAGE_DATA_DIRECTORY DataDirectories, DataDirectory;
 
-    printf("\n### IMAGE_OPTIONAL_HEADER64 ###\n");
-    printf("  Magic: 0x%04X\n", Optional64->Magic);
-    printf("  LinkerVersion: %u.%u\n", Optional64->MajorLinkerVersion, Optional64->MinorLinkerVersion);
-    printf("  SizeOfCode: 0x%08lX (%lu)\n", Optional64->SizeOfCode, Optional64->SizeOfCode);
-    printf("  SizeOfInitializedData: 0x%08lX (%lu)\n", Optional64->SizeOfInitializedData, Optional64->SizeOfInitializedData);
-    printf("  SizeOfUninitializedData: 0x%08lX (%lu)\n", Optional64->SizeOfUninitializedData, Optional64->SizeOfUninitializedData);
-    printf("  AddressOfEntryPoint: 0x%08lX\n", Optional64->AddressOfEntryPoint);
-    printf("  BaseOfCode: 0x%08lX\n", Optional64->BaseOfCode);
-    printf("  ImageBase: 0x%08lX%08lX\n", HILONG(Optional64->ImageBase), LOLONG(Optional64->ImageBase));
-    printf("  SectionAlignment: 0x%08lX\n", Optional64->SectionAlignment);
-    printf("  FileAlignment: 0x%08lX\n", Optional64->FileAlignment);
-    printf("  OperatingSystemVersion: %u.%u\n", Optional64->MajorOperatingSystemVersion, Optional64->MinorOperatingSystemVersion);
-    printf("  ImageVersion: %u.%u\n", Optional64->MajorImageVersion, Optional64->MinorImageVersion);
-    printf("  SubsystemVersion: %u.%u\n", Optional64->MajorSubsystemVersion, Optional64->MinorSubsystemVersion);
-    printf("  Win32VersionValue: 0x%08lX\n", Optional64->Win32VersionValue);
-    printf("  SizeOfImage: 0x%08lX (%lu)\n", Optional64->SizeOfImage, Optional64->SizeOfImage);
-    printf("  SizeOfHeaders: 0x%08lX (%lu)\n", Optional64->SizeOfHeaders, Optional64->SizeOfHeaders);
+    fprintf(fp, "\n### IMAGE_OPTIONAL_HEADER64 ###\n");
+    fprintf(fp, "  Magic: 0x%04X\n", Optional64->Magic);
+    fprintf(fp, "  LinkerVersion: %u.%u\n", Optional64->MajorLinkerVersion, Optional64->MinorLinkerVersion);
+    fprintf(fp, "  SizeOfCode: 0x%08lX (%lu)\n", Optional64->SizeOfCode, Optional64->SizeOfCode);
+    fprintf(fp, "  SizeOfInitializedData: 0x%08lX (%lu)\n", Optional64->SizeOfInitializedData, Optional64->SizeOfInitializedData);
+    fprintf(fp, "  SizeOfUninitializedData: 0x%08lX (%lu)\n", Optional64->SizeOfUninitializedData, Optional64->SizeOfUninitializedData);
+    fprintf(fp, "  AddressOfEntryPoint: 0x%08lX\n", Optional64->AddressOfEntryPoint);
+    fprintf(fp, "  BaseOfCode: 0x%08lX\n", Optional64->BaseOfCode);
+    fprintf(fp, "  ImageBase: 0x%08lX%08lX\n", HILONG(Optional64->ImageBase), LOLONG(Optional64->ImageBase));
+    fprintf(fp, "  SectionAlignment: 0x%08lX\n", Optional64->SectionAlignment);
+    fprintf(fp, "  FileAlignment: 0x%08lX\n", Optional64->FileAlignment);
+    fprintf(fp, "  OperatingSystemVersion: %u.%u\n", Optional64->MajorOperatingSystemVersion, Optional64->MinorOperatingSystemVersion);
+    fprintf(fp, "  ImageVersion: %u.%u\n", Optional64->MajorImageVersion, Optional64->MinorImageVersion);
+    fprintf(fp, "  SubsystemVersion: %u.%u\n", Optional64->MajorSubsystemVersion, Optional64->MinorSubsystemVersion);
+    fprintf(fp, "  Win32VersionValue: 0x%08lX\n", Optional64->Win32VersionValue);
+    fprintf(fp, "  SizeOfImage: 0x%08lX (%lu)\n", Optional64->SizeOfImage, Optional64->SizeOfImage);
+    fprintf(fp, "  SizeOfHeaders: 0x%08lX (%lu)\n", Optional64->SizeOfHeaders, Optional64->SizeOfHeaders);
 #ifndef NO_CHECKSUM
-    printf("  CheckSum: 0x%08lX (%s)\n", Optional64->CheckSum, (Optional64->CheckSum == 0 || Optional64->CheckSum == CheckSum ? "valid" : "invalid"));
+    fprintf(fp, "  CheckSum: 0x%08lX (%s)\n", Optional64->CheckSum, (Optional64->CheckSum == 0 || Optional64->CheckSum == CheckSum ? "valid" : "invalid"));
 #else
-    printf("  CheckSum: 0x%08lX\n", Optional64->CheckSum);
+    fprintf(fp, "  CheckSum: 0x%08lX\n", Optional64->CheckSum);
 #endif
-    printf("  Subsystem: 0x%04X (%s)\n", Optional64->Subsystem, CrGetSubsystemString(Optional64->Subsystem));
-    printf("  DllCharacteristics: 0x%04X (%s)\n", Optional64->DllCharacteristics, CrGetDllCharacteristicsString(Optional64->DllCharacteristics));
+    fprintf(fp, "  Subsystem: 0x%04X (%s)\n", Optional64->Subsystem, CrGetSubsystemString(Optional64->Subsystem));
+    fprintf(fp, "  DllCharacteristics: 0x%04X (%s)\n", Optional64->DllCharacteristics, CrGetDllCharacteristicsString(Optional64->DllCharacteristics));
 
     char a[64];
     _i64toa(Optional64->SizeOfStackReserve, a, 10);
-    printf("  SizeOfStackReserve: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfStackReserve), LOLONG(Optional64->SizeOfStackReserve), a);
+    fprintf(fp, "  SizeOfStackReserve: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfStackReserve), LOLONG(Optional64->SizeOfStackReserve), a);
     _i64toa(Optional64->SizeOfStackCommit, a, 10);
-    printf("  SizeOfStackCommit: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfStackCommit), LOLONG(Optional64->SizeOfStackCommit), a);
+    fprintf(fp, "  SizeOfStackCommit: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfStackCommit), LOLONG(Optional64->SizeOfStackCommit), a);
     _i64toa(Optional64->SizeOfHeapReserve, a, 10);
-    printf("  SizeOfHeapReserve: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfHeapReserve), LOLONG(Optional64->SizeOfHeapReserve), a);
+    fprintf(fp, "  SizeOfHeapReserve: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfHeapReserve), LOLONG(Optional64->SizeOfHeapReserve), a);
     _i64toa(Optional64->SizeOfHeapCommit, a, 10);
-    printf("  SizeOfHeapCommit: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfHeapCommit), LOLONG(Optional64->SizeOfHeapCommit), a);
+    fprintf(fp, "  SizeOfHeapCommit: 0x%08lX%08lX (%s)\n", HILONG(Optional64->SizeOfHeapCommit), LOLONG(Optional64->SizeOfHeapCommit), a);
 
-    printf("  LoaderFlags: 0x%08lX\n", Optional64->LoaderFlags);
-    printf("  NumberOfRvaAndSizes: 0x%08lX (%lu)\n", Optional64->NumberOfRvaAndSizes, Optional64->NumberOfRvaAndSizes);
+    fprintf(fp, "  LoaderFlags: 0x%08lX\n", Optional64->LoaderFlags);
+    fprintf(fp, "  NumberOfRvaAndSizes: 0x%08lX (%lu)\n", Optional64->NumberOfRvaAndSizes, Optional64->NumberOfRvaAndSizes);
 
-    printf("\n  ### Directory Entries ###\n");
+    fprintf(fp, "\n  ### Directory Entries ###\n");
     DataDirectories = Optional64->DataDirectory;
-    for (i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i)
-    {
+    for (i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES; ++i) {
         DataDirectory = &DataDirectories[i];
-        if (DataDirectory->VirtualAddress != 0 || DataDirectory->Size != 0)
-        {
-            CrDumpDataDirectory(DataDirectory, i);
+        if (DataDirectory->VirtualAddress != 0 || DataDirectory->Size != 0) {
+            CrDumpDataDirectory(fp, DataDirectory, i);
         }
     }
-}
+} // CrDumpOptionalHeader64
 
-void CrDumpSectionHeader(LPVOID Data)
-{
+void CrDumpSectionHeader(std::FILE *fp, LPVOID Data) {
     PREAL_IMAGE_SECTION_HEADER SectionHeader;
     DWORD i;
 
     SectionHeader = (PREAL_IMAGE_SECTION_HEADER)Data;
-    printf("  Name: ");
+    fprintf(fp, "  Name: ");
     for (i = 0; i < 8 && SectionHeader->Name[i] != 0; ++i)
-        printf("%c", SectionHeader->Name[i]);
-    printf("\n");
+        fprintf(fp, "%c", SectionHeader->Name[i]);
+    fprintf(fp, "\n");
 
-    printf("  VirtualSize: 0x%08lX (%lu)\n", SectionHeader->Misc.VirtualSize, SectionHeader->Misc.VirtualSize);
-    printf("  RVA: 0x%08lX\n", SectionHeader->RVA);
-    printf("  SizeOfRawData: 0x%08lX (%lu)\n", SectionHeader->SizeOfRawData, SectionHeader->SizeOfRawData);
-    printf("  PointerToRawData: 0x%08lX\n", SectionHeader->PointerToRawData);
-    printf("  PointerToRelocations: 0x%08lX\n", SectionHeader->PointerToRelocations);
-    printf("  PointerToLinenumbers: 0x%08lX\n", SectionHeader->PointerToLinenumbers);
-    printf("  NumberOfRelocations: 0x%08X (%u)\n", SectionHeader->NumberOfRelocations, SectionHeader->NumberOfRelocations);
-    printf("  NumberOfLinenumbers: 0x%08X (%u)\n", SectionHeader->NumberOfLinenumbers, SectionHeader->NumberOfLinenumbers);
-    printf("  Characteristics: 0x%08lX (%s)\n", SectionHeader->Characteristics, CrGetSectionFlagsString(SectionHeader->Characteristics));
-}
+    fprintf(fp, "  VirtualSize: 0x%08lX (%lu)\n", SectionHeader->Misc.VirtualSize, SectionHeader->Misc.VirtualSize);
+    fprintf(fp, "  RVA: 0x%08lX\n", SectionHeader->RVA);
+    fprintf(fp, "  SizeOfRawData: 0x%08lX (%lu)\n", SectionHeader->SizeOfRawData, SectionHeader->SizeOfRawData);
+    fprintf(fp, "  PointerToRawData: 0x%08lX\n", SectionHeader->PointerToRawData);
+    fprintf(fp, "  PointerToRelocations: 0x%08lX\n", SectionHeader->PointerToRelocations);
+    fprintf(fp, "  PointerToLinenumbers: 0x%08lX\n", SectionHeader->PointerToLinenumbers);
+    fprintf(fp, "  NumberOfRelocations: 0x%08X (%u)\n", SectionHeader->NumberOfRelocations, SectionHeader->NumberOfRelocations);
+    fprintf(fp, "  NumberOfLinenumbers: 0x%08X (%u)\n", SectionHeader->NumberOfLinenumbers, SectionHeader->NumberOfLinenumbers);
+    fprintf(fp, "  Characteristics: 0x%08lX (%s)\n", SectionHeader->Characteristics, CrGetSectionFlagsString(SectionHeader->Characteristics));
+} // CrDumpSectionHeader
 
-void CrDumpCodes(const CR_DataBytes& codes, INT bits)
-{
+void CrDumpCodes(std::FILE *fp, const CR_DataBytes& codes, INT bits) {
     std::size_t codesperline;
 
     if (bits == 64)
@@ -674,123 +656,171 @@ void CrDumpCodes(const CR_DataBytes& codes, INT bits)
         codesperline = 9;
 
     std::size_t i;
-    for (i = 0; i < codesperline; ++i)
-    {
-        if (i < codes.size())
-        {
-            printf("%02X ", codes[i]);
+    for (i = 0; i < codesperline; ++i) {
+        if (i < codes.size()) {
+            fprintf(fp, "%02X ", codes[i]);
+        } else {
+            fprintf(fp, "   ");
         }
-        else
-            printf("   ");
     }
 
-    for (; i < codes.size(); ++i)
-    {
-        printf("%02X ", codes[i]);
+    for (; i < codes.size(); ++i) {
+        fprintf(fp, "%02X ", codes[i]);
     }
-}
+} // CrDumpCodes
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Module dumping
 
-void CR_Module::DumpHeaders()
-{
+void CR_Module::DumpHeaders(std::FILE *fp) {
     if (!IsModuleLoaded())
         return;
 
 #ifdef _UNICODE
-    printf("FileName: %ls, FileSize: 0x%08lX (%lu)\n",
-        GetFileName(), GetFileSize(), GetFileSize());
+    fprintf(fp, "FileName: %ls, FileSize: 0x%08lX (%lu)\n",
+        m_strFileName.c_str(), m_dwFileSize, m_dwFileSize);
 #else
-    printf("FileName: %s, FileSize: 0x%08lX (%lu)\n",
-        GetFileName(), GetFileSize(), GetFileSize());
+    fprintf(fp, "FileName: %s, FileSize: 0x%08lX (%lu)\n",
+        m_strFileName.c_str(), m_dwFileSize, m_dwFileSize);
 #endif
 
-    if (DOSHeader())
-    {
-        CrDumpDOSHeader(DOSHeader());
+    if (m_pDOSHeader) {
+        CrDumpDOSHeader(fp, m_pDOSHeader);
     }
-    if (FileHeader())
-    {
-        CrDumpFileHeader(FileHeader());
+    if (m_pFileHeader) {
+        CrDumpFileHeader(fp, m_pFileHeader);
     }
-    if (OptionalHeader32())
-    {
-        CrDumpOptionalHeader32(OptionalHeader32(), CheckSum());
+    
+    if (m_pOptional32) {
+        CrDumpOptionalHeader32(fp, m_pOptional32, m_dwCheckSum);
+    } else if (m_pOptional64) {
+        CrDumpOptionalHeader64(fp, m_pOptional64, m_dwCheckSum);
     }
-    else if (OptionalHeader64())
-    {
-        CrDumpOptionalHeader64(OptionalHeader64(), CheckSum());
-    }
-    if (SectionHeaders())
-    {
+
+    if (m_pSectionHeaders) {
         DWORD size = NumberOfSections();
-        for (DWORD i = 0; i < size; ++i)
-        {
-            printf("\n### Section #%lu ###\n", i);
-            CrDumpSectionHeader(SectionHeader(i));
+        for (DWORD i = 0; i < size; ++i) {
+            fprintf(fp, "\n### Section #%lu ###\n", i);
+            CrDumpSectionHeader(fp, &m_pSectionHeaders[i]);
         }
     }
-}
+} // CR_Module::DumpHeaders
 
-void CR_Module::DumpImportSymbols()
-{
-    PIMAGE_IMPORT_DESCRIPTOR descs;
-    CR_StringSet dll_names;
-    CR_DeqSet<CR_ImportSymbol> symbols;
+void CR_Module::_DumpImportSymbols32(std::FILE *fp) {
+    DWORD i = 0;
+    for (auto& name : ImportDllNames()) {
+        fprintf(fp, "  %s\n", name.c_str());
+        fprintf(fp, "    RVA      VA       HINT FUNCTION NAME\n");
 
-    descs = ImportDescriptors();
+        for (auto& symbol : ImportSymbols()) {
+            if (symbol.iDLL != i) {
+                continue;
+            }
+            CR_Addr32 addr = VA32FromRVA(symbol.dwRVA);
+            fprintf(fp, "    %08lX %08lX ", symbol.dwRVA, addr);
+            if (symbol.Name.wImportByName)
+                fprintf(fp, "%4X %s\n", symbol.wHint, symbol.pszName);
+            else
+                fprintf(fp, "Ordinal %d\n", symbol.Name.wOrdinal);
+        }
+        fprintf(fp, "  \n");
+        ++i;
+    }
+} // CR_Module::_DumpImportSymbols32
+
+void CR_Module::_DumpImportSymbols64(std::FILE *fp) {
+    DWORD i = 0;
+    for (auto& name : ImportDllNames()) {
+        fprintf(fp, "  %s\n", name.c_str());
+        fprintf(fp, "    RVA      VA               HINT FUNCTION NAME\n");
+
+        for (auto& symbol : ImportSymbols()) {
+            if (symbol.iDLL != i) {
+                continue;
+            }
+            CR_Addr64 addr = VA64FromRVA(symbol.dwRVA);
+            fprintf(fp, "    %08lX %08lX%08lX ", symbol.dwRVA,
+                HILONG(addr), LOLONG(addr));
+            if (symbol.Name.wImportByName)
+                fprintf(fp, "%4X %s\n", symbol.wHint, symbol.pszName);
+            else
+                fprintf(fp, "Ordinal %d\n", symbol.Name.wOrdinal);
+        }
+        fprintf(fp, "  \n");
+        ++i;
+    }
+} // CR_Module::_DumpImportSymbols32
+
+void CR_Module::DumpImportSymbols(std::FILE *fp) {
+    PIMAGE_IMPORT_DESCRIPTOR descs = ImportDescriptors();
     if (descs == NULL)
         return;
 
-    printf("\n### IMPORTS ###\n");
-    printf("  Characteristics: 0x%08lX\n", descs->Characteristics);
-    printf("  TimeDateStamp: 0x%08lX (%s)\n", descs->TimeDateStamp,
+    fprintf(fp, "\n### IMPORTS ###\n");
+    fprintf(fp, "  Characteristics: 0x%08lX\n", descs->Characteristics);
+    fprintf(fp, "  TimeDateStamp: 0x%08lX (%s)\n", descs->TimeDateStamp,
         CrGetTimeStampString(descs->TimeDateStamp));
-    printf("  ForwarderChain: 0x%08lX\n", descs->ForwarderChain);
-    printf("  Name: 0x%08lX (%s)\n", descs->Name, reinterpret_cast<char *>(GetData(descs->Name)));
-    printf("  \n");
+    fprintf(fp, "  ForwarderChain: 0x%08lX\n", descs->ForwarderChain);
+    fprintf(fp, "  Name: 0x%08lX (%s)\n", descs->Name, reinterpret_cast<char *>(GetData(descs->Name)));
+    fprintf(fp, "  \n");
 
-    if (!_GetImportDllNames(dll_names))
+    if (ImportDllNames().empty() || ImportSymbols().empty()) {
         return;
+    }
 
-    for (DWORD i = 0; i < dll_names.size(); ++i)
-    {
-        printf("  %s\n", dll_names[i].c_str());
-        if (Is64Bit())
-            printf("    RVA      VA               HINT FUNCTION NAME\n");
-        else
-            printf("    RVA      VA       HINT FUNCTION NAME\n");
+    if (Is64Bit()) {
+        _DumpImportSymbols64(fp);
+    } else if (Is32Bit()) {
+        _DumpImportSymbols32(fp);
+    }
+} // CR_Module::DumpImportSymbols
 
-        if (_GetImportSymbols(i, symbols))
-        {
-            for (DWORD j = 0; j < symbols.size(); j++)
-            {
-                if (Is64Bit())
-                {
-                    CR_Addr64 addr = VA64FromRVA(symbols[j].dwRVA);
-                    printf("    %08lX %08lX%08lX ", symbols[j].dwRVA,
-                        HILONG(addr), LOLONG(addr));
-                }
-                else if (Is32Bit())
-                {
-                    CR_Addr32 addr = VA32FromRVA(symbols[j].dwRVA);
-                    printf("    %08lX %08lX ", symbols[j].dwRVA, addr);
-                }
-                if (symbols[j].Name.wImportByName)
-                    printf("%4X %s\n", symbols[j].wHint, symbols[j].pszName);
-                else
-                    printf("Ordinal %d\n", symbols[j].Name.wOrdinal);
-            }
-            printf("  \n");
+void CR_Module::_DumpExportSymbols32(std::FILE *fp) {
+    for (auto& symbol : ExportSymbols()) {
+        if (symbol.dwRVA) {
+            CR_Addr32 va = VA32FromRVA(symbol.dwRVA);
+            if (symbol.pszName)
+                fprintf(fp, "  %-50s @%-4lu ; %08lX %08lX\n", 
+                    symbol.pszName, symbol.dwOrdinal, symbol.dwRVA, va);
+            else
+                fprintf(fp, "  %-50s @%-4lu ; %08lX %08lX\n", 
+                    "(No Name)", symbol.dwOrdinal, symbol.dwRVA, va);
+        } else {
+            if (symbol.pszName)
+                fprintf(fp, "  %-50s @%-4lu ; (forwarded to %s)\n", 
+                    "(No Name)", symbol.dwOrdinal, symbol.pszForwarded);
+            else
+                fprintf(fp, "  %-50s @%-4lu ; (forwarded to %s)\n",
+                    "(No Name)", symbol.dwOrdinal, symbol.pszForwarded);
         }
     }
-}
+} // CR_Module::_DumpExportSymbols32
 
-void CR_Module::DumpExportSymbols()
-{
+void CR_Module::_DumpExportSymbols64(std::FILE *fp) {
+    for (auto& symbol : ExportSymbols()) {
+        if (symbol.dwRVA) {
+            CR_Addr64 va = VA64FromRVA(symbol.dwRVA);
+            if (symbol.pszName)
+                fprintf(fp, "  %-50s @%-4lu ; %08lX %08lX%08lX\n", 
+                    symbol.pszName, symbol.dwOrdinal, symbol.dwRVA,
+                    HILONG(va), LOLONG(va));
+            else
+                fprintf(fp, "  %-50s @%-4lu ; %08lX %08lX%08lX\n", 
+                    "(No Name)", symbol.dwOrdinal, symbol.dwRVA,
+                    HILONG(va), LOLONG(va));
+        } else {
+            if (symbol.pszName)
+                fprintf(fp, "  %-50s @%-4lu ; (forwarded to %s)\n", 
+                    "(No Name)", symbol.dwOrdinal, symbol.pszForwarded);
+            else
+                fprintf(fp, "  %-50s @%-4lu ; (forwarded to %s)\n",
+                    "(No Name)", symbol.dwOrdinal, symbol.pszForwarded);
+        }
+    }
+} // CR_Module::_DumpExportSymbols64
+
+void CR_Module::DumpExportSymbols(std::FILE *fp) {
     PIMAGE_EXPORT_DIRECTORY pDir = ExportDirectory();
-
     if (pDir == NULL)
         return;
 
@@ -802,175 +832,144 @@ void CR_Module::DumpExportSymbols()
     //LPDWORD pENPT = (LPDWORD)GetData(dwAddressOfNames);
     //LPWORD pOT = (LPWORD)GetData(dwAddressOfOrdinals);
 
-    printf("\n### EXPORTS ###\n");
-    printf("  Characteristics: 0x%08lX\n", pDir->Characteristics);
-    printf("  TimeDateStamp: 0x%08lX (%s)\n", pDir->TimeDateStamp, CrGetTimeStampString(pDir->TimeDateStamp));
-    printf("  Version: %u.%u\n", pDir->MajorVersion, pDir->MinorVersion);
-    printf("  Name: 0x%08lX (%s)\n", pDir->Name, reinterpret_cast<char *>(GetData(pDir->Name)));
-    printf("  Base: 0x%08lX (%lu)\n", pDir->Base, pDir->Base);
-    printf("  NumberOfFunctions: 0x%08lX (%lu)\n", pDir->NumberOfFunctions, pDir->NumberOfFunctions);
-    printf("  NumberOfNames: 0x%08lX (%lu)\n", pDir->NumberOfNames, pDir->NumberOfNames);
-    printf("  AddressOfFunctions: 0x%08lX\n", pDir->AddressOfFunctions);
-    printf("  AddressOfNames: 0x%08lX\n", pDir->AddressOfNames);
-    printf("  AddressOfNameOrdinals: 0x%08lX\n", pDir->AddressOfNameOrdinals);
-    printf("  \n");
+    fprintf(fp, "\n### EXPORTS ###\n");
+    fprintf(fp, "  Characteristics: 0x%08lX\n", pDir->Characteristics);
+    fprintf(fp, "  TimeDateStamp: 0x%08lX (%s)\n", pDir->TimeDateStamp, CrGetTimeStampString(pDir->TimeDateStamp));
+    fprintf(fp, "  Version: %u.%u\n", pDir->MajorVersion, pDir->MinorVersion);
+    fprintf(fp, "  Name: 0x%08lX (%s)\n", pDir->Name, reinterpret_cast<char *>(GetData(pDir->Name)));
+    fprintf(fp, "  Base: 0x%08lX (%lu)\n", pDir->Base, pDir->Base);
+    fprintf(fp, "  NumberOfFunctions: 0x%08lX (%lu)\n", pDir->NumberOfFunctions, pDir->NumberOfFunctions);
+    fprintf(fp, "  NumberOfNames: 0x%08lX (%lu)\n", pDir->NumberOfNames, pDir->NumberOfNames);
+    fprintf(fp, "  AddressOfFunctions: 0x%08lX\n", pDir->AddressOfFunctions);
+    fprintf(fp, "  AddressOfNames: 0x%08lX\n", pDir->AddressOfNames);
+    fprintf(fp, "  AddressOfNameOrdinals: 0x%08lX\n", pDir->AddressOfNameOrdinals);
+    fprintf(fp, "  \n");
 
-    printf("  %-50s %-5s ; %-8s %-8s\n", "FUNCTION NAME", "ORDI.", "RVA", "VA");
+    fprintf(fp, "  %-50s %-5s ; %-8s %-8s\n", "FUNCTION NAME", "ORDI.", "RVA", "VA");
 
-    for (DWORD i = 0; i < ExportSymbols().size(); ++i)
-    {
-        CR_ExportSymbol& symbol = ExportSymbols()[i];
-        if (symbol.dwRVA)
-        {
-            if (Is64Bit())
-            {
-                CR_Addr64 va = VA64FromRVA(symbol.dwRVA);
-                if (symbol.pszName)
-                    printf("  %-50s @%-4lu ; %08lX %08lX%08lX\n", 
-                        symbol.pszName, symbol.dwOrdinal, symbol.dwRVA,
-                        HILONG(va), LOLONG(va));
-                else
-                    printf("  %-50s @%-4lu ; %08lX %08lX%08lX\n", 
-                        "(No Name)", symbol.dwOrdinal, symbol.dwRVA,
-                        HILONG(va), LOLONG(va));
-            }
-            else if (Is32Bit())
-            {
-                CR_Addr32 va = VA32FromRVA(symbol.dwRVA);
-                if (symbol.pszName)
-                    printf("  %-50s @%-4lu ; %08lX %08lX\n", 
-                        symbol.pszName, symbol.dwOrdinal, symbol.dwRVA, va);
-                else
-                    printf("  %-50s @%-4lu ; %08lX %08lX\n", 
-                        "(No Name)", symbol.dwOrdinal, symbol.dwRVA, va);
-            }
-        }
-        else
-        {
-            if (symbol.pszName)
-                printf("  %-50s @%-4lu ; (forwarded to %s)\n", 
-                    "(No Name)", symbol.dwOrdinal, symbol.pszForwarded);
-            else
-                printf("  %-50s @%-4lu ; (forwarded to %s)\n",
-                    "(No Name)", symbol.dwOrdinal, symbol.pszForwarded);
-        }
+    if (Is64Bit()) {
+        _DumpExportSymbols64(fp);
+    } else if (Is32Bit()) {
+        _DumpExportSymbols32(fp);
     }
 
     printf("\n\n");
-}
+} // CR_Module::DumpExportSymbols
 
-void CR_Module::DumpDelayLoad()
-{
-    if (DelayLoadDescriptors().empty())
-    {
-        LoadDelayLoad();
-        if (DelayLoadDescriptors().empty())
-            return;
-    }
-
-    printf("\n### DELAY LOAD ###\n");
-    const std::size_t size = DelayLoadDescriptors().size();
+void CR_Module::_DumpDelayLoad32(std::FILE *fp) {
+    CR_Addr32 addr;
     DWORD rva;
-    if (Is64Bit())
-    {
-        CR_Addr64 addr;
-        for (std::size_t i = 0; i < size; ++i)
-        {
-            printf("  ### Descr #%u ###\n", static_cast<int>(i));
-            printf("    NAME       %-8s %-8s\n", "RVA", "VA");
 
-            rva = DelayLoadDescriptors()[i].grAttrs;
-            addr = VA64FromRVA(rva);
-            printf("    Attrs:     %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+    int i = 0;
+    for (auto& desc : DelayLoadDescriptors()) {
+        fprintf(fp, "  ### Descr #%u ###\n", i);
+        fprintf(fp, "    NAME       %-8s %-8s\n", "RVA", "VA");
 
-            rva = DelayLoadDescriptors()[i].rvaDLLName;
-            addr = VA64FromRVA(rva);
-            printf("    DLL Name:  %s\n", (LPCSTR)(LoadedImage() + rva));
-            printf("            :  %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+        rva = desc.grAttrs;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    Attrs:     %08lX %08lX\n", rva, addr);
 
-            rva = DelayLoadDescriptors()[i].rvaHmod;
-            addr = VA64FromRVA(rva);
-            printf("    Module:    %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+        rva = desc.rvaDLLName;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    DLL Name:  %s\n", (LPCSTR)(m_pLoadedImage + rva));
+        fprintf(fp, "            :  %08lX %08lX\n", rva, addr);
 
-            rva = DelayLoadDescriptors()[i].rvaIAT;
-            addr = VA64FromRVA(rva);
-            printf("    IAT:       %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+        rva = desc.rvaHmod;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    Module:    %08lX %08lX\n", rva, addr);
 
-            rva = DelayLoadDescriptors()[i].rvaINT;
-            addr = VA64FromRVA(rva);
-            printf("    INT:       %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+        rva = desc.rvaIAT;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    IAT:       %08lX %08lX\n", rva, addr);
 
-            rva = DelayLoadDescriptors()[i].rvaBoundIAT;
-            addr = VA64FromRVA(rva);
-            printf("    BoundIAT:  %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+        rva = desc.rvaINT;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    INT:       %08lX %08lX\n", rva, addr);
 
-            rva = DelayLoadDescriptors()[i].rvaUnloadIAT;
-            addr = VA64FromRVA(rva);
-            printf("    UnloadIAT: %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+        rva = desc.rvaBoundIAT;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    BoundIAT:  %08lX %08lX\n", rva, addr);
 
-            const char *pszTime = CrGetTimeStampString(DelayLoadDescriptors()[i].dwTimeStamp);
-            printf("    dwTimeStamp:  0x%08lX (%s)",
-                DelayLoadDescriptors()[i].dwTimeStamp, pszTime);
-        }
+        rva = desc.rvaUnloadIAT;
+        addr = VA32FromRVA(rva);
+        fprintf(fp, "    UnloadIAT: %08lX %08lX\n", rva, addr);
+
+        const char *pszTime = CrGetTimeStampString(desc.dwTimeStamp);
+        fprintf(fp, "    dwTimeStamp:  0x%08lX (%s)",
+            desc.dwTimeStamp, pszTime);
     }
-    else if (Is32Bit())
-    {
-        CR_Addr32 addr;
-        for (std::size_t i = 0; i < size; ++i)
-        {
-            printf("  ### Descr #%u ###\n", static_cast<int>(i));
-            printf("    NAME       %-8s %-8s\n", "RVA", "VA");
+} // CR_Module::_DumpDelayLoad32
 
-            rva = DelayLoadDescriptors()[i].grAttrs;
-            addr = VA32FromRVA(rva);
-            printf("    Attrs:     %08lX %08lX\n", rva, addr);
+void CR_Module::_DumpDelayLoad64(std::FILE *fp) {
+    CR_Addr64 addr;
+    DWORD rva;
 
-            rva = DelayLoadDescriptors()[i].rvaDLLName;
-            addr = VA32FromRVA(rva);
-            printf("    DLL Name:  %s\n", (LPCSTR)(LoadedImage() + rva));
-            printf("            :  %08lX %08lX\n", rva, addr);
+    int i = 0;
+    for (auto& desc : DelayLoadDescriptors()) {
+        fprintf(fp, "  ### Descr #%u ###\n", i);
+        fprintf(fp, "    NAME       %-8s %-8s\n", "RVA", "VA");
 
-            rva = DelayLoadDescriptors()[i].rvaHmod;
-            addr = VA32FromRVA(rva);
-            printf("    Module:    %08lX %08lX\n", rva, addr);
+        rva = desc.grAttrs;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    Attrs:     %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
 
-            rva = DelayLoadDescriptors()[i].rvaIAT;
-            addr = VA32FromRVA(rva);
-            printf("    IAT:       %08lX %08lX\n", rva, addr);
+        rva = desc.rvaDLLName;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    DLL Name:  %s\n", (LPCSTR)(m_pLoadedImage + rva));
+        fprintf(fp, "            :  %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
 
-            rva = DelayLoadDescriptors()[i].rvaINT;
-            addr = VA32FromRVA(rva);
-            printf("    INT:       %08lX %08lX\n", rva, addr);
+        rva = desc.rvaHmod;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    Module:    %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
 
-            rva = DelayLoadDescriptors()[i].rvaBoundIAT;
-            addr = VA32FromRVA(rva);
-            printf("    BoundIAT:  %08lX %08lX\n", rva, addr);
+        rva = desc.rvaIAT;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    IAT:       %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
 
-            rva = DelayLoadDescriptors()[i].rvaUnloadIAT;
-            addr = VA32FromRVA(rva);
-            printf("    UnloadIAT: %08lX %08lX\n", rva, addr);
+        rva = desc.rvaINT;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    INT:       %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
 
-            const char *pszTime = CrGetTimeStampString(DelayLoadDescriptors()[i].dwTimeStamp);
-            printf("    dwTimeStamp:  0x%08lX (%s)",
-                DelayLoadDescriptors()[i].dwTimeStamp, pszTime);
-        }
+        rva = desc.rvaBoundIAT;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    BoundIAT:  %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+
+        rva = desc.rvaUnloadIAT;
+        addr = VA64FromRVA(rva);
+        fprintf(fp, "    UnloadIAT: %08lX %08lX%08lX\n", rva, HILONG(addr), LOLONG(addr));
+
+        const char *pszTime = CrGetTimeStampString(desc.dwTimeStamp);
+        fprintf(fp, "    dwTimeStamp:  0x%08lX (%s)",
+            desc.dwTimeStamp, pszTime);
+
+        ++i;
+    }
+} // CR_Module::_DumpDelayLoad64
+
+void CR_Module::DumpDelayLoad(std::FILE *fp) {
+    if (DelayLoadDescriptors().empty())
+        return;
+
+    fprintf(fp, "\n### DELAY LOAD ###\n");
+    if (Is64Bit()) {
+        _DumpDelayLoad64(fp);
+    } else if (Is32Bit()) {
+        _DumpDelayLoad32(fp);
     }
 
-    printf("\n\n");
-}
+    fprintf(fp, "\n\n");
+} // CR_Module::DumpDelayLoad
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Module::DumpDisAsm32
 
-BOOL CR_Module::DumpDisAsm32(CR_DisAsmInfo32& info)
-{
+BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
     info.Entrances().sort();
     info.Entrances().unique();
     const std::size_t size = info.Entrances().size();
-    for (std::size_t i = 0; i < size; ++i)
-    {
+    for (std::size_t i = 0; i < size; ++i) {
         CR_CodeFunc32 *cf =
             info.MapAddrToCodeFunc()[info.Entrances()[i]].get();
         assert(cf);
@@ -979,101 +978,95 @@ BOOL CR_Module::DumpDisAsm32(CR_DisAsmInfo32& info)
 
         const char *pszName = FuncNameFromVA32(cf->Addr());
         if (pszName)
-            printf(";; Function %s @ L%08lX\n", pszName, cf->Addr());
+            fprintf(fp, ";; Function %s @ L%08lX\n", pszName, cf->Addr());
         else
-            printf(";; Function L%08lX\n", cf->Addr());
+            fprintf(fp, ";; Function L%08lX\n", cf->Addr());
 
-        switch (cf->FuncType())
-        {
+        switch (cf->FuncType()) {
         case FT_JUMPERFUNC:
-            printf("ft = FT_JUMPERFUNC, ");
+            fprintf(fp, "ft = FT_JUMPERFUNC, ");
             break;
 
         case FT_CDECL:
-            printf("ft = FT_CDECL, ");
+            fprintf(fp, "ft = FT_CDECL, ");
             break;
 
         case FT_STDCALL:
-            printf("ft = FT_STDCALL, ");
+            fprintf(fp, "ft = FT_STDCALL, ");
             break;
 
         case FT_FASTCALL:
-            printf("ft = FT_FASTCALL, ");
+            fprintf(fp, "ft = FT_FASTCALL, ");
             break;
 
         case FT_RETURNONLY:
-            printf("ft = FT_RETURNONLY, ");
+            fprintf(fp, "ft = FT_RETURNONLY, ");
             break;
 
         default:
-            printf("ft = FT_UNKNOWN, ");
+            fprintf(fp, "ft = FT_UNKNOWN, ");
             break;
         }
-        printf("SizeOfStackArgs == %d\n", cf->SizeOfStackArgs());
-        DumpDisAsmFunc32(info, info.Entrances()[i]);
+        fprintf(fp, "SizeOfStackArgs == %d\n", cf->SizeOfStackArgs());
+        DumpDisAsmFunc32(fp, info, info.Entrances()[i]);
 
         if (pszName)
-            printf(";; End of Function %s @ L%08lX\n\n", pszName, cf->Addr());
+            fprintf(fp, ";; End of Function %s @ L%08lX\n\n", pszName, cf->Addr());
         else
-            printf(";; End of Function L%08lX\n\n", cf->Addr());
+            fprintf(fp, ";; End of Function L%08lX\n\n", cf->Addr());
     }
     return TRUE;
-}
+} // CR_Module::DumpDisAsm32
 
-BOOL CR_Module::DumpDisAsmFunc32(CR_DisAsmInfo32& info, CR_Addr32 func)
-{
+BOOL CR_Module::DumpDisAsmFunc32(std::FILE *fp, CR_DisAsmInfo32& info, CR_Addr32 func) {
     auto end = info.MapAddrToOpCode().end();
-    for (auto it = info.MapAddrToOpCode().begin(); it != end; it++)
-    {
+    for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode32 *oc = it->second.get();
         assert(oc);
 
         if (func != 0 && !oc->FuncAddrs().Contains(func))
             continue;
 
-        printf("L%08lX: ", oc->Addr());
+        fprintf(fp, "L%08lX: ", oc->Addr());
 
-        CrDumpCodes(oc->Codes(), 32);
+        CrDumpCodes(fp, oc->Codes(), 32);
 
-        switch (oc->Operands().size())
-        {
+        switch (oc->Operands().size()) {
         case 3:
-            printf("%s %s,%s,%s\n", oc->Name().c_str(),
+            fprintf(fp, "%s %s,%s,%s\n", oc->Name().c_str(),
                 oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str(),
                 oc->Operand(2)->Text().c_str());
             break;
 
         case 2:
-            printf("%s %s,%s\n", oc->Name().c_str(),
+            fprintf(fp, "%s %s,%s\n", oc->Name().c_str(),
                 oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str());
             break;
 
         case 1:
-            printf("%s %s\n", oc->Name().c_str(),
+            fprintf(fp, "%s %s\n", oc->Name().c_str(),
                 oc->Operand(0)->Text().c_str());
             break;
 
         case 0:
-            printf("%s\n", oc->Name().c_str());
+            fprintf(fp, "%s\n", oc->Name().c_str());
             break;
         }
     }
 
     return TRUE;
-}
+} // CR_Module::DumpDisAsmFunc32
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Module::DumpDisAsm64
 
-BOOL CR_Module::DumpDisAsm64(CR_DisAsmInfo64& info)
-{
+BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
     info.Entrances().sort();
     info.Entrances().unique();
     const std::size_t size = info.Entrances().size();
-    for (std::size_t i = 0; i < size; ++i)
-    {
+    for (std::size_t i = 0; i < size; ++i) {
         CR_CodeFunc64 *cf =
             info.MapAddrToCodeFunc()[info.Entrances()[i]].get();
         assert(cf);
@@ -1083,69 +1076,69 @@ BOOL CR_Module::DumpDisAsm64(CR_DisAsmInfo64& info)
         const char *pszName = FuncNameFromVA64(cf->Addr());
 
         if (pszName)
-            printf(";; Function %s @ L%08lX%08lX\n", pszName,
+            fprintf(fp, ";; Function %s @ L%08lX%08lX\n", pszName,
                 HILONG(cf->Addr()), LOLONG(cf->Addr()));
         else
-            printf(";; Function L%08lX%08lX\n", HILONG(cf->Addr()), LOLONG(cf->Addr()));
+            fprintf(fp, ";; Function L%08lX%08lX\n", HILONG(cf->Addr()), LOLONG(cf->Addr()));
 
         if (cf->FuncType() == FT_JUMPERFUNC)
-            printf("ft = FT_JUMPERFUNC, ");
+            fprintf(fp, "ft = FT_JUMPERFUNC, ");
         else if (cf->FuncType() == FT_RETURNONLY)
-            printf("ft = FT_RETURNONLY, ");
+            fprintf(fp, "ft = FT_RETURNONLY, ");
         else
-            printf("ft = FT_64BITFUNC, ");
+            fprintf(fp, "ft = FT_64BITFUNC, ");
 
         printf("SizeOfStackArgs == %d\n", cf->SizeOfStackArgs());
-        DumpDisAsmFunc64(info, info.Entrances()[i]);
+        DumpDisAsmFunc64(fp, info, info.Entrances()[i]);
 
         if (pszName)
-            printf(";; End of Function %s @ L%08lX%08lX\n\n", pszName,
+            fprintf(fp, ";; End of Function %s @ L%08lX%08lX\n\n", pszName,
                 HILONG(cf->Addr()), LOLONG(cf->Addr()));
         else
-            printf(";; End of Function L%08lX%08lX\n\n",
+            fprintf(fp, ";; End of Function L%08lX%08lX\n\n",
                 HILONG(cf->Addr()), LOLONG(cf->Addr()));
     }
     return TRUE;
-}
+} // CR_Module::DumpDisAsm64
 
-BOOL CR_Module::DumpDisAsmFunc64(CR_DisAsmInfo64& info, CR_Addr64 func)
-{
+BOOL CR_Module::DumpDisAsmFunc64(std::FILE *fp, CR_DisAsmInfo64& info, CR_Addr64 func) {
     auto end = info.MapAddrToOpCode().end();
-    for (auto it = info.MapAddrToOpCode().begin(); it != end; it++)
-    {
+    for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode64 *oc = it->second.get();
         assert(oc);
 
         if (func != 0 && !oc->FuncAddrs().Contains(func))
             continue;
 
-        printf("L%08lX%08lX: ", HILONG(oc->Addr()), LOLONG(oc->Addr()));
+        fprintf(fp, "L%08lX%08lX: ", HILONG(oc->Addr()), LOLONG(oc->Addr()));
 
-        CrDumpCodes(oc->Codes(), 64);
+        CrDumpCodes(fp, oc->Codes(), 64);
 
         switch (oc->Operands().size())
         {
         case 3:
-            printf("%s %s,%s,%s\n", oc->Name().c_str(),
+            fprintf(fp, "%s %s,%s,%s\n", oc->Name().c_str(),
                 oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str(),
                 oc->Operand(2)->Text().c_str());
             break;
 
         case 2:
-            printf("%s %s,%s\n", oc->Name().c_str(),
+            fprintf(fp, "%s %s,%s\n", oc->Name().c_str(),
                 oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str());
             break;
 
         case 1:
-            printf("%s %s\n", oc->Name().c_str(),
+            fprintf(fp, "%s %s\n", oc->Name().c_str(),
                 oc->Operand(0)->Text().c_str());
             break;
 
         case 0:
-            printf("%s\n", oc->Name().c_str());
+            fprintf(fp, "%s\n", oc->Name().c_str());
             break;
         }
     }
 
     return TRUE;
-}
+} // CR_Module::DumpDisAsmFunc64
+
+////////////////////////////////////////////////////////////////////////////

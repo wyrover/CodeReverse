@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
 // Location.h
-// Copyright (C) 2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2014-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
-// This file is part of CodeReverse.
+// This file is part of CodeReverse. See file ReadMe.txt and License.txt.
 ////////////////////////////////////////////////////////////////////////////
 
 #ifndef LOCATION_H_
@@ -16,51 +16,33 @@ struct CR_Location
     std::string m_file;
     int m_line;
 
-    CR_Location() : m_line(1) { }
+    CR_Location() : m_file(), m_line(1) { }
 
-    CR_Location(const CR_Location& loc)
-    : m_file(loc.m_file), m_line(loc.m_line)
-    {
-    }
+    CR_Location(const std::string& file, int line) :
+        m_file(file), m_line(line) { }
 
-    CR_Location(const char *file, int line) : m_file(file), m_line(line) { }
-
-    CR_Location(const std::string& file, int line) : m_file(file), m_line(line)
-    {
-    }
-
-    void set(const char *file, int line)
-    {
+    void set(const std::string& file, int line) {
         m_file = file;
         m_line = line;
     }
 
-    void operator=(const CR_Location& loc)
-    {
-        m_file = loc.m_file;
-        m_line = loc.m_line;
-    }
-
-    CR_Location& operator++()
-    {
+    CR_Location& operator++() {
         m_line++;
         return *this;
     }
 
-    CR_Location operator++(int)
-    {
+    CR_Location operator++(int) {
         CR_Location loc(*this);
         m_line++;
         return loc;
     }
 
-    std::string to_string() const
-    {
-        std::string str = m_file;
-        char buf[32];
-        std::sprintf(buf, " (%d)", m_line);
-        str += buf;
-        return str;
+    std::string str() const {
+        std::string s = m_file;
+        s += " (";
+        s += std::to_string(m_line);
+        s += ')';
+        return s;
     }
 };
 

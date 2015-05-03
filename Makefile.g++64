@@ -10,7 +10,6 @@ DOTEXE = .exe
 
 CC = gcc
 CXX = g++
-CAPER = ./caper
 
 DEFS = -static -m64 -mthreads -DJAPAN -finput-charset=CP932 -fexec-charset=CP932
 
@@ -28,7 +27,7 @@ OBJS = \
 	CodeReverse64$(DOTOBJ) \
 	Dumping64$(DOTOBJ) \
 	Module64$(DOTOBJ) \
-	mzc2mini64$(DOTOBJ) \
+	TypeSystem64$(DOTOBJ) \
 	CodeReverse_res64$(DOTOBJ) \
 	h-ndisasm\disasm64$(DOTOBJ) \
 	h-ndisasm\insnsb64$(DOTOBJ) \
@@ -47,15 +46,9 @@ CR_HEADERS = \
 	CodeReverse_inl.h \
 	Module.h \
 	Module_inl.h \
-	mzc2mini.h
-
-CPARSER_HEADER = \
-	CParseHeader.h \
-	CScanner.h \
-	CParserAST.h \
-	CParserSite.h \
-	CParser.h \
-	TypeSystem.h
+	TextToText.hpp \
+	TextToText_inl.hpp \
+	StringAssortNew.h
 
 H_NDISASM_HEADERS = \
 	h-ndisasm\compiler.h \
@@ -73,7 +66,7 @@ all: coderev64$(DOTEXE)
 coderev64$(DOTEXE): $(OBJS)
 	$(CXX) -o coderev64$(DOTEXE) $(CXXFLAGS) $(OPTIONS) $(OBJS) -lkernel32 -limagehlp
 
-CodeReverse64$(DOTOBJ): $(CR_HEADERS) $(CPARSER_HEADER) CodeReverse.cpp
+CodeReverse64$(DOTOBJ): $(CR_HEADERS) CodeReverse.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o CodeReverse64$(DOTOBJ) CodeReverse.cpp
 Coding64$(DOTOBJ): $(CR_HEADERS) Coding.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Coding64$(DOTOBJ) Coding.cpp
@@ -81,10 +74,8 @@ Dumping64$(DOTOBJ): $(CR_HEADERS) Dumping.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Dumping64$(DOTOBJ) Dumping.cpp
 Module64$(DOTOBJ): $(CR_HEADERS) Module.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Module64$(DOTOBJ) Module.cpp
-mzc2mini64$(DOTOBJ): $(CR_HEADERS) mzc2mini.cpp
-	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o mzc2mini64$(DOTOBJ) mzc2mini.cpp
-CParser.h: $(CAPER) CParser.cpg
-	$(CAPER) CParser.cpg CParser.h
+TypeSystem64$(DOTOBJ): $(CR_HEADERS) TypeSystem.cpp
+	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o TypeSystem64$(DOTOBJ) TypeSystem.cpp
 
 h-ndisasm\disasm64$(DOTOBJ): h-ndisasm\disasm.c $(H_NDISASM_HEADERS)
 	$(CC) -c $(CCFLAGS) $(OPTIONS) -o h-ndisasm\disasm64$(DOTOBJ) h-ndisasm\disasm.c
@@ -110,4 +101,3 @@ clean:
 	rm -f *$(DOTOBJ)
 	rm -f h-ndisasm/*$(DOTOBJ)
 	rm -f *.res
-	rm -f CParser.h

@@ -1,1065 +1,857 @@
 ////////////////////////////////////////////////////////////////////////////
 // TypeSystem.h
-// Copyright (C) 2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2014-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
-// This file is part of CodeReverse.
+// This file is part of CodeReverse. See file ReadMe.txt and License.txt.
 ////////////////////////////////////////////////////////////////////////////
 
 #ifndef TYPESYSTEM_H_
 #define TYPESYSTEM_H_
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_TypeFlags
+// CR_TypeFlags --- type flags
 
-enum
-{
-    TF_VOID         = (1 << 0),
-    TF_CHAR         = (1 << 1),
-    TF_SHORT        = (1 << 2),
-    TF_LONG         = (1 << 3),
-    TF_LONGLONG     = (1 << 4),
-    TF_INT          = (1 << 5),
-    TF_VA_LIST      = (1 << 6),
-    TF_FLOAT        = (1 << 7),
-    TF_DOUBLE       = (1 << 8),
-    TF_SIGNED       = 0,
-    TF_UNSIGNED     = (1 << 9),
-    TF_XSIGNED      = (1 << 10), // CodeReverse extension: signed and/or unsigned
-    TF_STRUCT       = (1 << 11),
-    TF_UNION        = (1 << 12),
-    TF_ENUM         = (1 << 13),
-    TF_POINTER      = (1 << 14),
-    TF_ARRAY        = (1 << 15),
-    TF_FUNCTION     = (1 << 16),
-    TF_CDECL        = (1 << 17),
-    TF_STDCALL      = (1 << 18),
-    TF_FASTCALL     = (1 << 19),
-    TF_CONST        = (1 << 20),
-    TF_VOLATILE     = (1 << 21),
-    TF_COMPLEX      = (1 << 22),
-    TF_IMAGINARY    = (1 << 23),
-    TF_ATOMIC       = (1 << 24),
-    TF_EXTERN       = (1 << 25),
-    TF_STATIC       = (1 << 26),
-    TF_THREADLOCAL  = (1 << 27),
-    TF_INLINE       = (1 << 28),
-    TF_ALIAS        = (1 << 29)
-};
 typedef unsigned long CR_TypeFlags;
 
-////////////////////////////////////////////////////////////////////////////
-// CrNormalizeTypeFlags
+static const CR_TypeFlags TF_VOID         = 0x00000001;
+static const CR_TypeFlags TF_CHAR         = 0x00000002;
+static const CR_TypeFlags TF_SHORT        = 0x00000004;
+static const CR_TypeFlags TF_LONG         = 0x00000008;
+static const CR_TypeFlags TF_LONGLONG     = 0x00000010;
+static const CR_TypeFlags TF_INT          = 0x00000020;
+//
+static const CR_TypeFlags TF_FLOAT        = 0x00000080;
+static const CR_TypeFlags TF_DOUBLE       = 0x00000100;
+static const CR_TypeFlags TF_SIGNED       = 0;
+static const CR_TypeFlags TF_UNSIGNED     = 0x00000200;
+static const CR_TypeFlags TF_PTR64        = 0x00000400;
+static const CR_TypeFlags TF_STRUCT       = 0x00000800;
+static const CR_TypeFlags TF_UNION        = 0x00001000;
+static const CR_TypeFlags TF_ENUM         = 0x00002000;
+static const CR_TypeFlags TF_POINTER      = 0x00004000;
+static const CR_TypeFlags TF_ARRAY        = 0x00008000;
+static const CR_TypeFlags TF_FUNCTION     = 0x00010000;
+static const CR_TypeFlags TF_INCOMPLETE   = 0x00020000;
+static const CR_TypeFlags TF_CDECL        = 0;
+static const CR_TypeFlags TF_STDCALL      = 0x00040000;
+static const CR_TypeFlags TF_FASTCALL     = 0x00080000;
+static const CR_TypeFlags TF_CONST        = 0x00100000;
+//
+static const CR_TypeFlags TF_COMPLEX      = 0x00400000;
+static const CR_TypeFlags TF_IMAGINARY    = 0x00800000;
+static const CR_TypeFlags TF_ATOMIC       = 0x01000000;
+static const CR_TypeFlags TF_PTR32        = 0x02000000;
+static const CR_TypeFlags TF_INACCURATE   = 0x04000000;
+static const CR_TypeFlags TF_VECTOR       = 0x08000000;
+static const CR_TypeFlags TF_BITFIELD     = 0x10000000;
+static const CR_TypeFlags TF_ALIAS        = 0x20000000;
+//
+static const CR_TypeFlags TF_INT128       = 0x80000000;
 
-inline CR_TypeFlags CrNormalizeTypeFlags(CR_TypeFlags flags)
-{
-    if (flags & TF_INT)
-    {
-        if (flags & TF_SHORT)
-            flags &= ~TF_INT;
-        else if (flags & TF_LONG)
-            flags &= ~TF_INT;
-        else if (flags & TF_LONGLONG)
-            flags &= ~TF_INT;
-    }
-    if ((flags & TF_UNSIGNED) &&
-        !(flags & (TF_CHAR | TF_SHORT | TF_LONG | TF_LONGLONG | TF_INT)))
-    {
-        flags |= TF_INT;
-    }
-    if (flags == 0)
-        flags = TF_INT;
-    return flags & ~(TF_EXTERN | TF_STATIC);
-}
+////////////////////////////////////////////////////////////////////////////
+// functions
+
+CR_TypeFlags CrNormalizeTypeFlags(CR_TypeFlags flags);
+
+std::string CrEscapeStringA2A(const std::string& str);
+std::string CrEscapeStringW2A(const std::wstring& wstr);
+
+std::string CrUnescapeStringA2A(const std::string& str);
+std::wstring CrUnescapeStringA2W(const std::string& str);
+
+std::string CrUnescapeCharA2A(const std::string& str);
+std::wstring CrUnescapeCharL2W(const std::string& str);
+
+std::string CrFormatBinary(const std::string& binary);
+std::string CrParseBinary(const std::string& code);
+
+std::string CrIndent(const std::string& str);
+std::string CrTabToSpace(const std::string& str, size_t tabstop = 4);
 
 ////////////////////////////////////////////////////////////////////////////
 // IDs
 
 // CR_ID --- ID
-typedef std::size_t CR_ID;
-
-// CR_TypeID --- type ID
-typedef CR_ID CR_TypeID;
-
-// CR_FuncID --- function ID
-typedef CR_ID CR_FuncID;
-
-// CR_VarID --- variable ID
-typedef CR_ID CR_VarID;
-
-// CR_StructID --- struct or union ID
-typedef CR_ID CR_StructID;
-
-// CR_EnumID --- enum ID
-typedef CR_ID CR_EnumID;
+typedef std::size_t             CR_ID;
 
 // cr_invalid_id --- invalid ID
-#define cr_invalid_id   static_cast<CR_ID>(-1)
+#define cr_invalid_id           static_cast<CR_ID>(-1)
+
+// CR_TypeID --- type ID
+typedef CR_ID                   CR_TypeID;
+
+// CR_FuncID --- function ID
+typedef CR_ID                   CR_FuncID;
+
+// CR_StructID --- struct or union ID
+typedef CR_ID                   CR_StructID;
+
+// CR_EnumID --- enum ID
+typedef CR_ID                   CR_EnumID;
+
+// CR_VarID --- variable ID
+typedef CR_ID                   CR_VarID;
+
+// a set of ID 
+typedef CR_VecSet<CR_ID>        CR_IDSet;
+
+// a set of type id
+typedef CR_VecSet<CR_TypeID>    CR_TypeSet;
+
+// invalid address
+#ifdef _WIN64
+    #define cr_invalid_address      0xDEADFACEDEADFACEULL
+#else
+    #define cr_invalid_address      0xDEADFACEUL
+#endif
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_TypeSet
+// CR_TypedValue --- typed value
 
-typedef CR_DeqSet<CR_TypeID> CR_TypeSet;
+struct CR_TypedValue {
+    void *      m_ptr;
+    size_t      m_size;
+    CR_TypeID   m_type_id;
+    unsigned long long m_addr;
+    std::string m_text;
+    std::string m_extra;
+
+    CR_TypedValue() : m_ptr(NULL), m_size(0), m_type_id(cr_invalid_id),
+                      m_addr(cr_invalid_address) { }
+    CR_TypedValue(CR_TypeID tid) : m_ptr(NULL), m_size(0), m_type_id(tid),
+                                   m_addr(cr_invalid_address) { }
+    CR_TypedValue(const void *ptr, size_t size);
+    virtual ~CR_TypedValue();
+
+    // copy
+    CR_TypedValue(const CR_TypedValue& value);
+    CR_TypedValue& operator=(const CR_TypedValue& value);
+
+    // move
+    CR_TypedValue(CR_TypedValue&& value);
+    CR_TypedValue& operator=(CR_TypedValue&& value);
+
+    bool empty() const { return m_size == 0 || m_ptr == NULL; }
+    size_t size() const { return m_size; }
+    void clear() {
+        free(m_ptr);
+        m_ptr = NULL;
+        m_size = 0;
+    }
+
+    template <typename T_VALUE>
+    T_VALUE& get() {
+        assert(sizeof(T_VALUE) <= m_size);
+        return *reinterpret_cast<T_VALUE *>(m_ptr);
+    }
+
+    template <typename T_VALUE>
+    const T_VALUE& get() const {
+        assert(sizeof(T_VALUE) <= m_size);
+        return *reinterpret_cast<const T_VALUE *>(m_ptr);
+    }
+
+    template <typename T_VALUE>
+    CR_TypedValue(CR_TypeID tid, const T_VALUE& value) :
+        m_ptr(NULL), m_size(0), m_type_id(tid)
+    {
+        assign<T_VALUE>(value);
+    }
+
+    template <typename T_VALUE>
+    void assign(const T_VALUE& v) {
+        assign(&v, sizeof(T_VALUE));
+        m_text = std::to_string(v);
+    }
+
+    template <typename T_VALUE>
+    T_VALUE *get_at(size_t byte_index, size_t size = sizeof(T_VALUE)) {
+        if (m_ptr) {
+            if (byte_index + size <= m_size) {
+                return reinterpret_cast<char *>(m_ptr) + byte_index;
+            }
+        }
+        return NULL;
+    }
+
+    template <typename T_VALUE>
+    const T_VALUE *get_at(size_t byte_index, size_t size = sizeof(T_VALUE)) const {
+        if (m_ptr) {
+            if (byte_index + size <= m_size) {
+                return reinterpret_cast<const char *>(m_ptr) + byte_index;
+            }
+        }
+        return NULL;
+    }
+
+    void assign(const void *ptr, size_t size);
+};
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_LogFunc
+// CR_LogType --- logical type
 
-struct CR_LogFunc
-{
-    bool                    m_ellipsis;
-    CR_TypeSet              m_types;
-    CR_StringSet            m_names;
-    CR_TypeID               m_return_type;
-    enum {
+struct CR_LogType {
+    CR_TypeFlags m_flags;           // type flags
+
+    CR_ID        m_sub_id;          // sub ID.
+    // m_sub_id means...
+    // For TF_ALIAS:                A type ID (CR_TypeID).
+    // For TF_POINTER:              A type ID (CR_TypeID).
+    // For TF_ARRAY:                A type ID (CR_TypeID).
+    // For TF_CONST:                A type ID (CR_TypeID).
+    // For TF_CONST | TF_POINTER:   A type ID (CR_TypeID).
+    // For TF_VECTOR:               A type ID (CR_TypeID).
+    // For TF_FUNCTION:             A function ID (CR_FuncID).
+    // For TF_STRUCT:               A struct ID (CR_StructID).
+    // For TF_ENUM:                 An enum ID (CR_EnumID).
+    // For TF_UNION:                A struct ID (CR_StructID).
+    // Otherwise:                   Zero.
+
+    size_t          m_count;        // for TF_ARRAY, TF_STRUCT, TF_UNION
+                                    //     TF_VECTOR
+
+    int             m_size;         // the size of type
+    int             m_align;        // alignment requirement of type
+    int             m_alignas;      // # of alignas(#) if specified
+    bool            m_alignas_explicit;
+    CR_Location     m_location;         // the location
+    bool            m_is_macro;         // is it a macro?
+
+    CR_LogType() : m_flags(0), m_sub_id(0), m_count(0), m_size(0), m_align(0),
+                   m_alignas(0), m_alignas_explicit(false), m_is_macro(false) { }
+
+    CR_LogType(CR_TypeFlags flags, int size, const CR_Location& location) :
+        m_flags(flags), m_sub_id(0), m_count(0), m_size(size), m_align(size),
+        m_alignas(0), m_alignas_explicit(false), m_location(location),
+        m_is_macro(false) { }
+
+    CR_LogType(CR_TypeFlags flags, int size, int align,
+               const CR_Location& location) :
+        m_flags(flags), m_sub_id(0), m_count(0), m_size(size), m_align(align),
+            m_alignas(0), m_alignas_explicit(false), m_location(location),
+                m_is_macro(false) { }
+
+    CR_LogType(CR_TypeFlags flags, int size, int align, int alignas_,
+               const CR_Location& location) :
+        m_flags(flags), m_sub_id(0), m_count(0), m_size(size), m_align(align),
+            m_alignas(alignas_), m_alignas_explicit(false),
+                m_location(location), m_is_macro(false) { }
+
+    // incomplete comparison 
+    bool operator==(const CR_LogType& type) const;
+    bool operator!=(const CR_LogType& type) const;
+}; // struct CR_LogType
+
+////////////////////////////////////////////////////////////////////////////
+// CR_FuncParam --- parameter of function
+
+struct CR_FuncParam {
+    CR_TypeID       m_type_id;
+    std::string     m_name;
+
+    CR_FuncParam(CR_TypeID tid, const std::string& name) :
+        m_type_id(tid), m_name(name) { }
+};
+
+////////////////////////////////////////////////////////////////////////////
+// CR_LogFunc --- logical function
+
+struct CR_LogFunc {
+    enum Convention {
         FT_CDECL, FT_STDCALL, FT_FASTCALL
-    } m_func_type;
+    };
+
+    bool                        m_ellipsis;
+    CR_TypeID                   m_return_type;
+    Convention                  m_convention;  // calling convention
+    std::vector<CR_FuncParam>   m_params;
 
     CR_LogFunc() :
-        m_ellipsis(false),
-        m_return_type(0),
-        m_func_type(FT_CDECL)
-    {
-    }
-
-    CR_LogFunc(const CR_LogFunc& lf) :
-        m_ellipsis(lf.m_ellipsis),
-        m_types(lf.m_types),
-        m_names(lf.m_names),
-        m_return_type(lf.m_return_type),
-        m_func_type(lf.m_func_type)
-    {
-    }
-
-    void operator=(const CR_LogFunc& lf)
-    {
-        m_ellipsis = lf.m_ellipsis;
-        m_types = lf.m_types;
-        m_names = lf.m_names;
-        m_return_type = lf.m_return_type;
-        m_func_type = lf.m_func_type;
-    }
-};
+        m_ellipsis(false), m_return_type(0), m_convention(FT_CDECL) { }
+}; // struct CR_LogFunc
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_LogType
+// CR_StructMember --- member of structure
 
-struct CR_LogType
-{
-    CR_TypeFlags m_flags;
-
-    // For TF_POINTER:              the type ID (CR_TypeID)
-    // For TF_ARRAY:                the type ID (CR_TypeID)
-    // For TF_CONST:                the type ID (CR_TypeID)
-    // For TF_CONST | TF_POINTER:   the type ID (CR_TypeID)
-    // For TF_FUNCTION:             the function ID (CR_FuncID)
-    // For TF_STRUCT:               the struct ID (CR_StructID)
-    // For TF_ENUM:                 the enum ID (CR_EnumID)
-    // For TF_UNION:                the union ID (CR_UnionID)
-    // otherwise: zero
-    CR_ID        m_id;
-
-    int          m_count;   // for TF_ARRAY
-
-    CR_LogType() : m_flags(0), m_id(0), m_count(0) { }
-
-    CR_LogType(CR_TypeFlags flags) : m_flags(flags), m_id(0), m_count(0) { }
-
-    bool operator==(const CR_LogType& type) const
-    {
-        return m_flags == type.m_flags &&
-               m_id == type.m_id &&
-               m_count == type.m_count;
-    }
-
-    bool operator!=(const CR_LogType& type) const
-    {
-        return m_flags != type.m_flags ||
-               m_id != type.m_id ||
-               m_count != type.m_count;
-    }
+struct CR_StructMember {
+    CR_TypeID       m_type_id;
+    std::string     m_name;
+    int             m_bit_offset;
+    int             m_bits;
+    CR_StructMember(
+        CR_TypeID tid, const std::string& name,
+        int bit_offset = 0, int bits = -1
+    ) : m_type_id(tid),
+        m_name(name),
+        m_bit_offset(bit_offset),
+        m_bits(bits) { }
 };
+
+bool operator==(const CR_StructMember& mem1, const CR_StructMember& mem2);
+bool operator!=(const CR_StructMember& mem1, const CR_StructMember& mem2);
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_LogStruct -- logical structure or union
+// CR_LogStruct --- logical structure or union
 
-struct CR_LogStruct
-{
-    bool                    m_struct_or_union;
-    CR_TypeSet              m_types;
-    CR_StringSet            m_names;
-    CR_DeqSet<int>          m_bitfield;
-    int                     m_pack;
+struct CR_LogStruct {
+    CR_TypeID               m_tid;              // type ID
+    bool                    m_is_struct;        // struct or union?
+    int                     m_pack;             // pack
+    int                     m_align;            // alignment requirement
+    int                     m_alignas;          // _Alignas(#)
+    bool                    m_alignas_explicit;
+    bool                    m_is_complete;      // is it complete?
+    std::vector<CR_StructMember>    m_members;  // members
 
-    CR_LogStruct(bool struct_or_union = true) :
-        m_struct_or_union(struct_or_union)
-    {
-    }
+    CR_LogStruct(bool is_struct = true) :
+        m_is_struct(is_struct), m_pack(8), m_align(0), m_alignas(0),
+        m_alignas_explicit(false), m_is_complete(false) { }
 
-    CR_LogStruct(const CR_LogStruct& ls) :
-        m_struct_or_union(ls.m_struct_or_union),
-        m_types(ls.m_types),
-        m_names(ls.m_names),
-        m_bitfield(ls.m_bitfield),
-        m_pack(ls.m_pack)
-    {
-    }
+    // incomplete comparison
+    bool operator==(const CR_LogStruct& ls) const;
+    bool operator!=(const CR_LogStruct& ls) const;
 
-    void operator=(const CR_LogStruct& ls)
-    {
-        m_struct_or_union = ls.m_struct_or_union;
-        m_types = ls.m_types;
-        m_names = ls.m_names;
-        m_bitfield = ls.m_bitfield;
-        m_pack = ls.m_pack;
-    }
-
-    int FindName(const CR_String& name) const
-    {
-        for (size_t i = 0; i < m_names.size(); ++i)
-        {
-            if (m_names[i] == name)
-                return i;
-        }
-        return -1;
-    }
-
-    bool operator==(const CR_LogStruct& ls) const
-    {
-        return m_struct_or_union == ls.m_struct_or_union &&
-               m_types == ls.m_types &&
-               m_names == ls.m_names &&
-               m_bitfield == ls.m_bitfield &&
-               m_pack == ls.m_pack;
-    }
-
-    bool operator!=(const CR_LogStruct& ls) const
-    {
-        return m_struct_or_union != ls.m_struct_or_union ||
-               m_types != ls.m_types ||
-               m_names != ls.m_names ||
-               m_bitfield != ls.m_bitfield ||
-               m_pack != ls.m_pack;
-    }
-};
+    bool empty() const { return m_members.empty(); }
+    size_t size() const { return m_members.size(); }
+}; // struct CR_LogStruct
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_LogEnum
 
-struct CR_LogEnum
-{
-    CR_LogEnum() { }
+struct CR_LogEnum {
+    std::unordered_map<std::string, int>     m_mNameToValue;
+    std::unordered_map<int, std::string>     m_mValueToName;
 
-    CR_LogEnum(const CR_LogEnum& le) :
-        m_mNameToValue(le.m_mNameToValue),
-        m_mValueToName(le.m_mValueToName)
-    {
+    bool empty() const {
+        return m_mNameToValue.empty() && m_mValueToName.empty();
     }
+}; // struct CR_LogEnum
 
-    void operator=(const CR_LogEnum& le)
-    {
-        m_mNameToValue = le.m_mNameToValue;
-        m_mValueToName = le.m_mValueToName;
-    }
+////////////////////////////////////////////////////////////////////////////
+// CR_LogVar --- logical variable
 
-    CR_UnorderedMap<CR_String, int>& MapNameToValue()
-    { return m_mNameToValue; }
+struct CR_LogVar {
+    CR_TypedValue   m_typed_value;      // typed value
+    CR_Location     m_location;         // the location
+    bool            m_is_macro;         // is it a macro?
+    CR_LogVar() : m_is_macro(false) { }
+}; // struct CR_LogVar
 
-    CR_UnorderedMap<int, CR_String>& MapValueToName()
-    { return m_mValueToName; }
+////////////////////////////////////////////////////////////////////////////
+// CR_Name2Name --- name mapping
 
-    const CR_UnorderedMap<CR_String, int>& MapNameToValue() const
-    { return m_mNameToValue; }
-
-    const CR_UnorderedMap<int, CR_String>& MapValueToName() const
-    { return m_mValueToName; }
-
-protected:
-    CR_UnorderedMap<CR_String, int>     m_mNameToValue;
-    CR_UnorderedMap<int, CR_String>     m_mValueToName;
+struct CR_Name2Name {
+    std::string     m_from;
+    std::string     m_to;
+    CR_Location     m_location;         // the location
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_LogVar
+// CR_Macro
 
-struct CR_LogVar
-{
-    CR_LogVar() : m_has_value(false)
-    {
-    }
-
-    bool            m_has_value;
-    CR_TypeID       m_type_id;
-    union
-    {
-        char        m_char_value;
-        short       m_short_value;
-        long        m_long_value;
-        long long   m_long_long_value;
-        int         m_int_value;
-        float       m_float_value;
-        double      m_double_value;
-        long double m_long_double_value;
-        void *      m_pointer_value;
-    };
+struct CR_Macro {
+    int                         m_num_params;
+    std::vector<std::string>    m_params;
+    std::string                 m_contents;
+    CR_Location                 m_location;
+    bool                        m_ellipsis;
+    CR_Macro() : m_num_params(0), m_ellipsis(false) { }
 };
 
-////////////////////////////////////////////////////////////////////////////
-// CR_NameScope
+typedef std::unordered_map<std::string,CR_Macro> CR_MacroSet;
 
-class CR_NameScope
-{
+////////////////////////////////////////////////////////////////////////////
+// CR_NameScope --- universe of names, types, functions and variables etc.
+
+class CR_NameScope {
 public:
-    CR_NameScope() : m_is_64bit(false)
+    CR_NameScope(shared_ptr<CR_ErrorInfo> error_info, bool is_64bit) :
+        m_error_info(error_info), m_is_64bit(is_64bit)
     {
         Init();
     }
 
-    CR_NameScope(const CR_NameScope& ns) :
-        m_is_64bit(ns.m_is_64bit),
-        m_mNameToTypeID(ns.m_mNameToTypeID),
-        m_mTypeIDToName(ns.m_mTypeIDToName),
-        m_mNameToVarID(ns.m_mNameToVarID),
-        m_mVarIDToName(ns.m_mVarIDToName),
-        m_mNameToFuncTypeID(ns.m_mNameToFuncTypeID),
-        m_types(ns.m_types),
-        m_funcs(ns.m_funcs),
-        m_structs(ns.m_structs),
-        m_enums(ns.m_enums),
-        m_vars(ns.m_vars)
-    {
-    }
+    CR_NameScope(const CR_NameScope& ns);
+    CR_NameScope& operator=(const CR_NameScope& ns);
 
-    void operator=(const CR_NameScope& ns)
-    {
-        m_is_64bit = ns.m_is_64bit;
-        m_mNameToTypeID = ns.m_mNameToTypeID;
-        m_mTypeIDToName = ns.m_mTypeIDToName;
-        m_mNameToVarID = ns.m_mNameToVarID;
-        m_mVarIDToName = ns.m_mVarIDToName;
-        m_mNameToFuncTypeID = ns.m_mNameToFuncTypeID;
-        m_types = ns.m_types;
-        m_funcs = ns.m_funcs;
-        m_structs = ns.m_structs;
-        m_enums = ns.m_enums;
-        m_vars = ns.m_vars;
-    }
+    // is 64-bit mode or not?
+    bool Is64Bit() const { return m_is_64bit; }
 
-    bool Is64Bit() const
-    {
-        return m_is_64bit;
-    }
+    // initialize
+    void Init();
 
-    void Set64Bit(bool is_64bit)
-    {
-        m_is_64bit = is_64bit;
-    }
+    bool LoadFromFiles(
+        const std::string& prefix = "",
+        const std::string& suffix = ".dat");
 
-    void Init()
-    {
-        AddType("void", TF_VOID);
+    bool LoadMacros(
+        const std::string& prefix = "",
+        const std::string& suffix = ".dat");
 
-        AddType("char", TF_CHAR);
-        AddType("short", TF_SHORT);
-        AddType("long", TF_LONG);
-        AddType("long long", TF_LONGLONG);
-        AddType("int", TF_INT);
+    bool SaveToFiles(
+        const std::string& prefix = "",
+        const std::string& suffix = ".dat") const;
 
-        AddType("unsigned char", TF_UNSIGNED | TF_CHAR);
-        AddType("unsigned short", TF_UNSIGNED | TF_SHORT);
-        AddType("unsigned long", TF_UNSIGNED | TF_LONG);
-        AddType("unsigned long long", TF_UNSIGNED | TF_LONGLONG);
-        AddType("unsigned int", TF_UNSIGNED | TF_INT);
-
-        AddType("float", TF_FLOAT);
-        AddType("double", TF_DOUBLE);
-        AddType("long double", TF_LONG | TF_DOUBLE);
-
-        AddType("va_list", TF_VA_LIST);
-
-        // CodeReverse extension
-        AddType("xsigned char", TF_XSIGNED | TF_CHAR);
-        AddType("xsigned short", TF_XSIGNED | TF_SHORT);
-        AddType("xsigned long", TF_XSIGNED | TF_LONG);
-        AddType("xsigned long long", TF_XSIGNED | TF_LONGLONG);
-        AddType("xsigned int", TF_XSIGNED | TF_INT);
-    }
-
-    CR_TypeID TypeIDFromName(const CR_String& name) const
-    {
-        auto it = m_mNameToTypeID.find(name);
-        if (it != m_mNameToTypeID.end())
-            return it->second;
-        else
-            return cr_invalid_id;
-    }
-
-    CR_String NameFromTypeID(CR_TypeID tid) const
-    {
-        auto it = m_mTypeIDToName.find(tid);
-        if (it != m_mTypeIDToName.end())
-            return it->second;
-        else
-            return "";
-    }
-
-    CR_TypeID AddType(const CR_String& name, const CR_LogType& lt)
-    {
-        CR_TypeID tid = m_types.Insert(lt);
-        if (!name.empty())
-        {
+    CR_TypeID AddType(const std::string& name, const CR_LogType& lt) {
+        auto tid = m_types.AddUnique(lt);
+        if (!name.empty()) {
             m_mNameToTypeID[name] = tid;
             m_mTypeIDToName[tid] = name;
         }
         return tid;
     }
 
-    CR_TypeID AddType(const CR_String& name, CR_TypeFlags flags)
+    CR_TypeID AddType(const std::string& name, CR_TypeFlags flags, int size,
+                      const CR_Location& location)
     {
-        return AddType(name, CR_LogType(flags));
+        return AddType(name, CR_LogType(flags, size, location));
     }
 
-    CR_TypeID AddAliasType(const CR_String& name, CR_TypeID tid)
+    CR_TypeID AddType(const std::string& name, CR_TypeFlags flags, int size,
+                      int align, const CR_Location& location)
     {
-        assert(!name.empty());
-        CR_LogType lt;
-        lt.m_flags = TF_ALIAS;
-        lt.m_id = tid;
-        m_types.push_back(lt);
-        tid = static_cast<CR_TypeID>(m_types.size()) - 1;
-        m_mNameToTypeID[name] = tid;
-        m_mTypeIDToName[tid] = name;
-        return tid;
+        return AddType(name, CR_LogType(flags, size, align, location));
     }
 
-    CR_VarID AddVar(const CR_String& name, CR_TypeID tid)
+    CR_TypeID AddType(const std::string& name, CR_TypeFlags flags, int size,
+                      int align, int alignas_,
+                      const CR_Location& location)
     {
-        assert(tid != cr_invalid_id);
-        CR_LogVar var;
-        var.m_type_id = tid;
-        var.m_int_value = 0;
-        m_vars.push_back(var);
-        CR_VarID vid = static_cast<CR_VarID>(m_vars.size()) - 1;;
-        if (!name.empty())
-        {
-            m_mNameToVarID[name] = vid;
-            m_mVarIDToName[vid] = name;
+        return AddType(name, CR_LogType(flags, size, align, alignas_, location));
+    }
+
+    // add alias type
+    CR_TypeID AddAliasType(const std::string& name, CR_TypeID tid,
+                           const CR_Location& location);
+    // add alias macro type
+    CR_TypeID AddAliasMacroType(const std::string& name, CR_TypeID tid,
+                                const CR_Location& location);
+
+    // add a variable
+    CR_VarID AddVar(const std::string& name, CR_TypeID tid,
+                    const CR_Location& location);
+    // add a variable
+    CR_VarID AddVar(const std::string& name, CR_TypeID tid,
+                    const CR_Location& location, const CR_TypedValue& value);
+    // add a variable
+    CR_VarID AddVar(const std::string& name, CR_TypeID tid,
+                    int value, const CR_Location& location);
+
+    // add a variable
+    CR_VarID AddVar(const std::string& name, const CR_LogType& type) {
+        auto tid = m_types.AddUnique(type);
+        if (!name.empty()) {
+            m_mNameToTypeID[name] = tid;
+            m_mTypeIDToName[tid] = name;
         }
-        return vid;
+        return AddVar(name, tid, type.m_location);
     }
 
-    CR_VarID AddVar(const CR_String& name, const CR_LogType& lt)
-    {
-        CR_TypeID tid = m_types.Insert(lt);
-        return AddVar(name, tid);
+    // add a constant type
+    CR_TypeID AddConstType(CR_TypeID tid);
+
+    // add a pointer type
+    CR_TypeID AddPointerType(CR_TypeID tid, CR_TypeFlags flags,
+                             const CR_Location& location);
+
+    CR_TypeID AddArrayType(CR_TypeID tid, int count,
+                           const CR_Location& location);
+
+    CR_TypeID AddVectorType(
+        const std::string& name, CR_TypeID tid, int vector_size,
+        const CR_Location& location);
+
+    // add function type
+    CR_TypeID AddFuncType(const CR_LogFunc& lf, const CR_Location& location);
+
+    // add struct type
+    CR_TypeID AddStructType(const std::string& name, const CR_LogStruct& ls,
+                            int alignas_, const CR_Location& location);
+
+    // add union type
+    CR_TypeID AddUnionType(const std::string& name, const CR_LogStruct& ls,
+                           int alignas_, const CR_Location& location);
+
+    CR_TypeID AddEnumType(const std::string& name, const CR_LogEnum& le,
+                          const CR_Location& location);
+
+    void AddTypeFlags(CR_TypeID tid, CR_TypeFlags flags) {
+        LogType(tid).m_flags |= flags;
     }
 
-    CR_TypeID AddConstType(CR_TypeID tid)
-    {
-        assert(tid != cr_invalid_id);
-        CR_LogType lt;
-        lt.m_flags = TF_CONST;
-        lt.m_id = tid;
-        CR_TypeID newtid = m_types.Insert(lt);
-        CR_String name = NameFromTypeID(tid);
-        if (!name.empty())
-        {
-            name = CR_String("const ") + name;
-            m_mNameToTypeID[name] = newtid;
-            m_mTypeIDToName[newtid] = name;
-        }
-        return newtid;
+    bool CompleteStructType(CR_TypeID tid, CR_StructID sid);
+
+    bool CompleteUnionType(CR_TypeID tid, CR_StructID sid);
+
+    bool CompleteType(CR_TypeID tid) {
+        return CompleteType(tid, LogType(tid));
     }
 
-    CR_TypeID AddPtrType(CR_TypeID tid, CR_TypeFlags flags = 0)
-    {
-        assert(tid != cr_invalid_id);
-        CR_LogType lt;
-        lt.m_flags = TF_POINTER | flags;
-        lt.m_id = tid;
-        CR_TypeID newtid = m_types.Insert(lt);
-        CR_LogType type = m_types[tid];
-        CR_String name = NameFromTypeID(tid);
-        if (!name.empty() && !(type.m_flags & TF_FUNCTION))
-        {
-            if (flags & TF_CONST)
-                name += "* const ";
-            else
-                name += "*";
-            m_mNameToTypeID[name] = newtid;
-            m_mTypeIDToName[newtid] = name;
-        }
-        return newtid;
-    }
+    bool CompleteType(CR_TypeID tid, CR_LogType& type);
 
-    CR_TypeID AddArrayType(CR_TypeID tid, int count)
-    {
-        assert(tid != cr_invalid_id);
-        CR_LogType lt;
-        lt.m_flags = TF_ARRAY;
-        lt.m_id = tid;
-        lt.m_count = count;
-        tid = m_types.Insert(lt);
-        return tid;
-    }
+    void CompleteTypeInfo();
 
-    CR_TypeID AddFuncType(const CR_LogFunc& lf)
-    {
-        m_funcs.push_back(lf);
-        CR_FuncID fid = static_cast<CR_FuncID>(m_funcs.size()) - 1;
-        CR_LogType lt;
-        lt.m_flags = TF_FUNCTION;
-        lt.m_id = fid;
-        CR_TypeID tid = m_types.Insert(lt);
-        return tid;
-    }
+    void SetAlignas(CR_TypeID tid, int alignas_);
 
-    CR_TypeID AddStructType(const CR_String& name, const CR_LogStruct& ls)
-    {
-        CR_LogType lt;
-        if (name.empty())
-        {
-            m_structs.push_back(ls);
-            CR_StructID sid = static_cast<CR_StructID>(m_structs.size()) - 1;
-            lt.m_flags = (ls.m_struct_or_union ? TF_STRUCT : TF_UNION);
-            lt.m_id = sid;
-            CR_TypeID newtid = m_types.Insert(lt);
-            return newtid;
-        }
-        auto it = m_mNameToTypeID.find(name);
-        if (it == m_mNameToTypeID.end())
-        {
-            m_structs.push_back(ls);
-            CR_StructID sid = static_cast<CR_StructID>(m_structs.size()) - 1;
-            lt.m_flags = (ls.m_struct_or_union ? TF_STRUCT : TF_UNION);
-            lt.m_id = sid;
-            CR_TypeID newtid = m_types.Insert(lt);
-            if (ls.m_struct_or_union)
-            {
-                CR_String newname(CR_String("struct ") + name);
-                m_mNameToTypeID[newname] = newtid;
-                m_mTypeIDToName[newtid] = newname;
-            }
-            else
-            {
-                CR_String newname(CR_String("union ") + name);
-                m_mNameToTypeID[newname] = newtid;
-                m_mTypeIDToName[newtid] = newname;
-            }
-            return newtid;
-        }
-        else
-        {
-            CR_TypeID tid = it->second;
-            while (m_types[tid].m_flags & TF_ALIAS)
-                tid = m_types[tid].m_id;
-            assert(m_types[tid].m_flags & (TF_STRUCT | TF_UNION));
-            CR_StructID sid = m_types[tid].m_id;
-            if (ls.m_types.size())
-                m_structs[sid] = ls;
-            return tid;
-        }
-    }
+    //
+    // calculations
+    //
+    void IntZero(CR_TypedValue& value1) const;
+    void IntOne(CR_TypedValue& value1) const;
+    bool IsZero(const CR_TypedValue& value1) const;
+    bool IsNonZero(const CR_TypedValue& value1) const;
 
-    CR_TypeID AddEnumType(const CR_String& name, const CR_LogEnum& le)
-    {
-        CR_LogType lt;
-        if (name.empty())
-        {
-            m_enums.push_back(le);
-            CR_EnumID eid = static_cast<CR_EnumID>(m_enums.size()) - 1;
-            lt.m_flags = TF_ENUM;
-            lt.m_id = eid;
-            CR_TypeID newtid = m_types.Insert(lt);
-            return newtid;
-        }
-        auto it = m_mNameToTypeID.find(name);
-        if (it == m_mNameToTypeID.end())
-        {
-            m_enums.push_back(le);
-            CR_EnumID eid = static_cast<CR_EnumID>(m_enums.size()) - 1;
-            lt.m_flags = TF_ENUM;
-            lt.m_id = eid;
-            CR_TypeID newtid = m_types.Insert(lt);
-            CR_String newname(CR_String("enum ") + name);
-            m_mNameToTypeID[newname] = newtid;
-            m_mTypeIDToName[newtid] = newname;
-            return newtid;
-        }
-        else
-        {
-            CR_TypeID tid = it->second;
-            while (m_types[tid].m_flags & TF_ALIAS)
-                tid = m_types[tid].m_id;
-            assert(m_types[tid].m_flags & TF_ENUM);
-            CR_EnumID eid = m_types[tid].m_id;
-            m_enums[eid] = le;
-            return tid;
-        }
-    }
+    CR_TypedValue Cast(CR_TypeID tid, const CR_TypedValue& value) const;
+    CR_TypedValue StaticCast(CR_TypeID tid, const CR_TypedValue& value) const;
+    CR_TypedValue ReinterpretCast(CR_TypeID tid, const CR_TypedValue& value) const;
+    CR_TypeID MakeSigned(CR_TypeID tid) const;
+    CR_TypeID MakeUnsigned(CR_TypeID tid) const;
+    CR_TypeID MakeConst(CR_TypeID tid) const;
 
-    int GetSizeofStruct(CR_StructID sid) const
-    {
-        assert(sid != cr_invalid_id);
-        if (sid == cr_invalid_id)
-            return 0;
+    // array[index]
+    CR_TypedValue ArrayItem(const CR_TypedValue& array, size_t index) const;
+    // struct.member
+    CR_TypedValue Dot(const CR_TypedValue& struct_value, const std::string& name) const;
+    // p->member
+    CR_TypedValue Arrow(const CR_TypedValue& pointer_value, const std::string& name) const;
+    // *p
+    CR_TypedValue Asterisk(const CR_TypedValue& pointer_value) const;
+    // &var
+    CR_TypedValue Address(const CR_TypedValue& value) const;
 
-        const CR_LogStruct& ls = m_structs[sid];
-        int size = 0, align = 0, bitremain = 0, oldtypesize = 0;
-        CR_TypeID oldtid = cr_invalid_id;
-        const std::size_t count = ls.m_types.size();
-        for (std::size_t i = 0; i < count; ++i)
-        {
-            auto tid = ls.m_types[i];
-            int typesize = GetSizeofType(tid);
-            int bits = ls.m_bitfield[i];
-            if (bits)
-            {
-                // bitfield
-                assert(bits <= typesize * 8);
-                if ((oldtid == cr_invalid_id || tid == oldtid) && bitremain >= bits)
-                {
-                    bitremain -= bits;
-                }
-                else if (bitremain == 0)
-                {
-                    bitremain += typesize * 8;
-                    bitremain -= bits;
-                }
-                else
-                {
-                    size += oldtypesize;
-                    bitremain += oldtypesize * 8;
-                    bitremain -= bits;
-                }
-            }
-            else
-            {
-                if (bitremain)
-                    size += oldtypesize;
+          void *GetAddressPointer(unsigned long long addr, size_t size);
+    const void *GetAddressPointer(unsigned long long addr, size_t size) const;
 
-                size += typesize;
+    int GetIntValue(const CR_TypedValue& value) const;
+    void SetIntValue(CR_TypedValue& value, int n) const;
+    void SetValue(CR_TypedValue& value, CR_TypeID tid, const void *ptr,
+                  size_t size) const;
 
-                // consider struct packing...
-                if (align && typesize >= ls.m_pack)
-                {
-                    size += ls.m_pack - (typesize + align) % ls.m_pack;
-                    align = typesize % ls.m_pack;
-                }
-                else
-                {
-                    align += typesize;
-                    align %= ls.m_pack;
-                }
+    CR_TypedValue FConstant(const std::string& text, const std::string& extra);
+    CR_TypedValue SConstant(const std::string& text, const std::string& extra);
+    CR_TypedValue IConstant(const std::string& text, const std::string& extra);
 
-                bitremain = 0;
-            }
-            oldtid = tid;
-            oldtypesize = typesize;
-        }
-        if (bitremain)
-            size += oldtypesize;
-        return size;
-    }
+    CR_TypedValue PConstant(CR_TypeID tid, const std::string& text, const std::string& extra);
+    CR_TypedValue FConstant(CR_TypeID tid, const std::string& text, const std::string& extra);
+    CR_TypedValue SConstant(CR_TypeID tid, const std::string& text, const std::string& extra);
+    CR_TypedValue IConstant(CR_TypeID tid, const std::string& text, const std::string& extra);
 
-    int GetSizeofUnion(CR_StructID sid) const
-    {
-        assert(sid != cr_invalid_id);
-        if (sid == cr_invalid_id)
-            return 0;
+    CR_TypedValue BiOp(CR_TypedValue& v1, CR_TypedValue& v2) const;
+    CR_TypedValue BiOpInt(CR_TypedValue& v1, CR_TypedValue& v2) const;
+    int CompareValue(const CR_TypedValue& v1, const CR_TypedValue& v2) const;
 
-        const CR_LogStruct& ls = m_structs[sid];
-        int maxsize = 0, size;
-        for (auto tid : ls.m_types)
-        {
-            size = GetSizeofType(tid);
-            if (maxsize < size)
-                maxsize = size;
-        }
-        return maxsize;
-    }
+    // +
+    CR_TypedValue Add(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // -
+    CR_TypedValue Sub(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // *
+    CR_TypedValue Mul(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // /
+    CR_TypedValue Div(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // %
+    CR_TypedValue Mod(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
 
-    int GetSizeofType(CR_TypeID tid) const
-    {
-        assert(tid != cr_invalid_id);
+    // ~
+    CR_TypedValue Not(const CR_TypedValue& value1) const;
+    // - (unary)
+    CR_TypedValue Minus(const CR_TypedValue& value1) const;
+
+    // &
+    CR_TypedValue And(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // |
+    CR_TypedValue Or(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // ^
+    CR_TypedValue Xor(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+
+    // relational
+    CR_TypedValue Eq(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    CR_TypedValue Ne(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    CR_TypedValue Gt(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    CR_TypedValue Lt(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    CR_TypedValue Ge(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    CR_TypedValue Le(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+
+    // <<, >>
+    CR_TypedValue Shl(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    CR_TypedValue Shr(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+
+    // !
+    CR_TypedValue LNot(const CR_TypedValue& value1) const;
+    // &&
+    CR_TypedValue LAnd(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+    // ||
+    CR_TypedValue LOr(const CR_TypedValue& value1, const CR_TypedValue& value2) const;
+
+    //
+    // getters
+    //
+
+    std::string StringFromValue(const CR_TypedValue& value) const;
+
+    // get size of type
+    int SizeOfType(CR_TypeID tid) const {
         if (tid == cr_invalid_id)
             return 0;
-        auto& type = m_types[tid];
-        if (type.m_flags & TF_ALIAS)
-            return GetSizeofType(type.m_id);
-        if ((type.m_flags & TF_POINTER) || (type.m_flags & TF_VA_LIST))
-            return (Is64Bit() ? 8 : 4);
-        if (type.m_flags & TF_ARRAY)
-            return GetSizeofType(type.m_id) * type.m_count;
-        if (type.m_flags & TF_CONST)
-            return GetSizeofType(type.m_id);
-        if (type.m_flags & TF_FUNCTION)
-            return (Is64Bit() ? 8 : 4);
-        if (type.m_flags & TF_STRUCT)
-            return GetSizeofStruct(type.m_id);
-        if (type.m_flags & TF_UNION)
-            return GetSizeofUnion(type.m_id);
-        if (type.m_flags & TF_ENUM)
-            return 4;
-        if (type.m_flags & TF_LONGLONG)
-            return 8;
-        if ((type.m_flags & TF_LONG) && !(type.m_flags & TF_DOUBLE))
-            return 4;
-        if ((type.m_flags & TF_LONG) && (type.m_flags & TF_DOUBLE))
-            return 10;
-        if (type.m_flags & TF_SHORT)
-            return 2;
-        if (type.m_flags & TF_CHAR)
-            return 1;
-        if (type.m_flags & TF_FLOAT)
-            return 4;
-        if (type.m_flags & TF_DOUBLE)
-            return 8;
-        return 0;
+        auto& type = LogType(tid);
+        return type.m_size;
     }
 
-    CR_String StringOfEnumType(const CR_String& name, CR_EnumID eid) const
-    {
-        assert(eid != cr_invalid_id);
-        if (eid == cr_invalid_id)
-        {
-            return "";
-        }
-        CR_String str = "enum ";
-        str += name;
-        str += " ";
-        if (!m_enums[eid].MapValueToName().empty())
-        {
-            str += "{ ";
-            auto& e = m_enums[eid];
-            for (auto it : e.MapValueToName())
-            {
-                str += it.second;
-                str += " = ";
-                char buf[32];
-                std::sprintf(buf, "%d", it.first);
-                str += buf;
-                str += "; ";
-            }
-            str += "} ";
+    std::string
+    StringOfEnumTag(const std::string& name) const {
+        std::string str = "enum ";
+        if (name.size()) {
+            assert(name.find("enum ") == 0);
+            str += name.substr(5);
+            str += ' ';
         }
         return str;
     }
 
-    CR_String StringOfStructType(const CR_String& name, CR_StructID sid) const
-    {
-        assert(sid != cr_invalid_id);
-        if (sid == cr_invalid_id)
-        {
-            return "";
-        }
-        CR_String str;
-        if (m_structs[sid].m_struct_or_union)
-            str = "struct ";
-        else
-            str = "union ";
-        str += name;
-        str += " ";
-        auto& s = m_structs[sid];
-        if (s.m_types.size())
-        {
-            str += "{ ";
-            const std::size_t siz = s.m_types.size();
-            for (std::size_t i = 0; i < siz; ++i)
-            {
-                str += StringOfType(s.m_types[i], s.m_names[i]);
-                if (s.m_bitfield[i])
-                {
-                    char buf[64];
-                    sprintf(buf, " : %u", s.m_bitfield[i]);
-                    str += buf;
-                }
-                str += "; ";
-            }
-            str += "} ";
-        }
-        return str;
-    }
+    // get string of enum
+    std::string StringOfEnum(const std::string& name, CR_EnumID eid) const;
 
-    CR_String StringOfType(CR_TypeID tid, const CR_String& content) const
-    {
-        assert(tid != cr_invalid_id);
-        if (tid == cr_invalid_id)
-        {
-            return "";
-        }
-        const CR_LogType& type = m_types[tid];
-        auto it = m_mTypeIDToName.find(tid);
-        if (it != m_mTypeIDToName.end() &&
-            ((type.m_flags & (TF_STRUCT | TF_UNION | TF_ENUM)) == 0))
-        {
-            return it->second + " " + content;
-        }
-        if (type.m_flags & TF_ENUM)
-        {
-            CR_String name = NameFromTypeID(tid);
-            return StringOfEnumType(name, type.m_id) + content;
-        }
-        if (type.m_flags & (TF_STRUCT | TF_UNION))
-        {
-            CR_String name = NameFromTypeID(tid);
-            return StringOfStructType(name, type.m_id) + content;
-        }
-        if (type.m_flags & TF_POINTER)
-        {
-            const CR_LogType& type2 = m_types[type.m_id];
-            if ((type2.m_flags & TF_FUNCTION) || (type2.m_flags & TF_ARRAY) ||
-                (type2.m_flags & TF_POINTER))
-            {
-                if (type2.m_flags & TF_FUNCTION)
-                {
-                    if (type.m_flags & TF_CDECL)
-                        return StringOfType(type.m_id, "(__cdecl *" + content + ")");
-                    if (type.m_flags & TF_STDCALL)
-                        return StringOfType(type.m_id, "(__stdcall *" + content + ")");
-                    if (type.m_flags & TF_FASTCALL)
-                        return StringOfType(type.m_id, "(__fastcall *" + content + ")");
-                }
-                return StringOfType(type.m_id, "(*" + content + ")");
-            }
-            else if (type.m_flags & TF_CONST)
-                return StringOfType(type.m_id, "") + " * const " + content;
-            else
-                return StringOfType(type.m_id, "") + " *" + content;
-        }
-        if (type.m_flags & TF_ARRAY)
-        {
-            if (type.m_count)
-            {
-                char buf[64];
-                std::sprintf(buf, "[%d]", type.m_count);
-                return StringOfType(type.m_id, content + buf);
-            }
-            else
-                return StringOfType(type.m_id, content + "[]");
-        }
-        if (type.m_flags & TF_CONST)
-        {
-            return CR_String("const ") + StringOfType(type.m_id, content);
-        }
-        if (type.m_flags & TF_FUNCTION)
-        {
-            const CR_LogFunc& lf = m_funcs[type.m_id];
-            CR_String rettype = StringOfType(lf.m_return_type, "");
-            CR_String paramlist =
-                StringOfParamList(lf.m_types, lf.m_names);
-            CR_String convension;
-            if (type.m_flags & TF_CDECL)
-                convension = "__cdecl";
-            if (type.m_flags & TF_STDCALL)
-                convension = "__stdcall";
-            if (type.m_flags & TF_FASTCALL)
-                convension = "__fastcall";
-            if (lf.m_ellipsis)
-                paramlist += ", ...";
-            return rettype + " " + convension + " " + content + "(" + paramlist + ")";
-        }
-        return "";
-    }
+    std::string
+    StringOfStructTag(const std::string& name, const CR_LogStruct& s) const;
 
-    CR_String StringOfParamList(
-        const CR_TypeSet& type_list,
-        const CR_StringSet& name_list) const
-    {
-        assert(type_list.size() == name_list.size());
-        std::size_t i, size = type_list.size();
-        CR_String str;
-        if (size > 0)
-        {
-            assert(type_list[0] != cr_invalid_id);
-            str += StringOfType(type_list[0], name_list[0]);
-            for (i = 1; i < size; ++i)
-            {
-                str += ", ";
-                assert(type_list[i] != cr_invalid_id);
-                str += StringOfType(type_list[i], name_list[i]);
-            }
-        }
-        return str;
-    }
+    // get string of struct or union
+    std::string StringOfStruct(const std::string& name, CR_StructID sid) const;
 
-    int GetIntValueFromVarName(const CR_String& name) const
-    {
-        auto it = m_mNameToVarID.find(name);
-        if (it == m_mNameToVarID.end())
-            return 0;
-        return m_vars[it->second].m_int_value;
-    }
+    // get string of type
+    std::string StringOfType(CR_TypeID tid, const std::string& name,
+                           bool expand = true, bool no_convension = false) const;
 
-    bool IsFuncType(CR_TypeID tid) const
-    {
-        assert(tid != cr_invalid_id);
-        if (tid == cr_invalid_id)
-            return false;
-        tid = ResolveAlias(tid);
-        if (m_types[tid].m_flags & TF_FUNCTION)
-            return true;
-        return false;
-    }
+    // get string of parameter list
+    std::string StringOfParamList(const std::vector<CR_FuncParam>& params) const;
 
-    bool IsIntegerType(CR_TypeID tid) const
-    {
-        assert(tid != cr_invalid_id);
-        if (tid == cr_invalid_id)
-            return false;
-        tid = ResolveAlias(tid);
-        const CR_TypeFlags not_flags =
-            (TF_DOUBLE | TF_FLOAT | TF_POINTER | TF_ARRAY | TF_FUNCTION |
-             TF_VA_LIST | TF_STRUCT | TF_UNION | TF_ENUM);
-        if (m_types[tid].m_flags & not_flags)
-            return false;
-        const CR_TypeFlags flags =
-            (TF_INT | TF_CHAR | TF_SHORT | TF_LONG | TF_LONGLONG);
-        if (m_types[tid].m_flags & flags)
-            return true;
-        if (m_types[tid].m_flags & TF_CONST)
-            return IsIntegerType(m_types[tid].m_id);
-        return false;
-    }
+    // get member list of struct or union
+    void GetStructMemberList(
+        CR_StructID sid, std::vector<CR_StructMember>& members) const;
 
-    bool IsFloatingType(CR_TypeID tid) const
-    {
-        assert(tid != cr_invalid_id);
-        if (tid == cr_invalid_id)
-            return false;
-        tid = ResolveAlias(tid);
-        if (m_types[tid].m_flags & (TF_DOUBLE | TF_FLOAT))
-            return true;
-        if (m_types[tid].m_flags & TF_CONST)
-            return IsFloatingType(m_types[tid].m_id);
-        return false;
-    }
+    CR_TypeID AddConstCharType();
+    CR_TypeID AddConstUCharType();
+    CR_TypeID AddConstShortType();
+    CR_TypeID AddConstUShortType();
+    CR_TypeID AddConstIntType();
+    CR_TypeID AddConstUIntType();
+    CR_TypeID AddConstLongType();
+    CR_TypeID AddConstULongType();
+    CR_TypeID AddConstLongLongType();
+    CR_TypeID AddConstULongLongType();
+    CR_TypeID AddConstFloatType();
+    CR_TypeID AddConstDoubleType();
+    CR_TypeID AddConstLongDoubleType();
+    CR_TypeID AddConstStringType();
+    CR_TypeID AddConstWStringType();
+    CR_TypeID AddVoidPointerType();
+    CR_TypeID AddConstVoidPointerType();
+    CR_TypeID AddConstCharArray(size_t count);
+    CR_TypeID AddConstWCharArray(size_t count);
 
-    bool IsUnsignedType(CR_TypeID tid) const
-    {
-        assert(tid != cr_invalid_id);
-        if (tid == cr_invalid_id)
-            return false;
-        tid = ResolveAlias(tid);
-        if (m_types[tid].m_flags & TF_UNSIGNED)
-            return true;
-        if (m_types[tid].m_flags & TF_CONST)
-            return IsUnsignedType(m_types[tid].m_id);
-        return false;
-    }
+    bool HasValue(const CR_TypedValue& value) const;
 
-    CR_TypeID ResolveAlias(CR_TypeID tid) const
-    {
-        if (tid == cr_invalid_id)
-            return tid;
-        return ResolveAlias_(tid);
-    }
+    long long GetLongLongValue(const CR_TypedValue& value) const;
+    unsigned long long GetULongLongValue(const CR_TypedValue& value) const;
+    long double GetLongDoubleValue(const CR_TypedValue& value) const;
 
-    CR_TypeID ResolveAlias_(CR_TypeID tid) const
-    {
-        assert(tid != cr_invalid_id);
-        while (m_types[tid].m_flags & TF_ALIAS)
-            tid = m_types[tid].m_id;
-        return tid;
-    }
+    void SetLongLongValue(CR_TypedValue& value, long long n) const;
+    void SetULongLongValue(CR_TypedValue& value, unsigned long long u) const;
+    void SetLongDoubleValue(CR_TypedValue& value, long double ld) const;
 
-    void AddTypeFlags(CR_TypeID tid, CR_TypeFlags flags)
-    {
-        m_types[tid].m_flags |= flags;
-    }
+    //
+    // type judgements
+    //
+    CR_TypeID IsStringType(CR_TypeID tid) const;
+    CR_TypeID IsWStringType(CR_TypeID tid) const;
 
-    CR_LogType& LogType(CR_TypeID tid)
-    {
+    // is it a function type?
+    bool IsFuncType(CR_TypeID tid) const;
+    // is it a predefined type?
+    bool IsPredefinedType(CR_TypeID tid) const;
+    // is it an integer type?
+    bool IsIntegralType(CR_TypeID tid) const;
+    // is it a floating type?
+    bool IsFloatingType(CR_TypeID tid) const;
+    // is it an unsigned type?
+    bool IsUnsignedType(CR_TypeID tid) const;
+    // is it a pointer type?
+    bool IsPointerType(CR_TypeID tid) const;
+    // is it a constant type?
+    bool IsConstantType(CR_TypeID tid) const;
+    // is it an array type?
+    bool IsArrayType(CR_TypeID tid) const;
+    // is it a struct type?
+    bool IsStructType(CR_TypeID tid) const;
+    // is it a union type?
+    bool IsUnionType(CR_TypeID tid) const;
+    // is it a struct or union type?
+    bool IsStructOrUnionType(CR_TypeID tid) const;
+
+    //
+    // ResolveAlias
+    //
+
+    CR_TypeID ResolveAlias(CR_TypeID tid) const;
+    CR_TypeID ResolveAliasAndCV(CR_TypeID tid) const;
+
+    //
+    // accessors
+    //
+
+    CR_TypeID TypeIDFromFlags(CR_TypeFlags flags) const;
+
+    CR_TypeID TypeIDFromName(const std::string& name) const;
+
+    std::string NameFromTypeID(CR_TypeID tid) const;
+
+    CR_LogType& LogType(CR_TypeID tid) {
+        assert(tid < m_types.size());
         return m_types[tid];
     }
 
-    const CR_LogType& LogType(CR_TypeID tid) const
-    {
+    const CR_LogType& LogType(CR_TypeID tid) const {
+        assert(tid < m_types.size());
         return m_types[tid];
     }
 
-    CR_LogVar& LogVar(CR_VarID vid)
-    {
+    CR_LogVar& LogVar(CR_VarID vid) {
+        assert(vid < m_vars.size());
         return m_vars[vid];
     }
 
-    const CR_LogVar& LogVar(CR_VarID vid) const
-    {
+    const CR_LogVar& LogVar(CR_VarID vid) const {
+        assert(vid < m_vars.size());
         return m_vars[vid];
     }
 
-    CR_Map<CR_String, CR_TypeID>& MapNameToTypeID()
-    {
-        return m_mNameToTypeID;
-    }
+    std::map<std::string, CR_TypeID>& MapNameToTypeID()
+    { return m_mNameToTypeID; }
 
-    const CR_Map<CR_String, CR_TypeID>& MapNameToTypeID() const
-    {
-        return m_mNameToTypeID;
-    }
+    const std::map<std::string, CR_TypeID>& MapNameToTypeID() const
+    { return m_mNameToTypeID; }
 
-    CR_Map<CR_TypeID, CR_String>& MapTypeIDToName()
-    {
-        return m_mTypeIDToName;
-    }
+    std::map<CR_TypeID, std::string>& MapTypeIDToName()
+    { return m_mTypeIDToName; }
 
-    const CR_Map<CR_TypeID, CR_String>& MapTypeIDToName() const
-    {
-        return m_mTypeIDToName;
-    }
+    const std::map<CR_TypeID, std::string>& MapTypeIDToName() const
+    { return m_mTypeIDToName; }
 
-    CR_Map<CR_String, CR_VarID>& MapNameToVarID()
-    {
-        return m_mNameToVarID;
-    }
+    std::map<std::string, CR_VarID>& MapNameToVarID()
+    { return m_mNameToVarID; }
 
-    const CR_Map<CR_String, CR_VarID>& MapNameToVarID() const
-    {
-        return m_mNameToVarID;
-    }
+    const std::map<std::string, CR_VarID>& MapNameToVarID() const
+    { return m_mNameToVarID; }
 
-    CR_Map<CR_VarID, CR_String>& MapVarIDToName()
-    {
-        return m_mVarIDToName;
-    }
+    std::map<CR_VarID, std::string>& MapVarIDToName()
+    { return m_mVarIDToName; }
 
-    const CR_Map<CR_VarID, CR_String>& MapVarIDToName() const
-    {
-        return m_mVarIDToName;
-    }
+    const std::map<CR_VarID, std::string>& MapVarIDToName() const
+    { return m_mVarIDToName; }
 
-    CR_DeqSet<CR_LogVar>& Vars()
-    {
-        return m_vars;
-    }
+    std::map<std::string, CR_Name2Name>& MapNameToName()
+    { return m_mNameToName; }
 
-    const CR_DeqSet<CR_LogVar>& Vars() const
-    {
-        return m_vars;
-    }
+    const std::map<std::string, CR_Name2Name>& MapNameToName() const
+    { return m_mNameToName; }
 
-    CR_LogStruct& LogStruct(CR_StructID sid)
-    {
+    CR_LogStruct& LogStruct(CR_StructID sid) {
         assert(sid < m_structs.size());
         return m_structs[sid];
     }
 
-    const CR_LogStruct& LogStruct(CR_StructID sid) const
-    {
+    const CR_LogStruct& LogStruct(CR_StructID sid) const {
         assert(sid < m_structs.size());
         return m_structs[sid];
     }
+
+    CR_LogFunc& LogFunc(CR_FuncID fid) {
+        assert(fid < m_funcs.size());
+        return m_funcs[fid];
+    }
+
+    const CR_LogFunc& LogFunc(CR_FuncID fid) const {
+        assert(fid < m_funcs.size());
+        return m_funcs[fid];
+    }
+
+    CR_LogEnum& LogEnum(CR_EnumID eid) {
+        assert(eid < m_enums.size());
+        return m_enums[eid];
+    }
+
+    const CR_LogEnum& LogEnum(CR_EnumID eid) const {
+        assert(eid < m_enums.size());
+        return m_enums[eid];
+    }
+
+          CR_VecSet<CR_LogType>& LogTypes()       { return m_types; }
+    const CR_VecSet<CR_LogType>& LogTypes() const { return m_types; }
+
+          CR_VecSet<CR_LogStruct>& LogStructs()       { return m_structs; }
+    const CR_VecSet<CR_LogStruct>& LogStructs() const { return m_structs; }
+
+          CR_VecSet<CR_LogFunc>& LogFuncs()       { return m_funcs; }
+    const CR_VecSet<CR_LogFunc>& LogFuncs() const { return m_funcs; }
+
+          CR_VecSet<CR_LogEnum>& LogEnums()       { return m_enums; }
+    const CR_VecSet<CR_LogEnum>& LogEnums() const { return m_enums; }
+
+          CR_VecSet<CR_LogVar>& LogVars()       { return m_vars; }
+    const CR_VecSet<CR_LogVar>& LogVars() const { return m_vars; }
+
+          CR_MacroSet& Macros()       { return m_macros; }
+    const CR_MacroSet& Macros() const { return m_macros; }
+
+          shared_ptr<CR_ErrorInfo>& ErrorInfo()       { return m_error_info; }
+    const shared_ptr<CR_ErrorInfo>& ErrorInfo() const { return m_error_info; }
 
 protected:
-    bool                            m_is_64bit;
-    CR_Map<CR_String, CR_TypeID>    m_mNameToTypeID;
-    CR_Map<CR_TypeID, CR_String>    m_mTypeIDToName;
-    CR_Map<CR_String, CR_VarID>     m_mNameToVarID;
-    CR_Map<CR_VarID, CR_String>     m_mVarIDToName;
-    CR_Map<CR_String, CR_TypeID>    m_mNameToFuncTypeID;
-    CR_DeqSet<CR_LogType>           m_types;
-    CR_DeqSet<CR_LogFunc>           m_funcs;
-    CR_DeqSet<CR_LogStruct>         m_structs;
-    CR_DeqSet<CR_LogEnum>           m_enums;
-    CR_DeqSet<CR_LogVar>            m_vars;
-};
+    shared_ptr<CR_ErrorInfo>            m_error_info;
+    bool                                m_is_64bit;
+    std::map<std::string, CR_TypeID>    m_mNameToTypeID;
+    std::map<CR_TypeID, std::string>    m_mTypeIDToName;
+    std::map<std::string, CR_VarID>     m_mNameToVarID;
+    std::map<CR_VarID, std::string>     m_mVarIDToName;
+    std::map<std::string, CR_TypeID>    m_mNameToFuncTypeID;
+    CR_VecSet<CR_LogType>               m_types;
+    CR_VecSet<CR_LogFunc>               m_funcs;
+    CR_VecSet<CR_LogStruct>             m_structs;
+    CR_VecSet<CR_LogEnum>               m_enums;
+    CR_VecSet<CR_LogVar>                m_vars;
+    std::map<std::string, CR_Name2Name> m_mNameToName;
+    CR_MacroSet                         m_macros;
+
+public:
+    CR_TypeID                           m_void_type;
+    CR_TypeID                           m_char_type;
+    CR_TypeID                           m_short_type;
+    CR_TypeID                           m_long_type;
+    CR_TypeID                           m_long_long_type;
+    CR_TypeID                           m_int_type;
+    CR_TypeID                           m_uchar_type;
+    CR_TypeID                           m_ushort_type;
+    CR_TypeID                           m_ulong_type;
+    CR_TypeID                           m_ulong_long_type;
+    CR_TypeID                           m_uint_type;
+    CR_TypeID                           m_float_type;
+    CR_TypeID                           m_double_type;
+    CR_TypeID                           m_long_double_type;
+    CR_TypeID                           m_const_char_type;
+    CR_TypeID                           m_const_uchar_type;
+    CR_TypeID                           m_const_short_type;
+    CR_TypeID                           m_const_ushort_type;
+    CR_TypeID                           m_const_int_type;
+    CR_TypeID                           m_const_uint_type;
+    CR_TypeID                           m_const_long_type;
+    CR_TypeID                           m_const_ulong_type;
+    CR_TypeID                           m_const_long_long_type;
+    CR_TypeID                           m_const_ulong_long_type;
+    CR_TypeID                           m_const_float_type;
+    CR_TypeID                           m_const_double_type;
+    CR_TypeID                           m_const_long_double_type;
+    CR_TypeID                           m_const_string_type;
+    CR_TypeID                           m_const_wstring_type;
+    CR_TypeID                           m_void_ptr_type;
+    CR_TypeID                           m_const_void_ptr_type;
+}; // class CR_NameScope
 
 #endif  // ndef TYPESYSTEM_H_

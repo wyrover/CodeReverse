@@ -1,254 +1,105 @@
 ////////////////////////////////////////////////////////////////////////////
 // Module.cpp
-// Copyright (C) 2013-2014 Katayama Hirofumi MZ.  All rights reserved.
+// Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
 
-////////////////////////////////////////////////////////////////////////////
-// CR_SymbolInfo
-
-CR_ImportSymbol *CR_SymbolInfo::GetImportSymbolFromRVA(DWORD RVA)
-{
-    for (auto& p : MapRVAToImportSymbol())
-    {
-        if (p.first == RVA)
-            return &p.second;
-    }
-    return NULL;
-}
-
-CR_ImportSymbol *CR_SymbolInfo::GetImportSymbolFromName(const char *name)
-{
-    for (auto& p : MapNameToImportSymbol())
-    {
-        if (p.first == name)
-            return &p.second;
-    }
-    return NULL;
-}
-
-CR_ExportSymbol *CR_SymbolInfo::GetExportSymbolFromRVA(DWORD RVA)
-{
-    for (auto& p : MapRVAToExportSymbol())
-    {
-        if (p.first == RVA)
-            return &p.second;
-    }
-    return NULL;
-}
-
-CR_ExportSymbol *CR_SymbolInfo::GetExportSymbolFromName(const char *name)
-{
-    for (auto& p : MapNameToExportSymbol())
-    {
-        if (p.first == name)
-            return &p.second;
-    }
-    return NULL;
-}
-
-const CR_ImportSymbol *CR_SymbolInfo::GetImportSymbolFromRVA(DWORD RVA) const
-{
-    for (auto& p : MapRVAToImportSymbol())
-    {
-        if (p.first == RVA)
-            return &p.second;
-    }
-    return NULL;
-}
-
-const CR_ImportSymbol *CR_SymbolInfo::GetImportSymbolFromName(const char *name) const
-{
-    for (auto& p : MapNameToImportSymbol())
-    {
-        if (p.first == name)
-            return &p.second;
-    }
-    return NULL;
-}
-
-const CR_ExportSymbol *CR_SymbolInfo::GetExportSymbolFromRVA(DWORD RVA) const
-{
-    for (auto& p : MapRVAToExportSymbol())
-    {
-        if (p.first == RVA)
-            return &p.second;
-    }
-    return NULL;
-}
-
-const CR_ExportSymbol *CR_SymbolInfo::GetExportSymbolFromName(const char *name) const
-{
-    for (auto& p : MapNameToExportSymbol())
-    {
-        if (p.first == name)
-            return &p.second;
-    }
-    return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_SymbolInfo
-
-CR_SymbolInfo::CR_SymbolInfo()
-{
-}
-
-CR_SymbolInfo::CR_SymbolInfo(const CR_SymbolInfo& info)
-{
-    Copy(info);
-}
-
-void CR_SymbolInfo::operator=(const CR_SymbolInfo& info)
-{
-    Copy(info);
-}
-
-/*virtual*/ CR_SymbolInfo::~CR_SymbolInfo()
-{
-}
-
-void CR_SymbolInfo::Copy(const CR_SymbolInfo& info)
-{
-    GetImportDllNames() = info.GetImportDllNames();
-    GetImportSymbols() = info.GetImportSymbols();
-    MapRVAToImportSymbol() = info.MapRVAToImportSymbol();
-    MapNameToImportSymbol() = info.MapNameToImportSymbol();
-    GetExportSymbols() = info.GetExportSymbols();
-    MapRVAToExportSymbol() = info.MapRVAToExportSymbol();
-    MapNameToExportSymbol() = info.MapNameToExportSymbol();
-}
-
-void CR_SymbolInfo::clear()
-{
-    GetImportDllNames().clear();
-    GetImportSymbols().clear();
-    MapRVAToImportSymbol().clear();
-    MapNameToImportSymbol().clear();
-    GetExportSymbols().clear();
-    MapRVAToExportSymbol().clear();
-    MapNameToExportSymbol().clear();
-}
-
-void CR_SymbolInfo::AddImportDllName(const char *name)
-{
-    GetImportDllNames().insert(name);
-}
-
-void CR_SymbolInfo::AddImportSymbol(const CR_ImportSymbol& is)
-{
-    GetImportSymbols().insert(is);
-    MapRVAToImportSymbol().insert(std::make_pair(is.dwRVA, is));
-    if (is.Name.wImportByName)
-    {
-        MapNameToImportSymbol().insert(std::make_pair(is.pszName, is));
-    }
-}
-
-void CR_SymbolInfo::AddExportSymbol(const CR_ExportSymbol& es)
-{
-    GetExportSymbols().insert(es);
-    MapRVAToExportSymbol().insert(std::make_pair(es.dwRVA, es));
-    if (es.pszName)
-    {
-        MapNameToExportSymbol().insert(std::make_pair(es.pszName, es));
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_Module
-
 CR_Module::CR_Module() :
-    m_pszFileName(NULL),
     m_hFile(INVALID_HANDLE_VALUE),
     m_hFileMapping(NULL),
     m_pFileImage(NULL),
     m_dwFileSize(0),
-    m_dwLastError(ERROR_SUCCESS),
-    m_bModuleLoaded(FALSE),
-    m_bDisAsmed(FALSE),
-    m_bDecompiled(FALSE),
+    m_pLoadedImage(NULL),
     m_pDOSHeader(NULL),
     m_pNTHeaders(NULL),
     m_pFileHeader(NULL),
     m_pOptional32(NULL),
     m_pOptional64(NULL),
-    m_pLoadedImage(NULL),
-    m_dwHeaderSum(0),
-    m_dwCheckSum(0),
-    m_dwSizeOfOptionalHeader(0),
-    m_dwAddressOfEntryPoint(0),
-    m_dwBaseOfCode(0),
-    m_dwSizeOfHeaders(0),
-    m_pSectionHeaders(NULL),
-    m_pCodeSectionHeader(NULL),
-    m_pDataDirectories(NULL)
-{
-}
-
-CR_Module::CR_Module(LPCTSTR FileName) :
-    m_pszFileName(NULL),
-    m_hFile(INVALID_HANDLE_VALUE),
-    m_hFileMapping(NULL),
-    m_pFileImage(NULL),
-    m_dwFileSize(0),
     m_dwLastError(ERROR_SUCCESS),
-    m_bModuleLoaded(FALSE),
-    m_bDisAsmed(FALSE),
-    m_bDecompiled(FALSE),
-    m_pDOSHeader(NULL),
-    m_pNTHeaders(NULL),
-    m_pFileHeader(NULL),
-    m_pOptional32(NULL),
-    m_pOptional64(NULL),
-    m_pLoadedImage(NULL),
     m_dwHeaderSum(0),
     m_dwCheckSum(0),
-    m_dwSizeOfOptionalHeader(0),
-    m_dwAddressOfEntryPoint(0),
-    m_dwBaseOfCode(0),
-    m_dwSizeOfHeaders(0),
     m_pSectionHeaders(NULL),
-    m_pCodeSectionHeader(NULL),
     m_pDataDirectories(NULL)
 {
-    LoadModule(FileName);
 }
 
-/*virtual*/ CR_Module::~CR_Module()
-{
-    if (IsModuleLoaded())
-        UnloadModule();
-}
+BOOL CR_Module::LoadModule(LPCTSTR pszFileName) {
+    m_hFile = ::CreateFile(pszFileName, GENERIC_READ,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        NULL, OPEN_EXISTING, 0, NULL);
+    if (m_hFile == INVALID_HANDLE_VALUE) {
+        m_dwLastError = ::GetLastError();
+        return FALSE;
+    }
 
-void CR_Module::UnloadModule()
-{
-    if (m_pLoadedImage != NULL)
-    {
-        VirtualFree(m_pLoadedImage, 0, MEM_RELEASE);
+    m_dwFileSize = ::GetFileSize(m_hFile, NULL);
+    if (m_dwFileSize == 0xFFFFFFFF) {
+        m_dwLastError = ::GetLastError();
+        ::CloseHandle(m_hFile);
+        return FALSE;
+    }
+
+    m_hFileMapping = ::CreateFileMapping(
+        m_hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+    if (m_hFileMapping) {
+        m_pFileImage = reinterpret_cast<LPBYTE>(
+            ::MapViewOfFile(
+                m_hFileMapping, FILE_MAP_READ, 0, 0, m_dwFileSize));
+        if (m_pFileImage) {
+#ifndef NO_CHECKSUM
+            ::CheckSumMappedFile(m_pFileImage, m_dwFileSize,
+                &m_dwHeaderSum, &m_dwCheckSum);
+#endif
+            if (_LoadImage(m_pFileImage)) {
+                LoadImportTables();
+                LoadExportTable();
+                LoadDelayLoad();
+                m_strFileName = pszFileName;
+                return TRUE;
+            } else {
+                m_dwLastError = ERROR_INVALID_DATA;
+            }
+        } else {
+            m_dwLastError = ::GetLastError();
+        }
+        ::CloseHandle(m_hFileMapping);
+        m_hFileMapping = NULL;
+    } else {
+        m_dwLastError = ::GetLastError();
+    }
+
+    ::CloseHandle(m_hFile);
+    m_hFile = INVALID_HANDLE_VALUE;
+
+    return FALSE;
+} // CR_Module::LoadModule
+
+void CR_Module::UnloadModule() {
+    if (m_pLoadedImage) {
+        ::VirtualFree(m_pLoadedImage, 0, MEM_RELEASE);
         m_pLoadedImage = NULL;
     }
-    if (m_pFileImage != NULL)
-    {
-        UnmapViewOfFile(m_pFileImage);
+
+    if (m_pFileImage) {
+        ::UnmapViewOfFile(m_pFileImage);
         m_pFileImage = NULL;
     }
-    if (m_hFileMapping != NULL)
-    {
-        CloseHandle(m_hFileMapping);
+
+    if (m_hFileMapping) {
+        ::CloseHandle(m_hFileMapping);
         m_hFileMapping = NULL;
     }
-    if (m_hFile != INVALID_HANDLE_VALUE)
-    {
-        CloseHandle(m_hFile);
+
+    if (m_hFile != INVALID_HANDLE_VALUE) {
+        ::CloseHandle(m_hFile);
         m_hFile = INVALID_HANDLE_VALUE;
     }
-    m_pszFileName = NULL;
+
+    m_strFileName.clear();
     m_dwFileSize = 0;
-    m_bModuleLoaded = FALSE;
     m_pDOSHeader = NULL;
     m_pNTHeaders = NULL;
     m_pFileHeader = NULL;
@@ -256,143 +107,46 @@ void CR_Module::UnloadModule()
     m_pOptional64 = NULL;
     m_dwHeaderSum = 0;
     m_dwCheckSum = 0;
-    m_dwSizeOfOptionalHeader = 0;
-    m_dwAddressOfEntryPoint = 0;
-    m_dwBaseOfCode = 0;
-    m_dwSizeOfHeaders = 0;
     m_pSectionHeaders = NULL;
-    m_pCodeSectionHeader = NULL;
     m_pDataDirectories = NULL;
 
-    m_syminfo.clear();
-
-    m_bDisAsmed = FALSE;
-    m_bDecompiled = FALSE;
-
-    m_vImgDelayDescrs.clear();
-
-    m_mFuncNameToRVA.clear();
-    m_mRVAToFuncName.clear();
+    m_vecImportSymbols.clear();
+    m_vecExportSymbols.clear();
+    m_vecDelayLoadDescriptors.clear();
+    m_mRVAToFuncNameMap.clear();
+    m_mFuncNameToRVAMap.clear();
 } // CR_Module::UnloadModule
 
-LPBYTE CR_Module::DirEntryData(DWORD index)
-{
-    if (index < IMAGE_NUMBEROF_DIRECTORY_ENTRIES)
-    {
-        if (DataDirectories()[index].RVA != 0 &&
-            DataDirectories()[index].Size != 0)
-        {
-            return LoadedImage() + DataDirectories()[index].RVA;
-        }
-    }
-    return NULL;
-}
-
-BOOL CR_Module::AddressInCode32(CR_Addr32 va) const
-{
-    if (!Is32Bit())
-        return FALSE;
-
-    PREAL_IMAGE_SECTION_HEADER pCode = CodeSectionHeader();
-    if (pCode == NULL)
-        return FALSE;
-
-    const CR_Addr32 begin = OptionalHeader32()->ImageBase + pCode->RVA;
-    const CR_Addr32 end = begin + pCode->Misc.VirtualSize;
-    return begin <= va && va < end;
-}
-
-BOOL CR_Module::AddressInCode64(CR_Addr64 va) const
-{
-    if (!Is64Bit())
-        return FALSE;
-
-    PREAL_IMAGE_SECTION_HEADER pCode = CodeSectionHeader();
-    if (pCode == NULL)
-        return FALSE;
-
-    const CR_Addr64 begin = OptionalHeader64()->ImageBase + pCode->RVA;
-    const CR_Addr64 end = begin + pCode->Misc.VirtualSize;
-    return begin <= va && va < end;
-}
-
-PREAL_IMAGE_SECTION_HEADER CR_Module::CodeSectionHeader()
-{
-    if (m_pCodeSectionHeader)
-        return m_pCodeSectionHeader;
-
-    assert(SectionHeaders());
-    const DWORD size = NumberOfSections();
-    for (DWORD i = 0; i < size; ++i)
-    {
-        PREAL_IMAGE_SECTION_HEADER pHeader = SectionHeader(i);
-        if (pHeader->Characteristics & IMAGE_SCN_MEM_EXECUTE)
-        {
-            m_pCodeSectionHeader = pHeader;
-            return pHeader;
-        }
-    }
-    return NULL;
-}
-
-const PREAL_IMAGE_SECTION_HEADER CR_Module::CodeSectionHeader() const
-{
-    if (m_pCodeSectionHeader)
-        return m_pCodeSectionHeader;
-
-    assert(SectionHeaders());
-    const DWORD size = NumberOfSections();
-    for (DWORD i = 0; i < size; ++i)
-    {
-        PREAL_IMAGE_SECTION_HEADER pHeader = SectionHeader(i);
-        if (pHeader->Characteristics & IMAGE_SCN_MEM_EXECUTE)
-        {
-            m_pCodeSectionHeader = pHeader;
-            return pHeader;
-        }
-    }
-    return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_Module loading
-
-BOOL CR_Module::_LoadImage(LPVOID Data)
-{
+BOOL CR_Module::_LoadImage(LPVOID Data) {
     PIMAGE_DOS_HEADER pDOSHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(Data);
     PIMAGE_NT_HEADERS pNTHeaders;
 
-    if (pDOSHeader->e_magic == IMAGE_DOS_SIGNATURE && pDOSHeader->e_lfanew)  // "MZ"
-    {
+    // "MZ"
+    if (pDOSHeader->e_magic == IMAGE_DOS_SIGNATURE && pDOSHeader->e_lfanew) {
         pNTHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(
             reinterpret_cast<LPBYTE>(Data) + pDOSHeader->e_lfanew);
-    }
-    else
-    {
+    } else {
         pDOSHeader = NULL;
         pNTHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(Data);
     }
-    DOSHeader() = pDOSHeader;
+    m_pDOSHeader = pDOSHeader;
 
-    if (pNTHeaders->Signature == IMAGE_NT_SIGNATURE) // "PE\0\0"
-    {
-        if (_LoadNTHeaders(pNTHeaders))
-        {
-            LoadedImage() = reinterpret_cast<LPBYTE>(
-                VirtualAlloc(NULL, GetSizeOfImage() + 16,
-                             MEM_COMMIT, PAGE_READWRITE));
-            assert(LoadedImage());
-            if (LoadedImage() != NULL)
-            {
-                CopyMemory(LoadedImage(), FileImage(), GetSizeOfHeaders());
+    // "PE\0\0"
+    if (pNTHeaders->Signature == IMAGE_NT_SIGNATURE)  {
+        if (_LoadNTHeaders(pNTHeaders)) {
+            m_pLoadedImage = reinterpret_cast<LPBYTE>(
+                ::VirtualAlloc(NULL, GetSizeOfImage() + 16,
+                               MEM_COMMIT, PAGE_READWRITE));
+            assert(m_pLoadedImage);
+            if (m_pLoadedImage) {
+                CopyMemory(m_pLoadedImage, m_pFileImage, GetSizeOfHeaders());
 
                 DWORD size = NumberOfSections();
-                PREAL_IMAGE_SECTION_HEADER Headers = SectionHeaders();
-                for (DWORD i = 0; i < size; ++i)
-                {
+                PREAL_IMAGE_SECTION_HEADER Headers = m_pSectionHeaders;
+                for (DWORD i = 0; i < size; ++i) {
                     CopyMemory(
-                        &LoadedImage()[Headers[i].RVA],
-                        &FileImage()[Headers[i].PointerToRawData],
+                        &m_pLoadedImage[Headers[i].RVA],
+                        &m_pFileImage[Headers[i].PointerToRawData],
                         Headers[i].SizeOfRawData);
                 }
                 return TRUE;
@@ -403,176 +157,151 @@ BOOL CR_Module::_LoadImage(LPVOID Data)
     return FALSE;
 } // CR_Module::_LoadImage
 
-BOOL CR_Module::_LoadNTHeaders(LPVOID Data)
-{
-#ifndef IMAGE_SIZEOF_NT_OPTIONAL32_HEADER
-    #define IMAGE_SIZEOF_NT_OPTIONAL32_HEADER sizeof(IMAGE_OPTIONAL_HEADER32)
-#endif
-#ifndef IMAGE_SIZEOF_NT_OPTIONAL64_HEADER
-    #define IMAGE_SIZEOF_NT_OPTIONAL64_HEADER sizeof(IMAGE_OPTIONAL_HEADER64)
-#endif
-
-    PIMAGE_FILE_HEADER pFileHeader;
-    PIMAGE_OPTIONAL_HEADER32 pOptional32;
-    PIMAGE_OPTIONAL_HEADER64 pOptional64;
-    NTHeaders() = reinterpret_cast<PIMAGE_NT_HEADERS>(Data);
-    pFileHeader = &NTHeaders()->FileHeader;
+BOOL CR_Module::_LoadNTHeaders(LPVOID Data) {
+    m_pNTHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(Data);
+    PIMAGE_FILE_HEADER pFileHeader = &m_pNTHeaders->FileHeader;
 
     LPBYTE pb;
-    switch (pFileHeader->SizeOfOptionalHeader)
-    {
-    case IMAGE_SIZEOF_NT_OPTIONAL32_HEADER:
-        FileHeader() = pFileHeader;
-        OptionalHeader32() = pOptional32 = &NTHeaders32()->OptionalHeader;;
-        if (pOptional32->Magic != IMAGE_NT_OPTIONAL_HDR32_MAGIC)
+    switch (pFileHeader->SizeOfOptionalHeader) {
+    case sizeof(IMAGE_OPTIONAL_HEADER32):
+        m_pFileHeader = pFileHeader;
+        m_pOptional32 = &m_pNTHeaders32->OptionalHeader;;
+        if (m_pOptional32->Magic != IMAGE_NT_OPTIONAL_HDR32_MAGIC)
             return FALSE;
 
-        pb = reinterpret_cast<LPBYTE>(pOptional32) + pFileHeader->SizeOfOptionalHeader;
-        SectionHeaders() = reinterpret_cast<PREAL_IMAGE_SECTION_HEADER>(pb);
-        DataDirectories() =
-            reinterpret_cast<PREAL_IMAGE_DATA_DIRECTORY>(pOptional32->DataDirectory);
+        pb = reinterpret_cast<LPBYTE>(m_pOptional32) +
+             pFileHeader->SizeOfOptionalHeader;
+        m_pSectionHeaders = reinterpret_cast<PREAL_IMAGE_SECTION_HEADER>(pb);
+        m_pDataDirectories =
+            reinterpret_cast<PREAL_IMAGE_DATA_DIRECTORY>(
+                m_pOptional32->DataDirectory);
         break;
 
-    case IMAGE_SIZEOF_NT_OPTIONAL64_HEADER:
-        FileHeader() = pFileHeader;
-        OptionalHeader64() = pOptional64 = &NTHeaders64()->OptionalHeader;
-        if (pOptional64->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
+    case sizeof(IMAGE_OPTIONAL_HEADER64):
+        m_pFileHeader = pFileHeader;
+        m_pOptional64 = &m_pNTHeaders64->OptionalHeader;
+        if (m_pOptional64->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
             return FALSE;
 
-        pb = reinterpret_cast<LPBYTE>(pOptional64) + pFileHeader->SizeOfOptionalHeader;
-        SectionHeaders() = reinterpret_cast<PREAL_IMAGE_SECTION_HEADER>(pb);
-        DataDirectories() =
-            reinterpret_cast<PREAL_IMAGE_DATA_DIRECTORY>(pOptional64->DataDirectory);
+        pb = reinterpret_cast<LPBYTE>(m_pOptional64) +
+             pFileHeader->SizeOfOptionalHeader;
+        m_pSectionHeaders = reinterpret_cast<PREAL_IMAGE_SECTION_HEADER>(pb);
+        m_pDataDirectories =
+            reinterpret_cast<PREAL_IMAGE_DATA_DIRECTORY>(
+                m_pOptional64->DataDirectory);
         break;
 
     default:
-        FileHeader() = NULL;
-        NTHeaders() = NULL;
-        OptionalHeader32() = NULL;
-        OptionalHeader64() = NULL;
+        m_pFileHeader = NULL;
+        m_pNTHeaders = NULL;
+        m_pOptional32 = NULL;
+        m_pOptional64 = NULL;
         return FALSE;
     }
 
     return TRUE;
 } // CR_Module::_LoadNTHeaders
 
-BOOL CR_Module::LoadModule(LPCTSTR pszFileName)
-{
-    File() = CreateFile(pszFileName, GENERIC_READ,
-        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-        NULL, OPEN_EXISTING, 0, NULL);
-    if (File() == INVALID_HANDLE_VALUE)
-    {
-        LastError() = GetLastError();
+BOOL CR_Module::AddressInCode32(CR_Addr32 va) const {
+    if (!Is32Bit())
         return FALSE;
-    }
 
-    FileSize() = ::GetFileSize(File(), NULL);
-    if (FileSize() == 0xFFFFFFFF)
-    {
-        LastError() = GetLastError();
-        CloseHandle(File());
+    const REAL_IMAGE_SECTION_HEADER *pCode = CodeSectionHeader();
+    if (pCode == NULL)
         return FALSE;
-    }
 
-    FileMapping() = CreateFileMappingA(
-        File(), NULL, PAGE_READONLY, 0, 0, NULL);
-    if (FileMapping() != NULL)
-    {
-        FileImage() = reinterpret_cast<LPBYTE>(
-            MapViewOfFile(
-                FileMapping(), FILE_MAP_READ, 0, 0, FileSize()));
-        if (FileImage() != NULL)
-        {
-#ifndef NO_CHECKSUM
-            CheckSumMappedFile(FileImage(), FileSize(),
-                &m_dwHeaderSum, &m_dwCheckSum);
-#endif
-            if (_LoadImage(FileImage()))
-            {
-                LoadImportTables();
-                LoadExportTable();
-                ModuleLoaded() = TRUE;
-                FileName() = pszFileName;
-                return TRUE;
-            }
-            LastError() = ERROR_INVALID_DATA;
+    const CR_Addr32 begin = m_pOptional32->ImageBase + pCode->RVA;
+    const CR_Addr32 end = begin + pCode->Misc.VirtualSize;
+    return begin <= va && va < end;
+} // CR_Module::AddressInCode32
+
+BOOL CR_Module::AddressInCode64(CR_Addr64 va) const {
+    if (!Is64Bit())
+        return FALSE;
+
+    const REAL_IMAGE_SECTION_HEADER *pCode = CodeSectionHeader();
+    if (pCode == NULL)
+        return FALSE;
+
+    const CR_Addr64 begin = m_pOptional64->ImageBase + pCode->RVA;
+    const CR_Addr64 end = begin + pCode->Misc.VirtualSize;
+    return begin <= va && va < end;
+} // CR_Module::AddressInCode64
+
+REAL_IMAGE_SECTION_HEADER *CR_Module::CodeSectionHeader() {
+    assert(m_pSectionHeaders);
+    const DWORD size = NumberOfSections();
+    for (DWORD i = 0; i < size; ++i) {
+        PREAL_IMAGE_SECTION_HEADER pHeader = SectionHeader(i);
+        if (pHeader->Characteristics & IMAGE_SCN_MEM_EXECUTE) {
+            return pHeader;
         }
-        else
-        {
-            LastError() = GetLastError();
+    }
+    return NULL;
+} // CR_Module::CodeSectionHeader
+
+const REAL_IMAGE_SECTION_HEADER *CR_Module::CodeSectionHeader() const {
+    assert(m_pSectionHeaders);
+    const DWORD siz = NumberOfSections();
+    for (DWORD i = 0; i < siz; ++i) {
+        const REAL_IMAGE_SECTION_HEADER *pHeader = SectionHeader(i);
+        if (pHeader->Characteristics & IMAGE_SCN_MEM_EXECUTE) {
+            return pHeader;
         }
-        CloseHandle(FileMapping());
-        FileMapping() = NULL;
     }
-    else
-    {
-        LastError() = GetLastError();
-    }
+    return NULL;
+} // CR_Module::CodeSectionHeader
 
-    CloseHandle(File());
-    File() = INVALID_HANDLE_VALUE;
-
-    return FALSE;
-} // CR_Module::LoadModule
-
-BOOL CR_Module::LoadImportTables()
-{
+BOOL CR_Module::LoadImportTables() {
     if (!_GetImportDllNames(ImportDllNames()))
         return FALSE;
 
-    const DWORD size = static_cast<DWORD>(ImportDllNames().size());
-    for (DWORD i = 0; i < size; ++i)
-    {
-        CR_DeqSet<CR_ImportSymbol> symbols;
-        if (_GetImportSymbols(i, symbols))
-        {
-            for (auto& symbol : symbols)
-            {
-                SymbolInfo().AddImportSymbol(symbol);
+    const DWORD siz = static_cast<DWORD>(ImportDllNames().size());
+    for (DWORD i = 0; i < siz; ++i) {
+        CR_VecSet<CR_ImportSymbol> symbols;
+        if (_GetImportSymbols(i, symbols)) {
+            for (auto& symbol : symbols) {
+                symbol.iDLL = i;
                 MapFuncNameToRVA()[symbol.pszName] = symbol.dwRVA;
                 MapRVAToFuncName()[symbol.dwRVA] = symbol.pszName;
             }
+            ImportSymbols().insert(
+                ImportSymbols().end(), symbols.begin(), symbols.end());
         }
     }
     return TRUE;
-}
+} // CR_Module::LoadImportTables
 
-BOOL CR_Module::LoadExportTable()
-{
-    CR_DeqSet<CR_ExportSymbol> symbols;
+BOOL CR_Module::LoadExportTable() {
+    CR_VecSet<CR_ExportSymbol> symbols;
 
-    if (!_GetExportSymbols(SymbolInfo().GetExportSymbols()))
+    if (!_GetExportSymbols(ExportSymbols()))
         return FALSE;
 
-    for (auto& symbol : symbols)
-    {
+    for (auto& symbol : ExportSymbols()) {
         if (symbol.dwRVA == 0 || symbol.pszForwarded)
             continue;
 
-        SymbolInfo().AddExportSymbol(symbol);
         MapFuncNameToRVA()[symbol.pszName] = symbol.dwRVA;
         MapRVAToFuncName()[symbol.dwRVA] = symbol.pszName;
     }
 
     return TRUE;
-}
+} // CR_Module::LoadExportTable
 
-BOOL CR_Module::LoadDelayLoad()
-{
+BOOL CR_Module::LoadDelayLoad() {
     if (!IsModuleLoaded())
         return FALSE;
 
     PREAL_IMAGE_DATA_DIRECTORY pDir =
         DataDirectory(IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT);
 
-    CR_DeqSet<ImgDelayDescr> Descrs;
+    CR_VecSet<ImgDelayDescr> Descrs;
     ImgDelayDescr *pDescrs =
-        reinterpret_cast<ImgDelayDescr *>(LoadedImage() + pDir->RVA);
+        reinterpret_cast<ImgDelayDescr *>(m_pLoadedImage + pDir->RVA);
 
     std::size_t i = 0;
-    while (pDescrs[i].rvaHmod)
-    {
+    while (pDescrs[i].rvaHmod) {
         Descrs.push_back(pDescrs[i]);
         i++;
     }
@@ -582,14 +311,11 @@ BOOL CR_Module::LoadDelayLoad()
     // TODO: load IAT and INT
 
     return TRUE;
-}
+} // CR_Module::LoadDelayLoad
 
-////////////////////////////////////////////////////////////////////////////
-
-BOOL CR_Module::_GetImportDllNames(CR_StringSet& names)
-{
-    PIMAGE_IMPORT_DESCRIPTOR descs = ImportDescriptors();
+BOOL CR_Module::_GetImportDllNames(CR_StringSet& names) {
     names.clear();
+    PIMAGE_IMPORT_DESCRIPTOR descs = ImportDescriptors();
 
     if (descs == NULL)
         return FALSE;
@@ -598,104 +324,95 @@ BOOL CR_Module::_GetImportDllNames(CR_StringSet& names)
         names.insert(reinterpret_cast<char *>(GetData(descs[i].Name)));
 
     return TRUE;
-}
+} // CR_Module::_GetImportDllNames
 
-BOOL CR_Module::_GetImportSymbols(DWORD dll_index, CR_DeqSet<CR_ImportSymbol>& symbols)
+BOOL CR_Module::_GetImportSymbols(
+    DWORD dll_index, CR_VecSet<CR_ImportSymbol>& symbols)
 {
-    DWORD i, j;
-    CR_ImportSymbol symbol;
-    PIMAGE_IMPORT_BY_NAME pIBN;
-    PIMAGE_IMPORT_DESCRIPTOR descs = ImportDescriptors();
-
     symbols.clear();
 
-    if (descs == NULL || descs[0].OriginalFirstThunk == 0)
+    DWORD i, j;
+    PIMAGE_IMPORT_BY_NAME pIBN;
+    PIMAGE_IMPORT_DESCRIPTOR descs = ImportDescriptors();
+    if (descs == NULL || descs[0].OriginalFirstThunk == 0) {
         return FALSE;
+    }
 
-    for (i = 0; descs[i].FirstThunk != 0; ++i)
-    {
-        if (dll_index == i)
-        {
-            if (Is64Bit())
-            {
-                PULONGLONG pIAT64, pINT64;
-
-                pIAT64 = (PULONGLONG)(DWORD_PTR)descs[i].FirstThunk;
-                if (descs[i].OriginalFirstThunk)
-                    pINT64 = (PULONGLONG)GetData(descs[i].OriginalFirstThunk);
-                else
-                    pINT64 = pIAT64;
-
-                for (j = 0; pINT64[j] != 0; j++)
-                {
-                    if (pINT64[j] < GetSizeOfImage())
-                    {
-                        symbol.dwRVA = descs[i].FirstThunk + j * sizeof(DWORD);
-
-                        if (IMAGE_SNAP_BY_ORDINAL64(pINT64[j]))
-                        {
-                            symbol.wHint = 0;
-                            symbol.Name.wImportByName = 0;
-                            symbol.Name.wOrdinal = WORD(IMAGE_ORDINAL64(pINT64[j]));
-                        }
-                        else
-                        {
-                            pIBN = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
-                                GetData(DWORD(pINT64[j])));
-                            symbol.wHint = pIBN->Hint;
-                            symbol.pszName = reinterpret_cast<char *>(pIBN->Name);
-                        }
-                        symbols.insert(symbol);
-                    }
-                }
-            }
-            else
-            {
-                LPDWORD pIAT, pINT;     // import address table & import name table
-                pIAT = (LPDWORD)(DWORD_PTR)descs[i].FirstThunk;
-                if (descs[i].OriginalFirstThunk)
-                    pINT = (LPDWORD)GetData(descs[i].OriginalFirstThunk);
-                else
-                    pINT = pIAT;
-
-                for (j = 0; pINT[j] != 0; j++)
-                {
-                    if (pINT[j] < GetSizeOfImage())
-                    {
-                        symbol.dwRVA = descs[i].FirstThunk + j * sizeof(DWORD);
-
-                        if (IMAGE_SNAP_BY_ORDINAL32(pINT[j]))
-                        {
-                            symbol.wHint = 0;
-                            symbol.Name.wImportByName = 0;
-                            symbol.Name.wOrdinal = WORD(IMAGE_ORDINAL32(pINT[j]));
-                        }
-                        else
-                        {
-                            pIBN = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(GetData(pINT[j]));
-                            symbol.wHint = pIBN->Hint;
-                            symbol.pszName = reinterpret_cast<char *>(pIBN->Name);
-                        }
-                        symbols.insert(symbol);
-                    }
-                }
-            }
-            break;
+    CR_ImportSymbol symbol;
+    for (i = 0; descs[i].FirstThunk != 0; ++i) {
+        if (dll_index != i) {
+            continue;
         }
+        if (Is64Bit()) {
+            PULONGLONG pIAT64, pINT64;
+
+            pIAT64 = reinterpret_cast<PULONGLONG>(
+                static_cast<DWORD_PTR>(descs[i].FirstThunk));
+            if (descs[i].OriginalFirstThunk) {
+                pINT64 = reinterpret_cast<PULONGLONG>(
+                    GetData(descs[i].OriginalFirstThunk));
+            } else {
+                pINT64 = pIAT64;
+            }
+
+            for (j = 0; pINT64[j] != 0; j++) {
+                if (pINT64[j] < GetSizeOfImage()) {
+                    symbol.dwRVA = descs[i].FirstThunk + j * sizeof(DWORD);
+
+                    if (IMAGE_SNAP_BY_ORDINAL64(pINT64[j])) {
+                        symbol.wHint = 0;
+                        symbol.Name.wImportByName = 0;
+                        symbol.Name.wOrdinal = WORD(IMAGE_ORDINAL64(pINT64[j]));
+                    } else {
+                        pIBN = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                            GetData(DWORD(pINT64[j])));
+                        symbol.wHint = pIBN->Hint;
+                        symbol.pszName = reinterpret_cast<char *>(pIBN->Name);
+                    }
+                    symbols.insert(symbol);
+                }
+            }
+        } else {
+            LPDWORD pIAT, pINT;     // import address table & import name table
+            pIAT = reinterpret_cast<LPDWORD>(
+                static_cast<DWORD_PTR>(descs[i].FirstThunk));
+            if (descs[i].OriginalFirstThunk) {
+                pINT = reinterpret_cast<LPDWORD>(GetData(descs[i].OriginalFirstThunk));
+            } else {
+                pINT = pIAT;
+            }
+
+            for (j = 0; pINT[j] != 0; j++) {
+                if (pINT[j] < GetSizeOfImage()) {
+                    symbol.dwRVA = descs[i].FirstThunk + j * sizeof(DWORD);
+
+                    if (IMAGE_SNAP_BY_ORDINAL32(pINT[j])) {
+                        symbol.wHint = 0;
+                        symbol.Name.wImportByName = 0;
+                        symbol.Name.wOrdinal = WORD(IMAGE_ORDINAL32(pINT[j]));
+                    } else {
+                        pIBN = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(GetData(pINT[j]));
+                        symbol.wHint = pIBN->Hint;
+                        symbol.pszName = reinterpret_cast<char *>(pIBN->Name);
+                    }
+                    symbols.insert(symbol);
+                }
+            }
+        }
+        break;
     }
 
     return TRUE;
 } // CR_Module::_GetImportSymbols
 
-BOOL CR_Module::_GetExportSymbols(CR_DeqSet<CR_ExportSymbol>& symbols)
-{
-    CR_ExportSymbol symbol;
-    PIMAGE_EXPORT_DIRECTORY pDir = ExportDirectory();
-
+BOOL CR_Module::_GetExportSymbols(CR_VecSet<CR_ExportSymbol>& symbols) {
     symbols.clear();
 
-    if (pDir == NULL)
+    CR_ExportSymbol symbol;
+    PIMAGE_EXPORT_DIRECTORY pDir = ExportDirectory();
+    if (pDir == NULL) {
         return FALSE;
+    }
 
     // export address table (EAT)
     LPDWORD pEAT = reinterpret_cast<LPDWORD>(GetData(pDir->AddressOfFunctions));
@@ -706,8 +423,7 @@ BOOL CR_Module::_GetExportSymbols(CR_DeqSet<CR_ExportSymbol>& symbols)
 
     DWORD i, j;
     WORD wOrdinal;
-    for (i = 0; i < pDir->NumberOfNames; ++i)
-    {
+    for (i = 0; i < pDir->NumberOfNames; ++i) {
         wOrdinal = pEOT[i];
         symbol.dwRVA = pEAT[wOrdinal];
         symbol.pszName = reinterpret_cast<char *>(GetData(pENPT[i]));
@@ -716,10 +432,8 @@ BOOL CR_Module::_GetExportSymbols(CR_DeqSet<CR_ExportSymbol>& symbols)
         symbols.insert(symbol);
     }
 
-    for (i = 0; i < pDir->NumberOfFunctions; ++i)
-    {
-        for (j = 0; j < pDir->NumberOfNames; j++)
-        {
+    for (i = 0; i < pDir->NumberOfFunctions; ++i) {
+        for (j = 0; j < pDir->NumberOfNames; j++) {
             if (static_cast<DWORD>(pEOT[j]) == i)
                 break;
         }
@@ -731,13 +445,10 @@ BOOL CR_Module::_GetExportSymbols(CR_DeqSet<CR_ExportSymbol>& symbols)
             continue;
 
         symbol.pszName = NULL;
-        if (RVAInDirEntry(dw, IMAGE_DIRECTORY_ENTRY_EXPORT))
-        {
+        if (RVAInDirEntry(dw, IMAGE_DIRECTORY_ENTRY_EXPORT)) {
             symbol.dwRVA = 0;
             symbol.pszForwarded = reinterpret_cast<char *>(GetData(dw));
-        }
-        else
-        {
+        } else {
             symbol.dwRVA = dw;
             symbol.pszForwarded = NULL;
         }
@@ -748,6 +459,24 @@ BOOL CR_Module::_GetExportSymbols(CR_DeqSet<CR_ExportSymbol>& symbols)
     return TRUE;
 } // CR_Module::_GetExportSymbols
 
+const char *CR_Module::FuncNameFromRVA(DWORD RVA) const {
+    for (auto& symbol : ExportSymbols()) {
+        if (symbol.dwRVA == RVA) {
+            return symbol.pszName;
+        }
+    }
+    for (auto& symbol : ImportSymbols()) {
+        if (symbol.dwRVA == RVA) {
+            return symbol.pszName;
+        }
+    }
+    auto it = MapRVAToFuncName().find(RVA);
+    if (it != MapRVAToFuncName().end()) {
+        return it->second.c_str();
+    }
+    return NULL;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // disasm
 
@@ -755,20 +484,20 @@ extern "C"
 int32_t disasm(uint8_t *data, char *output, int outbufsize, int segsize,
                int64_t offset, int autosync, uint32_t prefer);
 
-BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va)
+BOOL CR_Module::DisAsmAddr32(
+    CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va)
 {
     if (!IsModuleLoaded() || !Is32Bit())
         return FALSE;
 
     DWORD rva = RVAFromVA32(va);
-    LPBYTE input = LoadedImage() + rva;
+    LPBYTE input = m_pLoadedImage + rva;
     int lendis;
     CHAR outbuf[256];
     CR_Addr32 addr;
 
     CR_CodeFunc32 *cf = info.MapAddrToCodeFunc()[func].get();
-    if (cf == NULL)
-    {
+    if (cf == NULL) {
         cf = new CR_CodeFunc32;
         info.MapAddrToCodeFunc()[func] = CR_SharedCodeFunc32(cf);
     }
@@ -778,12 +507,10 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
     const PREAL_IMAGE_SECTION_HEADER pCode = CodeSectionHeader();
     assert(pCode);
 
-    LPBYTE iend = LoadedImage() + pCode->RVA + pCode->SizeOfRawData;
-    while (input < iend)
-    {
+    LPBYTE iend = m_pLoadedImage + pCode->RVA + pCode->SizeOfRawData;
+    while (input < iend) {
         CR_OpCode32 *oc = info.MapAddrToOpCode()[va].get();
-        if (oc == NULL)
-        {
+        if (oc == NULL) {
             oc = new CR_OpCode32;
             info.MapAddrToOpCode()[va] = CR_SharedOpCode32(oc);
         }
@@ -791,10 +518,9 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
             break;
 
         oc->Addr() = va;
-        oc->FuncAddrs().Insert(func);
+        oc->FuncAddrs().AddUnique(func);
 
-        if (oc->FuncAddrs().size() > 1)
-        {
+        if (oc->FuncAddrs().size() > 1) {
             cf->Flags() |= FF_FUNCINFUNC;
         }
 
@@ -802,35 +528,30 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
         lendis = disasm(input, outbuf, sizeof(outbuf), 32, va, false, 0);
 
         // parse insn
-        if (!lendis || input + lendis > iend)
-        {
+        if (!lendis || input + lendis > iend) {
             lendis = 1;
             oc->Name() = "???";
             oc->OpCodeType() = OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
             cf->Flags() |= FF_DONTDECOMPBUTDISASM;
-        }
-        else
+        } else
             oc->ParseText(outbuf);
 
         // add asm codes
-        if (oc->Codes().empty())
-        {
+        if (oc->Codes().empty()) {
             for (int i = 0; i < lendis; ++i)
                 oc->Codes().push_back(input[i]);
         }
 
         BOOL bBreak = FALSE;
-        switch (oc->OpCodeType())
-        {
+        switch (oc->OpCodeType()) {
         case OCT_JCC:
             // conditional jump
-            switch (oc->Operand(0)->OperandType())
-            {
+            switch (oc->Operand(0)->OperandType()) {
             case OT_IMM: case OT_FUNCNAME:
                 addr = oc->Operand(0)->Value32();
-                cf->Jumpers().Insert(va);
-                cf->Jumpees().Insert(addr);
+                cf->Jumpers().AddUnique(va);
+                cf->Jumpees().AddUnique(addr);
                 break;
 
             default: break;
@@ -838,17 +559,15 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
             break;
 
         case OCT_JMP:
-            switch (oc->Operand(0)->OperandType())
-            {
+            switch (oc->Operand(0)->OperandType()) {
             case OT_IMM:
-                if (func == va)
-                {
+                if (func == va) {
                     // func is jumper
                     cf->FuncType() = FT_JUMPERFUNC;
 
                     addr = oc->Operand(0)->Value32();
-                    info.Entrances().Insert(addr);
-                    cf->Callers().Insert(va);
+                    info.Entrances().AddUnique(addr);
+                    cf->Callers().AddUnique(va);
 
                     CR_CodeFunc32 *newcf;
                     newcf = info.MapAddrToCodeFunc()[addr].get();
@@ -859,19 +578,16 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
                             CR_SharedCodeFunc32(newcf);
                     }
                     newcf->Addr() = addr;
-                    newcf->Callees().Insert(func);
-                }
-                else
-                {
+                    newcf->Callees().AddUnique(func);
+                } else {
                     addr = oc->Operand(0)->Value32();
-                    cf->Jumpers().Insert(va);
-                    cf->Jumpees().Insert(addr);
+                    cf->Jumpers().AddUnique(va);
+                    cf->Jumpees().AddUnique(addr);
                 }
                 break;
 
             case OT_FUNCNAME:
-                if (func == va)
-                {
+                if (func == va) {
                     // func is jumper
                     cf->FuncType() = FT_JUMPERFUNC;
 
@@ -880,8 +596,7 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
                 break;
 
             case OT_MEMIMM:
-                if (func == va)
-                {
+                if (func == va) {
                     // func is jumper
                     cf->FuncType() = FT_JUMPERFUNC;
 
@@ -896,23 +611,21 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
             break;
 
         case OCT_CALL:
-            switch (oc->Operand(0)->OperandType())
-            {
+            switch (oc->Operand(0)->OperandType()) {
             case OT_IMM:
                 // function call
                 addr = oc->Operand(0)->Value32();
-                info.Entrances().Insert(addr);
-                cf->Callers().Insert(va);
+                info.Entrances().AddUnique(addr);
+                cf->Callers().AddUnique(va);
                 {
                     CR_CodeFunc32 *newcf = info.MapAddrToCodeFunc()[addr].get();
-                    if (newcf == NULL)
-                    {
+                    if (newcf == NULL) {
                         newcf = new CR_CodeFunc32;
                         info.MapAddrToCodeFunc()[addr] =
                             CR_SharedCodeFunc32(newcf);
                     }
                     newcf->Addr() = addr;
-                    newcf->Callees().Insert(func);
+                    newcf->Callees().AddUnique(func);
                 }
                 break;
 
@@ -922,18 +635,14 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
             break;
 
         case OCT_RETURN:
-            if (!oc->Operands().empty() && oc->Operand(0)->OperandType() == OT_IMM)
-            {
+            if (!oc->Operands().empty() && oc->Operand(0)->OperandType() == OT_IMM) {
                 // func is __stdcall
                 cf->FuncType() = FT_STDCALL;
                 cf->SizeOfStackArgs() = (int)oc->Operand(0)->Value32();
-            }
-            else
-            {
+            } else {
                 // func is not __stdcall
                 cf->Flags() |= FF_NOTSTDCALL;
-                if (func == va)
-                {
+                if (func == va) {
                     cf->FuncType() = FT_RETURNONLY;
                     cf->SizeOfStackArgs() = 0;
                 }
@@ -956,21 +665,19 @@ BOOL CR_Module::DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va
     return TRUE;
 } // CR_Module::DisAsmAddr32
 
-BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va)
-{
+BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va) {
     if (!IsModuleLoaded() || !Is64Bit())
         return FALSE;
 
     // calculate
     DWORD rva = RVAFromVA64(va);
-    LPBYTE input = LoadedImage() + rva;
+    LPBYTE input = m_pLoadedImage + rva;
     int lendis;
     CHAR outbuf[256];
     CR_Addr64 addr;
 
     CR_CodeFunc64 *cf = info.MapAddrToCodeFunc()[func].get();
-    if (cf == NULL)
-    {
+    if (cf == NULL) {
         cf = new CR_CodeFunc64;
         info.MapAddrToCodeFunc()[func] = CR_SharedCodeFunc64(cf);
     }
@@ -980,12 +687,10 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
     const PREAL_IMAGE_SECTION_HEADER pCode = CodeSectionHeader();
     assert(pCode);
 
-    LPBYTE iend = LoadedImage() + pCode->RVA + pCode->SizeOfRawData;
-    while (input < iend)
-    {
+    LPBYTE iend = m_pLoadedImage + pCode->RVA + pCode->SizeOfRawData;
+    while (input < iend) {
         CR_OpCode64 *oc = info.MapAddrToOpCode()[va].get();
-        if (oc == NULL)
-        {
+        if (oc == NULL) {
             oc = new CR_OpCode64;
             info.MapAddrToOpCode()[va] = CR_SharedOpCode64(oc);
         }
@@ -993,10 +698,9 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             break;
 
         oc->Addr() = va;
-        oc->FuncAddrs().Insert(func);
+        oc->FuncAddrs().AddUnique(func);
 
-        if (oc->FuncAddrs().size() > 1)
-        {
+        if (oc->FuncAddrs().size() > 1) {
             cf->Flags() |= FF_FUNCINFUNC;
         }
 
@@ -1004,35 +708,30 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
         lendis = disasm(input, outbuf, sizeof(outbuf), 64, va, false, 0);
 
         // parse insn
-        if (!lendis || input + lendis > iend)
-        {
+        if (!lendis || input + lendis > iend) {
             lendis = 1;
             oc->Name() = "???";
             oc->OpCodeType() = OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
             cf->Flags() |= FF_DONTDECOMPBUTDISASM;
-        }
-        else
+        } else
             oc->ParseText(outbuf);
 
         // add asm codes
-        if (oc->Codes().empty())
-        {
+        if (oc->Codes().empty()) {
             for (int i = 0; i < lendis; ++i)
                 oc->Codes().push_back(input[i]);
         }
 
         BOOL bBreak = FALSE;
-        switch (oc->OpCodeType())
-        {
+        switch (oc->OpCodeType()) {
         case OCT_JCC:
             // conditional jump
-            switch (oc->Operand(0)->OperandType())
-            {
+            switch (oc->Operand(0)->OperandType()) {
             case OT_IMM:
                 addr = oc->Operand(0)->Value64();
-                cf->Jumpers().Insert(va);
-                cf->Jumpees().Insert(addr);
+                cf->Jumpers().AddUnique(va);
+                cf->Jumpees().AddUnique(addr);
                 break;
 
             default:
@@ -1041,17 +740,15 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             break;
 
         case OCT_JMP:
-            switch (oc->Operand(0)->OperandType())
-            {
+            switch (oc->Operand(0)->OperandType()) {
             case OT_IMM:
-                if (func == va)
-                {
+                if (func == va) {
                     // func is jumper
                     cf->FuncType() = FT_JUMPERFUNC;
 
                     addr = oc->Operand(0)->Value64();
-                    info.Entrances().Insert(addr);
-                    cf->Callers().Insert(va);
+                    info.Entrances().AddUnique(addr);
+                    cf->Callers().AddUnique(va);
 
                     CR_CodeFunc64 *newcf = info.MapAddrToCodeFunc()[addr].get();
                     if (newcf == NULL)
@@ -1061,19 +758,16 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
                             CR_SharedCodeFunc64(newcf);
                     }
                     newcf->Addr() = addr;
-                    newcf->Callees().Insert(func);
-                }
-                else
-                {
+                    newcf->Callees().AddUnique(func);
+                } else {
                     addr = oc->Operand(0)->Value64();
-                    cf->Jumpers().Insert(va);
-                    cf->Jumpees().Insert(addr);
+                    cf->Jumpers().AddUnique(va);
+                    cf->Jumpees().AddUnique(addr);
                 }
                 break;
 
             case OT_FUNCNAME:
-                if (func == va)
-                {
+                if (func == va) {
                     // func is jumper
                     cf->FuncType() = FT_JUMPERFUNC;
 
@@ -1082,8 +776,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
                 break;
 
             case OT_MEMIMM:
-                if (func == va)
-                {
+                if (func == va) {
                     // func is jumper
                     cf->FuncType() = FT_JUMPERFUNC;
 
@@ -1098,23 +791,21 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             break;
 
         case OCT_CALL:
-            switch (oc->Operand(0)->OperandType())
-            {
+            switch (oc->Operand(0)->OperandType()) {
             case OT_IMM:
                 // function call
                 addr = oc->Operand(0)->Value64();
-                info.Entrances().Insert(addr);
-                cf->Callers().Insert(va);
+                info.Entrances().AddUnique(addr);
+                cf->Callers().AddUnique(va);
                 {
                     CR_CodeFunc64 *newcf = info.MapAddrToCodeFunc()[addr].get();
-                    if (newcf == NULL)
-                    {
+                    if (newcf == NULL) {
                         newcf = new CR_CodeFunc64;
                         info.MapAddrToCodeFunc()[addr] =
                             CR_SharedCodeFunc64(newcf);
                     }
                     newcf->Addr() = addr;
-                    newcf->Callees().Insert(func);
+                    newcf->Callees().AddUnique(func);
                 }
                 break;
 
@@ -1124,18 +815,14 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             break;
 
         case OCT_RETURN:
-            if (!oc->Operands().empty() && oc->Operand(0)->OperandType() == OT_IMM)
-            {
+            if (!oc->Operands().empty() && oc->Operand(0)->OperandType() == OT_IMM) {
                 // func is __stdcall
                 cf->FuncType() = FT_STDCALL;
                 cf->SizeOfStackArgs() = (int)oc->Operand(0)->Value64();
-            }
-            else
-            {
+            } else {
                 // func is not __stdcall
                 cf->Flags() |= FF_NOTSTDCALL;
-                if (func == va)
-                {
+                if (func == va) {
                     cf->FuncType() = FT_RETURNONLY;
                     cf->SizeOfStackArgs() = 0;
                 }
@@ -1166,7 +853,7 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info)
     // register entrances
     CR_Addr32 va;
     va = VA32FromRVA(RVAOfEntryPoint());
-    info.Entrances().Insert(va);
+    info.Entrances().AddUnique(va);
     {
         CR_CodeFunc32 *codefunc = new CR_CodeFunc32;
         codefunc->Addr() = va;
@@ -1180,11 +867,10 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info)
     }
 
     // exporting functions are entrances
-    for (auto& e_symbol : ExportSymbols())
-    {
+    for (auto& e_symbol : ExportSymbols()) {
         va = VA32FromRVA(e_symbol.dwRVA);
 
-        info.Entrances().Insert(va);
+        info.Entrances().AddUnique(va);
 
         MapRVAToFuncName()[e_symbol.dwRVA] = e_symbol.pszName;
         MapFuncNameToRVA()[e_symbol.pszName] = e_symbol.dwRVA;
@@ -1194,13 +880,11 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info)
     {
         std::size_t i = 0, size, size2;
         CR_Addr32Set addrset;
-        do
-        {
+        do {
             addrset = info.Entrances();
             size = addrset.size();
 
-            for ( ; i < size; ++i)
-            {
+            for ( ; i < size; ++i) {
                 CR_CodeFunc32 *cf =
                     info.MapAddrToCodeFunc()[addrset[i]].get();
                 assert(cf);
@@ -1208,8 +892,7 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info)
                 DisAsmAddr32(info, addrset[i], addrset[i]);
 
                 CR_Addr32Set jumpees;
-                do
-                {
+                do {
                     jumpees = cf->Jumpees();
                     size2 = jumpees.size();
                     for (std::size_t j = 0; j < size2; j++)
@@ -1235,8 +918,7 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info)
     // register entrances
     CR_Addr64 va;
     va = VA64FromRVA(RVAOfEntryPoint());
-    info.Entrances().Insert(va);
-    {
+    info.Entrances().AddUnique(va); {
         CR_CodeFunc64 *codefunc = new CR_CodeFunc64;
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
@@ -1249,11 +931,10 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info)
     }
 
     // exporting functions are entrances
-    for (auto& e_symbol : ExportSymbols())
-    {
+    for (auto& e_symbol : ExportSymbols()) {
         va = VA64FromRVA(e_symbol.dwRVA);
 
-        info.Entrances().Insert(va);
+        info.Entrances().AddUnique(va);
 
         MapRVAToFuncName()[e_symbol.dwRVA] = e_symbol.pszName;
         MapFuncNameToRVA()[e_symbol.pszName] = e_symbol.dwRVA;
@@ -1263,13 +944,11 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info)
     {
         std::size_t i = 0, size, size2;
         CR_Addr64Set addrset;
-        do
-        {
+        do {
             addrset = info.Entrances();
             size = addrset.size();
 
-            for ( ; i < size; ++i)
-            {
+            for ( ; i < size; ++i) {
                 CR_CodeFunc64 *cf =
                     info.MapAddrToCodeFunc()[addrset[i]].get();
                 assert(cf);
@@ -1277,8 +956,7 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info)
                 DisAsmAddr64(info, addrset[i], addrset[i]);
 
                 CR_Addr64Set jumpees;
-                do
-                {
+                do {
                     jumpees = cf->Jumpees();
                     size2 = jumpees.size();
                     for (std::size_t j = 0; j < size2; j++)
@@ -1304,29 +982,20 @@ BOOL CR_Module::FixupAsm32(CR_DisAsmInfo32& info)
 retry:;
     must_retry = false;
 
-    for (auto it : info.MapAddrToOpCode())
-    {
+    for (auto it : info.MapAddrToOpCode()) {
         auto& operands = it.second.get()->Operands();
-        for (auto& opr : operands)
-        {
-            if (opr.OperandType() == OT_MEMIMM)
-            {
+        for (auto& opr : operands) {
+            if (opr.OperandType() == OT_MEMIMM) {
                 CR_Addr32 addr = opr.Value32();
-                if (AddressInData32(addr))
-                {
+                if (AddressInData32(addr)) {
                     sprintf(buf, "M%08lX", addr);
                     opr.Text() = buf;
-                }
-                else if (AddressInCode32(addr))
-                {
+                } else if (AddressInCode32(addr)) {
                     auto name = FuncNameFromRVA(addr);
-                    if (name)
-                    {
+                    if (name) {
                         opr.SetFuncName(name);
                         must_retry = true;
-                    }
-                    else
-                    {
+                    } else {
                         sprintf(buf, "L%08lX", addr);
                         opr.Text() = buf;
                     }
@@ -1334,36 +1003,27 @@ retry:;
             }
         }
 
-        switch (it.second->OpCodeType())
-        {
+        switch (it.second->OpCodeType()) {
         case OCT_JMP:
         case OCT_LOOP:
         case OCT_JCC:
         case OCT_CALL:
-            if (operands[0].OperandType() == OT_MEMIMM)
-            {
+            if (operands[0].OperandType() == OT_MEMIMM) {
                 CR_Addr32 addr = operands[0].Value32();
                 const char *pName = FuncNameFromVA32(addr);
-                if (pName)
-                {
+                if (pName) {
                     operands[0].SetFuncName(pName);
                     must_retry = true;
                 }
-            }
-            else if (operands[0].OperandType() == OT_IMM)
-            {
+            } else if (operands[0].OperandType() == OT_IMM) {
                 CR_Addr32 addr = operands[0].Value32();
                 const char *pName = FuncNameFromVA32(addr);
-                if (pName)
-                {
-                    if (operands[0].OperandType() != OT_FUNCNAME)
-                    {
+                if (pName) {
+                    if (operands[0].OperandType() != OT_FUNCNAME) {
                         operands[0].SetFuncName(pName);
                         must_retry = true;
                     }
-                }
-                else if (AddressInCode32(addr))
-                {
+                } else if (AddressInCode32(addr)) {
                     sprintf(buf, "L%08lX", addr);
                     operands[0].Text() = buf;
                 }
@@ -1382,17 +1042,12 @@ retry:;
                     operands[0].Size() = operands[1].Size();
                 else if (operands[1].Size() == 0)
                     operands[1].Size() = operands[0].Size();
-            }
-            else if (it.second->Name() == "lea")
-            {
+            } else if (it.second->Name() == "lea") {
                 CR_Addr32 addr = operands[1].Value32();
-                if (AddressInData32(addr))
-                {
+                if (AddressInData32(addr)) {
                     sprintf(buf, "offset M%08lX", addr);
                     operands[1].Text() = buf;
-                }
-                else if (AddressInCode32(addr))
-                {
+                } else if (AddressInCode32(addr)) {
                     sprintf(buf, "offset L%08lX", addr);
                     operands[1].Text() = buf;
                 }
@@ -1404,13 +1059,11 @@ retry:;
         }
     }
 
-    for (auto it : info.MapAddrToCodeFunc())
-    {
+    for (auto it : info.MapAddrToCodeFunc()) {
         CR_CodeFunc32 *cf = it.second.get();
         assert(cf);
 
-        if (cf->FuncType() == FT_JUMPERFUNC && cf->Name().empty())
-        {
+        if (cf->FuncType() == FT_JUMPERFUNC && cf->Name().empty()) {
             CR_Addr32 addr = cf->Addr();
             CR_OpCode32 *oc = info.MapAddrToOpCode(addr);
             assert(oc);
@@ -1424,9 +1077,8 @@ retry:;
         }
 
         DWORD rva = RVAFromVA32(cf->Addr());
-        auto es = SymbolInfo().GetExportSymbolFromRVA(rva);
-        if (es && cf->Name() != es->pszName)
-        {
+        auto es = ExportSymbolFromRVA(rva);
+        if (es && cf->Name() != es->pszName) {
             cf->Name() = es->pszName;
             must_retry = true;
         }
@@ -1446,29 +1098,20 @@ BOOL CR_Module::FixupAsm64(CR_DisAsmInfo64& info)
 retry:;
     must_retry = false;
 
-    for (auto it : info.MapAddrToOpCode())
-    {
+    for (auto it : info.MapAddrToOpCode()) {
         auto& operands = it.second.get()->Operands();
-        for (auto& opr : operands)
-        {
-            if (opr.OperandType() == OT_MEMIMM)
-            {
+        for (auto& opr : operands) {
+            if (opr.OperandType() == OT_MEMIMM) {
                 CR_Addr64 addr = opr.Value64();
-                if (AddressInData64(addr))
-                {
+                if (AddressInData64(addr)) {
                     sprintf(buf, "M%08lX%08lX", HILONG(addr), LOLONG(addr));
                     opr.Text() = buf;
-                }
-                else if (AddressInCode64(addr))
-                {
+                } else if (AddressInCode64(addr)) {
                     auto name = FuncNameFromVA64(addr);
-                    if (name)
-                    {
+                    if (name) {
                         opr.SetFuncName(name);
                         must_retry = true;
-                    }
-                    else
-                    {
+                    } else {
                         sprintf(buf, "L%08lX%08lX", HILONG(addr), LOLONG(addr));
                         opr.Text() = buf;
                     }
@@ -1476,36 +1119,27 @@ retry:;
             }
         }
 
-        switch (it.second->OpCodeType())
-        {
+        switch (it.second->OpCodeType()) {
         case OCT_JMP:
         case OCT_LOOP:
         case OCT_JCC:
         case OCT_CALL:
-            if (operands[0].OperandType() == OT_MEMIMM)
-            {
+            if (operands[0].OperandType() == OT_MEMIMM) {
                 CR_Addr64 addr = operands[0].Value64();
                 const char *pName = FuncNameFromVA64(addr);
-                if (pName)
-                {
-                    if (operands[0].OperandType() != OT_FUNCNAME)
-                    {
+                if (pName) {
+                    if (operands[0].OperandType() != OT_FUNCNAME) {
                         operands[0].SetFuncName(pName);
                         must_retry = true;
                     }
                 }
-            }
-            else if (operands[0].OperandType() == OT_IMM)
-            {
+            } else if (operands[0].OperandType() == OT_IMM) {
                 CR_Addr64 addr = operands[0].Value64();
                 const char *pName = FuncNameFromVA64(addr);
-                if (pName)
-                {
+                if (pName) {
                     operands[0].SetFuncName(pName);
                     must_retry = true;
-                }
-                else if (AddressInCode64(addr))
-                {
+                } else if (AddressInCode64(addr)) {
                     sprintf(buf, "L%08lX%08lX", HILONG(addr), LOLONG(addr));
                     operands[0].Text() = buf;
                 }
@@ -1524,17 +1158,12 @@ retry:;
                     operands[0].Size() = operands[1].Size();
                 else if (operands[1].Size() == 0)
                     operands[1].Size() = operands[0].Size();
-            }
-            else if (it.second->Name() == "lea")
-            {
+            } else if (it.second->Name() == "lea") {
                 CR_Addr64 addr = operands[1].Value64();
-                if (AddressInData64(addr))
-                {
+                if (AddressInData64(addr)) {
                     sprintf(buf, "offset M%08lX%08lX", HILONG(addr), LOLONG(addr));
                     operands[1].Text() = buf;
-                }
-                else if (AddressInCode64(addr))
-                {
+                } else if (AddressInCode64(addr)) {
                     sprintf(buf, "offset L%08lX%08lX", HILONG(addr), LOLONG(addr));
                     operands[1].Text() = buf;
                 }
@@ -1546,13 +1175,11 @@ retry:;
         }
     }
 
-    for (auto it : info.MapAddrToCodeFunc())
-    {
+    for (auto it : info.MapAddrToCodeFunc()) {
         CR_CodeFunc64 *cf = it.second.get();
         assert(cf);
 
-        if (cf->FuncType() == FT_JUMPERFUNC && cf->Name().empty())
-        {
+        if (cf->FuncType() == FT_JUMPERFUNC && cf->Name().empty()) {
             CR_Addr64 addr = cf->Addr();
             CR_OpCode64 *oc = info.MapAddrToOpCode(addr);
             assert(oc);
@@ -1566,9 +1193,8 @@ retry:;
         }
 
         DWORD rva = RVAFromVA64(cf->Addr());
-        auto es = SymbolInfo().GetExportSymbolFromRVA(rva);
-        if (es && cf->Name() != es->pszName)
-        {
+        auto es = ExportSymbolFromRVA(rva);
+        if (es && cf->Name() != es->pszName) {
             cf->Name() = es->pszName;
             must_retry = true;
         }
@@ -1585,51 +1211,57 @@ retry:;
 
 extern "C"
 BOOL CALLBACK
-EnumResLangProc(
+CrEnumResLangProc(
     HMODULE hModule,
     LPCTSTR lpszType,
     LPCTSTR lpszName,
     WORD wIDLanguage,
     LPARAM lParam)
 {
+    std::FILE *fp = reinterpret_cast<std::FILE *>(lParam);
     CHAR szLangName[64];
     DWORD LCID = MAKELCID(wIDLanguage, SORT_DEFAULT);
-    if (GetLocaleInfoA(LCID, LOCALE_SLANGUAGE, szLangName, 64))
-        printf("      Language: %s\n", szLangName);
-    else
-        printf("      Language: #%u\n", (UINT)(UINT_PTR)wIDLanguage);
+    if (::GetLocaleInfoA(LCID, LOCALE_SENGLANGUAGE, szLangName, 64)) {
+        fprintf(fp, "      Language: %s\n", szLangName);
+    } else {
+        fprintf(fp, "      Language: #%u\n",
+            static_cast<UINT>(static_cast<UINT_PTR>(wIDLanguage)));
+    }
 
     HRSRC hRsrc;
-    hRsrc = (HRSRC)FindResourceEx(hModule, lpszType, lpszName, wIDLanguage);
-    DWORD size = SizeofResource(hModule, hRsrc);
-    printf("        Data size: 0x%08lX (%lu) Bytes\n", size, size);
+    hRsrc = reinterpret_cast<HRSRC>(
+        ::FindResourceEx(hModule, lpszType, lpszName, wIDLanguage));
+    DWORD size = ::SizeofResource(hModule, hRsrc);
+    fprintf(fp, "        Data size: 0x%08lX (%lu) Bytes\n", size, size);
 
     return TRUE;
-}
+} // CrEnumResLangProc
 
 extern "C"
 BOOL CALLBACK
-EnumResNameProc(
+CrEnumResNameProc(
     HMODULE hModule,
     LPCTSTR lpszType,
     LPTSTR lpszName,
     LPARAM lParam)
 {
-    if (IS_INTRESOURCE(lpszName))
-        printf("    Resource Name: #%u\n", (UINT)(UINT_PTR)lpszName);
-    else
+    std::FILE *fp = reinterpret_cast<std::FILE *>(lParam);
+    if (IS_INTRESOURCE(lpszName)) {
+        fprintf(fp, "    Resource Name: #%u\n",
+            static_cast<UINT>(reinterpret_cast<UINT_PTR>(lpszName)));
+    } else {
 #ifdef _UNICODE
-        printf("    Resource Name: %ls\n", lpszName);
+        fprintf(fp, "    Resource Name: %ls\n", lpszName);
 #else
-        printf("    Resource Name: %s\n", lpszName);
+        fprintf(fp, "    Resource Name: %s\n", lpszName);
 #endif
+    }
 
-    EnumResourceLanguages(hModule, lpszType, lpszName, EnumResLangProc, 0);
+    ::EnumResourceLanguages(hModule, lpszType, lpszName, CrEnumResLangProc, lParam);
     return TRUE;
-}
+} // CrEnumResNameProc
 
-const char * const cr_res_types[] =
-{
+static const char * const cr_res_types[] = {
     NULL,               // 0
     "RT_CURSOR",        // 1
     "RT_BITMAP",        // 2
@@ -1658,70 +1290,61 @@ const char * const cr_res_types[] =
 
 extern "C"
 BOOL CALLBACK
-EnumResTypeProc(
-    HMODULE hModule,
-    LPTSTR lpszType,
-    LPARAM lParam)
-{
-    if (IS_INTRESOURCE(lpszType))
-    {
+CrEnumResTypeProc(HMODULE hModule, LPTSTR lpszType, LPARAM lParam) {
+    std::FILE *fp = reinterpret_cast<std::FILE *>(lParam);
+    if (IS_INTRESOURCE(lpszType)) {
         UINT nType = static_cast<UINT>(reinterpret_cast<UINT_PTR>(lpszType));
         UINT size = static_cast<UINT>(sizeof(cr_res_types) / sizeof(cr_res_types[0]));
-        if (nType < size && cr_res_types[nType])
-        {
-            printf("  Resource Type: %s\n", cr_res_types[nType]);
+        if (nType < size && cr_res_types[nType]) {
+            fprintf(fp, "  Resource Type: %s\n", cr_res_types[nType]);
+        } else {
+            fprintf(fp, "  Resource Type: #%u\n", nType);
         }
-        else
-            printf("  Resource Type: #%u\n", nType);
-    }
-    else
-    {
+    } else {
 #ifdef _UNICODE
-        printf("  Resource Type: %ls\n", lpszType);
+        fprintf(fp, "  Resource Type: %ls\n", lpszType);
 #else
-        printf("  Resource Type: %s\n", lpszType);
+        fprintf(fp, "  Resource Type: %s\n", lpszType);
 #endif
     }
 
-    EnumResourceNames(hModule, lpszType, EnumResNameProc, 0);
+    ::EnumResourceNames(hModule, lpszType, CrEnumResNameProc, lParam);
     return TRUE;
-} // EnumResTypeProc
+} // CrEnumResTypeProc
 
-void CR_Module::DumpResource()
-{
-    HINSTANCE hInst;
-    hInst = LoadLibraryEx(GetFileName(), NULL, LOAD_LIBRARY_AS_DATAFILE);
+void CR_Module::DumpResource(std::FILE *fp) {
+    HINSTANCE hInst = ::LoadLibraryEx(m_strFileName.c_str(), NULL,
+                                      LOAD_LIBRARY_AS_DATAFILE);
     if (hInst == NULL)
         return;
 
-    printf("\n### RESOURCE ###\n");
-    if (!EnumResourceTypes(hInst, EnumResTypeProc, 0))
-        printf("  No resource data\n");
-    FreeLibrary(hInst);
+    fprintf(fp, "\n### RESOURCE ###\n");
+    if (!::EnumResourceTypes(hInst, CrEnumResTypeProc,
+                             reinterpret_cast<LONG_PTR>(fp)))
+    {
+        fprintf(fp, "  No resource data\n");
+    }
+    ::FreeLibrary(hInst);
 
-    printf("\n");
-}
+    fprintf(fp, "\n");
+} // CR_Module::DumpResource
 
 ////////////////////////////////////////////////////////////////////////////
 // decompiling
 
-BOOL CR_Module::DecompileAddr32(CR_DisAsmInfo32& info, CR_Addr32 va)
-{
+BOOL CR_Module::DecompileAddr32(CR_DisAsmInfo32& info, CR_Addr32 va) {
     return FALSE;
 }
 
-BOOL CR_Module::DecompileAddr64(CR_DisAsmInfo64& info, CR_Addr64 va)
-{
+BOOL CR_Module::DecompileAddr64(CR_DisAsmInfo64& info, CR_Addr64 va) {
     return FALSE;
 }
 
-BOOL CR_Module::Decompile32(CR_DisAsmInfo32& info)
-{
+BOOL CR_Module::Decompile32(CR_DisAsmInfo32& info) {
     return FALSE;
 }
 
-BOOL CR_Module::Decompile64(CR_DisAsmInfo64& info)
-{
+BOOL CR_Module::Decompile64(CR_DisAsmInfo64& info) {
     return FALSE;
 }
 
