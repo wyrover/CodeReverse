@@ -34,8 +34,7 @@ typedef unsigned long long  CR_Addr64;
 ////////////////////////////////////////////////////////////////////////////
 // CR_TriBool - logical value of three states
 
-class CR_TriBool
-{
+class CR_TriBool {
 public:
     CR_TriBool();
     CR_TriBool(bool b);
@@ -77,6 +76,57 @@ protected:
     static const char TB_FALSE      = 0;
     static const char TB_TRUE       = 1;
     char m_value;
+};
+
+////////////////////////////////////////////////////////////////////////////
+// CR_Range -- closed range
+
+struct CR_Range {
+public:
+    typedef unsigned long long value_type;
+    static const value_type npos = 0x7FFFFFFF;
+    value_type m_min, m_max;
+
+public:
+    CR_Range() : m_min(0), m_max(CR_Range::npos) { }
+
+    CR_Range(value_type mi, value_type ma) : m_min(mi), m_max(ma) { }
+
+    CR_Range(const CR_Range& range) :
+        m_min(range.m_min), m_max(range.m_max) { }
+
+    value_type& Min() { return m_min; }
+    value_type& Max() { return m_max; }
+    const value_type& Min() const { return m_min; }
+    const value_type& Max() const { return m_max; }
+
+    bool empty() const {
+        return m_max < m_min;
+    }
+    bool whole() const {
+        return m_min == 0 && m_max == CR_Range::npos;
+    }
+
+    void clear() {
+        m_min = 0;
+        m_max = CR_Range::npos;
+    }
+
+    void LimitMin(value_type m) {
+        if (m_min < m) {
+            m_min = m;
+        }
+    }
+
+    void LimitMax(value_type m) {
+        if (m_max > m) {
+            m_max = m;
+        }
+    }
+
+    void Set(value_type value) {
+        m_min = m_max = value;
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////

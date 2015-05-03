@@ -343,7 +343,7 @@ public:
     CR_Addr32&                          Addr();
     std::string&                        Name();
     CR_FuncType&                        FuncType();
-    int&                                SizeOfStackArgs();
+    CR_Range&                           ArgSizeRange();
     DWORD&                              Flags();
     CR_Addr32Set&                       Jumpees();
     CR_Addr32Set&                       Jumpers();
@@ -353,7 +353,7 @@ public:
     const CR_Addr32&                    Addr() const;
     const std::string&                  Name() const;
     const CR_FuncType&                  FuncType() const;
-    const int&                          SizeOfStackArgs() const;
+    const CR_Range&                     ArgSizeRange() const;
     const DWORD&                        Flags() const;
     const CR_Addr32Set&                 Jumpees() const;
     const CR_Addr32Set&                 Jumpers() const;
@@ -364,7 +364,7 @@ protected:
     CR_Addr32                           m_addr;
     std::string                         m_name;
     CR_FuncType                         m_ft;
-    int                                 m_SizeOfStackArgs;
+    CR_Range                            m_ArgSizeRange;
     DWORD                               m_flags;
     CR_Addr32Set                        m_jumpees;
     CR_Addr32Set                        m_jumpers;
@@ -392,7 +392,7 @@ public:
     CR_Addr64&                          Addr();
     std::string&                        Name();
     CR_FuncType&                        FuncType();
-    int&                                SizeOfStackArgs();
+    CR_Range&                           ArgSizeRange();
     DWORD&                              Flags();
     CR_Addr64Set&                       Jumpees();
     CR_Addr64Set&                       Jumpers();
@@ -402,7 +402,7 @@ public:
     const CR_Addr64&                    Addr() const;
     const std::string&                  Name() const;
     const CR_FuncType&                  FuncType() const;
-    const int&                          SizeOfStackArgs() const;
+    const CR_Range&                     ArgSizeRange() const;
     const DWORD&                        Flags() const;
     const CR_Addr64Set&                 Jumpees() const;
     const CR_Addr64Set&                 Jumpers() const;
@@ -413,7 +413,7 @@ protected:
     CR_Addr64                           m_addr;
     std::string                         m_name;
     CR_FuncType                         m_ft;
-    int                                 m_SizeOfStackArgs;
+    CR_Range                            m_ArgSizeRange;
     DWORD                               m_flags;
     CR_Addr64Set                        m_jumpees;
     CR_Addr64Set                        m_jumpers;

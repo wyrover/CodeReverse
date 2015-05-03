@@ -331,8 +331,8 @@ inline CR_FuncType& CR_CodeFunc32::FuncType() {
     return m_ft;
 }
 
-inline int& CR_CodeFunc32::SizeOfStackArgs() {
-    return m_SizeOfStackArgs;
+inline CR_Range& CR_CodeFunc32::ArgSizeRange() {
+    return m_ArgSizeRange;
 }
 
 inline DWORD& CR_CodeFunc32::Flags() {
@@ -370,8 +370,8 @@ inline const CR_FuncType& CR_CodeFunc32::FuncType() const {
     return m_ft;
 }
 
-inline const int& CR_CodeFunc32::SizeOfStackArgs() const {
-    return m_SizeOfStackArgs;
+inline const CR_Range& CR_CodeFunc32::ArgSizeRange() const {
+    return m_ArgSizeRange;
 }
 
 inline const DWORD& CR_CodeFunc32::Flags() const {
@@ -409,8 +409,8 @@ inline CR_FuncType& CR_CodeFunc64::FuncType() {
     return m_ft;
 }
 
-inline int& CR_CodeFunc64::SizeOfStackArgs() {
-    return m_SizeOfStackArgs;
+inline CR_Range& CR_CodeFunc64::ArgSizeRange() {
+    return m_ArgSizeRange;
 }
 
 inline DWORD& CR_CodeFunc64::Flags() {
@@ -448,8 +448,8 @@ inline const CR_FuncType& CR_CodeFunc64::FuncType() const {
     return m_ft;
 }
 
-inline const int& CR_CodeFunc64::SizeOfStackArgs() const {
-    return m_SizeOfStackArgs;
+inline const CR_Range& CR_CodeFunc64::ArgSizeRange() const {
+    return m_ArgSizeRange;
 }
 
 inline const DWORD& CR_CodeFunc64::Flags() const {

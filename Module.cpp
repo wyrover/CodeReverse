@@ -623,13 +623,12 @@ BOOL CR_Module::DisAsmAddr32(
             if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
                 // func is __stdcall
                 cf->FuncType() = FT_STDCALL;
-                cf->SizeOfStackArgs() = (int)oc->Operand(0)->Value32();
+                cf->ArgSizeRange().Set(oc->Operand(0)->Value32());
             } else {
                 // func is not __stdcall
                 cf->Flags() |= FF_NOTSTDCALL;
                 if (func == va) {
                     cf->FuncType() = FT_RETURNONLY;
-                    cf->SizeOfStackArgs() = 0;
                 }
             }
             bBreak = TRUE;
@@ -814,13 +813,12 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
             if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
                 // func is __stdcall
                 cf->FuncType() = FT_STDCALL;
-                cf->SizeOfStackArgs() = (int)oc->Operand(0)->Value64();
+                cf->ArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {
                 // func is not __stdcall
                 cf->Flags() |= FF_NOTSTDCALL;
                 if (func == va) {
                     cf->FuncType() = FT_RETURNONLY;
-                    cf->SizeOfStackArgs() = 0;
                 }
             }
             bBreak = TRUE;
@@ -854,7 +852,7 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info) {
         auto codefunc = make_shared<CR_CodeFunc32>();
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
-        codefunc->SizeOfStackArgs() = 0;
+        codefunc->ArgSizeRange().Set(0);
         codefunc->Flags() = FF_NOTSTDCALL;
         codefunc->FuncType() = FT_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
@@ -915,7 +913,7 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info) {
         auto codefunc = make_shared<CR_CodeFunc64>();
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
-        codefunc->SizeOfStackArgs() = 0;
+        codefunc->ArgSizeRange().Set(0);
         codefunc->Flags() = FF_NOTSTDCALL;
         codefunc->FuncType() = FT_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
