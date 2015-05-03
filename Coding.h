@@ -8,6 +8,13 @@
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
 
+std::string Cr2Hex(unsigned char value);
+std::string Cr4Hex(unsigned short value);
+std::string Cr8Hex(unsigned long value);
+std::string Cr16Hex(unsigned long long value);
+std::string CrValue32(unsigned long value, BOOL is_signed);
+std::string CrValue64(unsigned long long value, BOOL is_signed);
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_CondCode - condition code
 
@@ -430,10 +437,6 @@ public:
     void clear();
 
 public:
-    void MapAddrToOpCode(CR_Addr32 addr, CR_OpCode32 *oc);
-    void MapAddrToCodeFunc(CR_Addr32 addr, CR_CodeFunc32 *cf);
-
-public:
     // accessors
     std::map<CR_Addr32, CR_SharedOpCode32>&         MapAddrToOpCode();
     CR_Addr32Set&                                   Entrances();
@@ -468,10 +471,6 @@ public:
     virtual ~CR_DisAsmInfo64();
     void Copy(const CR_DisAsmInfo64& info);
     void clear();
-
-public:
-    void MapAddrToOpCode(CR_Addr64 addr, CR_OpCode64 *oc);
-    void MapAddrToCodeFunc(CR_Addr64 addr, CR_CodeFunc64 *cf);
 
 public:
     // accessors

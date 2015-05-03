@@ -966,12 +966,8 @@ void CR_Module::DumpDelayLoad(std::FILE *fp) {
 BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
-    info.Entrances().sort();
-    info.Entrances().unique();
-    const std::size_t size = info.Entrances().size();
-    for (std::size_t i = 0; i < size; ++i) {
-        CR_CodeFunc32 *cf =
-            info.MapAddrToCodeFunc()[info.Entrances()[i]].get();
+    for (auto& entrance : info.Entrances()) {
+        CR_CodeFunc32 *cf = info.MapAddrToCodeFunc(entrance);
         assert(cf);
         if (cf->Flags() & FF_IGNORE)
             continue;
@@ -1008,7 +1004,7 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
             break;
         }
         fprintf(fp, "SizeOfStackArgs == %d\n", cf->SizeOfStackArgs());
-        DumpDisAsmFunc32(fp, info, info.Entrances()[i]);
+        DumpDisAsmFunc32(fp, info, entrance);
 
         if (pszName)
             fprintf(fp, ";; End of Function %s @ L%08lX\n\n", pszName, cf->Addr());
@@ -1024,7 +1020,7 @@ BOOL CR_Module::DumpDisAsmFunc32(std::FILE *fp, CR_DisAsmInfo32& info, CR_Addr32
         CR_OpCode32 *oc = it->second.get();
         assert(oc);
 
-        if (func != 0 && !oc->FuncAddrs().Contains(func))
+        if (func != 0 && !oc->FuncAddrs().count(func))
             continue;
 
         fprintf(fp, "L%08lX: ", oc->Addr());
@@ -1063,12 +1059,8 @@ BOOL CR_Module::DumpDisAsmFunc32(std::FILE *fp, CR_DisAsmInfo32& info, CR_Addr32
 BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
-    info.Entrances().sort();
-    info.Entrances().unique();
-    const std::size_t size = info.Entrances().size();
-    for (std::size_t i = 0; i < size; ++i) {
-        CR_CodeFunc64 *cf =
-            info.MapAddrToCodeFunc()[info.Entrances()[i]].get();
+    for (auto& entrance : info.Entrances()) {
+        CR_CodeFunc64 *cf = info.MapAddrToCodeFunc(entrance);
         assert(cf);
         if (cf->Flags() & FF_IGNORE)
             continue;
@@ -1089,7 +1081,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
             fprintf(fp, "ft = FT_64BITFUNC, ");
 
         printf("SizeOfStackArgs == %d\n", cf->SizeOfStackArgs());
-        DumpDisAsmFunc64(fp, info, info.Entrances()[i]);
+        DumpDisAsmFunc64(fp, info, entrance);
 
         if (pszName)
             fprintf(fp, ";; End of Function %s @ L%08lX%08lX\n\n", pszName,
@@ -1107,7 +1099,7 @@ BOOL CR_Module::DumpDisAsmFunc64(std::FILE *fp, CR_DisAsmInfo64& info, CR_Addr64
         CR_OpCode64 *oc = it->second.get();
         assert(oc);
 
-        if (func != 0 && !oc->FuncAddrs().Contains(func))
+        if (func != 0 && !oc->FuncAddrs().count(func))
             continue;
 
         fprintf(fp, "L%08lX%08lX: ", HILONG(oc->Addr()), LOLONG(oc->Addr()));

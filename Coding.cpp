@@ -8,6 +8,70 @@
 #include "stdafx.h"
 
 ////////////////////////////////////////////////////////////////////////////
+
+std::string Cr2Hex(unsigned char value) {
+    char buf[32];
+    sprintf(buf, "%02X", value);
+    return buf;
+}
+
+std::string Cr4Hex(unsigned short value) {
+    char buf[32];
+    sprintf(buf, "%04X", value);
+    return buf;
+}
+
+std::string Cr8Hex(unsigned long value) {
+    char buf[32];
+    sprintf(buf, "%08lX", value);
+    return buf;
+}
+
+std::string Cr16Hex(unsigned long long value) {
+    char buf[32];
+    sprintf(buf, "%08lX%08lX", HILONG(value), LOLONG(value));
+    return buf;
+}
+
+std::string CrValue32(unsigned long value, BOOL is_signed) {
+    CHAR buf[64];
+
+    if (is_signed) {
+        sprintf(buf, "%ld", (LONG)value);
+    } else {
+        if (HIWORD(value) == 0) {
+            if (HIBYTE(LOWORD(LOLONG(value))) == 0)
+                sprintf(buf, "0x%02X", BYTE(value));
+            else
+                sprintf(buf, "0x%04X", LOWORD(value));
+        } else {
+            sprintf(buf, "0x%08lX", value);
+        }
+    }
+    return buf;
+}
+
+std::string CrValue64(unsigned long long value, BOOL is_signed) {
+    char buf[32];
+    if (is_signed) {
+        sprintf(buf, "%ld", LONG(LONGLONG(value)));
+    } else if (HILONG(value) == 0) {
+        if (HIWORD(LOLONG(value)) == 0) {
+            if (HIBYTE(LOWORD(LOLONG(value))) == 0) {
+                sprintf(buf, "0x%02X", BYTE(value));
+            } else {
+                sprintf(buf, "0x%04X", LOWORD(LOLONG(value)));
+            }
+        } else {
+            sprintf(buf, "0x%08lX", LOLONG(value));
+        }
+    } else {
+        sprintf(buf, "0x%08lX%08lX", HILONG(value), LOLONG(value));
+    }
+    return buf;
+}
+
+////////////////////////////////////////////////////////////////////////////
 // x86 flags
 
 CR_FlagType CrFlagGetType(const char *name, int bits) {
@@ -338,45 +402,13 @@ void CR_Operand::clear() {
 }
 
 void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed) {
-    CHAR buf[64];
-
-    if (is_signed) {
-        sprintf(buf, "%ld", (LONG)val);
-    } else {
-        if (HIWORD(val) == 0) {
-            if (HIBYTE(LOWORD(LOLONG(val))) == 0)
-                sprintf(buf, "0x%02X", (BYTE)(val));
-            else
-                sprintf(buf, "0x%04X", LOWORD(val));
-        } else {
-            sprintf(buf, "0x%08lX", val);
-        }
-    }
-
-    Text() = buf;
+    Text() = CrValue32(val, is_signed);
     OperandType() = OT_IMM;
     Value64() = val;
 }
 
 void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed) {
-    CHAR buf[64];
-
-    if (is_signed) {
-        sprintf(buf, "%ld", (LONG)(LONGLONG)val);
-    } else if (HILONG(val) == 0) {
-        if (HIWORD(LOLONG(val)) == 0) {
-            if (HIBYTE(LOWORD(LOLONG(val))) == 0)
-                sprintf(buf, "0x%02X", (BYTE)(val));
-            else
-                sprintf(buf, "0x%04X", LOWORD(LOLONG(val)));
-        } else {
-            sprintf(buf, "0x%08lX", LOLONG(val));
-        }
-    } else {
-        sprintf(buf, "0x%08lX%08lX", HILONG(val), LOLONG(val));
-    }
-
-    Text() = buf;
+    Text() = CrValue64(val, is_signed);
     OperandType() = OT_IMM;
     Value64() = val;
 }

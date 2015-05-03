@@ -32,6 +32,7 @@
 
 #include <set>              // for std::set
 #include <map>              // for std::map
+#include <unordered_set>    // for std::unordered_set
 #include <unordered_map>    // for std::unordered_map
 #include <algorithm>        // for std::sort, std::unique
 #include <iostream>         // for std::cout, std::cerr

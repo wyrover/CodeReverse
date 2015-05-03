@@ -307,4 +307,30 @@ inline const CR_StringSet& CR_Module::ImportDllNames() const {
     return m_vecImportDllNames;
 }
 
+inline BOOL CR_Module::AddressInCode32(CR_Addr32 va) const {
+    if (!Is32Bit())
+        return FALSE;
+
+    const REAL_IMAGE_SECTION_HEADER *pCode = CodeSectionHeader();
+    if (pCode == NULL)
+        return FALSE;
+
+    const CR_Addr32 begin = m_pOptional32->ImageBase + pCode->RVA;
+    const CR_Addr32 end = begin + pCode->Misc.VirtualSize;
+    return begin <= va && va < end;
+} // CR_Module::AddressInCode32
+
+inline BOOL CR_Module::AddressInCode64(CR_Addr64 va) const {
+    if (!Is64Bit())
+        return FALSE;
+
+    const REAL_IMAGE_SECTION_HEADER *pCode = CodeSectionHeader();
+    if (pCode == NULL)
+        return FALSE;
+
+    const CR_Addr64 begin = m_pOptional64->ImageBase + pCode->RVA;
+    const CR_Addr64 end = begin + pCode->Misc.VirtualSize;
+    return begin <= va && va < end;
+} // CR_Module::AddressInCode64
+
 ////////////////////////////////////////////////////////////////////////////

@@ -111,6 +111,11 @@ public:
         return std::vector<ITEM_T>::insert(it1, first, last);
     }
 
+    template <class T_IT2>
+    void assign(T_IT2 first, T_IT2 last) {
+        std::vector<ITEM_T>::assign(first, last);
+    }
+
     bool Contains(const ITEM_T& item) const {
         const std::size_t siz = this->size();
         for (std::size_t i = 0; i < siz; i++) {
@@ -190,8 +195,8 @@ namespace std
 ////////////////////////////////////////////////////////////////////////////
 // CR_Addr32Set, CR_Addr64Set
 
-typedef CR_VecSet<CR_Addr32> CR_Addr32Set;
-typedef CR_VecSet<CR_Addr64> CR_Addr64Set;
+typedef std::unordered_set<CR_Addr32> CR_Addr32Set;
+typedef std::unordered_set<CR_Addr64> CR_Addr64Set;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_String

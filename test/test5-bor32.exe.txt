@@ -1,0 +1,257 @@
+///////////////////////////////////////////////
+// CodeReverse 0.1.7 (32-bit) for gcc        //
+// https://github.com/katahiromz/CodeReverse //
+// katayama.hirofumi.mz@gmail.com            //
+///////////////////////////////////////////////
+
+Command Line: coderev test5-bor32.exe
+FileName: test5-bor32.exe, FileSize: 0x0000D800 (55296)
+
+### DOS Header ###
+  e_magic: 0x5A4D
+  e_cblp: 0x0050
+  e_cp: 0x0002
+  e_crlc: 0x0000
+  e_cparhdr: 0x0004
+  e_minalloc: 0x000F
+  e_maxalloc: 0xFFFF
+  e_ss: 0x0000
+  e_sp: 0x00B8
+  e_csum: 0x0000
+  e_ip: 0x0000
+  e_cs: 0x0000
+  e_lfarlc: 0x0040
+  e_ovno: 0x001A
+  e_res[0]: 0x0000
+  e_res[1]: 0x0000
+  e_res[2]: 0x0000
+  e_res[3]: 0x0000
+  e_oemid: 0x0000
+  e_oeminfo: 0x0000
+  e_res2[0]: 0x0000
+  e_res2[1]: 0x0000
+  e_res2[2]: 0x0000
+  e_res2[3]: 0x0000
+  e_res2[4]: 0x0000
+  e_res2[5]: 0x0000
+  e_res2[6]: 0x0000
+  e_res2[7]: 0x0000
+  e_res2[8]: 0x0000
+  e_res2[9]: 0x0000
+  e_lfanew: 0x00000200
+
+### IMAGE_FILE_HEADER ###
+  Machine: 0x014C (IMAGE_FILE_MACHINE_I386)
+  NumberOfSections: 0x0008 (8)
+  TimeDateStamp: 0x554598A8 (Sun May 03 03:40:24 2015)
+  PointerToSymbolTable: 0x00000000
+  NumberOfSymbols: 0x00000000 (0)
+  SizeOfOptionalHeader: 0x00E0 (224)
+  Characteristics: 0x010E (IMAGE_FILE_EXECUTABLE_IMAGE IMAGE_FILE_LINE_NUMS_STRIPPED IMAGE_FILE_LOCAL_SYMS_STRIPPED IMAGE_FILE_32BIT_MACHINE)
+
+### IMAGE_OPTIONAL_HEADER32 ###
+  Magic: 0x010B
+  LinkerVersion: 5.0
+  SizeOfCode: 0x0000A000 (40960)
+  SizeOfInitializedData: 0x00006000 (24576)
+  SizeOfUninitializedData: 0x00000000 (0)
+  AddressOfEntryPoint: 0x00001000
+  BaseOfCode: 0x00001000
+  BaseOfData: 0x0000B000
+  ImageBase: 0x00400000
+  SectionAlignment: 0x00001000
+  FileAlignment: 0x00000200
+  OperatingSystemVersion: 4.0
+  ImageVersion: 0.0
+  SubsystemVersion: 4.0
+  Win32VersionValue: 0x00000000
+  SizeOfImage: 0x00017000 (94208)
+  SizeOfHeaders: 0x00000600 (1536)
+  CheckSum: 0x00000000 (valid)
+  Subsystem: 0x0003 (IMAGE_SUBSYSTEM_WINDOWS_CUI)
+  DllCharacteristics: 0x0000 ()
+  SizeOfStackReserve: 0x00100000 (1048576)
+  SizeOfStackCommit: 0x00002000 (8192)
+  SizeOfHeapReserve: 0x00100000 (1048576)
+  SizeOfHeapCommit: 0x00001000 (4096)
+  LoaderFlags: 0x00000000
+  NumberOfRvaAndSizes: 0x00000010 (16)
+
+  ### Directory Entries ###
+    IMAGE_DIRECTORY_ENTRY_EXPORT (0): V.A.: 0x00014000, Size: 0x000000BB (187)
+    IMAGE_DIRECTORY_ENTRY_IMPORT (1): V.A.: 0x00013000, Size: 0x00000514 (1300)
+    IMAGE_DIRECTORY_ENTRY_RESOURCE (2): V.A.: 0x00015000, Size: 0x00000200 (512)
+    IMAGE_DIRECTORY_ENTRY_BASERELOC (5): V.A.: 0x00016000, Size: 0x000008B0 (2224)
+    IMAGE_DIRECTORY_ENTRY_TLS (9): V.A.: 0x00012000, Size: 0x00000018 (24)
+
+### Section #0 ###
+  Name: .text
+  VirtualSize: 0x0000A000 (40960)
+  RVA: 0x00001000
+  SizeOfRawData: 0x00009400 (37888)
+  PointerToRawData: 0x00000600
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x60000020 (IMAGE_SCN_CNT_CODE IMAGE_SCN_MEM_EXECUTE IMAGE_SCN_MEM_READ)
+
+### Section #1 ###
+  Name: .data
+  VirtualSize: 0x00006000 (24576)
+  RVA: 0x0000B000
+  SizeOfRawData: 0x00002600 (9728)
+  PointerToRawData: 0x00009A00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #2 ###
+  Name: .tls
+  VirtualSize: 0x00001000 (4096)
+  RVA: 0x00011000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x0000C000
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #3 ###
+  Name: .rdata
+  VirtualSize: 0x00001000 (4096)
+  RVA: 0x00012000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x0000C200
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x50000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_SHARED IMAGE_SCN_MEM_READ)
+
+### Section #4 ###
+  Name: .idata
+  VirtualSize: 0x00001000 (4096)
+  RVA: 0x00013000
+  SizeOfRawData: 0x00000600 (1536)
+  PointerToRawData: 0x0000C400
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_READ)
+
+### Section #5 ###
+  Name: .edata
+  VirtualSize: 0x00001000 (4096)
+  RVA: 0x00014000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x0000CA00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_READ)
+
+### Section #6 ###
+  Name: .rsrc
+  VirtualSize: 0x00001000 (4096)
+  RVA: 0x00015000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x0000CC00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_READ)
+
+### Section #7 ###
+  Name: .reloc
+  VirtualSize: 0x00001000 (4096)
+  RVA: 0x00016000
+  SizeOfRawData: 0x00000A00 (2560)
+  PointerToRawData: 0x0000CE00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x50000040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_MEM_SHARED IMAGE_SCN_MEM_READ)
+
+### IMPORTS ###
+  Characteristics: 0x0001303C
+  TimeDateStamp: 0x00000000 (NULL)
+  ForwarderChain: 0x00000000
+  Name: 0x000131CC (KERNEL32.DLL)
+  
+  KERNEL32.DLL
+    RVA      VA       HINT FUNCTION NAME
+    000130F4 004130F4    0 CloseHandle
+    000130F8 004130F8    0 CreateFileA
+    000130FC 004130FC    0 EnterCriticalSection
+    00013100 00413100    0 ExitProcess
+    00013104 00413104    0 GetACP
+    00013108 00413108    0 GetCPInfo
+    0001310C 0041310C    0 GetCommandLineA
+    00013110 00413110    0 GetCurrentThreadId
+    00013114 00413114    0 GetEnvironmentStrings
+    00013118 00413118    0 GetFileType
+    0001311C 0041311C    0 GetLastError
+    00013120 00413120    0 GetLocalTime
+    00013124 00413124    0 GetModuleFileNameA
+    00013128 00413128    0 GetModuleHandleA
+    0001312C 0041312C    0 GetOEMCP
+    00013130 00413130    0 GetProcAddress
+    00013134 00413134    0 GetProcessHeap
+    00013138 00413138    0 GetStartupInfoA
+    0001313C 0041313C    0 GetStdHandle
+    00013140 00413140    0 GetStringTypeW
+    00013144 00413144    0 GetVersion
+    00013148 00413148    0 GetVersionExA
+    0001314C 0041314C    0 GlobalMemoryStatus
+    00013150 00413150    0 HeapAlloc
+    00013154 00413154    0 HeapFree
+    00013158 00413158    0 InitializeCriticalSection
+    0001315C 0041315C    0 LeaveCriticalSection
+    00013160 00413160    0 LoadLibraryA
+    00013164 00413164    0 MultiByteToWideChar
+    00013168 00413168    0 RaiseException
+    0001316C 0041316C    0 RtlUnwind
+    00013170 00413170    0 SetConsoleCtrlHandler
+    00013174 00413174    0 SetFilePointer
+    00013178 00413178    0 SetHandleCount
+    0001317C 0041317C    0 SetLastError
+    00013180 00413180    0 TlsAlloc
+    00013184 00413184    0 TlsFree
+    00013188 00413188    0 TlsGetValue
+    0001318C 0041318C    0 TlsSetValue
+    00013190 00413190    0 UnhandledExceptionFilter
+    00013194 00413194    0 VirtualAlloc
+    00013198 00413198    0 VirtualFree
+    0001319C 0041319C    0 VirtualQuery
+    000131A0 004131A0    0 WideCharToMultiByte
+    000131A4 004131A4    0 WriteFile
+  
+  USER32.DLL
+    RVA      VA       HINT FUNCTION NAME
+    000131BC 004131BC    0 EnumThreadWindows
+    000131C0 004131C0    0 MessageBoxA
+    000131C4 004131C4    0 wsprintfA
+  
+
+### EXPORTS ###
+  Characteristics: 0x00000000
+  TimeDateStamp: 0x00000000 (NULL)
+  Version: 0.0
+  Name: 0x0001406E (test5.exe)
+  Base: 0x00000001 (1)
+  NumberOfFunctions: 0x00000007 (7)
+  NumberOfNames: 0x00000007 (7)
+  AddressOfFunctions: 0x00014028
+  AddressOfNames: 0x00014044
+  AddressOfNameOrdinals: 0x00014060
+  
+  FUNCTION NAME                                      ORDI. ; RVA      VA      
+  __GetExceptDLLinfo                                 @

@@ -3,6 +3,9 @@
                           Katayama Hirofumi MZ
                           Public Domain
 
+NOTICE
+------
+
 The description of this file may be imperfect or incorrect.
 
 

@@ -253,7 +253,7 @@ int main(int argc, char **argv) {
 
     if (prefix.empty()) {
         prefix = CrGetExePath();
-        #ifdef _DEBUG
+        #if defined(_DEBUG) && defined(_MSC_VER)
             #ifdef _WIN64
                 prefix += "\\..\\..";
             #else
@@ -280,6 +280,9 @@ int main(int argc, char **argv) {
             }
         }
     }
+
+    fprintf(stderr, "Wonders API prefix: %s\n", prefix.c_str());
+    fprintf(stderr, "Wonders API suffix: %s\n", suffix.c_str());
 
     const char *pszModule = arg;
     fprintf(stderr, "Loading module %s...\n", pszModule);
