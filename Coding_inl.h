@@ -513,7 +513,7 @@ inline /*virtual*/ CR_DisAsmInfo32::~CR_DisAsmInfo32() { }
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo32 accessors
 
-inline std::map<CR_Addr32, CR_SharedOpCode32>&
+inline std::map<CR_Addr32, CR_ShdOpCode32>&
 CR_DisAsmInfo32::MapAddrToOpCode() {
     return m_mAddrToOpCode;
 }
@@ -522,7 +522,7 @@ inline CR_Addr32Set& CR_DisAsmInfo32::Entrances() {
     return m_sEntrances;
 }
 
-inline std::map<CR_Addr32, CR_SharedCodeFunc32>&
+inline std::map<CR_Addr32, CR_ShdCodeFunc32>&
 CR_DisAsmInfo32::MapAddrToCodeFunc() {
     return m_mAddrToCodeFunc;
 }
@@ -530,7 +530,7 @@ CR_DisAsmInfo32::MapAddrToCodeFunc() {
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo32 const accessors
 
-inline const std::map<CR_Addr32, CR_SharedOpCode32>&
+inline const std::map<CR_Addr32, CR_ShdOpCode32>&
 CR_DisAsmInfo32::MapAddrToOpCode() const
 {
     return m_mAddrToOpCode;
@@ -541,7 +541,7 @@ inline const CR_Addr32Set& CR_DisAsmInfo32::Entrances() const
     return m_sEntrances;
 }
 
-inline const std::map<CR_Addr32, CR_SharedCodeFunc32>&
+inline const std::map<CR_Addr32, CR_ShdCodeFunc32>&
 CR_DisAsmInfo32::MapAddrToCodeFunc() const {
     return m_mAddrToCodeFunc;
 }
@@ -564,7 +564,7 @@ inline /*virtual*/ CR_DisAsmInfo64::~CR_DisAsmInfo64() { }
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo64 accessors
 
-inline std::map<CR_Addr64, CR_SharedOpCode64>&
+inline std::map<CR_Addr64, CR_ShdOpCode64>&
 CR_DisAsmInfo64::MapAddrToOpCode() {
     return m_mAddrToOpCode;
 }
@@ -573,7 +573,7 @@ inline CR_Addr64Set& CR_DisAsmInfo64::Entrances() {
     return m_sEntrances;
 }
 
-inline std::map<CR_Addr64, CR_SharedCodeFunc64>&
+inline std::map<CR_Addr64, CR_ShdCodeFunc64>&
 CR_DisAsmInfo64::MapAddrToCodeFunc() {
     return m_mAddrToCodeFunc;
 }
@@ -581,7 +581,7 @@ CR_DisAsmInfo64::MapAddrToCodeFunc() {
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo64 const accessors
 
-inline const std::map<CR_Addr64, CR_SharedOpCode64>&
+inline const std::map<CR_Addr64, CR_ShdOpCode64>&
 CR_DisAsmInfo64::MapAddrToOpCode() const {
     return m_mAddrToOpCode;
 }
@@ -590,7 +590,7 @@ inline const CR_Addr64Set& CR_DisAsmInfo64::Entrances() const {
     return m_sEntrances;
 }
 
-inline const std::map<CR_Addr64, CR_SharedCodeFunc64>&
+inline const std::map<CR_Addr64, CR_ShdCodeFunc64>&
 CR_DisAsmInfo64::MapAddrToCodeFunc() const {
     return m_mAddrToCodeFunc;
 }

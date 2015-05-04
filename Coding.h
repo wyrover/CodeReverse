@@ -267,7 +267,7 @@ protected:
     void Copy(const CR_OpCode32& oc);
 }; // class CR_OpCode32
 
-typedef shared_ptr<CR_OpCode32> CR_SharedOpCode32;
+typedef shared_ptr<CR_OpCode32> CR_ShdOpCode32;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64 - op.code for 64-bit mode
@@ -315,7 +315,7 @@ protected:
     void Copy(const CR_OpCode64& oc);
 }; // class CR_OpCode64
 
-typedef shared_ptr<CR_OpCode64> CR_SharedOpCode64;
+typedef shared_ptr<CR_OpCode64> CR_ShdOpCode64;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_DataMemberEntry, CR_DataMemberEntries
@@ -373,7 +373,7 @@ protected:
     CR_Addr32Set                        m_callers;
 }; // class CR_CodeFunc32
 
-typedef shared_ptr<CR_CodeFunc32> CR_SharedCodeFunc32;
+typedef shared_ptr<CR_CodeFunc32> CR_ShdCodeFunc32;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc64 - code function for 64-bit
@@ -419,7 +419,7 @@ protected:
     CR_Addr64Set                        m_callers;
 }; // class CR_CodeFunc64
 
-typedef shared_ptr<CR_CodeFunc64> CR_SharedCodeFunc64;
+typedef shared_ptr<CR_CodeFunc64> CR_ShdCodeFunc64;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_DisAsmInfo32 - disassembly info for 32-bit
@@ -436,25 +436,25 @@ public:
 
 public:
     // accessors
-    std::map<CR_Addr32, CR_SharedOpCode32>&         MapAddrToOpCode();
-    CR_Addr32Set&                                   Entrances();
-    std::map<CR_Addr32, CR_SharedCodeFunc32>&       MapAddrToCodeFunc();
-    CR_OpCode32 *                                   MapAddrToOpCode(CR_Addr32 addr);
-    CR_CodeFunc32 *                                 MapAddrToCodeFunc(CR_Addr32 addr);
+    std::map<CR_Addr32, CR_ShdOpCode32>&         MapAddrToOpCode();
+    CR_Addr32Set&                                Entrances();
+    std::map<CR_Addr32, CR_ShdCodeFunc32>&       MapAddrToCodeFunc();
+    CR_OpCode32 *                                MapAddrToOpCode(CR_Addr32 addr);
+    CR_CodeFunc32 *                              MapAddrToCodeFunc(CR_Addr32 addr);
     // const accessors
-    const std::map<CR_Addr32, CR_SharedOpCode32>&   MapAddrToOpCode() const;
-    const CR_Addr32Set&                             Entrances() const;
-    const std::map<CR_Addr32, CR_SharedCodeFunc32>& MapAddrToCodeFunc() const;
-    const CR_OpCode32 *                             MapAddrToOpCode(CR_Addr32 addr) const;
-    const CR_CodeFunc32 *                           MapAddrToCodeFunc(CR_Addr32 addr) const;
+    const std::map<CR_Addr32, CR_ShdOpCode32>&   MapAddrToOpCode() const;
+    const CR_Addr32Set&                          Entrances() const;
+    const std::map<CR_Addr32, CR_ShdCodeFunc32>& MapAddrToCodeFunc() const;
+    const CR_OpCode32 *                          MapAddrToOpCode(CR_Addr32 addr) const;
+    const CR_CodeFunc32 *                        MapAddrToCodeFunc(CR_Addr32 addr) const;
 
 protected:
     // map virtual address to asm code
-    std::map<CR_Addr32, CR_SharedOpCode32>          m_mAddrToOpCode;
+    std::map<CR_Addr32, CR_ShdOpCode32>          m_mAddrToOpCode;
     // entrances
-    CR_Addr32Set                                    m_sEntrances;
+    CR_Addr32Set                                 m_sEntrances;
     // map addr to code function
-    std::map<CR_Addr32, CR_SharedCodeFunc32>        m_mAddrToCodeFunc;
+    std::map<CR_Addr32, CR_ShdCodeFunc32>        m_mAddrToCodeFunc;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -472,25 +472,25 @@ public:
 
 public:
     // accessors
-    std::map<CR_Addr64, CR_SharedOpCode64>&         MapAddrToOpCode();
-    CR_Addr64Set&                                   Entrances();
-    std::map<CR_Addr64, CR_SharedCodeFunc64>&       MapAddrToCodeFunc();
-    CR_OpCode64 *                                   MapAddrToOpCode(CR_Addr64 addr);
-    CR_CodeFunc64 *                                 MapAddrToCodeFunc(CR_Addr64 addr);
+    std::map<CR_Addr64, CR_ShdOpCode64>&         MapAddrToOpCode();
+    CR_Addr64Set&                                Entrances();
+    std::map<CR_Addr64, CR_ShdCodeFunc64>&       MapAddrToCodeFunc();
+    CR_OpCode64 *                                MapAddrToOpCode(CR_Addr64 addr);
+    CR_CodeFunc64 *                              MapAddrToCodeFunc(CR_Addr64 addr);
     // const accessors
-    const std::map<CR_Addr64, CR_SharedOpCode64>&   MapAddrToOpCode() const;
-    const CR_Addr64Set&                             Entrances() const;
-    const std::map<CR_Addr64, CR_SharedCodeFunc64>& MapAddrToCodeFunc() const;
-    const CR_OpCode64 *                             MapAddrToOpCode(CR_Addr64 addr) const;
-    const CR_CodeFunc64 *                           MapAddrToCodeFunc(CR_Addr64 addr) const;
+    const std::map<CR_Addr64, CR_ShdOpCode64>&   MapAddrToOpCode() const;
+    const CR_Addr64Set&                          Entrances() const;
+    const std::map<CR_Addr64, CR_ShdCodeFunc64>& MapAddrToCodeFunc() const;
+    const CR_OpCode64 *                          MapAddrToOpCode(CR_Addr64 addr) const;
+    const CR_CodeFunc64 *                        MapAddrToCodeFunc(CR_Addr64 addr) const;
 
 protected:
     // map virtual address to asm code
-    std::map<CR_Addr64, CR_SharedOpCode64>          m_mAddrToOpCode;
+    std::map<CR_Addr64, CR_ShdOpCode64>          m_mAddrToOpCode;
     // entrances
-    CR_Addr64Set                                    m_sEntrances;
+    CR_Addr64Set                                 m_sEntrances;
     // map addr to code function
-    std::map<CR_Addr64, CR_SharedCodeFunc64>        m_mAddrToCodeFunc;
+    std::map<CR_Addr64, CR_ShdCodeFunc64>        m_mAddrToCodeFunc;
 };
 
 ////////////////////////////////////////////////////////////////////////////
