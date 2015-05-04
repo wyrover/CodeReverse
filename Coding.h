@@ -238,7 +238,7 @@ public:
     // accessors
     CR_Addr32&                  Addr();         // address of assembly
     std::string&                Name();         // name of instruction
-    CR_Operands&              Operands();     // operands
+    CR_Operands&                Operands();     // operands
     CR_Operand*                 Operand(std::size_t index);
     CR_DataBytes&               Codes();        // code of instruction
     CR_OpCodeType&              OpCodeType();   // type of instruction
@@ -248,7 +248,7 @@ public:
     // const accessors
     const CR_Addr32&            Addr() const;
     const std::string&          Name() const;
-    const CR_Operands&        Operands() const;
+    const CR_Operands&          Operands() const;
     const CR_Operand*           Operand(std::size_t index) const;
     const CR_DataBytes&         Codes() const;
     const CR_OpCodeType&        OpCodeType() const;
@@ -258,7 +258,7 @@ public:
 protected:
     CR_Addr32                   m_addr;
     std::string                 m_name;
-    CR_Operands               m_operands;
+    CR_Operands                 m_operands;
     CR_DataBytes                m_codes;
     CR_OpCodeType               m_oct;
     CR_CondCode                 m_ccode;
@@ -289,7 +289,7 @@ public:
     CR_Operands&                Operands();     // operands
     CR_Operand*                 Operand(std::size_t index);
     CR_DataBytes&               Codes();        // code of instruction
-    CR_OpCodeType&              OpCodeType(); // type of instruction
+    CR_OpCodeType&              OpCodeType();   // type of instruction
     CR_CondCode&                CondCode();     // condition type
     CR_Addr64Set&               FuncAddrs();
 
