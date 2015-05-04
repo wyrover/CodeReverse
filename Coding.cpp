@@ -546,8 +546,9 @@ void CR_Operand::ParseText(int bits) {
             // ebx*4+0x402800
             // edi*4+0x0
             *r++ = 0;
+            BaseReg().clear();
             IndexReg() = p;
-            Scale() = strtol(r, NULL, 0);
+            Scale() = char(strtol(r, NULL, 0));
             if (minus1) {
                 Disp() = -strtol(q, NULL, 0);
             } else {
@@ -567,7 +568,7 @@ void CR_Operand::ParseText(int bits) {
                 *s++ = 0;
                 BaseReg() = p;
                 IndexReg() = q;
-                Scale() = strtol(s, NULL, 0);
+                Scale() = char(strtol(s, NULL, 0));
                 Disp() = 0;
                 SetOperandType(cr_OF_MEMINDEX);
                 return;
@@ -603,7 +604,7 @@ void CR_Operand::ParseText(int bits) {
                 *s++ = 0;
                 BaseReg() = p;
                 IndexReg() = q;
-                Scale() = strtol(s, NULL, 0);
+                Scale() = char(strtol(s, NULL, 0));
                 if (minus2) {
                     Disp() = -strtol(r, NULL, 0);
                 } else {

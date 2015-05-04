@@ -352,7 +352,7 @@ inline CR_Addr32Set& CR_CodeFunc32::Callees() {
 }
 
 inline CR_Addr32Set& CR_CodeFunc32::Callers() {
-    return m_callees;
+    return m_callers;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -387,7 +387,7 @@ inline const CR_Addr32Set& CR_CodeFunc32::Callees() const {
 }
 
 inline const CR_Addr32Set& CR_CodeFunc32::Callers() const {
-    return m_callees;
+    return m_callers;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -422,7 +422,7 @@ inline CR_Addr64Set& CR_CodeFunc64::Callees() {
 }
 
 inline CR_Addr64Set& CR_CodeFunc64::Callers() {
-    return m_callees;
+    return m_callers;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -457,7 +457,7 @@ inline const CR_Addr64Set& CR_CodeFunc64::Callees() const {
 }
 
 inline const CR_Addr64Set& CR_CodeFunc64::Callers() const {
-    return m_callees;
+    return m_callers;
 }
 
 ////////////////////////////////////////////////////////////////////////////

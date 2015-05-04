@@ -328,7 +328,6 @@ public:
     virtual ~CR_CodeFunc32();
     void Copy(const CR_CodeFunc32& cf);
     void clear();
-
 public:
     // accessors
     CR_Addr32&                          Addr();
@@ -348,7 +347,6 @@ public:
     const CR_Addr32Set&                 Jumpers() const;
     const CR_Addr32Set&                 Callees() const;
     const CR_Addr32Set&                 Callers() const;
-
 protected:
     CR_Addr32                           m_addr;
     std::string                         m_name;
@@ -373,7 +371,6 @@ public:
     virtual ~CR_CodeFunc64();
     void Copy(const CR_CodeFunc64& cf);
     void clear();
-
 public:
     // accessors
     CR_Addr64&                          Addr();
@@ -393,7 +390,6 @@ public:
     const CR_Addr64Set&                 Jumpers() const;
     const CR_Addr64Set&                 Callees() const;
     const CR_Addr64Set&                 Callers() const;
-
 protected:
     CR_Addr64                           m_addr;
     std::string                         m_name;

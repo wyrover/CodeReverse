@@ -530,7 +530,7 @@ BOOL CR_Module::DisAsmAddr32(
         switch (oc->OpCodeType()) {
         case cr_OCT_JCC:    // conditional jump
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM: case cr_OF_FUNCNAME:
+            case cr_OF_IMM:
                 addr = oc->Operand(0)->Value32();
                 cf->Jumpers().emplace(va);
                 cf->Jumpees().emplace(addr);
@@ -549,10 +549,9 @@ BOOL CR_Module::DisAsmAddr32(
 
                     addr = oc->Operand(0)->Value32();
                     info.Entrances().emplace(addr);
-                    cf->Callers().emplace(va);
+                    cf->Callers().emplace(addr);
 
-                    CR_CodeFunc32 *newcf;
-                    newcf = info.CodeFuncFromAddr(addr);
+                    auto newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc32>());
@@ -564,15 +563,6 @@ BOOL CR_Module::DisAsmAddr32(
                     addr = oc->Operand(0)->Value32();
                     cf->Jumpers().emplace(va);
                     cf->Jumpees().emplace(addr);
-                }
-                break;
-
-            case cr_OF_FUNCNAME:
-                if (func == va) {
-                    // func is jumper
-                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
-
-                    bBreak = TRUE;
                 }
                 break;
 
@@ -597,16 +587,16 @@ BOOL CR_Module::DisAsmAddr32(
                 // function call
                 addr = oc->Operand(0)->Value32();
                 info.Entrances().emplace(addr);
-                cf->Callers().emplace(va);
+                cf->Callees().emplace(addr);
                 {
-                    CR_CodeFunc32 *newcf = info.CodeFuncFromAddr(addr);
+                    auto newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc32>());
                         newcf = info.CodeFuncFromAddr(addr);
                     }
                     newcf->Addr() = addr;
-                    newcf->Callees().emplace(func);
+                    newcf->Callers().emplace(func);
                 }
                 break;
 
@@ -735,9 +725,9 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
 
                     addr = oc->Operand(0)->Value64();
                     info.Entrances().emplace(addr);
-                    cf->Callers().emplace(va);
+                    cf->Callers().emplace(addr);
 
-                    CR_CodeFunc64 *newcf = info.CodeFuncFromAddr(addr);
+                    auto newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc64>());
@@ -749,15 +739,6 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                     addr = oc->Operand(0)->Value64();
                     cf->Jumpers().emplace(va);
                     cf->Jumpees().emplace(addr);
-                }
-                break;
-
-            case cr_OF_FUNCNAME:
-                if (func == va) {
-                    // func is jumper
-                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
-
-                    bBreak = TRUE;
                 }
                 break;
 
@@ -782,16 +763,16 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                 // function call
                 addr = oc->Operand(0)->Value64();
                 info.Entrances().emplace(addr);
-                cf->Callers().emplace(va);
+                cf->Callees().emplace(addr);
                 {
-                    CR_CodeFunc64 *newcf = info.CodeFuncFromAddr(addr);
+                    auto newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc64>());
                         newcf = info.CodeFuncFromAddr(addr);
                     }
                     newcf->Addr() = addr;
-                    newcf->Callees().emplace(func);
+                    newcf->Callers().emplace(func);
                 }
                 break;
 
