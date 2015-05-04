@@ -628,7 +628,7 @@ BOOL CR_Module::DisAsmAddr32(
                 // func is not __stdcall
                 cf->FuncFlags() |= FF_NOTSTDCALL;
                 if (func == va) {
-                    cf->FuncFlags() |= FF_RETURNONLY;
+                    cf->FuncFlags() |= FF_RETURNONLY | FF_CDECL;
                 }
             }
             bBreak = TRUE;
@@ -811,12 +811,8 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
         case OCT_RETURN:
             // return
             if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
-                // func is __stdcall
-                cf->FuncFlags() |= FF_STDCALL;
                 cf->ArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {
-                // func is not __stdcall
-                cf->FuncFlags() |= FF_NOTSTDCALL;
                 if (func == va) {
                     cf->FuncFlags() |= FF_RETURNONLY;
                 }
@@ -853,7 +849,6 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info) {
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
         codefunc->ArgSizeRange().Set(0);
-        codefunc->FuncFlags() |= FF_NOTSTDCALL;
         codefunc->FuncFlags() |= FF_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
@@ -914,8 +909,6 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info) {
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
         codefunc->ArgSizeRange().Set(0);
-        codefunc->FuncFlags() |= FF_NOTSTDCALL;
-        codefunc->FuncFlags() |= FF_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
         MapFuncNameToRVA().emplace(codefunc->Name(), RVA);
@@ -1065,6 +1058,14 @@ retry:;
                     auto& rtype = ns.LogType(rtid);
                     auto& func = ns.LogFunc(rtype.m_sub_id);
 
+                    if (rtype.m_flags & TF_CDECL) {
+                        cf->FuncFlags() |= FF_CDECL;
+                    } else if (rtype.m_flags & TF_STDCALL) {
+                        cf->FuncFlags() |= FF_STDCALL;
+                    } else if (rtype.m_flags & TF_FASTCALL) {
+                        cf->FuncFlags() |= FF_FASTCALL;
+                    }
+
                     if (func.m_ellipsis) {
                         cf->ArgSizeRange().LimitMin(func.m_params.size() * 4);
                     } else {
@@ -1186,16 +1187,12 @@ retry:;
                     auto& rtype = ns.LogType(rtid);
                     auto& func = ns.LogFunc(rtype.m_sub_id);
 
-                    switch (func.m_convention) {
-                    case CR_LogFunc::FT_CDECL:
+                    if (rtype.m_flags & TF_CDECL) {
                         cf->FuncFlags() |= FF_CDECL;
-                        break;
-                    case CR_LogFunc::FT_STDCALL:
+                    } else if (rtype.m_flags & TF_STDCALL) {
                         cf->FuncFlags() |= FF_STDCALL;
-                        break;
-                    case CR_LogFunc::FT_FASTCALL:
+                    } else if (rtype.m_flags & TF_FASTCALL) {
                         cf->FuncFlags() |= FF_FASTCALL;
-                        break;
                     }
 
                     if (func.m_ellipsis) {

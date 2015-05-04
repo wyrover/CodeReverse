@@ -30,19 +30,32 @@ enum CR_CondCode {
 
 typedef unsigned long CR_FuncFlags;
 
-static const CR_FuncFlags FF_UNKNOWN                = 0;            // unknown
-static const CR_FuncFlags FF_CDECL                  = (1 << 1);     // __cdecl
-static const CR_FuncFlags FF_STDCALL                = (1 << 2);     // __stdcall
-static const CR_FuncFlags FF_FASTCALL               = (1 << 3);     // __fastcall
-static const CR_FuncFlags FF_THISCALL               = (1 << 4);     // thiscall
-static const CR_FuncFlags FF_64BITFUNC              = (1 << 5);     // 64-bit function
-static const CR_FuncFlags FF_JUMPERFUNC             = (1 << 6);     // jumper function
-static const CR_FuncFlags FF_FUNCINFUNC             = (1 << 7);     // function in function
-static const CR_FuncFlags FF_LEAFFUNC               = (1 << 8);     // leaf function
-static const CR_FuncFlags FF_RETURNONLY             = (1 << 9);     // return-only function
-static const CR_FuncFlags FF_NOTSTDCALL             = (1 << 10);    // not __stdcall
-static const CR_FuncFlags FF_DONTDECOMPBUTDISASM    = (1 << 11);    // don't decompile but disasm
-static const CR_FuncFlags FF_IGNORE                 = (1 << 12);    // ignore
+// unknown
+static const CR_FuncFlags FF_UNKNOWN                = 0;
+// __cdecl
+static const CR_FuncFlags FF_CDECL                  = (1 << 1);
+// __stdcall
+static const CR_FuncFlags FF_STDCALL                = (1 << 2);
+// __fastcall
+static const CR_FuncFlags FF_FASTCALL               = (1 << 3);
+// thiscall
+static const CR_FuncFlags FF_THISCALL               = (1 << 4);
+// 64-bit function
+static const CR_FuncFlags FF_64BITFUNC              = (1 << 5);
+// jumper function
+static const CR_FuncFlags FF_JUMPERFUNC             = (1 << 6);
+// function in function
+static const CR_FuncFlags FF_FUNCINFUNC             = (1 << 7);
+// leaf function
+static const CR_FuncFlags FF_LEAFFUNC               = (1 << 8);
+// return-only function
+static const CR_FuncFlags FF_RETURNONLY             = (1 << 9);
+// not __stdcall
+static const CR_FuncFlags FF_NOTSTDCALL             = (1 << 10);
+// don't decompile but disasm
+static const CR_FuncFlags FF_DONTDECOMPBUTDISASM    = (1 << 11);
+// ignore
+static const CR_FuncFlags FF_IGNORE                 = (1 << 12);
 
 ////////////////////////////////////////////////////////////////////////////
 // x86 registers
