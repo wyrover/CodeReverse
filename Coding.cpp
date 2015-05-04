@@ -780,10 +780,8 @@ void CR_OpCode64::ParseText(const char *text) {
     strcpy(buf, text);
 
     char *q = buf;
-    if (strncmp(q, "a16 ", 4) == 0 ||
-        strncmp(q, "o16 ", 4) == 0 ||
-        strncmp(q, "o32 ", 4) == 0 ||
-        strncmp(q, "o64 ", 4) == 0)
+    if (strncmp(q, "a16 ", 4) == 0 || strncmp(q, "o16 ", 4) == 0 ||
+        strncmp(q, "o32 ", 4) == 0 || strncmp(q, "o64 ", 4) == 0)
     {
         q += 4;
     }
@@ -904,40 +902,6 @@ void CR_OpCode64::ParseText(const char *text) {
         }
         Operand(0)->ParseText(64);
     }
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_CodeFunc32
-
-void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
-    Addr() = cf.Addr();
-    Name() = cf.Name();
-    FuncFlags() = cf.FuncFlags();
-    ArgSizeRange() = cf.ArgSizeRange();
-}
-
-void CR_CodeFunc32::clear() {
-    Addr() = 0;
-    Name().clear();
-    FuncFlags() = FF_UNKNOWN;
-    ArgSizeRange().clear();
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_CodeFunc64
-
-void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
-    Addr() = cf.Addr();
-    Name() = cf.Name();
-    FuncFlags() = cf.FuncFlags();
-    ArgSizeRange() = cf.ArgSizeRange();
-}
-
-void CR_CodeFunc64::clear() {
-    Addr() = 0;
-    Name().clear();
-    FuncFlags() = FF_64BITFUNC;
-    ArgSizeRange().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -473,6 +473,20 @@ inline void CR_CodeFunc32::operator=(const CR_CodeFunc32& cf) {
 
 inline /*virtual*/ CR_CodeFunc32::~CR_CodeFunc32() { }
 
+inline void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
+    Addr() = cf.Addr();
+    Name() = cf.Name();
+    FuncFlags() = cf.FuncFlags();
+    ArgSizeRange() = cf.ArgSizeRange();
+}
+
+inline void CR_CodeFunc32::clear() {
+    Addr() = 0;
+    Name().clear();
+    FuncFlags() = FF_UNKNOWN;
+    ArgSizeRange().clear();
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc64
 
@@ -491,8 +505,20 @@ inline void CR_CodeFunc64::operator=(const CR_CodeFunc64& cf)
     Copy(cf);
 }
 
-inline /*virtual*/ CR_CodeFunc64::~CR_CodeFunc64()
-{
+inline /*virtual*/ CR_CodeFunc64::~CR_CodeFunc64() { }
+
+inline void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
+    Addr() = cf.Addr();
+    Name() = cf.Name();
+    FuncFlags() = cf.FuncFlags();
+    ArgSizeRange() = cf.ArgSizeRange();
+}
+
+inline void CR_CodeFunc64::clear() {
+    Addr() = 0;
+    Name().clear();
+    FuncFlags() = FF_64BITFUNC;
+    ArgSizeRange().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
