@@ -30,19 +30,19 @@ enum CR_CondCode {
 
 typedef unsigned long CR_FuncFlags;
 static const CR_FuncFlags
-    cr_FF_UNKNOWN             = 0,    // unknown
-    cr_FF_CDECL               = (1 << 1),   // __cdecl
-    cr_FF_STDCALL             = (1 << 2),   // __stdcall
-    cr_FF_FASTCALL            = (1 << 3),   // __fastcall
-    cr_FF_THISCALL            = (1 << 4),   // thiscall
-    cr_FF_64BITFUNC           = (1 << 5),   // 64-bit function
-    cr_FF_JUMPERFUNC          = (1 << 6),   // jumper function
-    cr_FF_FUNCINFUNC          = (1 << 7),   // function in function
-    cr_FF_LEAFFUNC            = (1 << 8),   // leaf function
-    cr_FF_RETURNONLY          = (1 << 9),   // return-only function
-    cr_FF_NOTSTDCALL          = (1 << 10),  // not __stdcall
-    cr_FF_DONTDECOMPBUTDISASM = (1 << 11),  // don't decompile but disasm
-    cr_FF_IGNORE              = (1 << 12);  // ignore
+    cr_FF_UNKNOWN           = 0,    // unknown
+    cr_FF_CDECL             = (1 << 1),   // __cdecl
+    cr_FF_STDCALL           = (1 << 2),   // __stdcall
+    cr_FF_FASTCALL          = (1 << 3),   // __fastcall
+    cr_FF_THISCALL          = (1 << 4),   // thiscall
+    cr_FF_64BITFUNC         = (1 << 5),   // 64-bit function
+    cr_FF_JUMPERFUNC        = (1 << 6),   // jumper function
+    cr_FF_FUNCINFUNC        = (1 << 7),   // function in function
+    cr_FF_LEAFFUNC          = (1 << 8),   // leaf function
+    cr_FF_RETURNONLY        = (1 << 9),   // return-only function
+    cr_FF_NOTSTDCALL        = (1 << 10),  // not __stdcall
+    cr_FF_INVALID           = (1 << 11),  // don't decompile but disasm
+    cr_FF_IGNORE            = (1 << 12);  // ignore
 
 ////////////////////////////////////////////////////////////////////////////
 // x86 registers
@@ -139,7 +139,7 @@ static const CR_OperandFlags
     cr_OF_MEMIMM       = (1 << 2),     // memory access by immediate
     cr_OF_MEMINDEX     = (1 << 4),     // memory access by index
     cr_OF_IMM          = (1 << 5),     // immediate
-    cr_OF_TYPEMASK     = 0x1F,
+    cr_OF_TYPEMASK     = 0x3F,
     cr_OF_FUNCNAME     = (1 << 6);     // function name
 
 ////////////////////////////////////////////////////////////////////////////
@@ -175,9 +175,6 @@ public:
     DWORD&                  Size();
     CR_Addr32&              Value32();
     CR_Addr64&              Value64();
-    CR_TriBool&             IsInteger();
-    CR_TriBool&             IsPointer();
-    CR_TriBool&             IsFunction();
     CR_Addr32&              Disp();
     char&                   Scale();
     // const accessors
@@ -189,9 +186,6 @@ public:
     const DWORD&            Size() const;
     const CR_Addr32&        Value32() const;
     const CR_Addr64&        Value64() const;
-    const CR_TriBool&       IsInteger() const;
-    const CR_TriBool&       IsPointer() const;
-    const CR_TriBool&       IsFunction() const;
     const CR_Addr32&        Disp() const;
     const char&             Scale() const;
 
@@ -206,9 +200,6 @@ protected:
         CR_Addr64           m_value64;
         CR_Addr32           m_value32;
     };
-    CR_TriBool              m_is_integer;
-    CR_TriBool              m_is_pointer;
-    CR_TriBool              m_is_function;
     CR_Addr32               m_disp;
     char                    m_scale;
 }; // class CR_Operand

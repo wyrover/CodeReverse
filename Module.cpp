@@ -470,7 +470,7 @@ BOOL CR_Module::DisAsmAddr32(
     CR_Addr32 addr;
 
     // add or retrieve the code function
-    CR_CodeFunc32 *cf = info.CodeFuncFromAddr(func);
+    auto cf = info.CodeFuncFromAddr(func);
     if (cf == NULL) {
         info.MapAddrToCodeFunc().emplace(func, make_shared<CR_CodeFunc32>());
         cf = info.CodeFuncFromAddr(func);
@@ -488,7 +488,7 @@ BOOL CR_Module::DisAsmAddr32(
     LPBYTE iend = m_pLoadedImage + pCode->RVA + pCode->SizeOfRawData;
     while (input < iend) {
         // add or retrieve op.code
-        CR_OpCode32 *oc = info.OpCodeFromAddr(va);
+        auto oc = info.OpCodeFromAddr(va);
         if (oc == NULL) {
             info.MapAddrToOpCode().emplace(va, make_shared<CR_OpCode32>());
             oc = info.OpCodeFromAddr(va);
@@ -515,7 +515,7 @@ BOOL CR_Module::DisAsmAddr32(
             oc->Name() = "???";
             oc->OpCodeType() = cr_OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
-            cf->FuncFlags() |= cr_FF_DONTDECOMPBUTDISASM;
+            cf->FuncFlags() |= cr_FF_INVALID;
         } else {
             oc->ParseText(outbuf);
         }
@@ -528,8 +528,7 @@ BOOL CR_Module::DisAsmAddr32(
 
         BOOL bBreak = FALSE;
         switch (oc->OpCodeType()) {
-        case cr_OCT_JCC:
-            // conditional jump
+        case cr_OCT_JCC:    // conditional jump
             switch (oc->Operand(0)->GetOperandType()) {
             case cr_OF_IMM: case cr_OF_FUNCNAME:
                 addr = oc->Operand(0)->Value32();
@@ -541,8 +540,7 @@ BOOL CR_Module::DisAsmAddr32(
             }
             break;
 
-        case cr_OCT_JMP:
-            // jump
+        case cr_OCT_JMP:    // jump
             switch (oc->Operand(0)->GetOperandType()) {
             case cr_OF_IMM:
                 if (func == va) {
@@ -593,8 +591,7 @@ BOOL CR_Module::DisAsmAddr32(
             bBreak = TRUE;
             break;
 
-        case cr_OCT_CALL:
-            // call
+        case cr_OCT_CALL:   // call
             switch (oc->Operand(0)->GetOperandType()) {
             case cr_OF_IMM:
                 // function call
@@ -618,8 +615,7 @@ BOOL CR_Module::DisAsmAddr32(
             }
             break;
 
-        case cr_OCT_RETURN:
-            // return
+        case cr_OCT_RETURN: // return
             if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
                 // func is __stdcall
                 cf->FuncFlags() |= cr_FF_STDCALL;
@@ -659,7 +655,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
     CR_Addr64 addr;
 
     // add or retrieve the code function
-    CR_CodeFunc64 *cf = info.CodeFuncFromAddr(func);
+    auto cf = info.CodeFuncFromAddr(func);
     if (cf == NULL) {
         info.MapAddrToCodeFunc().emplace(func, make_shared<CR_CodeFunc64>());
         cf = info.CodeFuncFromAddr(func);
@@ -677,7 +673,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
     LPBYTE iend = m_pLoadedImage + pCode->RVA + pCode->SizeOfRawData;
     while (input < iend) {
         // add or retrieve op.code
-        CR_OpCode64 *oc = info.OpCodeFromAddr(va);
+        auto oc = info.OpCodeFromAddr(va);
         if (oc == NULL) {
             info.MapAddrToOpCode().emplace(va, make_shared<CR_OpCode64>());
             oc = info.OpCodeFromAddr(va);
@@ -704,7 +700,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             oc->Name() = "???";
             oc->OpCodeType() = cr_OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
-            cf->FuncFlags() |= cr_FF_DONTDECOMPBUTDISASM;
+            cf->FuncFlags() |= cr_FF_INVALID;
         } else {
             oc->ParseText(outbuf);
         }
@@ -717,8 +713,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
 
         BOOL bBreak = FALSE;
         switch (oc->OpCodeType()) {
-        case cr_OCT_JCC:
-            // conditional jump
+        case cr_OCT_JCC:    // conditional jump
             switch (oc->Operand(0)->GetOperandType()) {
             case cr_OF_IMM:
                 addr = oc->Operand(0)->Value64();
@@ -731,8 +726,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             }
             break;
 
-        case cr_OCT_JMP:
-            // jump
+        case cr_OCT_JMP:    // jump
             switch (oc->Operand(0)->GetOperandType()) {
             case cr_OF_IMM:
                 if (func == va) {
@@ -782,8 +776,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             bBreak = TRUE;
             break;
 
-        case cr_OCT_CALL:
-            // call
+        case cr_OCT_CALL:   // call
             switch (oc->Operand(0)->GetOperandType()) {
             case cr_OF_IMM:
                 // function call
@@ -807,8 +800,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             }
             break;
 
-        case cr_OCT_RETURN:
-            // return
+        case cr_OCT_RETURN: // return
             if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
                 cf->ArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {

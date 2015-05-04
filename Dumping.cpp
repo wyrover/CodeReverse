@@ -958,6 +958,77 @@ void CR_Module::DumpDelayLoad(std::FILE *fp) {
 } // CR_Module::DumpDelayLoad
 
 ////////////////////////////////////////////////////////////////////////////
+
+void CrDumpFuncFlags(std::FILE *fp, CR_FuncFlags flags) {
+    if (flags & cr_FF_CDECL) {
+        fprintf(fp, " cr_FF_CDECL");
+    }
+    if (flags & cr_FF_STDCALL) {
+        fprintf(fp, " cr_FF_STDCALL");
+    }
+    if (flags & cr_FF_FASTCALL) {
+        fprintf(fp, " cr_FF_FASTCALL");
+    }
+    if (flags & cr_FF_THISCALL) {
+        fprintf(fp, " cr_FF_THISCALL");
+    }
+    if (flags & cr_FF_64BITFUNC) {
+        fprintf(fp, " cr_FF_64BITFUNC");
+    }
+    if (flags & cr_FF_JUMPERFUNC) {
+        fprintf(fp, " cr_FF_JUMPERFUNC");
+    }
+    if (flags & cr_FF_FUNCINFUNC) {
+        fprintf(fp, " cr_FF_FUNCINFUNC");
+    }
+    if (flags & cr_FF_LEAFFUNC) {
+        fprintf(fp, " cr_FF_LEAFFUNC");
+    }
+    if (flags & cr_FF_RETURNONLY) {
+        fprintf(fp, " cr_FF_RETURNONLY");
+    }
+    if (flags & cr_FF_NOTSTDCALL) {
+        fprintf(fp, " cr_FF_NOTSTDCALL");
+    }
+    if (flags & cr_FF_INVALID) {
+        fprintf(fp, " cr_FF_INVALID");
+    }
+    if (flags & cr_FF_IGNORE) {
+        fprintf(fp, " cr_FF_IGNORE");
+    }
+}
+
+void CrDumpFuncExtra32(std::FILE *fp, CR_CodeFunc32 *cf) {
+    for (auto& jumpee : cf->Jumpees()) {
+        fprintf(fp, "JUMPEE: %08lX\n", jumpee);
+    }
+    for (auto& jumper : cf->Jumpers()) {
+        fprintf(fp, "JUMPER: %08lX\n", jumper);
+    }
+    for (auto& callee : cf->Callees()) {
+        fprintf(fp, "CALLEE: %08lX\n", callee);
+    }
+    for (auto& caller : cf->Callers()) {
+        fprintf(fp, "CALLER: %08lX\n", caller);
+    }
+}
+
+void CrDumpFuncExtra64(std::FILE *fp, CR_CodeFunc64 *cf) {
+    for (auto& jumpee : cf->Jumpees()) {
+        fprintf(fp, "JUMPEE: %08lX%08lX\n", HILONG(jumpee), LOLONG(jumpee));
+    }
+    for (auto& jumper : cf->Jumpers()) {
+        fprintf(fp, "JUMPER: %08lX%08lX\n", HILONG(jumper), LOLONG(jumper));
+    }
+    for (auto& callee : cf->Callees()) {
+        fprintf(fp, "CALLEE: %08lX%08lX\n", HILONG(callee), LOLONG(callee));
+    }
+    for (auto& caller : cf->Callers()) {
+        fprintf(fp, "CALLER: %08lX%08lX\n", HILONG(caller), LOLONG(caller));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////
 // CR_Module::DumpDisAsm32
 
 BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
@@ -976,25 +1047,14 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
             fprintf(fp, ";; Function L%08lX\n", cf->Addr());
 
         fprintf(fp, "flags =");
-        if (cf->FuncFlags() & cr_FF_JUMPERFUNC) {
-            fprintf(fp, " cr_FF_JUMPERFUNC");
-        }
-        if (cf->FuncFlags() & cr_FF_CDECL) {
-            fprintf(fp, " cr_FF_CDECL");
-        }
-        if (cf->FuncFlags() & cr_FF_STDCALL) {
-            fprintf(fp, " cr_FF_STDCALL");
-        }
-        if (cf->FuncFlags() & cr_FF_FASTCALL) {
-            fprintf(fp, " cr_FF_FASTCALL");
-        }
-        if (cf->FuncFlags() & cr_FF_RETURNONLY) {
-            fprintf(fp, " cr_FF_RETURNONLY");
-        }
+        CrDumpFuncFlags(fp, cf->FuncFlags());
         fprintf(fp, "\n");
 
         auto& range = cf->ArgSizeRange();
         fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
+
+        CrDumpFuncExtra32(fp, cf);
+
         _DumpDisAsmFunc32(fp, info, entrance);
 
         if (pszName)
@@ -1064,17 +1124,15 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
         else
             fprintf(fp, ";; Function L%08lX%08lX\n", HILONG(cf->Addr()), LOLONG(cf->Addr()));
 
-        fprintf(fp, "flags = ");
-        if (cf->FuncFlags() & cr_FF_JUMPERFUNC)
-            fprintf(fp, " cr_FF_JUMPERFUNC");
-        if (cf->FuncFlags() & cr_FF_RETURNONLY)
-            fprintf(fp, " cr_FF_RETURNONLY");
-        if (cf->FuncFlags() & cr_FF_64BITFUNC)
-            fprintf(fp, " cr_FF_64BITFUNC");
+        fprintf(fp, "flags =");
+        CrDumpFuncFlags(fp, cf->FuncFlags());
         fprintf(fp, "\n");
 
         auto& range = cf->ArgSizeRange();
         fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
+
+        CrDumpFuncExtra64(fp, cf);
+
         _DumpDisAsmFunc64(fp, info, entrance);
 
         if (pszName)

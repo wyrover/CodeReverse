@@ -384,9 +384,6 @@ void CR_Operand::Copy(const CR_Operand& opr) {
     OperandFlags() = opr.OperandFlags();
     Size() = opr.Size();
     Value64() = opr.Value64();
-    IsInteger() = opr.IsInteger();
-    IsPointer() = opr.IsPointer();
-    IsFunction() = opr.IsFunction();
     Disp() = opr.Disp();
     Scale() = opr.Scale();
 }
@@ -399,9 +396,6 @@ void CR_Operand::clear() {
     OperandFlags() = 0;
     Size() = 0;
     Value64() = 0;
-    IsInteger().clear();
-    IsPointer().clear();
-    IsFunction().clear();
     Disp() = 0;
     Scale() = 1;
 }
@@ -789,19 +783,17 @@ void CR_OpCode32::ParseText(const char *text) {
     }
 
     if (q[0] == 'c' || q[0] == 'l' || q[0] == 'j') {
-        const std::size_t size =
-            sizeof(cr_ccentries) / sizeof(cr_ccentries[0]);
-        for (std::size_t i = 0; i < size; ++i) {
-            if (strncmp(q, cr_ccentries[i].name, strlen(cr_ccentries[i].name)) == 0) {
+        for (auto& entry : cr_ccentries) {
+            if (strncmp(q, entry.name, strlen(entry.name)) == 0) {
                 char *p = strchr(q, ' ');
                 *p = '\0';
-                Name() = cr_ccentries[i].name;
-                CondCode() = cr_ccentries[i].cc;
+                Name() = entry.name;
+                CondCode() = entry.cc;
 
-                if (strncmp(cr_ccentries[i].name, "loop", 4) == 0) {
+                if (strncmp(entry.name, "loop", 4) == 0) {
                     OpCodeType() = cr_OCT_LOOP;
                 } else if (CondCode() == C_NONE) {
-                    if (_stricmp(cr_ccentries[i].name, "call") == 0)
+                    if (_stricmp(entry.name, "call") == 0)
                         OpCodeType() = cr_OCT_CALL;
                     else
                         OpCodeType() = cr_OCT_JMP;

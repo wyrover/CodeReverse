@@ -77,18 +77,6 @@ inline CR_Addr64& CR_Operand::Value64() {
     return m_value64;
 }
 
-inline CR_TriBool& CR_Operand::IsInteger() {
-    return m_is_integer;
-}
-
-inline CR_TriBool& CR_Operand::IsPointer() {
-    return m_is_pointer;
-}
-
-inline CR_TriBool& CR_Operand::IsFunction() {
-    return m_is_function;
-}
-
 inline CR_Addr32& CR_Operand::Disp() {
     return m_disp;
 }
@@ -130,18 +118,6 @@ inline const CR_Addr32& CR_Operand::Value32() const {
 
 inline const CR_Addr64& CR_Operand::Value64() const {
     return m_value64;
-}
-
-inline const CR_TriBool& CR_Operand::IsInteger() const {
-    return m_is_integer;
-}
-
-inline const CR_TriBool& CR_Operand::IsPointer() const {
-    return m_is_pointer;
-}
-
-inline const CR_TriBool& CR_Operand::IsFunction() const {
-    return m_is_function;
 }
 
 inline const CR_Addr32& CR_Operand::Disp() const {
