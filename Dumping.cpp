@@ -991,13 +991,10 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
         if (cf->FuncFlags() & FF_RETURNONLY) {
             fprintf(fp, " FF_RETURNONLY");
         }
+        fprintf(fp, "\n");
+
         auto& range = cf->ArgSizeRange();
-        if (!range.whole()) {
-            fprintf(fp, "ArgSizeMin == %d\n", int(range.Min()));
-            if (range.Max() != CR_Range::npos) {
-                fprintf(fp, "ArgSizeMax == %d\n", int(range.Max()));
-            }
-        }
+        fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
         DumpDisAsmFunc32(fp, info, entrance);
 
         if (pszName)
@@ -1077,12 +1074,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
         fprintf(fp, "\n");
 
         auto& range = cf->ArgSizeRange();
-        if (!range.whole()) {
-            fprintf(fp, "ArgSizeMin == %d\n", int(range.Min()));
-            if (range.Max() != CR_Range::npos) {
-                fprintf(fp, "ArgSizeMax == %d\n", int(range.Max()));
-            }
-        }
+        fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
         DumpDisAsmFunc64(fp, info, entrance);
 
         if (pszName)

@@ -936,7 +936,7 @@ void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
 void CR_CodeFunc64::clear() {
     Addr() = 0;
     Name().clear();
-    FuncFlags() = FF_UNKNOWN;
+    FuncFlags() = FF_64BITFUNC;
     ArgSizeRange().clear();
 }
 

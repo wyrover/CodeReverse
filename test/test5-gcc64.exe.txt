@@ -1,0 +1,2553 @@
+///////////////////////////////////////////////
+// CodeReverse 0.1.9 (64-bit) for gcc        //
+// https://github.com/katahiromz/CodeReverse //
+// katayama.hirofumi.mz@gmail.com            //
+///////////////////////////////////////////////
+
+Command Line: coderev64 test5-gcc64.exe
+FileName: test5-gcc64.exe, FileSize: 0x00020626 (132646)
+
+### DOS Header ###
+  e_magic: 0x5A4D
+  e_cblp: 0x0090
+  e_cp: 0x0003
+  e_crlc: 0x0000
+  e_cparhdr: 0x0004
+  e_minalloc: 0x0000
+  e_maxalloc: 0xFFFF
+  e_ss: 0x0000
+  e_sp: 0x00B8
+  e_csum: 0x0000
+  e_ip: 0x0000
+  e_cs: 0x0000
+  e_lfarlc: 0x0040
+  e_ovno: 0x0000
+  e_res[0]: 0x0000
+  e_res[1]: 0x0000
+  e_res[2]: 0x0000
+  e_res[3]: 0x0000
+  e_oemid: 0x0000
+  e_oeminfo: 0x0000
+  e_res2[0]: 0x0000
+  e_res2[1]: 0x0000
+  e_res2[2]: 0x0000
+  e_res2[3]: 0x0000
+  e_res2[4]: 0x0000
+  e_res2[5]: 0x0000
+  e_res2[6]: 0x0000
+  e_res2[7]: 0x0000
+  e_res2[8]: 0x0000
+  e_res2[9]: 0x0000
+  e_lfanew: 0x00000080
+
+### IMAGE_FILE_HEADER ###
+  Machine: 0x8664 (IMAGE_FILE_MACHINE_AMD64)
+  NumberOfSections: 0x0013 (19)
+  TimeDateStamp: 0x5546C609 (Mon May 04 01:06:17 2015)
+  PointerToSymbolTable: 0x00018600
+  NumberOfSymbols: 0x000005BE (1470)
+  SizeOfOptionalHeader: 0x00F0 (240)
+  Characteristics: 0x0026 (IMAGE_FILE_EXECUTABLE_IMAGE IMAGE_FILE_LINE_NUMS_STRIPPED IMAGE_FILE_LARGE_ADDRESS_AWARE)
+
+### IMAGE_OPTIONAL_HEADER64 ###
+  Magic: 0x020B
+  LinkerVersion: 2.24
+  SizeOfCode: 0x00001E00 (7680)
+  SizeOfInitializedData: 0x00002200 (8704)
+  SizeOfUninitializedData: 0x00000C00 (3072)
+  AddressOfEntryPoint: 0x00001500
+  BaseOfCode: 0x00001000
+  ImageBase: 0x0000000000400000
+  SectionAlignment: 0x00001000
+  FileAlignment: 0x00000200
+  OperatingSystemVersion: 4.0
+  ImageVersion: 0.0
+  SubsystemVersion: 5.2
+  Win32VersionValue: 0x00000000
+  SizeOfImage: 0x00024000 (147456)
+  SizeOfHeaders: 0x00000600 (1536)
+  CheckSum: 0x0002FF31 (valid)
+  Subsystem: 0x0003 (IMAGE_SUBSYSTEM_WINDOWS_CUI)
+  DllCharacteristics: 0x0000 ()
+  SizeOfStackReserve: 0x0000000000200000 (2097152)
+  SizeOfStackCommit: 0x0000000000001000 (4096)
+  SizeOfHeapReserve: 0x0000000000100000 (1048576)
+  SizeOfHeapCommit: 0x0000000000001000 (4096)
+  LoaderFlags: 0x00000000
+  NumberOfRvaAndSizes: 0x00000010 (16)
+
+  ### Directory Entries ###
+    IMAGE_DIRECTORY_ENTRY_EXPORT (0): V.A.: 0x00008000, Size: 0x000000A7 (167)
+    IMAGE_DIRECTORY_ENTRY_IMPORT (1): V.A.: 0x00009000, Size: 0x000007C8 (1992)
+    IMAGE_DIRECTORY_ENTRY_EXCEPTION (3): V.A.: 0x00005000, Size: 0x0000027C (636)
+    IMAGE_DIRECTORY_ENTRY_BASERELOC (5): V.A.: 0x0000C000, Size: 0x00000080 (128)
+    IMAGE_DIRECTORY_ENTRY_TLS (9): V.A.: 0x0000B020, Size: 0x00000028 (40)
+    IMAGE_DIRECTORY_ENTRY_IAT (12): V.A.: 0x000091EC, Size: 0x000001B0 (432)
+
+### Section #0 ###
+  Name: .text
+  VirtualSize: 0x00001DC0 (7616)
+  RVA: 0x00001000
+  SizeOfRawData: 0x00001E00 (7680)
+  PointerToRawData: 0x00000600
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x60500020 (IMAGE_SCN_CNT_CODE IMAGE_SCN_ALIGN_16BYTES IMAGE_SCN_MEM_EXECUTE IMAGE_SCN_MEM_READ)
+
+### Section #1 ###
+  Name: .data
+  VirtualSize: 0x00000090 (144)
+  RVA: 0x00003000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x00002400
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0500040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_16BYTES IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #2 ###
+  Name: .rdata
+  VirtualSize: 0x000007D0 (2000)
+  RVA: 0x00004000
+  SizeOfRawData: 0x00000800 (2048)
+  PointerToRawData: 0x00002600
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40500040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_16BYTES IMAGE_SCN_MEM_READ)
+
+### Section #3 ###
+  Name: .pdata
+  VirtualSize: 0x0000027C (636)
+  RVA: 0x00005000
+  SizeOfRawData: 0x00000400 (1024)
+  PointerToRawData: 0x00002E00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40300040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_4BYTES IMAGE_SCN_MEM_READ)
+
+### Section #4 ###
+  Name: .xdata
+  VirtualSize: 0x00000240 (576)
+  RVA: 0x00006000
+  SizeOfRawData: 0x00000400 (1024)
+  PointerToRawData: 0x00003200
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40300040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_4BYTES IMAGE_SCN_MEM_READ)
+
+### Section #5 ###
+  Name: .bss
+  VirtualSize: 0x00000A60 (2656)
+  RVA: 0x00007000
+  SizeOfRawData: 0x00000000 (0)
+  PointerToRawData: 0x00000000
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0700080 (IMAGE_SCN_CNT_UNINITIALIZED_DATA IMAGE_SCN_ALIGN_64BYTES IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #6 ###
+  Name: .edata
+  VirtualSize: 0x000000A7 (167)
+  RVA: 0x00008000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x00003600
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x40300040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_4BYTES IMAGE_SCN_MEM_READ)
+
+### Section #7 ###
+  Name: .idata
+  VirtualSize: 0x000007C8 (1992)
+  RVA: 0x00009000
+  SizeOfRawData: 0x00000800 (2048)
+  PointerToRawData: 0x00003800
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0300040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_4BYTES IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #8 ###
+  Name: .CRT
+  VirtualSize: 0x00000068 (104)
+  RVA: 0x0000A000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x00004000
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0400040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_8BYTES IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #9 ###
+  Name: .tls
+  VirtualSize: 0x00000068 (104)
+  RVA: 0x0000B000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x00004200
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0xC0600040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_32BYTES IMAGE_SCN_MEM_READ IMAGE_SCN_MEM_WRITE)
+
+### Section #10 ###
+  Name: .reloc
+  VirtualSize: 0x00000080 (128)
+  RVA: 0x0000C000
+  SizeOfRawData: 0x00000200 (512)
+  PointerToRawData: 0x00004400
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42300040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_4BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #11 ###
+  Name: /4
+  VirtualSize: 0x00000420 (1056)
+  RVA: 0x0000D000
+  SizeOfRawData: 0x00000600 (1536)
+  PointerToRawData: 0x00004600
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42500040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_16BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #12 ###
+  Name: /19
+  VirtualSize: 0x0000BE7A (48762)
+  RVA: 0x0000E000
+  SizeOfRawData: 0x0000C000 (49152)
+  PointerToRawData: 0x00004C00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42100040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_1BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #13 ###
+  Name: /31
+  VirtualSize: 0x00001A3C (6716)
+  RVA: 0x0001A000
+  SizeOfRawData: 0x00001C00 (7168)
+  PointerToRawData: 0x00010C00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42100040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_1BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #14 ###
+  Name: /45
+  VirtualSize: 0x000019B5 (6581)
+  RVA: 0x0001C000
+  SizeOfRawData: 0x00001A00 (6656)
+  PointerToRawData: 0x00012800
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42100040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_1BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #15 ###
+  Name: /57
+  VirtualSize: 0x00000AE0 (2784)
+  RVA: 0x0001E000
+  SizeOfRawData: 0x00000C00 (3072)
+  PointerToRawData: 0x00014200
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42400040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_8BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #16 ###
+  Name: /70
+  VirtualSize: 0x00000300 (768)
+  RVA: 0x0001F000
+  SizeOfRawData: 0x00000400 (1024)
+  PointerToRawData: 0x00014E00
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42100040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_1BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #17 ###
+  Name: /81
+  VirtualSize: 0x00002C04 (11268)
+  RVA: 0x00020000
+  SizeOfRawData: 0x00002E00 (11776)
+  PointerToRawData: 0x00015200
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42100040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_1BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### Section #18 ###
+  Name: /92
+  VirtualSize: 0x00000520 (1312)
+  RVA: 0x00023000
+  SizeOfRawData: 0x00000600 (1536)
+  PointerToRawData: 0x00018000
+  PointerToRelocations: 0x00000000
+  PointerToLinenumbers: 0x00000000
+  NumberOfRelocations: 0x00000000 (0)
+  NumberOfLinenumbers: 0x00000000 (0)
+  Characteristics: 0x42100040 (IMAGE_SCN_CNT_INITIALIZED_DATA IMAGE_SCN_ALIGN_1BYTES IMAGE_SCN_MEM_DISCARDABLE IMAGE_SCN_MEM_READ)
+
+### IMPORTS ###
+  Characteristics: 0x0000903C
+  TimeDateStamp: 0x00000000 (NULL)
+  ForwarderChain: 0x00000000
+  Name: 0x00009738 (KERNEL32.dll)
+  
+  KERNEL32.dll
+    RVA      VA               HINT FUNCTION NAME
+    000091EC 00000000004091EC   D8 DeleteCriticalSection
+    000091F0 00000000004091F0   F8 EnterCriticalSection
+    000091F4 00000000004091F4  1CD GetCurrentProcess
+    000091F8 00000000004091F8  1CE GetCurrentProcessId
+    000091FC 00000000004091FC  1D2 GetCurrentThreadId
+    00009200 0000000000409200  210 GetLastError
+    00009204 0000000000409204  273 GetStartupInfoA
+    00009208 0000000000409208  28A GetSystemTimeAsFileTime
+    0000920C 000000000040920C  2A5 GetTickCount
+    00009210 0000000000409210  2F9 InitializeCriticalSection
+    00009214 0000000000409214  34B LeaveCriticalSection
+    00009218 0000000000409218  3BB QueryPerformanceCounter
+    0000921C 000000000040921C  401 RtlAddFunctionTable
+    00009220 0000000000409220  402 RtlCaptureContext
+    00009224 0000000000409224  409 RtlLookupFunctionEntry
+    00009228 0000000000409228  410 RtlVirtualUnwind
+    0000922C 000000000040922C  49F SetUnhandledExceptionFilter
+    00009230 0000000000409230  4AC Sleep
+    00009234 0000000000409234  4BA TerminateProcess
+    00009238 0000000000409238  4C1 TlsGetValue
+    0000923C 000000000040923C  4CE UnhandledExceptionFilter
+    00009240 0000000000409240  4EC VirtualProtect
+    00009244 0000000000409244  4EE VirtualQuery
+  
+  msvcrt.dll
+    RVA      VA               HINT FUNCTION NAME
+    000092AC 00000000004092AC   37 __C_specific_handler
+    000092B0 00000000004092B0   4E __dllonexit
+    000092B4 00000000004092B4   51 __getmainargs
+    000092B8 00000000004092B8   52 __initenv
+    000092BC 00000000004092BC   53 __iob_func
+    000092C0 00000000004092C0   5A __lconv_init
+    000092C4 00000000004092C4   60 __set_app_type
+    000092C8 00000000004092C8   62 __setusermatherr
+    000092CC 00000000004092CC   74 _acmdln
+    000092D0 00000000004092D0   7B _amsg_exit
+    000092D4 00000000004092D4   8D _cexit
+    000092D8 00000000004092D8   FD _fmode
+    000092DC 00000000004092DC  149 _initterm
+    000092E0 00000000004092E0  1B9 _lock
+    000092E4 00000000004092E4  262 _onexit
+    000092E8 00000000004092E8  332 _unlock
+    000092EC 00000000004092EC  406 abort
+    000092F0 00000000004092F0  414 calloc
+    000092F4 00000000004092F4  41F exit
+    000092F8 00000000004092F8  430 fprintf
+    000092FC 00000000004092FC  437 free
+    00009300 0000000000409300  442 fwrite
+    00009304 0000000000409304  471 malloc
+    00009308 0000000000409308  479 memcpy
+    0000930C 000000000040930C  480 printf
+    00009310 0000000000409310  496 signal
+    00009314 0000000000409314  4A9 strlen
+    00009318 0000000000409318  4AC strncmp
+    0000931C 000000000040931C  4CB vfprintf
+  
+
+### EXPORTS ###
+  Characteristics: 0x00000000
+  TimeDateStamp: 0x5546C609 (Mon May 04 01:06:17 2015)
+  Version: 0.0
+  Name: 0x0000806E (test5-gcc64.exe)
+  Base: 0x00000001 (1)
+  NumberOfFunctions: 0x00000007 (7)
+  NumberOfNames: 0x00000007 (7)
+  AddressOfFunctions: 0x00008028
+  AddressOfNames: 0x00008044
+  AddressOfNameOrdinals: 0x00008060
+  
+  FUNCTION NAME                                      ORDI. ; RVA      VA      
+  func1                                              @1    ; 00001530 0000000000401530
+  func2                                              @2    ; 00001566 0000000000401566
+  func3                                              @3    ; 00001596 0000000000401596
+  func4                                              @4    ; 000015C8 00000000004015C8
+  func5                                              @5    ; 000015FE 00000000004015FE
+  func6                                              @6    ; 0000162E 000000000040162E
+  main                                               @7    ; 00001660 0000000000401660
+
+
+
+### RESOURCE ###
+  No resource data
+
+
+### DISASSEMBLY ###
+
+;; Function __impM0000000000409384 @ L0000000000402CC0
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402CC0: FF 25 BE 66 00 00                               jmp M0000000000409384
+;; End of Function __impM0000000000409384 @ L0000000000402CC0
+
+;; Function __impM0000000000409354 @ L0000000000402C78
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C78: FF 25 D6 66 00 00                               jmp M0000000000409354
+;; End of Function __impM0000000000409354 @ L0000000000402C78
+
+;; Function L00000000004025D0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004025D0: 48 63 41 3C                                     movsxd rax,dword [rcx+0x3c]
+L00000000004025D4: 48 01 C1                                        add rcx,rax
+L00000000004025D7: 31 C0                                           xor eax,eax
+L00000000004025D9: 81 39 50 45 00 00                               cmp dword [rcx],0x4550
+L00000000004025DF: 74 02                                           jz L00000000004025E3
+L00000000004025E1: F3 C3                                           rep ret
+L00000000004025E3: 31 C0                                           xor eax,eax
+L00000000004025E5: 66 81 79 18 0B 02                               cmp word [rcx+0x18],0x020B
+L00000000004025EB: 0F 94 C0                                        setz al
+L00000000004025EE: C3                                              ret
+;; End of Function L00000000004025D0
+
+;; Function L0000000000402790
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402790: 57                                              push rdi
+L0000000000402791: 56                                              push rsi
+L0000000000402792: 53                                              push rbx
+L0000000000402793: 48 83 EC 20                                     sub rsp,32
+L0000000000402797: 48 8B 35 52 1B 00 00                            mov rsi,M00000000004042F0
+L000000000040279E: 31 FF                                           xor edi,edi
+L00000000004027A0: 48 89 CB                                        mov rbx,rcx
+L00000000004027A3: 66 81 3E 4D 5A                                  cmp word [rsi],0x5A4D
+L00000000004027A8: 74 0B                                           jz L00000000004027B5
+L00000000004027AA: 48 89 F8                                        mov rax,rdi
+L00000000004027AD: 48 83 C4 20                                     add rsp,32
+L00000000004027B1: 5B                                              pop rbx
+L00000000004027B2: 5E                                              pop rsi
+L00000000004027B3: 5F                                              pop rdi
+L00000000004027B4: C3                                              ret
+L00000000004027B5: 48 89 F1                                        mov rcx,rsi
+L00000000004027B8: E8 13 FE FF FF                                  call L00000000004025D0
+L00000000004027BD: 85 C0                                           test eax,eax
+L00000000004027BF: 74 E9                                           jz L00000000004027AA
+L00000000004027C1: 48 63 46 3C                                     movsxd rax,dword [rsi+0x3c]
+L00000000004027C5: 48 01 C6                                        add rsi,rax
+L00000000004027C8: 0F B7 4E 06                                     movzx ecx,word [rsi+0x6]
+L00000000004027CC: 0F B7 46 14                                     movzx eax,word [rsi+0x14]
+L00000000004027D0: 85 C9                                           test ecx,ecx
+L00000000004027D2: 48 8D 54 06 18                                  lea rdx,[rsi+rax+0x18]
+L00000000004027D7: 74 D1                                           jz L00000000004027AA
+L00000000004027D9: 83 E9 01                                        sub ecx,1
+L00000000004027DC: 48 8D 04 89                                     lea rax,[rcx+rcx*4]
+L00000000004027E0: 48 8D 44 C2 28                                  lea rax,[rdx+rax*8+0x28]
+L00000000004027E5: F6 42 27 20                                     test byte [rdx+0x27],0x20
+L00000000004027E9: 74 09                                           jz L00000000004027F4
+L00000000004027EB: 48 85 DB                                        test rbx,rbx
+L00000000004027EE: 74 20                                           jz L0000000000402810
+L00000000004027F0: 48 83 EB 01                                     sub rbx,1
+L00000000004027F4: 48 83 C2 28                                     add rdx,40
+L00000000004027F8: 48 39 C2                                        cmp rdx,rax
+L00000000004027FB: 75 E8                                           jnz L00000000004027E5
+L00000000004027FD: 31 FF                                           xor edi,edi
+L00000000004027FF: 48 89 F8                                        mov rax,rdi
+L0000000000402802: 48 83 C4 20                                     add rsp,32
+L0000000000402806: 5B                                              pop rbx
+L0000000000402807: 5E                                              pop rsi
+L0000000000402808: 5F                                              pop rdi
+L0000000000402809: C3                                              ret
+L0000000000402810: 48 89 D7                                        mov rdi,rdx
+L0000000000402813: 48 89 F8                                        mov rax,rdi
+L0000000000402816: 48 83 C4 20                                     add rsp,32
+L000000000040281A: 5B                                              pop rbx
+L000000000040281B: 5E                                              pop rsi
+L000000000040281C: 5F                                              pop rdi
+L000000000040281D: C3                                              ret
+;; End of Function L0000000000402790
+
+;; Function __impM0000000000409374 @ L0000000000402C90
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C90: FF 25 DE 66 00 00                               jmp M0000000000409374
+;; End of Function __impM0000000000409374 @ L0000000000402C90
+
+;; Function L0000000000402700
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402610: 48 63 41 3C                                     movsxd rax,dword [rcx+0x3c]
+L0000000000402614: 48 01 C1                                        add rcx,rax
+L0000000000402617: 0F B7 41 14                                     movzx eax,word [rcx+0x14]
+L000000000040261B: 48 8D 44 01 18                                  lea rax,[rcx+rax+0x18]
+L0000000000402620: 0F B7 49 06                                     movzx ecx,word [rcx+0x6]
+L0000000000402624: 85 C9                                           test ecx,ecx
+L0000000000402626: 74 29                                           jz L0000000000402651
+L0000000000402628: 83 E9 01                                        sub ecx,1
+L000000000040262B: 48 8D 0C 89                                     lea rcx,[rcx+rcx*4]
+L000000000040262F: 4C 8D 4C C8 28                                  lea r9,[rax+rcx*8+0x28]
+L0000000000402634: 44 8B 40 0C                                     mov r8d,[rax+0xc]
+L0000000000402638: 49 39 D0                                        cmp r8,rdx
+L000000000040263B: 4C 89 C1                                        mov rcx,r8
+L000000000040263E: 77 08                                           ja L0000000000402648
+L0000000000402640: 03 48 08                                        add ecx,[rax+0x8]
+L0000000000402643: 48 39 CA                                        cmp rdx,rcx
+L0000000000402646: 72 0B                                           jc L0000000000402653
+L0000000000402648: 48 83 C0 28                                     add rax,40
+L000000000040264C: 4C 39 C8                                        cmp rax,r9
+L000000000040264F: 75 E3                                           jnz L0000000000402634
+L0000000000402651: 31 C0                                           xor eax,eax
+L0000000000402653: F3 C3                                           rep ret
+L0000000000402655: 66 66 2E 0F 1F 84 00 00 00 00 00                nop word [cs:rax+rax+0x0]
+L0000000000402660: 57                                              push rdi
+L0000000000402661: 56                                              push rsi
+L0000000000402662: 53                                              push rbx
+L0000000000402663: 48 83 EC 20                                     sub rsp,32
+L0000000000402667: 48 89 CE                                        mov rsi,rcx
+L000000000040266A: E8 B9 05 00 00                                  call __impM000000000040937C
+L000000000040266F: 48 83 F8 08                                     cmp rax,8
+L0000000000402673: 77 1B                                           ja L0000000000402690
+L0000000000402675: 48 8B 1D 74 1C 00 00                            mov rbx,M00000000004042F0
+L000000000040267C: 31 FF                                           xor edi,edi
+L000000000040267E: 66 81 3B 4D 5A                                  cmp word [rbx],0x5A4D
+L0000000000402683: 74 1B                                           jz L00000000004026A0
+L0000000000402685: 48 89 F8                                        mov rax,rdi
+L0000000000402688: 48 83 C4 20                                     add rsp,32
+L000000000040268C: 5B                                              pop rbx
+L000000000040268D: 5E                                              pop rsi
+L000000000040268E: 5F                                              pop rdi
+L000000000040268F: C3                                              ret
+L0000000000402690: 31 FF                                           xor edi,edi
+L0000000000402692: 48 89 F8                                        mov rax,rdi
+L0000000000402695: 48 83 C4 20                                     add rsp,32
+L0000000000402699: 5B                                              pop rbx
+L000000000040269A: 5E                                              pop rsi
+L000000000040269B: 5F                                              pop rdi
+L000000000040269C: C3                                              ret
+L00000000004026A0: 48 89 D9                                        mov rcx,rbx
+L00000000004026A3: E8 28 FF FF FF                                  call L00000000004025D0
+L00000000004026A8: 85 C0                                           test eax,eax
+L00000000004026AA: 74 D9                                           jz L0000000000402685
+L00000000004026AC: 48 63 53 3C                                     movsxd rdx,dword [rbx+0x3c]
+L00000000004026B0: 48 01 DA                                        add rdx,rbx
+L00000000004026B3: 0F B7 42 14                                     movzx eax,word [rdx+0x14]
+L00000000004026B7: 48 8D 5C 02 18                                  lea rbx,[rdx+rax+0x18]
+L00000000004026BC: 0F B7 52 06                                     movzx edx,word [rdx+0x6]
+L00000000004026C0: 85 D2                                           test edx,edx
+L00000000004026C2: 74 C1                                           jz L0000000000402685
+L00000000004026C4: 83 EA 01                                        sub edx,1
+L00000000004026C7: 48 8D 04 92                                     lea rax,[rdx+rdx*4]
+L00000000004026CB: 48 8D 7C C3 28                                  lea rdi,[rbx+rax*8+0x28]
+L00000000004026D0: EB 09                                           jmp L00000000004026DB
+L00000000004026D2: 48 83 C3 28                                     add rbx,40
+L00000000004026D6: 48 39 FB                                        cmp rbx,rdi
+L00000000004026D9: 74 B5                                           jz L0000000000402690
+L00000000004026DB: 41 B8 08 00 00 00                               mov r8d,0x08
+L00000000004026E1: 48 89 F2                                        mov rdx,rsi
+L00000000004026E4: 48 89 D9                                        mov rcx,rbx
+L00000000004026E7: E8 D4 05 00 00                                  call __impM0000000000409384
+L00000000004026EC: 85 C0                                           test eax,eax
+L00000000004026EE: 75 E2                                           jnz L00000000004026D2
+L00000000004026F0: 48 89 DF                                        mov rdi,rbx
+L00000000004026F3: 48 89 F8                                        mov rax,rdi
+L00000000004026F6: 48 83 C4 20                                     add rsp,32
+L00000000004026FA: 5B                                              pop rbx
+L00000000004026FB: 5E                                              pop rsi
+L00000000004026FC: 5F                                              pop rdi
+L00000000004026FD: C3                                              ret
+L0000000000402700: 56                                              push rsi
+L0000000000402701: 53                                              push rbx
+L0000000000402702: 48 83 EC 28                                     sub rsp,40
+L0000000000402706: 48 8B 1D E3 1B 00 00                            mov rbx,M00000000004042F0
+L000000000040270D: 66 81 3B 4D 5A                                  cmp word [rbx],0x5A4D
+L0000000000402712: 74 0C                                           jz L0000000000402720
+L0000000000402714: 31 C0                                           xor eax,eax
+L0000000000402716: 48 83 C4 28                                     add rsp,40
+L000000000040271A: 5B                                              pop rbx
+L000000000040271B: 5E                                              pop rsi
+L000000000040271C: C3                                              ret
+L0000000000402720: 48 89 CE                                        mov rsi,rcx
+L0000000000402723: 48 89 D9                                        mov rcx,rbx
+L0000000000402726: E8 A5 FE FF FF                                  call L00000000004025D0
+L000000000040272B: 85 C0                                           test eax,eax
+L000000000040272D: 74 E5                                           jz L0000000000402714
+L000000000040272F: 48 29 DE                                        sub rsi,rbx
+L0000000000402732: 48 89 D9                                        mov rcx,rbx
+L0000000000402735: 48 89 F2                                        mov rdx,rsi
+L0000000000402738: 48 83 C4 28                                     add rsp,40
+L000000000040273C: 5B                                              pop rbx
+L000000000040273D: 5E                                              pop rsi
+L000000000040273E: E9 CD FE FF FF                                  jmp L0000000000402610
+;; End of Function L0000000000402700
+
+;; Function L0000000000401850
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401850: 56                                              push rsi
+L0000000000401851: 53                                              push rbx
+L0000000000401852: 48 83 EC 38                                     sub rsp,56
+L0000000000401856: 48 8D 44 24 58                                  lea rax,[rsp+0x58]
+L000000000040185B: 48 89 CB                                        mov rbx,rcx
+L000000000040185E: 48 89 54 24 58                                  mov [rsp+0x58],rdx
+L0000000000401863: 4C 89 44 24 60                                  mov [rsp+0x60],r8
+L0000000000401868: 4C 89 4C 24 68                                  mov [rsp+0x68],r9
+L000000000040186D: 48 89 44 24 28                                  mov [rsp+0x28],rax
+L0000000000401872: E8 F1 13 00 00                                  call __imp_acmdln
+L0000000000401877: 48 8D 0D D2 28 00 00                            lea rcx,offset M0000000000404150
+L000000000040187E: 4C 8D 48 60                                     lea r9,[rax+0x60]
+L0000000000401882: 41 B8 1B 00 00 00                               mov r8d,0x1B
+L0000000000401888: BA 01 00 00 00                                  mov edx,0x01
+L000000000040188D: E8 E6 13 00 00                                  call __impM0000000000409354
+L0000000000401892: 48 8B 74 24 28                                  mov rsi,[rsp+0x28]
+L0000000000401897: E8 CC 13 00 00                                  call __imp_acmdln
+L000000000040189C: 48 8D 48 60                                     lea rcx,[rax+0x60]
+L00000000004018A0: 48 89 DA                                        mov rdx,rbx
+L00000000004018A3: 49 89 F0                                        mov r8,rsi
+L00000000004018A6: E8 D5 13 00 00                                  call __impM000000000040938C
+L00000000004018AB: E8 D8 13 00 00                                  call __impM000000000040932C
+L00000000004018B0: 90                                              nop
+L00000000004018B1: 66 66 66 66 66 66 2E 0F 1F 84 00 00 00 00 00    nop word [cs:rax+rax+0x0]
+L00000000004018C0: 41 55                                           push r13
+L00000000004018C2: 41 54                                           push r12
+L00000000004018C4: 55                                              push rbp
+L00000000004018C5: 57                                              push rdi
+L00000000004018C6: 56                                              push rsi
+L00000000004018C7: 53                                              push rbx
+L00000000004018C8: 48 83 EC 58                                     sub rsp,88
+L00000000004018CC: 48 63 2D 81 57 00 00                            movsxd rbp,M0000000000407054
+L00000000004018D3: 48 89 CB                                        mov rbx,rcx
+L00000000004018D6: 48 89 D6                                        mov rsi,rdx
+L00000000004018D9: 4C 89 C7                                        mov rdi,r8
+L00000000004018DC: 85 ED                                           test ebp,ebp
+L00000000004018DE: 0F 8E F6 00 00 00                               jng L00000000004019DA
+L00000000004018E4: 48 8B 05 6D 57 00 00                            mov rax,M0000000000407058
+L00000000004018EB: 45 31 C9                                        xor r9d,r9d
+L00000000004018EE: 48 83 C0 08                                     add rax,8
+L00000000004018F2: 4C 8B 10                                        mov r10,[rax]
+L00000000004018F5: 4C 39 D3                                        cmp rbx,r10
+L00000000004018F8: 72 14                                           jc L000000000040190E
+L00000000004018FA: 48 8B 50 08                                     mov rdx,[rax+0x8]
+L00000000004018FE: 44 8B 5A 08                                     mov r11d,[rdx+0x8]
+L0000000000401902: 4D 01 DA                                        add r10,r11
+L0000000000401905: 4C 39 D3                                        cmp rbx,r10
+L0000000000401908: 0F 82 B2 00 00 00                               jc L00000000004019C0
+L000000000040190E: 41 83 C1 01                                     add r9d,1
+L0000000000401912: 48 83 C0 18                                     add rax,24
+L0000000000401916: 41 39 E9                                        cmp r9d,ebp
+L0000000000401919: 75 D7                                           jnz L00000000004018F2
+L000000000040191B: 48 89 D9                                        mov rcx,rbx
+L000000000040191E: E8 DD 0D 00 00                                  call L0000000000402700
+L0000000000401923: 48 85 C0                                        test rax,rax
+L0000000000401926: 49 89 C4                                        mov r12,rax
+L0000000000401929: 0F 84 E3 00 00 00                               jz L0000000000401A12
+L000000000040192F: 48 8D 6C 6D 00                                  lea rbp,[rbp+rbp*2+0x0]
+L0000000000401934: 48 C1 E5 03                                     shl rbp,0x03
+L0000000000401938: 49 89 ED                                        mov r13,rbp
+L000000000040193B: 4C 03 2D 16 57 00 00                            add r13,M0000000000407058
+L0000000000401942: 49 89 45 10                                     mov [r13+0x10],rax
+L0000000000401946: 41 C7 45 00 00 00 00 00                         mov dword [r13+0x0],0x00
+L000000000040194E: E8 CD 0E 00 00                                  call L0000000000402820
+L0000000000401953: 41 8B 54 24 0C                                  mov edx,[r12+0xc]
+L0000000000401958: 41 B8 30 00 00 00                               mov r8d,0x30
+L000000000040195E: 48 01 D0                                        add rax,rdx
+L0000000000401961: 48 8D 54 24 20                                  lea rdx,[rsp+0x20]
+L0000000000401966: 49 89 45 08                                     mov [r13+0x8],rax
+L000000000040196A: 48 8B 05 E7 56 00 00                            mov rax,M0000000000407058
+L0000000000401971: 48 8B 4C 28 08                                  mov rcx,[rax+rbp+0x8]
+L0000000000401976: FF 15 20 79 00 00                               call M000000000040929C
+L000000000040197C: 48 85 C0                                        test rax,rax
+L000000000040197F: 74 74                                           jz L00000000004019F5
+L0000000000401981: 8B 44 24 44                                     mov eax,[rsp+0x44]
+L0000000000401985: 8D 50 FC                                        lea edx,[rax-0x4]
+L0000000000401988: 83 E2 FB                                        and edx,-5
+L000000000040198B: 74 2C                                           jz L00000000004019B9
+L000000000040198D: 83 E8 40                                        sub eax,64
+L0000000000401990: 83 E0 BF                                        and eax,-65
+L0000000000401993: 74 24                                           jz L00000000004019B9
+L0000000000401995: 49 89 E9                                        mov r9,rbp
+L0000000000401998: 4C 03 0D B9 56 00 00                            add r9,M0000000000407058
+L000000000040199F: 41 B8 40 00 00 00                               mov r8d,0x40
+L00000000004019A5: 48 8B 54 24 38                                  mov rdx,[rsp+0x38]
+L00000000004019AA: 48 8B 4C 24 20                                  mov rcx,[rsp+0x20]
+L00000000004019AF: FF 15 DF 78 00 00                               call M0000000000409294
+L00000000004019B5: 85 C0                                           test eax,eax
+L00000000004019B7: 74 28                                           jz L00000000004019E1
+L00000000004019B9: 83 05 94 56 00 00 01                            add M0000000000407054,1
+L00000000004019C0: 49 89 F8                                        mov r8,rdi
+L00000000004019C3: 48 89 F2                                        mov rdx,rsi
+L00000000004019C6: 48 89 D9                                        mov rcx,rbx
+L00000000004019C9: 48 83 C4 58                                     add rsp,88
+L00000000004019CD: 5B                                              pop rbx
+L00000000004019CE: 5E                                              pop rsi
+L00000000004019CF: 5F                                              pop rdi
+L00000000004019D0: 5D                                              pop rbp
+L00000000004019D1: 41 5C                                           pop r12
+L00000000004019D3: 41 5D                                           pop r13
+L00000000004019D5: E9 56 12 00 00                                  jmp __impM0000000000409364
+L00000000004019DA: 31 ED                                           xor ebp,ebp
+L00000000004019DC: E9 3A FF FF FF                                  jmp L000000000040191B
+L00000000004019E1: FF 15 2D 78 00 00                               call LeaveCriticalSection
+L00000000004019E7: 48 8D 0D DA 27 00 00                            lea rcx,offset M00000000004041C8
+L00000000004019EE: 89 C2                                           mov edx,eax
+L00000000004019F0: E8 5B FE FF FF                                  call L0000000000401850
+L00000000004019F5: 48 8B 05 5C 56 00 00                            mov rax,M0000000000407058
+L00000000004019FC: 41 8B 54 24 08                                  mov edx,[r12+0x8]
+L0000000000401A01: 48 8D 0D 88 27 00 00                            lea rcx,offset M0000000000404190
+L0000000000401A08: 4C 8B 44 28 08                                  mov r8,[rax+rbp+0x8]
+L0000000000401A0D: E8 3E FE FF FF                                  call L0000000000401850
+L0000000000401A12: 48 8D 0D 57 27 00 00                            lea rcx,offset M0000000000404170
+L0000000000401A19: 48 89 DA                                        mov rdx,rbx
+L0000000000401A1C: E8 2F FE FF FF                                  call L0000000000401850
+L0000000000401A21: 90                                              nop
+L0000000000401A22: 66 66 66 66 66 2E 0F 1F 84 00 00 00 00 00       nop word [cs:rax+rax+0x0]
+L0000000000401A30: 55                                              push rbp
+L0000000000401A31: 41 56                                           push r14
+L0000000000401A33: 41 55                                           push r13
+L0000000000401A35: 41 54                                           push r12
+L0000000000401A37: 57                                              push rdi
+L0000000000401A38: 56                                              push rsi
+L0000000000401A39: 53                                              push rbx
+L0000000000401A3A: 48 89 E5                                        mov rbp,rsp
+L0000000000401A3D: 48 83 EC 60                                     sub rsp,96
+L0000000000401A41: 8B 1D 09 56 00 00                               mov ebx,M0000000000407050
+L0000000000401A47: 85 DB                                           test ebx,ebx
+L0000000000401A49: 74 15                                           jz L0000000000401A60
+L0000000000401A4B: 48 89 EC                                        mov rsp,rbp
+L0000000000401A4E: 5B                                              pop rbx
+L0000000000401A4F: 5E                                              pop rsi
+L0000000000401A50: 5F                                              pop rdi
+L0000000000401A51: 41 5C                                           pop r12
+L0000000000401A53: 41 5D                                           pop r13
+L0000000000401A55: 41 5E                                           pop r14
+L0000000000401A57: 5D                                              pop rbp
+L0000000000401A58: C3                                              ret
+L0000000000401A60: C7 05 E6 55 00 00 01 00 00 00                   mov M0000000000407050,0x01
+L0000000000401A6A: E8 E1 0C 00 00                                  call L0000000000402750
+L0000000000401A6F: 48 98                                           cdqe
+L0000000000401A71: 48 8D 04 40                                     lea rax,[rax+rax*2]
+L0000000000401A75: 48 8D 04 C5 1E 00 00 00                         lea rax,[rax*8+0x1e]
+L0000000000401A7D: 48 83 E0 F0                                     and rax,-16
+L0000000000401A81: E8 1A 11 00 00                                  call L0000000000402BA0
+L0000000000401A86: 48 8B 35 33 28 00 00                            mov rsi,M00000000004042C0
+L0000000000401A8D: 48 8B 1D 3C 28 00 00                            mov rbx,M00000000004042D0
+L0000000000401A94: 48 29 C4                                        sub rsp,rax
+L0000000000401A97: C7 05 B3 55 00 00 00 00 00 00                   mov M0000000000407054,0x00
+L0000000000401AA1: 48 8D 44 24 20                                  lea rax,[rsp+0x20]
+L0000000000401AA6: 48 89 05 AB 55 00 00                            mov M0000000000407058,rax
+L0000000000401AAD: 48 89 F0                                        mov rax,rsi
+L0000000000401AB0: 48 29 D8                                        sub rax,rbx
+L0000000000401AB3: 48 83 F8 07                                     cmp rax,7
+L0000000000401AB7: 7E 92                                           jng L0000000000401A4B
+L0000000000401AB9: 48 83 F8 0B                                     cmp rax,11
+L0000000000401ABD: 7E 26                                           jng L0000000000401AE5
+L0000000000401ABF: 44 8B 1B                                        mov r11d,[rbx]
+L0000000000401AC2: 45 85 DB                                        test r11d,r11d
+L0000000000401AC5: 0F 85 45 01 00 00                               jnz L0000000000401C10
+L0000000000401ACB: 44 8B 53 04                                     mov r10d,[rbx+0x4]
+L0000000000401ACF: 45 85 D2                                        test r10d,r10d
+L0000000000401AD2: 0F 85 38 01 00 00                               jnz L0000000000401C10
+L0000000000401AD8: 44 8B 4B 08                                     mov r9d,[rbx+0x8]
+L0000000000401ADC: 45 85 C9                                        test r9d,r9d
+L0000000000401ADF: 75 1B                                           jnz L0000000000401AFC
+L0000000000401AE1: 48 83 C3 0C                                     add rbx,12
+L0000000000401AE5: 44 8B 03                                        mov r8d,[rbx]
+L0000000000401AE8: 45 85 C0                                        test r8d,r8d
+L0000000000401AEB: 0F 85 1F 01 00 00                               jnz L0000000000401C10
+L0000000000401AF1: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401AF4: 85 C9                                           test ecx,ecx
+L0000000000401AF6: 0F 85 14 01 00 00                               jnz L0000000000401C10
+L0000000000401AFC: 8B 53 08                                        mov edx,[rbx+0x8]
+L0000000000401AFF: 83 FA 01                                        cmp edx,1
+L0000000000401B02: 0F 85 14 02 00 00                               jnz L0000000000401D1C
+L0000000000401B08: 48 83 C3 0C                                     add rbx,12
+L0000000000401B0C: 48 39 F3                                        cmp rbx,rsi
+L0000000000401B0F: 0F 83 36 FF FF FF                               jnc L0000000000401A4B
+L0000000000401B15: 4C 8B 25 D4 27 00 00                            mov r12,M00000000004042F0
+L0000000000401B1C: 4C 8D 6D D0                                     lea r13,[rbp-0x30]
+L0000000000401B20: 49 BE 00 00 00 00 FF FF FF FF                   mov r14,0xFFFFFFFF00000000
+L0000000000401B2A: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401B2D: 8B 03                                           mov eax,[rbx]
+L0000000000401B2F: 0F B6 53 08                                     movzx edx,byte [rbx+0x8]
+L0000000000401B33: 4C 01 E0                                        add rax,r12
+L0000000000401B36: 4C 01 E1                                        add rcx,r12
+L0000000000401B39: 83 FA 10                                        cmp edx,16
+L0000000000401B3C: 4C 8B 00                                        mov r8,[rax]
+L0000000000401B3F: 0F 84 41 01 00 00                               jz L0000000000401C86
+L0000000000401B45: 0F 86 02 01 00 00                               jna L0000000000401C4D
+L0000000000401B4B: 83 FA 20                                        cmp edx,32
+L0000000000401B4E: 0F 84 7B 01 00 00                               jz L0000000000401CCF
+L0000000000401B54: 83 FA 40                                        cmp edx,64
+L0000000000401B57: 0F 85 5E 01 00 00                               jnz L0000000000401CBB
+L0000000000401B5D: 49 29 C0                                        sub r8,rax
+L0000000000401B60: 4C 89 EA                                        mov rdx,r13
+L0000000000401B63: 4C 89 EF                                        mov rdi,r13
+L0000000000401B66: 4C 89 C0                                        mov rax,r8
+L0000000000401B69: 48 03 01                                        add rax,[rcx]
+L0000000000401B6C: 41 B8 08 00 00 00                               mov r8d,0x08
+L0000000000401B72: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401B76: E8 45 FD FF FF                                  call L00000000004018C0
+L0000000000401B7B: 48 83 C3 0C                                     add rbx,12
+L0000000000401B7F: 48 39 F3                                        cmp rbx,rsi
+L0000000000401B82: 72 A6                                           jc L0000000000401B2A
+L0000000000401B84: 8B 05 CA 54 00 00                               mov eax,M0000000000407054
+L0000000000401B8A: 31 DB                                           xor ebx,ebx
+L0000000000401B8C: 31 F6                                           xor esi,esi
+L0000000000401B8E: 85 C0                                           test eax,eax
+L0000000000401B90: 0F 8E B5 FE FF FF                               jng L0000000000401A4B
+L0000000000401B96: 4C 8B 35 FF 76 00 00                            mov r14,M000000000040929C
+L0000000000401B9D: 4C 8D 6D CC                                     lea r13,[rbp-0x34]
+L0000000000401BA1: 4C 8B 25 EC 76 00 00                            mov r12,M0000000000409294
+L0000000000401BA8: EB 19                                           jmp L0000000000401BC3
+L0000000000401BB0: 83 C6 01                                        add esi,1
+L0000000000401BB3: 48 83 C3 18                                     add rbx,24
+L0000000000401BB7: 3B 35 97 54 00 00                               cmp esi,M0000000000407054
+L0000000000401BBD: 0F 8D 88 FE FF FF                               jnl L0000000000401A4B
+L0000000000401BC3: 48 89 D8                                        mov rax,rbx
+L0000000000401BC6: 48 03 05 8B 54 00 00                            add rax,M0000000000407058
+L0000000000401BCD: 8B 10                                           mov edx,[rax]
+L0000000000401BCF: 85 D2                                           test edx,edx
+L0000000000401BD1: 74 DD                                           jz L0000000000401BB0
+L0000000000401BD3: 48 8B 48 08                                     mov rcx,[rax+0x8]
+L0000000000401BD7: 41 B8 30 00 00 00                               mov r8d,0x30
+L0000000000401BDD: 48 89 FA                                        mov rdx,rdi
+L0000000000401BE0: 41 FF D6                                        call r14
+L0000000000401BE3: 48 85 C0                                        test rax,rax
+L0000000000401BE6: 0F 84 12 01 00 00                               jz L0000000000401CFE
+L0000000000401BEC: 48 8B 05 65 54 00 00                            mov rax,M0000000000407058
+L0000000000401BF3: 4D 89 E9                                        mov r9,r13
+L0000000000401BF6: 48 8B 55 E8                                     mov rdx,[rbp-0x18]
+L0000000000401BFA: 48 8B 4D D0                                     mov rcx,[rbp-0x30]
+L0000000000401BFE: 44 8B 04 18                                     mov r8d,[rax+rbx]
+L0000000000401C02: 41 FF D4                                        call r12
+L0000000000401C05: EB A9                                           jmp L0000000000401BB0
+L0000000000401C10: 48 39 F3                                        cmp rbx,rsi
+L0000000000401C13: 0F 83 32 FE FF FF                               jnc L0000000000401A4B
+L0000000000401C19: 4C 8B 25 D0 26 00 00                            mov r12,M00000000004042F0
+L0000000000401C20: 48 8D 7D D0                                     lea rdi,[rbp-0x30]
+L0000000000401C24: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401C27: 8B 03                                           mov eax,[rbx]
+L0000000000401C29: 41 B8 04 00 00 00                               mov r8d,0x04
+L0000000000401C2F: 48 89 FA                                        mov rdx,rdi
+L0000000000401C32: 48 83 C3 08                                     add rbx,8
+L0000000000401C36: 4C 01 E1                                        add rcx,r12
+L0000000000401C39: 03 01                                           add eax,[rcx]
+L0000000000401C3B: 89 45 D0                                        mov [rbp-0x30],eax
+L0000000000401C3E: E8 7D FC FF FF                                  call L00000000004018C0
+L0000000000401C43: 48 39 F3                                        cmp rbx,rsi
+L0000000000401C46: 72 DC                                           jc L0000000000401C24
+L0000000000401C48: E9 37 FF FF FF                                  jmp L0000000000401B84
+L0000000000401C4D: 83 FA 08                                        cmp edx,8
+L0000000000401C50: 75 69                                           jnz L0000000000401CBB
+L0000000000401C52: 0F B6 11                                        movzx edx,byte [rcx]
+L0000000000401C55: 4C 89 EF                                        mov rdi,r13
+L0000000000401C58: 49 89 D2                                        mov r10,rdx
+L0000000000401C5B: 49 81 CA 00 FF FF FF                            or r10,0xFFFFFFFFFFFFFF00
+L0000000000401C62: 84 D2                                           test dl,dl
+L0000000000401C64: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401C68: 48 29 C2                                        sub rdx,rax
+L0000000000401C6B: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401C6F: 41 B8 01 00 00 00                               mov r8d,0x01
+L0000000000401C75: 4C 89 EA                                        mov rdx,r13
+L0000000000401C78: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401C7C: E8 3F FC FF FF                                  call L00000000004018C0
+L0000000000401C81: E9 F5 FE FF FF                                  jmp L0000000000401B7B
+L0000000000401C86: 0F B7 11                                        movzx edx,word [rcx]
+L0000000000401C89: 4C 89 EF                                        mov rdi,r13
+L0000000000401C8C: 49 89 D2                                        mov r10,rdx
+L0000000000401C8F: 49 81 CA 00 00 FF FF                            or r10,0xFFFFFFFFFFFF0000
+L0000000000401C96: 66 85 D2                                        test dx,dx
+L0000000000401C99: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401C9D: 48 29 C2                                        sub rdx,rax
+L0000000000401CA0: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401CA4: 41 B8 02 00 00 00                               mov r8d,0x02
+L0000000000401CAA: 4C 89 EA                                        mov rdx,r13
+L0000000000401CAD: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401CB1: E8 0A FC FF FF                                  call L00000000004018C0
+L0000000000401CB6: E9 C0 FE FF FF                                  jmp L0000000000401B7B
+L0000000000401CBB: 48 8D 0D 66 25 00 00                            lea rcx,offset M0000000000404228
+L0000000000401CC2: 48 C7 45 D0 00 00 00 00                         mov qword [rbp-0x30],0x00
+L0000000000401CCA: E8 81 FB FF FF                                  call L0000000000401850
+L0000000000401CCF: 8B 11                                           mov edx,[rcx]
+L0000000000401CD1: 4C 89 EF                                        mov rdi,r13
+L0000000000401CD4: 49 89 D2                                        mov r10,rdx
+L0000000000401CD7: 4D 09 F2                                        or r10,r14
+L0000000000401CDA: 85 D2                                           test edx,edx
+L0000000000401CDC: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401CE0: 48 29 C2                                        sub rdx,rax
+L0000000000401CE3: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401CE7: 41 B8 04 00 00 00                               mov r8d,0x04
+L0000000000401CED: 4C 89 EA                                        mov rdx,r13
+L0000000000401CF0: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401CF4: E8 C7 FB FF FF                                  call L00000000004018C0
+L0000000000401CF9: E9 7D FE FF FF                                  jmp L0000000000401B7B
+L0000000000401CFE: 48 03 1D 53 53 00 00                            add rbx,M0000000000407058
+L0000000000401D05: 48 8D 0D 84 24 00 00                            lea rcx,offset M0000000000404190
+L0000000000401D0C: 48 8B 43 10                                     mov rax,[rbx+0x10]
+L0000000000401D10: 4C 8B 43 08                                     mov r8,[rbx+0x8]
+L0000000000401D14: 8B 50 08                                        mov edx,[rax+0x8]
+L0000000000401D17: E8 34 FB FF FF                                  call L0000000000401850
+L0000000000401D1C: 48 8D 0D CD 24 00 00                            lea rcx,offset M00000000004041F0
+L0000000000401D23: E8 28 FB FF FF                                  call L0000000000401850
+L0000000000401D28: 90                                              nop
+L0000000000401D29: 90                                              nop
+L0000000000401D2A: 90                                              nop
+L0000000000401D2B: 90                                              nop
+L0000000000401D2C: 90                                              nop
+L0000000000401D2D: 90                                              nop
+L0000000000401D2E: 90                                              nop
+L0000000000401D2F: 90                                              nop
+L0000000000401D30: 48 83 EC 28                                     sub rsp,40
+L0000000000401D34: 8B 01                                           mov eax,[rcx]
+L0000000000401D36: 3D 91 00 00 C0                                  cmp eax,0xC0000091
+L0000000000401D3B: 77 63                                           ja L0000000000401DA0
+L0000000000401D3D: 3D 8D 00 00 C0                                  cmp eax,0xC000008D
+L0000000000401D42: 73 7B                                           jnc L0000000000401DBF
+L0000000000401D44: 3D 08 00 00 C0                                  cmp eax,0xC0000008
+L0000000000401D49: 0F 84 11 01 00 00                               jz L0000000000401E60
+L0000000000401D4F: 0F 87 DB 00 00 00                               ja L0000000000401E30
+L0000000000401D55: 3D 02 00 00 80                                  cmp eax,0x80000002
+L0000000000401D5A: 0F 84 00 01 00 00                               jz L0000000000401E60
+L0000000000401D60: 3D 05 00 00 C0                                  cmp eax,0xC0000005
+L0000000000401D65: 0F 85 D3 00 00 00                               jnz L0000000000401E3E
+L0000000000401D6B: 31 D2                                           xor edx,edx
+L0000000000401D6D: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401D72: E8 19 0F 00 00                                  call __impM0000000000409374
+L0000000000401D77: 48 83 F8 01                                     cmp rax,1
+L0000000000401D7B: 0F 84 3F 01 00 00                               jz L0000000000401EC0
+L0000000000401D81: 48 85 C0                                        test rax,rax
+L0000000000401D84: 0F 84 16 01 00 00                               jz L0000000000401EA0
+L0000000000401D8A: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401D8F: FF D0                                           call rax
+L0000000000401D91: 31 C0                                           xor eax,eax
+L0000000000401D93: 48 83 C4 28                                     add rsp,40
+L0000000000401D97: C3                                              ret
+L0000000000401DA0: 3D 94 00 00 C0                                  cmp eax,0xC0000094
+L0000000000401DA5: 0F 84 C5 00 00 00                               jz L0000000000401E70
+L0000000000401DAB: 77 43                                           ja L0000000000401DF0
+L0000000000401DAD: 3D 92 00 00 C0                                  cmp eax,0xC0000092
+L0000000000401DB2: 0F 84 A8 00 00 00                               jz L0000000000401E60
+L0000000000401DB8: 3D 93 00 00 C0                                  cmp eax,0xC0000093
+L0000000000401DBD: 75 7F                                           jnz L0000000000401E3E
+L0000000000401DBF: 31 D2                                           xor edx,edx
+L0000000000401DC1: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401DC6: E8 C5 0E 00 00                                  call __impM0000000000409374
+L0000000000401DCB: 48 83 F8 01                                     cmp rax,1
+L0000000000401DCF: 48 89 C2                                        mov rdx,rax
+L0000000000401DD2: 74 74                                           jz L0000000000401E48
+L0000000000401DD4: 48 85 D2                                        test rdx,rdx
+L0000000000401DD7: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401DDC: 74 B5                                           jz L0000000000401D93
+L0000000000401DDE: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401DE3: FF D2                                           call rdx
+L0000000000401DE5: 31 C0                                           xor eax,eax
+L0000000000401DE7: 48 83 C4 28                                     add rsp,40
+L0000000000401DEB: C3                                              ret
+L0000000000401DF0: 3D 95 00 00 C0                                  cmp eax,0xC0000095
+L0000000000401DF5: 74 69                                           jz L0000000000401E60
+L0000000000401DF7: 3D 96 00 00 C0                                  cmp eax,0xC0000096
+L0000000000401DFC: 75 40                                           jnz L0000000000401E3E
+L0000000000401DFE: 31 D2                                           xor edx,edx
+L0000000000401E00: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401E05: E8 86 0E 00 00                                  call __impM0000000000409374
+L0000000000401E0A: 48 83 F8 01                                     cmp rax,1
+L0000000000401E0E: 0F 84 96 00 00 00                               jz L0000000000401EAA
+L0000000000401E14: 48 85 C0                                        test rax,rax
+L0000000000401E17: 0F 84 83 00 00 00                               jz L0000000000401EA0
+L0000000000401E1D: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401E22: FF D0                                           call rax
+L0000000000401E24: 31 C0                                           xor eax,eax
+L0000000000401E26: E9 68 FF FF FF                                  jmp L0000000000401D93
+L0000000000401E30: 3D 1D 00 00 C0                                  cmp eax,0xC000001D
+L0000000000401E35: 74 C7                                           jz L0000000000401DFE
+L0000000000401E37: 3D 8C 00 00 C0                                  cmp eax,0xC000008C
+L0000000000401E3C: 74 22                                           jz L0000000000401E60
+L0000000000401E3E: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401E43: 48 83 C4 28                                     add rsp,40
+L0000000000401E47: C3                                              ret
+L0000000000401E48: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401E4D: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E52: E8 39 0E 00 00                                  call __impM0000000000409374
+L0000000000401E57: E8 34 03 00 00                                  call L0000000000402190
+L0000000000401E5C: 0F 1F 40 00                                     nop dword [rax+0x0]
+L0000000000401E60: 31 C0                                           xor eax,eax
+L0000000000401E62: 48 83 C4 28                                     add rsp,40
+L0000000000401E66: C3                                              ret
+L0000000000401E70: 31 D2                                           xor edx,edx
+L0000000000401E72: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E77: E8 14 0E 00 00                                  call __impM0000000000409374
+L0000000000401E7C: 48 83 F8 01                                     cmp rax,1
+L0000000000401E80: 48 89 C2                                        mov rdx,rax
+L0000000000401E83: 0F 85 4B FF FF FF                               jnz L0000000000401DD4
+L0000000000401E89: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401E8E: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E93: E8 F8 0D 00 00                                  call __impM0000000000409374
+L0000000000401E98: 31 C0                                           xor eax,eax
+L0000000000401E9A: E9 F4 FE FF FF                                  jmp L0000000000401D93
+L0000000000401EA0: B8 04 00 00 00                                  mov eax,0x04
+L0000000000401EA5: 48 83 C4 28                                     add rsp,40
+L0000000000401EA9: C3                                              ret
+L0000000000401EAA: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401EAF: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401EB4: E8 D7 0D 00 00                                  call __impM0000000000409374
+L0000000000401EB9: 31 C0                                           xor eax,eax
+L0000000000401EBB: E9 D3 FE FF FF                                  jmp L0000000000401D93
+L0000000000401EC0: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401EC5: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401ECA: E8 C1 0D 00 00                                  call __impM0000000000409374
+L0000000000401ECF: 31 C0                                           xor eax,eax
+L0000000000401ED1: E9 BD FE FF FF                                  jmp L0000000000401D93
+L0000000000402C30: FF 25 2E 67 00 00                               jmp M0000000000409364
+;; End of Function L0000000000401850
+
+;; Function L0000000000402BA0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402BA0: 51                                              push rcx
+L0000000000402BA1: 50                                              push rax
+L0000000000402BA2: 48 3D 00 10 00 00                               cmp rax,0x1000
+L0000000000402BA8: 48 8D 4C 24 18                                  lea rcx,[rsp+0x18]
+L0000000000402BAD: 72 19                                           jc L0000000000402BC8
+L0000000000402BAF: 48 81 E9 00 10 00 00                            sub rcx,0x1000
+L0000000000402BB6: 48 83 09 00                                     or qword [rcx],0
+L0000000000402BBA: 48 2D 00 10 00 00                               sub rax,0x1000
+L0000000000402BC0: 48 3D 00 10 00 00                               cmp rax,0x1000
+L0000000000402BC6: 77 E7                                           ja L0000000000402BAF
+L0000000000402BC8: 48 29 C1                                        sub rcx,rax
+L0000000000402BCB: 48 83 09 00                                     or qword [rcx],0
+L0000000000402BCF: 58                                              pop rax
+L0000000000402BD0: 59                                              pop rcx
+L0000000000402BD1: C3                                              ret
+;; End of Function L0000000000402BA0
+
+;; Function L0000000000402750
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402750: 53                                              push rbx
+L0000000000402751: 48 83 EC 20                                     sub rsp,32
+L0000000000402755: 48 8B 1D 94 1B 00 00                            mov rbx,M00000000004042F0
+L000000000040275C: 31 C0                                           xor eax,eax
+L000000000040275E: 66 81 3B 4D 5A                                  cmp word [rbx],0x5A4D
+L0000000000402763: 74 0B                                           jz L0000000000402770
+L0000000000402765: 48 83 C4 20                                     add rsp,32
+L0000000000402769: 5B                                              pop rbx
+L000000000040276A: C3                                              ret
+L0000000000402770: 48 89 D9                                        mov rcx,rbx
+L0000000000402773: E8 58 FE FF FF                                  call L00000000004025D0
+L0000000000402778: 85 C0                                           test eax,eax
+L000000000040277A: 74 E9                                           jz L0000000000402765
+L000000000040277C: 48 63 43 3C                                     movsxd rax,dword [rbx+0x3c]
+L0000000000402780: 0F B7 44 18 06                                  movzx eax,word [rax+rbx+0x6]
+L0000000000402785: 48 83 C4 20                                     add rsp,32
+L0000000000402789: 5B                                              pop rbx
+L000000000040278A: C3                                              ret
+;; End of Function L0000000000402750
+
+;; Function L00000000004016D0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004016D0: 48 89 C8                                        mov rax,rcx
+L00000000004016D3: C3                                              ret
+;; End of Function L00000000004016D0
+
+;; Function __imp__getmainargs @ L0000000000402CA0
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402CA0: FF 25 0E 66 00 00                               jmp __getmainargs
+;; End of Function __imp__getmainargs @ L0000000000402CA0
+
+;; Function __impstrlen @ L0000000000402C98
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == [8, 8]
+L0000000000402C98: FF 25 76 66 00 00                               jmp strlen
+;; End of Function __impstrlen @ L0000000000402C98
+
+;; Function L00000000004016C0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004016C0: 48 89 C8                                        mov rax,rcx
+L00000000004016C3: C3                                              ret
+;; End of Function L00000000004016C0
+
+;; Function __impM000000000040933C @ L0000000000402C50
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C50: FF 25 E6 66 00 00                               jmp M000000000040933C
+;; End of Function __impM000000000040933C @ L0000000000402C50
+
+;; Function L0000000000402660
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402660: 57                                              push rdi
+L0000000000402661: 56                                              push rsi
+L0000000000402662: 53                                              push rbx
+L0000000000402663: 48 83 EC 20                                     sub rsp,32
+L0000000000402667: 48 89 CE                                        mov rsi,rcx
+L000000000040266A: E8 B9 05 00 00                                  call __impM000000000040937C
+L000000000040266F: 48 83 F8 08                                     cmp rax,8
+L0000000000402673: 77 1B                                           ja L0000000000402690
+L0000000000402675: 48 8B 1D 74 1C 00 00                            mov rbx,M00000000004042F0
+L000000000040267C: 31 FF                                           xor edi,edi
+L000000000040267E: 66 81 3B 4D 5A                                  cmp word [rbx],0x5A4D
+L0000000000402683: 74 1B                                           jz L00000000004026A0
+L0000000000402685: 48 89 F8                                        mov rax,rdi
+L0000000000402688: 48 83 C4 20                                     add rsp,32
+L000000000040268C: 5B                                              pop rbx
+L000000000040268D: 5E                                              pop rsi
+L000000000040268E: 5F                                              pop rdi
+L000000000040268F: C3                                              ret
+L0000000000402690: 31 FF                                           xor edi,edi
+L0000000000402692: 48 89 F8                                        mov rax,rdi
+L0000000000402695: 48 83 C4 20                                     add rsp,32
+L0000000000402699: 5B                                              pop rbx
+L000000000040269A: 5E                                              pop rsi
+L000000000040269B: 5F                                              pop rdi
+L000000000040269C: C3                                              ret
+L00000000004026A0: 48 89 D9                                        mov rcx,rbx
+L00000000004026A3: E8 28 FF FF FF                                  call L00000000004025D0
+L00000000004026A8: 85 C0                                           test eax,eax
+L00000000004026AA: 74 D9                                           jz L0000000000402685
+L00000000004026AC: 48 63 53 3C                                     movsxd rdx,dword [rbx+0x3c]
+L00000000004026B0: 48 01 DA                                        add rdx,rbx
+L00000000004026B3: 0F B7 42 14                                     movzx eax,word [rdx+0x14]
+L00000000004026B7: 48 8D 5C 02 18                                  lea rbx,[rdx+rax+0x18]
+L00000000004026BC: 0F B7 52 06                                     movzx edx,word [rdx+0x6]
+L00000000004026C0: 85 D2                                           test edx,edx
+L00000000004026C2: 74 C1                                           jz L0000000000402685
+L00000000004026C4: 83 EA 01                                        sub edx,1
+L00000000004026C7: 48 8D 04 92                                     lea rax,[rdx+rdx*4]
+L00000000004026CB: 48 8D 7C C3 28                                  lea rdi,[rbx+rax*8+0x28]
+L00000000004026D0: EB 09                                           jmp L00000000004026DB
+L00000000004026D2: 48 83 C3 28                                     add rbx,40
+L00000000004026D6: 48 39 FB                                        cmp rbx,rdi
+L00000000004026D9: 74 B5                                           jz L0000000000402690
+L00000000004026DB: 41 B8 08 00 00 00                               mov r8d,0x08
+L00000000004026E1: 48 89 F2                                        mov rdx,rsi
+L00000000004026E4: 48 89 D9                                        mov rcx,rbx
+L00000000004026E7: E8 D4 05 00 00                                  call __impM0000000000409384
+L00000000004026EC: 85 C0                                           test eax,eax
+L00000000004026EE: 75 E2                                           jnz L00000000004026D2
+L00000000004026F0: 48 89 DF                                        mov rdi,rbx
+L00000000004026F3: 48 89 F8                                        mov rax,rdi
+L00000000004026F6: 48 83 C4 20                                     add rsp,32
+L00000000004026FA: 5B                                              pop rbx
+L00000000004026FB: 5E                                              pop rsi
+L00000000004026FC: 5F                                              pop rdi
+L00000000004026FD: C3                                              ret
+;; End of Function L0000000000402660
+
+;; Function __impexit @ L0000000000402C40
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == [8, 8]
+L0000000000402C40: FF 25 AE 66 00 00                               jmp exit
+;; End of Function __impexit @ L0000000000402C40
+
+;; Function func5 @ L00000000004015FE
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004015FE: 55                                              push rbp
+L00000000004015FF: 48 89 E5                                        mov rbp,rsp
+L0000000000401602: 48 83 EC 30                                     sub rsp,48
+L0000000000401606: 89 4D 10                                        mov [rbp+0x10],ecx
+L0000000000401609: 8B 45 10                                        mov eax,[rbp+0x10]
+L000000000040160C: 83 C0 01                                        add eax,1
+L000000000040160F: 89 45 FC                                        mov [rbp-0x4],eax
+L0000000000401612: 8B 45 FC                                        mov eax,[rbp-0x4]
+L0000000000401615: 89 C2                                           mov edx,eax
+L0000000000401617: 48 8D 0D E8 29 00 00                            lea rcx,offset M0000000000404006
+L000000000040161E: E8 35 16 00 00                                  call __impM000000000040936C
+L0000000000401623: 8B 45 10                                        mov eax,[rbp+0x10]
+L0000000000401626: 48 98                                           cdqe
+L0000000000401628: 48 83 C4 30                                     add rsp,48
+L000000000040162C: 5D                                              pop rbp
+L000000000040162D: C3                                              ret
+;; End of Function func5 @ L00000000004015FE
+
+;; Function L0000000000402C10
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C10: 48 89 C8                                        mov rax,rcx
+L0000000000402C13: 48 87 05 E6 4D 00 00                            xchg rax,M0000000000407A00
+L0000000000402C1A: C3                                              ret
+;; End of Function L0000000000402C10
+
+;; Function func3 @ L0000000000401596
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401596: 55                                              push rbp
+L0000000000401597: 48 89 E5                                        mov rbp,rsp
+L000000000040159A: 48 83 EC 30                                     sub rsp,48
+L000000000040159E: 89 C8                                           mov eax,ecx
+L00000000004015A0: 88 45 10                                        mov [rbp+0x10],al
+L00000000004015A3: 0F BE 45 10                                     movsx eax,byte [rbp+0x10]
+L00000000004015A7: 83 C0 01                                        add eax,1
+L00000000004015AA: 89 45 FC                                        mov [rbp-0x4],eax
+L00000000004015AD: 8B 45 FC                                        mov eax,[rbp-0x4]
+L00000000004015B0: 89 C2                                           mov edx,eax
+L00000000004015B2: 48 8D 0D 4D 2A 00 00                            lea rcx,offset M0000000000404006
+L00000000004015B9: E8 9A 16 00 00                                  call __impM000000000040936C
+L00000000004015BE: 0F BE 45 10                                     movsx eax,byte [rbp+0x10]
+L00000000004015C2: 48 83 C4 30                                     add rsp,48
+L00000000004015C6: 5D                                              pop rbp
+L00000000004015C7: C3                                              ret
+;; End of Function func3 @ L0000000000401596
+
+;; Function __impM000000000040936C @ L0000000000402C58
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C58: FF 25 0E 67 00 00                               jmp M000000000040936C
+;; End of Function __impM000000000040936C @ L0000000000402C58
+
+;; Function L00000000004018C0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004018C0: 41 55                                           push r13
+L00000000004018C2: 41 54                                           push r12
+L00000000004018C4: 55                                              push rbp
+L00000000004018C5: 57                                              push rdi
+L00000000004018C6: 56                                              push rsi
+L00000000004018C7: 53                                              push rbx
+L00000000004018C8: 48 83 EC 58                                     sub rsp,88
+L00000000004018CC: 48 63 2D 81 57 00 00                            movsxd rbp,M0000000000407054
+L00000000004018D3: 48 89 CB                                        mov rbx,rcx
+L00000000004018D6: 48 89 D6                                        mov rsi,rdx
+L00000000004018D9: 4C 89 C7                                        mov rdi,r8
+L00000000004018DC: 85 ED                                           test ebp,ebp
+L00000000004018DE: 0F 8E F6 00 00 00                               jng L00000000004019DA
+L00000000004018E4: 48 8B 05 6D 57 00 00                            mov rax,M0000000000407058
+L00000000004018EB: 45 31 C9                                        xor r9d,r9d
+L00000000004018EE: 48 83 C0 08                                     add rax,8
+L00000000004018F2: 4C 8B 10                                        mov r10,[rax]
+L00000000004018F5: 4C 39 D3                                        cmp rbx,r10
+L00000000004018F8: 72 14                                           jc L000000000040190E
+L00000000004018FA: 48 8B 50 08                                     mov rdx,[rax+0x8]
+L00000000004018FE: 44 8B 5A 08                                     mov r11d,[rdx+0x8]
+L0000000000401902: 4D 01 DA                                        add r10,r11
+L0000000000401905: 4C 39 D3                                        cmp rbx,r10
+L0000000000401908: 0F 82 B2 00 00 00                               jc L00000000004019C0
+L000000000040190E: 41 83 C1 01                                     add r9d,1
+L0000000000401912: 48 83 C0 18                                     add rax,24
+L0000000000401916: 41 39 E9                                        cmp r9d,ebp
+L0000000000401919: 75 D7                                           jnz L00000000004018F2
+L000000000040191B: 48 89 D9                                        mov rcx,rbx
+L000000000040191E: E8 DD 0D 00 00                                  call L0000000000402700
+L0000000000401923: 48 85 C0                                        test rax,rax
+L0000000000401926: 49 89 C4                                        mov r12,rax
+L0000000000401929: 0F 84 E3 00 00 00                               jz L0000000000401A12
+L000000000040192F: 48 8D 6C 6D 00                                  lea rbp,[rbp+rbp*2+0x0]
+L0000000000401934: 48 C1 E5 03                                     shl rbp,0x03
+L0000000000401938: 49 89 ED                                        mov r13,rbp
+L000000000040193B: 4C 03 2D 16 57 00 00                            add r13,M0000000000407058
+L0000000000401942: 49 89 45 10                                     mov [r13+0x10],rax
+L0000000000401946: 41 C7 45 00 00 00 00 00                         mov dword [r13+0x0],0x00
+L000000000040194E: E8 CD 0E 00 00                                  call L0000000000402820
+L0000000000401953: 41 8B 54 24 0C                                  mov edx,[r12+0xc]
+L0000000000401958: 41 B8 30 00 00 00                               mov r8d,0x30
+L000000000040195E: 48 01 D0                                        add rax,rdx
+L0000000000401961: 48 8D 54 24 20                                  lea rdx,[rsp+0x20]
+L0000000000401966: 49 89 45 08                                     mov [r13+0x8],rax
+L000000000040196A: 48 8B 05 E7 56 00 00                            mov rax,M0000000000407058
+L0000000000401971: 48 8B 4C 28 08                                  mov rcx,[rax+rbp+0x8]
+L0000000000401976: FF 15 20 79 00 00                               call M000000000040929C
+L000000000040197C: 48 85 C0                                        test rax,rax
+L000000000040197F: 74 74                                           jz L00000000004019F5
+L0000000000401981: 8B 44 24 44                                     mov eax,[rsp+0x44]
+L0000000000401985: 8D 50 FC                                        lea edx,[rax-0x4]
+L0000000000401988: 83 E2 FB                                        and edx,-5
+L000000000040198B: 74 2C                                           jz L00000000004019B9
+L000000000040198D: 83 E8 40                                        sub eax,64
+L0000000000401990: 83 E0 BF                                        and eax,-65
+L0000000000401993: 74 24                                           jz L00000000004019B9
+L0000000000401995: 49 89 E9                                        mov r9,rbp
+L0000000000401998: 4C 03 0D B9 56 00 00                            add r9,M0000000000407058
+L000000000040199F: 41 B8 40 00 00 00                               mov r8d,0x40
+L00000000004019A5: 48 8B 54 24 38                                  mov rdx,[rsp+0x38]
+L00000000004019AA: 48 8B 4C 24 20                                  mov rcx,[rsp+0x20]
+L00000000004019AF: FF 15 DF 78 00 00                               call M0000000000409294
+L00000000004019B5: 85 C0                                           test eax,eax
+L00000000004019B7: 74 28                                           jz L00000000004019E1
+L00000000004019B9: 83 05 94 56 00 00 01                            add M0000000000407054,1
+L00000000004019C0: 49 89 F8                                        mov r8,rdi
+L00000000004019C3: 48 89 F2                                        mov rdx,rsi
+L00000000004019C6: 48 89 D9                                        mov rcx,rbx
+L00000000004019C9: 48 83 C4 58                                     add rsp,88
+L00000000004019CD: 5B                                              pop rbx
+L00000000004019CE: 5E                                              pop rsi
+L00000000004019CF: 5F                                              pop rdi
+L00000000004019D0: 5D                                              pop rbp
+L00000000004019D1: 41 5C                                           pop r12
+L00000000004019D3: 41 5D                                           pop r13
+L00000000004019D5: E9 56 12 00 00                                  jmp __impM0000000000409364
+L00000000004019DA: 31 ED                                           xor ebp,ebp
+L00000000004019DC: E9 3A FF FF FF                                  jmp L000000000040191B
+L00000000004019E1: FF 15 2D 78 00 00                               call LeaveCriticalSection
+L00000000004019E7: 48 8D 0D DA 27 00 00                            lea rcx,offset M00000000004041C8
+L00000000004019EE: 89 C2                                           mov edx,eax
+L00000000004019F0: E8 5B FE FF FF                                  call L0000000000401850
+L00000000004019F5: 48 8B 05 5C 56 00 00                            mov rax,M0000000000407058
+L00000000004019FC: 41 8B 54 24 08                                  mov edx,[r12+0x8]
+L0000000000401A01: 48 8D 0D 88 27 00 00                            lea rcx,offset M0000000000404190
+L0000000000401A08: 4C 8B 44 28 08                                  mov r8,[rax+rbp+0x8]
+L0000000000401A0D: E8 3E FE FF FF                                  call L0000000000401850
+L0000000000401A12: 48 8D 0D 57 27 00 00                            lea rcx,offset M0000000000404170
+L0000000000401A19: 48 89 DA                                        mov rdx,rbx
+L0000000000401A1C: E8 2F FE FF FF                                  call L0000000000401850
+L0000000000401A21: 90                                              nop
+L0000000000401A22: 66 66 66 66 66 2E 0F 1F 84 00 00 00 00 00       nop word [cs:rax+rax+0x0]
+L0000000000401A30: 55                                              push rbp
+L0000000000401A31: 41 56                                           push r14
+L0000000000401A33: 41 55                                           push r13
+L0000000000401A35: 41 54                                           push r12
+L0000000000401A37: 57                                              push rdi
+L0000000000401A38: 56                                              push rsi
+L0000000000401A39: 53                                              push rbx
+L0000000000401A3A: 48 89 E5                                        mov rbp,rsp
+L0000000000401A3D: 48 83 EC 60                                     sub rsp,96
+L0000000000401A41: 8B 1D 09 56 00 00                               mov ebx,M0000000000407050
+L0000000000401A47: 85 DB                                           test ebx,ebx
+L0000000000401A49: 74 15                                           jz L0000000000401A60
+L0000000000401A4B: 48 89 EC                                        mov rsp,rbp
+L0000000000401A4E: 5B                                              pop rbx
+L0000000000401A4F: 5E                                              pop rsi
+L0000000000401A50: 5F                                              pop rdi
+L0000000000401A51: 41 5C                                           pop r12
+L0000000000401A53: 41 5D                                           pop r13
+L0000000000401A55: 41 5E                                           pop r14
+L0000000000401A57: 5D                                              pop rbp
+L0000000000401A58: C3                                              ret
+L0000000000401A60: C7 05 E6 55 00 00 01 00 00 00                   mov M0000000000407050,0x01
+L0000000000401A6A: E8 E1 0C 00 00                                  call L0000000000402750
+L0000000000401A6F: 48 98                                           cdqe
+L0000000000401A71: 48 8D 04 40                                     lea rax,[rax+rax*2]
+L0000000000401A75: 48 8D 04 C5 1E 00 00 00                         lea rax,[rax*8+0x1e]
+L0000000000401A7D: 48 83 E0 F0                                     and rax,-16
+L0000000000401A81: E8 1A 11 00 00                                  call L0000000000402BA0
+L0000000000401A86: 48 8B 35 33 28 00 00                            mov rsi,M00000000004042C0
+L0000000000401A8D: 48 8B 1D 3C 28 00 00                            mov rbx,M00000000004042D0
+L0000000000401A94: 48 29 C4                                        sub rsp,rax
+L0000000000401A97: C7 05 B3 55 00 00 00 00 00 00                   mov M0000000000407054,0x00
+L0000000000401AA1: 48 8D 44 24 20                                  lea rax,[rsp+0x20]
+L0000000000401AA6: 48 89 05 AB 55 00 00                            mov M0000000000407058,rax
+L0000000000401AAD: 48 89 F0                                        mov rax,rsi
+L0000000000401AB0: 48 29 D8                                        sub rax,rbx
+L0000000000401AB3: 48 83 F8 07                                     cmp rax,7
+L0000000000401AB7: 7E 92                                           jng L0000000000401A4B
+L0000000000401AB9: 48 83 F8 0B                                     cmp rax,11
+L0000000000401ABD: 7E 26                                           jng L0000000000401AE5
+L0000000000401ABF: 44 8B 1B                                        mov r11d,[rbx]
+L0000000000401AC2: 45 85 DB                                        test r11d,r11d
+L0000000000401AC5: 0F 85 45 01 00 00                               jnz L0000000000401C10
+L0000000000401ACB: 44 8B 53 04                                     mov r10d,[rbx+0x4]
+L0000000000401ACF: 45 85 D2                                        test r10d,r10d
+L0000000000401AD2: 0F 85 38 01 00 00                               jnz L0000000000401C10
+L0000000000401AD8: 44 8B 4B 08                                     mov r9d,[rbx+0x8]
+L0000000000401ADC: 45 85 C9                                        test r9d,r9d
+L0000000000401ADF: 75 1B                                           jnz L0000000000401AFC
+L0000000000401AE1: 48 83 C3 0C                                     add rbx,12
+L0000000000401AE5: 44 8B 03                                        mov r8d,[rbx]
+L0000000000401AE8: 45 85 C0                                        test r8d,r8d
+L0000000000401AEB: 0F 85 1F 01 00 00                               jnz L0000000000401C10
+L0000000000401AF1: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401AF4: 85 C9                                           test ecx,ecx
+L0000000000401AF6: 0F 85 14 01 00 00                               jnz L0000000000401C10
+L0000000000401AFC: 8B 53 08                                        mov edx,[rbx+0x8]
+L0000000000401AFF: 83 FA 01                                        cmp edx,1
+L0000000000401B02: 0F 85 14 02 00 00                               jnz L0000000000401D1C
+L0000000000401B08: 48 83 C3 0C                                     add rbx,12
+L0000000000401B0C: 48 39 F3                                        cmp rbx,rsi
+L0000000000401B0F: 0F 83 36 FF FF FF                               jnc L0000000000401A4B
+L0000000000401B15: 4C 8B 25 D4 27 00 00                            mov r12,M00000000004042F0
+L0000000000401B1C: 4C 8D 6D D0                                     lea r13,[rbp-0x30]
+L0000000000401B20: 49 BE 00 00 00 00 FF FF FF FF                   mov r14,0xFFFFFFFF00000000
+L0000000000401B2A: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401B2D: 8B 03                                           mov eax,[rbx]
+L0000000000401B2F: 0F B6 53 08                                     movzx edx,byte [rbx+0x8]
+L0000000000401B33: 4C 01 E0                                        add rax,r12
+L0000000000401B36: 4C 01 E1                                        add rcx,r12
+L0000000000401B39: 83 FA 10                                        cmp edx,16
+L0000000000401B3C: 4C 8B 00                                        mov r8,[rax]
+L0000000000401B3F: 0F 84 41 01 00 00                               jz L0000000000401C86
+L0000000000401B45: 0F 86 02 01 00 00                               jna L0000000000401C4D
+L0000000000401B4B: 83 FA 20                                        cmp edx,32
+L0000000000401B4E: 0F 84 7B 01 00 00                               jz L0000000000401CCF
+L0000000000401B54: 83 FA 40                                        cmp edx,64
+L0000000000401B57: 0F 85 5E 01 00 00                               jnz L0000000000401CBB
+L0000000000401B5D: 49 29 C0                                        sub r8,rax
+L0000000000401B60: 4C 89 EA                                        mov rdx,r13
+L0000000000401B63: 4C 89 EF                                        mov rdi,r13
+L0000000000401B66: 4C 89 C0                                        mov rax,r8
+L0000000000401B69: 48 03 01                                        add rax,[rcx]
+L0000000000401B6C: 41 B8 08 00 00 00                               mov r8d,0x08
+L0000000000401B72: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401B76: E8 45 FD FF FF                                  call L00000000004018C0
+L0000000000401B7B: 48 83 C3 0C                                     add rbx,12
+L0000000000401B7F: 48 39 F3                                        cmp rbx,rsi
+L0000000000401B82: 72 A6                                           jc L0000000000401B2A
+L0000000000401B84: 8B 05 CA 54 00 00                               mov eax,M0000000000407054
+L0000000000401B8A: 31 DB                                           xor ebx,ebx
+L0000000000401B8C: 31 F6                                           xor esi,esi
+L0000000000401B8E: 85 C0                                           test eax,eax
+L0000000000401B90: 0F 8E B5 FE FF FF                               jng L0000000000401A4B
+L0000000000401B96: 4C 8B 35 FF 76 00 00                            mov r14,M000000000040929C
+L0000000000401B9D: 4C 8D 6D CC                                     lea r13,[rbp-0x34]
+L0000000000401BA1: 4C 8B 25 EC 76 00 00                            mov r12,M0000000000409294
+L0000000000401BA8: EB 19                                           jmp L0000000000401BC3
+L0000000000401BB0: 83 C6 01                                        add esi,1
+L0000000000401BB3: 48 83 C3 18                                     add rbx,24
+L0000000000401BB7: 3B 35 97 54 00 00                               cmp esi,M0000000000407054
+L0000000000401BBD: 0F 8D 88 FE FF FF                               jnl L0000000000401A4B
+L0000000000401BC3: 48 89 D8                                        mov rax,rbx
+L0000000000401BC6: 48 03 05 8B 54 00 00                            add rax,M0000000000407058
+L0000000000401BCD: 8B 10                                           mov edx,[rax]
+L0000000000401BCF: 85 D2                                           test edx,edx
+L0000000000401BD1: 74 DD                                           jz L0000000000401BB0
+L0000000000401BD3: 48 8B 48 08                                     mov rcx,[rax+0x8]
+L0000000000401BD7: 41 B8 30 00 00 00                               mov r8d,0x30
+L0000000000401BDD: 48 89 FA                                        mov rdx,rdi
+L0000000000401BE0: 41 FF D6                                        call r14
+L0000000000401BE3: 48 85 C0                                        test rax,rax
+L0000000000401BE6: 0F 84 12 01 00 00                               jz L0000000000401CFE
+L0000000000401BEC: 48 8B 05 65 54 00 00                            mov rax,M0000000000407058
+L0000000000401BF3: 4D 89 E9                                        mov r9,r13
+L0000000000401BF6: 48 8B 55 E8                                     mov rdx,[rbp-0x18]
+L0000000000401BFA: 48 8B 4D D0                                     mov rcx,[rbp-0x30]
+L0000000000401BFE: 44 8B 04 18                                     mov r8d,[rax+rbx]
+L0000000000401C02: 41 FF D4                                        call r12
+L0000000000401C05: EB A9                                           jmp L0000000000401BB0
+L0000000000401C10: 48 39 F3                                        cmp rbx,rsi
+L0000000000401C13: 0F 83 32 FE FF FF                               jnc L0000000000401A4B
+L0000000000401C19: 4C 8B 25 D0 26 00 00                            mov r12,M00000000004042F0
+L0000000000401C20: 48 8D 7D D0                                     lea rdi,[rbp-0x30]
+L0000000000401C24: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401C27: 8B 03                                           mov eax,[rbx]
+L0000000000401C29: 41 B8 04 00 00 00                               mov r8d,0x04
+L0000000000401C2F: 48 89 FA                                        mov rdx,rdi
+L0000000000401C32: 48 83 C3 08                                     add rbx,8
+L0000000000401C36: 4C 01 E1                                        add rcx,r12
+L0000000000401C39: 03 01                                           add eax,[rcx]
+L0000000000401C3B: 89 45 D0                                        mov [rbp-0x30],eax
+L0000000000401C3E: E8 7D FC FF FF                                  call L00000000004018C0
+L0000000000401C43: 48 39 F3                                        cmp rbx,rsi
+L0000000000401C46: 72 DC                                           jc L0000000000401C24
+L0000000000401C48: E9 37 FF FF FF                                  jmp L0000000000401B84
+L0000000000401C4D: 83 FA 08                                        cmp edx,8
+L0000000000401C50: 75 69                                           jnz L0000000000401CBB
+L0000000000401C52: 0F B6 11                                        movzx edx,byte [rcx]
+L0000000000401C55: 4C 89 EF                                        mov rdi,r13
+L0000000000401C58: 49 89 D2                                        mov r10,rdx
+L0000000000401C5B: 49 81 CA 00 FF FF FF                            or r10,0xFFFFFFFFFFFFFF00
+L0000000000401C62: 84 D2                                           test dl,dl
+L0000000000401C64: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401C68: 48 29 C2                                        sub rdx,rax
+L0000000000401C6B: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401C6F: 41 B8 01 00 00 00                               mov r8d,0x01
+L0000000000401C75: 4C 89 EA                                        mov rdx,r13
+L0000000000401C78: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401C7C: E8 3F FC FF FF                                  call L00000000004018C0
+L0000000000401C81: E9 F5 FE FF FF                                  jmp L0000000000401B7B
+L0000000000401C86: 0F B7 11                                        movzx edx,word [rcx]
+L0000000000401C89: 4C 89 EF                                        mov rdi,r13
+L0000000000401C8C: 49 89 D2                                        mov r10,rdx
+L0000000000401C8F: 49 81 CA 00 00 FF FF                            or r10,0xFFFFFFFFFFFF0000
+L0000000000401C96: 66 85 D2                                        test dx,dx
+L0000000000401C99: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401C9D: 48 29 C2                                        sub rdx,rax
+L0000000000401CA0: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401CA4: 41 B8 02 00 00 00                               mov r8d,0x02
+L0000000000401CAA: 4C 89 EA                                        mov rdx,r13
+L0000000000401CAD: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401CB1: E8 0A FC FF FF                                  call L00000000004018C0
+L0000000000401CB6: E9 C0 FE FF FF                                  jmp L0000000000401B7B
+L0000000000401CBB: 48 8D 0D 66 25 00 00                            lea rcx,offset M0000000000404228
+L0000000000401CC2: 48 C7 45 D0 00 00 00 00                         mov qword [rbp-0x30],0x00
+L0000000000401CCA: E8 81 FB FF FF                                  call L0000000000401850
+L0000000000401CCF: 8B 11                                           mov edx,[rcx]
+L0000000000401CD1: 4C 89 EF                                        mov rdi,r13
+L0000000000401CD4: 49 89 D2                                        mov r10,rdx
+L0000000000401CD7: 4D 09 F2                                        or r10,r14
+L0000000000401CDA: 85 D2                                           test edx,edx
+L0000000000401CDC: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401CE0: 48 29 C2                                        sub rdx,rax
+L0000000000401CE3: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401CE7: 41 B8 04 00 00 00                               mov r8d,0x04
+L0000000000401CED: 4C 89 EA                                        mov rdx,r13
+L0000000000401CF0: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401CF4: E8 C7 FB FF FF                                  call L00000000004018C0
+L0000000000401CF9: E9 7D FE FF FF                                  jmp L0000000000401B7B
+L0000000000401CFE: 48 03 1D 53 53 00 00                            add rbx,M0000000000407058
+L0000000000401D05: 48 8D 0D 84 24 00 00                            lea rcx,offset M0000000000404190
+L0000000000401D0C: 48 8B 43 10                                     mov rax,[rbx+0x10]
+L0000000000401D10: 4C 8B 43 08                                     mov r8,[rbx+0x8]
+L0000000000401D14: 8B 50 08                                        mov edx,[rax+0x8]
+L0000000000401D17: E8 34 FB FF FF                                  call L0000000000401850
+L0000000000401D1C: 48 8D 0D CD 24 00 00                            lea rcx,offset M00000000004041F0
+L0000000000401D23: E8 28 FB FF FF                                  call L0000000000401850
+L0000000000401D28: 90                                              nop
+L0000000000401D29: 90                                              nop
+L0000000000401D2A: 90                                              nop
+L0000000000401D2B: 90                                              nop
+L0000000000401D2C: 90                                              nop
+L0000000000401D2D: 90                                              nop
+L0000000000401D2E: 90                                              nop
+L0000000000401D2F: 90                                              nop
+L0000000000401D30: 48 83 EC 28                                     sub rsp,40
+L0000000000401D34: 8B 01                                           mov eax,[rcx]
+L0000000000401D36: 3D 91 00 00 C0                                  cmp eax,0xC0000091
+L0000000000401D3B: 77 63                                           ja L0000000000401DA0
+L0000000000401D3D: 3D 8D 00 00 C0                                  cmp eax,0xC000008D
+L0000000000401D42: 73 7B                                           jnc L0000000000401DBF
+L0000000000401D44: 3D 08 00 00 C0                                  cmp eax,0xC0000008
+L0000000000401D49: 0F 84 11 01 00 00                               jz L0000000000401E60
+L0000000000401D4F: 0F 87 DB 00 00 00                               ja L0000000000401E30
+L0000000000401D55: 3D 02 00 00 80                                  cmp eax,0x80000002
+L0000000000401D5A: 0F 84 00 01 00 00                               jz L0000000000401E60
+L0000000000401D60: 3D 05 00 00 C0                                  cmp eax,0xC0000005
+L0000000000401D65: 0F 85 D3 00 00 00                               jnz L0000000000401E3E
+L0000000000401D6B: 31 D2                                           xor edx,edx
+L0000000000401D6D: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401D72: E8 19 0F 00 00                                  call __impM0000000000409374
+L0000000000401D77: 48 83 F8 01                                     cmp rax,1
+L0000000000401D7B: 0F 84 3F 01 00 00                               jz L0000000000401EC0
+L0000000000401D81: 48 85 C0                                        test rax,rax
+L0000000000401D84: 0F 84 16 01 00 00                               jz L0000000000401EA0
+L0000000000401D8A: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401D8F: FF D0                                           call rax
+L0000000000401D91: 31 C0                                           xor eax,eax
+L0000000000401D93: 48 83 C4 28                                     add rsp,40
+L0000000000401D97: C3                                              ret
+L0000000000401DA0: 3D 94 00 00 C0                                  cmp eax,0xC0000094
+L0000000000401DA5: 0F 84 C5 00 00 00                               jz L0000000000401E70
+L0000000000401DAB: 77 43                                           ja L0000000000401DF0
+L0000000000401DAD: 3D 92 00 00 C0                                  cmp eax,0xC0000092
+L0000000000401DB2: 0F 84 A8 00 00 00                               jz L0000000000401E60
+L0000000000401DB8: 3D 93 00 00 C0                                  cmp eax,0xC0000093
+L0000000000401DBD: 75 7F                                           jnz L0000000000401E3E
+L0000000000401DBF: 31 D2                                           xor edx,edx
+L0000000000401DC1: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401DC6: E8 C5 0E 00 00                                  call __impM0000000000409374
+L0000000000401DCB: 48 83 F8 01                                     cmp rax,1
+L0000000000401DCF: 48 89 C2                                        mov rdx,rax
+L0000000000401DD2: 74 74                                           jz L0000000000401E48
+L0000000000401DD4: 48 85 D2                                        test rdx,rdx
+L0000000000401DD7: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401DDC: 74 B5                                           jz L0000000000401D93
+L0000000000401DDE: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401DE3: FF D2                                           call rdx
+L0000000000401DE5: 31 C0                                           xor eax,eax
+L0000000000401DE7: 48 83 C4 28                                     add rsp,40
+L0000000000401DEB: C3                                              ret
+L0000000000401DF0: 3D 95 00 00 C0                                  cmp eax,0xC0000095
+L0000000000401DF5: 74 69                                           jz L0000000000401E60
+L0000000000401DF7: 3D 96 00 00 C0                                  cmp eax,0xC0000096
+L0000000000401DFC: 75 40                                           jnz L0000000000401E3E
+L0000000000401DFE: 31 D2                                           xor edx,edx
+L0000000000401E00: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401E05: E8 86 0E 00 00                                  call __impM0000000000409374
+L0000000000401E0A: 48 83 F8 01                                     cmp rax,1
+L0000000000401E0E: 0F 84 96 00 00 00                               jz L0000000000401EAA
+L0000000000401E14: 48 85 C0                                        test rax,rax
+L0000000000401E17: 0F 84 83 00 00 00                               jz L0000000000401EA0
+L0000000000401E1D: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401E22: FF D0                                           call rax
+L0000000000401E24: 31 C0                                           xor eax,eax
+L0000000000401E26: E9 68 FF FF FF                                  jmp L0000000000401D93
+L0000000000401E30: 3D 1D 00 00 C0                                  cmp eax,0xC000001D
+L0000000000401E35: 74 C7                                           jz L0000000000401DFE
+L0000000000401E37: 3D 8C 00 00 C0                                  cmp eax,0xC000008C
+L0000000000401E3C: 74 22                                           jz L0000000000401E60
+L0000000000401E3E: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401E43: 48 83 C4 28                                     add rsp,40
+L0000000000401E47: C3                                              ret
+L0000000000401E48: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401E4D: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E52: E8 39 0E 00 00                                  call __impM0000000000409374
+L0000000000401E57: E8 34 03 00 00                                  call L0000000000402190
+L0000000000401E5C: 0F 1F 40 00                                     nop dword [rax+0x0]
+L0000000000401E60: 31 C0                                           xor eax,eax
+L0000000000401E62: 48 83 C4 28                                     add rsp,40
+L0000000000401E66: C3                                              ret
+L0000000000401E70: 31 D2                                           xor edx,edx
+L0000000000401E72: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E77: E8 14 0E 00 00                                  call __impM0000000000409374
+L0000000000401E7C: 48 83 F8 01                                     cmp rax,1
+L0000000000401E80: 48 89 C2                                        mov rdx,rax
+L0000000000401E83: 0F 85 4B FF FF FF                               jnz L0000000000401DD4
+L0000000000401E89: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401E8E: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E93: E8 F8 0D 00 00                                  call __impM0000000000409374
+L0000000000401E98: 31 C0                                           xor eax,eax
+L0000000000401E9A: E9 F4 FE FF FF                                  jmp L0000000000401D93
+L0000000000401EA0: B8 04 00 00 00                                  mov eax,0x04
+L0000000000401EA5: 48 83 C4 28                                     add rsp,40
+L0000000000401EA9: C3                                              ret
+L0000000000401EAA: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401EAF: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401EB4: E8 D7 0D 00 00                                  call __impM0000000000409374
+L0000000000401EB9: 31 C0                                           xor eax,eax
+L0000000000401EBB: E9 D3 FE FF FF                                  jmp L0000000000401D93
+L0000000000401EC0: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401EC5: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401ECA: E8 C1 0D 00 00                                  call __impM0000000000409374
+L0000000000401ECF: 31 C0                                           xor eax,eax
+L0000000000401ED1: E9 BD FE FF FF                                  jmp L0000000000401D93
+L0000000000402C30: FF 25 2E 67 00 00                               jmp M0000000000409364
+;; End of Function L00000000004018C0
+
+;; Function func6 @ L000000000040162E
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L000000000040162E: 55                                              push rbp
+L000000000040162F: 48 89 E5                                        mov rbp,rsp
+L0000000000401632: 48 83 EC 30                                     sub rsp,48
+L0000000000401636: 89 C8                                           mov eax,ecx
+L0000000000401638: 88 45 10                                        mov [rbp+0x10],al
+L000000000040163B: 0F BE 45 10                                     movsx eax,byte [rbp+0x10]
+L000000000040163F: 83 C0 01                                        add eax,1
+L0000000000401642: 89 45 FC                                        mov [rbp-0x4],eax
+L0000000000401645: 8B 45 FC                                        mov eax,[rbp-0x4]
+L0000000000401648: 89 C2                                           mov edx,eax
+L000000000040164A: 48 8D 0D B5 29 00 00                            lea rcx,offset M0000000000404006
+L0000000000401651: E8 02 16 00 00                                  call __impM000000000040936C
+L0000000000401656: 0F BE 45 10                                     movsx eax,byte [rbp+0x10]
+L000000000040165A: 48 83 C4 30                                     add rsp,48
+L000000000040165E: 5D                                              pop rbp
+L000000000040165F: C3                                              ret
+;; End of Function func6 @ L000000000040162E
+
+;; Function L0000000000402190
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402190: DB E3                                           fninit
+L0000000000402192: C3                                              ret
+;; End of Function L0000000000402190
+
+;; Function __impfree @ L0000000000402C38
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == [8, 8]
+L0000000000402C38: FF 25 BE 66 00 00                               jmp free
+;; End of Function __impfree @ L0000000000402C38
+
+;; Function __impM000000000040932C @ L0000000000402C88
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C88: FF 25 9E 66 00 00                               jmp M000000000040932C
+;; End of Function __impM000000000040932C @ L0000000000402C88
+
+;; Function L0000000000402820
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402820: 56                                              push rsi
+L0000000000402821: 53                                              push rbx
+L0000000000402822: 48 83 EC 28                                     sub rsp,40
+L0000000000402826: 48 8B 35 C3 1A 00 00                            mov rsi,M00000000004042F0
+L000000000040282D: 31 DB                                           xor ebx,ebx
+L000000000040282F: 66 81 3E 4D 5A                                  cmp word [rsi],0x5A4D
+L0000000000402834: 74 0A                                           jz L0000000000402840
+L0000000000402836: 48 89 D8                                        mov rax,rbx
+L0000000000402839: 48 83 C4 28                                     add rsp,40
+L000000000040283D: 5B                                              pop rbx
+L000000000040283E: 5E                                              pop rsi
+L000000000040283F: C3                                              ret
+L0000000000402840: 48 89 F1                                        mov rcx,rsi
+L0000000000402843: E8 88 FD FF FF                                  call L00000000004025D0
+L0000000000402848: 85 C0                                           test eax,eax
+L000000000040284A: 48 0F 45 DE                                     cmovnz rbx,rsi
+L000000000040284E: 48 89 D8                                        mov rax,rbx
+L0000000000402851: 48 83 C4 28                                     add rsp,40
+L0000000000402855: 5B                                              pop rbx
+L0000000000402856: 5E                                              pop rsi
+L0000000000402857: C3                                              ret
+;; End of Function L0000000000402820
+
+;; Function func2 @ L0000000000401566
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401566: 55                                              push rbp
+L0000000000401567: 48 89 E5                                        mov rbp,rsp
+L000000000040156A: 48 83 EC 30                                     sub rsp,48
+L000000000040156E: 89 4D 10                                        mov [rbp+0x10],ecx
+L0000000000401571: 8B 45 10                                        mov eax,[rbp+0x10]
+L0000000000401574: 83 C0 01                                        add eax,1
+L0000000000401577: 89 45 FC                                        mov [rbp-0x4],eax
+L000000000040157A: 8B 45 FC                                        mov eax,[rbp-0x4]
+L000000000040157D: 89 C2                                           mov edx,eax
+L000000000040157F: 48 8D 0D 80 2A 00 00                            lea rcx,offset M0000000000404006
+L0000000000401586: E8 CD 16 00 00                                  call __impM000000000040936C
+L000000000040158B: 8B 45 10                                        mov eax,[rbp+0x10]
+L000000000040158E: 48 98                                           cdqe
+L0000000000401590: 48 83 C4 30                                     add rsp,48
+L0000000000401594: 5D                                              pop rbp
+L0000000000401595: C3                                              ret
+;; End of Function func2 @ L0000000000401566
+
+;; Function L0000000000402240
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004021E0: 56                                              push rsi
+L00000000004021E1: 53                                              push rbx
+L00000000004021E2: 48 83 EC 28                                     sub rsp,40
+L00000000004021E6: 48 8B 35 C3 20 00 00                            mov rsi,M00000000004042B0
+L00000000004021ED: 48 8B 06                                        mov rax,[rsi]
+L00000000004021F0: 83 F8 FF                                        cmp eax,-1
+L00000000004021F3: 89 C3                                           mov ebx,eax
+L00000000004021F5: 74 29                                           jz L0000000000402220
+L00000000004021F7: 85 DB                                           test ebx,ebx
+L00000000004021F9: 74 0F                                           jz L000000000040220A
+L00000000004021FB: 0F 1F 44 00 00                                  nop dword [rax+rax+0x0]
+L0000000000402200: 89 D8                                           mov eax,ebx
+L0000000000402202: FF 14 C6                                        call [rsi+rax*8]
+L0000000000402205: 83 EB 01                                        sub ebx,1
+L0000000000402208: 75 F6                                           jnz L0000000000402200
+L000000000040220A: 48 8D 0D 8F FF FF FF                            lea rcx,offset L00000000004021A0
+L0000000000402211: 48 83 C4 28                                     add rsp,40
+L0000000000402215: 5B                                              pop rbx
+L0000000000402216: 5E                                              pop rsi
+L0000000000402217: E9 84 03 00 00                                  jmp L00000000004025A0
+L0000000000402220: 31 DB                                           xor ebx,ebx
+L0000000000402222: EB 02                                           jmp L0000000000402226
+L0000000000402224: 89 C3                                           mov ebx,eax
+L0000000000402226: 8D 53 01                                        lea edx,[rbx+0x1]
+L0000000000402229: 48 83 3C D6 00                                  cmp qword [rsi+rdx*8],0
+L000000000040222E: 48 89 D0                                        mov rax,rdx
+L0000000000402231: 75 F1                                           jnz L0000000000402224
+L0000000000402233: EB C2                                           jmp L00000000004021F7
+L0000000000402240: 8B 05 FA 50 00 00                               mov eax,M0000000000407340
+L0000000000402246: 85 C0                                           test eax,eax
+L0000000000402248: 74 06                                           jz L0000000000402250
+L000000000040224A: F3 C3                                           rep ret
+L000000000040224C: 0F 1F 40 00                                     nop dword [rax+0x0]
+L0000000000402250: C7 05 E6 50 00 00 01 00 00 00                   mov M0000000000407340,0x01
+L000000000040225A: EB 84                                           jmp L00000000004021E0
+L00000000004025A0: 48 83 EC 28                                     sub rsp,40
+L00000000004025A4: E8 47 FF FF FF                                  call L00000000004024F0
+L00000000004025A9: 48 85 C0                                        test rax,rax
+L00000000004025AC: 0F 94 C0                                        setz al
+L00000000004025AF: 0F B6 C0                                        movzx eax,al
+L00000000004025B2: F7 D8                                           neg eax
+L00000000004025B4: 48 83 C4 28                                     add rsp,40
+L00000000004025B8: C3                                              ret
+;; End of Function L0000000000402240
+
+;; Function func1 @ L0000000000401530
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401530: 55                                              push rbp
+L0000000000401531: 48 89 E5                                        mov rbp,rsp
+L0000000000401534: 48 83 EC 30                                     sub rsp,48
+L0000000000401538: 48 89 4D 10                                     mov [rbp+0x10],rcx
+L000000000040153C: 48 8B 45 10                                     mov rax,[rbp+0x10]
+L0000000000401540: 48 83 C0 01                                     add rax,1
+L0000000000401544: 48 89 45 F8                                     mov [rbp-0x8],rax
+L0000000000401548: 48 8B 45 F8                                     mov rax,[rbp-0x8]
+L000000000040154C: 48 89 C2                                        mov rdx,rax
+L000000000040154F: 48 8D 0D AA 2A 00 00                            lea rcx,offset M0000000000404000
+L0000000000401556: E8 FD 16 00 00                                  call __impM000000000040936C
+L000000000040155B: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401560: 48 83 C4 30                                     add rsp,48
+L0000000000401564: 5D                                              pop rbp
+L0000000000401565: C3                                              ret
+;; End of Function func1 @ L0000000000401530
+
+;; Function __impM0000000000409364 @ L0000000000402C30
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C30: FF 25 2E 67 00 00                               jmp M0000000000409364
+;; End of Function __impM0000000000409364 @ L0000000000402C30
+
+;; Function __imp_acmdln @ L0000000000402C68
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C68: FF 25 5E 66 00 00                               jmp _acmdln
+;; End of Function __imp_acmdln @ L0000000000402C68
+
+;; Function main @ L0000000000401660
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401660: 55                                              push rbp
+L0000000000401661: 48 89 E5                                        mov rbp,rsp
+L0000000000401664: 48 83 EC 20                                     sub rsp,32
+L0000000000401668: E8 D3 0B 00 00                                  call L0000000000402240
+L000000000040166D: 48 C7 C1 FF FF FF FF                            mov rcx,0xFFFFFFFF
+L0000000000401674: E8 B7 FE FF FF                                  call func1
+L0000000000401679: B9 FE FF FF FF                                  mov ecx,0xFFFFFFFE
+L000000000040167E: E8 E3 FE FF FF                                  call func2
+L0000000000401683: B9 FD FF FF FF                                  mov ecx,0xFFFFFFFD
+L0000000000401688: E8 09 FF FF FF                                  call func3
+L000000000040168D: 48 C7 C1 FC FF FF FF                            mov rcx,0xFFFFFFFC
+L0000000000401694: E8 2F FF FF FF                                  call func4
+L0000000000401699: B9 FB FF FF FF                                  mov ecx,0xFFFFFFFB
+L000000000040169E: E8 5B FF FF FF                                  call func5
+L00000000004016A3: B9 FA FF FF FF                                  mov ecx,0xFFFFFFFA
+L00000000004016A8: E8 81 FF FF FF                                  call func6
+L00000000004016AD: B8 00 00 00 00                                  mov eax,0x00
+L00000000004016B2: 48 83 C4 20                                     add rsp,32
+L00000000004016B6: 5D                                              pop rbp
+L00000000004016B7: C3                                              ret
+;; End of Function main @ L0000000000401660
+
+;; Function __impM000000000040938C @ L0000000000402C80
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C80: FF 25 06 67 00 00                               jmp M000000000040938C
+;; End of Function __impM000000000040938C @ L0000000000402C80
+
+;; Function EntryPoint @ L0000000000401500
+flags =  FF_64BITFUNC
+ArgSizeRange == [0, 0]
+L0000000000401500: 48 83 EC 28                                     sub rsp,40
+L0000000000401504: 48 8B 05 15 2F 00 00                            mov rax,M0000000000404420
+L000000000040150B: C7 00 00 00 00 00                               mov dword [rax],0x00
+L0000000000401511: E8 4A 0D 00 00                                  call L0000000000402260
+L0000000000401516: E8 95 FC FF FF                                  call L00000000004011B0
+L000000000040151B: 90                                              nop
+L000000000040151C: 90                                              nop
+L000000000040151D: 48 83 C4 28                                     add rsp,40
+L0000000000401521: C3                                              ret
+;; End of Function EntryPoint @ L0000000000401500
+
+;; Function __impM0000000000409324 @ L0000000000402CA8
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402CA8: FF 25 76 66 00 00                               jmp M0000000000409324
+;; End of Function __impM0000000000409324 @ L0000000000402CA8
+
+;; Function L0000000000402260
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402260: 41 54                                           push r12
+L0000000000402262: 55                                              push rbp
+L0000000000402263: 57                                              push rdi
+L0000000000402264: 56                                              push rsi
+L0000000000402265: 53                                              push rbx
+L0000000000402266: 48 83 EC 40                                     sub rsp,64
+L000000000040226A: 48 8B 1D FF 0D 00 00                            mov rbx,M0000000000403070
+L0000000000402271: 48 B8 32 A2 DF 2D 99 2B 00 00                   mov rax,0x00002B992DDFA232
+L000000000040227B: 48 C7 44 24 20 00 00 00 00                      mov qword [rsp+0x20],0x00
+L0000000000402284: 48 39 C3                                        cmp rbx,rax
+L0000000000402287: 74 17                                           jz L00000000004022A0
+L0000000000402289: 48 F7 D3                                        not rbx
+L000000000040228C: 48 89 1D ED 0D 00 00                            mov M0000000000403080,rbx
+L0000000000402293: 48 83 C4 40                                     add rsp,64
+L0000000000402297: 5B                                              pop rbx
+L0000000000402298: 5E                                              pop rsi
+L0000000000402299: 5F                                              pop rdi
+L000000000040229A: 5D                                              pop rbp
+L000000000040229B: 41 5C                                           pop r12
+L000000000040229D: C3                                              ret
+L00000000004022A0: 48 8D 4C 24 20                                  lea rcx,[rsp+0x20]
+L00000000004022A5: FF 15 79 6F 00 00                               call RtlLookupFunctionEntry
+L00000000004022AB: 4C 8B 64 24 20                                  mov r12,[rsp+0x20]
+L00000000004022B0: FF 15 4E 6F 00 00                               call GetStartupInfoA
+L00000000004022B6: 89 C5                                           mov ebp,eax
+L00000000004022B8: FF 15 4E 6F 00 00                               call GetTickCount
+L00000000004022BE: 89 C7                                           mov edi,eax
+L00000000004022C0: FF 15 66 6F 00 00                               call SetUnhandledExceptionFilter
+L00000000004022C6: 48 8D 4C 24 30                                  lea rcx,[rsp+0x30]
+L00000000004022CB: 89 C6                                           mov esi,eax
+L00000000004022CD: FF 15 71 6F 00 00                               call VirtualQuery
+L00000000004022D3: 4C 33 64 24 30                                  xor r12,[rsp+0x30]
+L00000000004022D8: 89 FA                                           mov edx,edi
+L00000000004022DA: 48 B8 FF FF FF FF FF FF 00 00                   mov rax,0x0000FFFFFFFFFFFF
+L00000000004022E4: 4C 31 E5                                        xor rbp,r12
+L00000000004022E7: 48 89 EF                                        mov rdi,rbp
+L00000000004022EA: 48 31 D7                                        xor rdi,rdx
+L00000000004022ED: 89 F2                                           mov edx,esi
+L00000000004022EF: 48 31 D7                                        xor rdi,rdx
+L00000000004022F2: 48 89 FE                                        mov rsi,rdi
+L00000000004022F5: 48 21 C6                                        and rsi,rax
+L00000000004022F8: 48 39 DE                                        cmp rsi,rbx
+L00000000004022FB: 74 23                                           jz L0000000000402320
+L00000000004022FD: 48 89 F0                                        mov rax,rsi
+L0000000000402300: 48 F7 D0                                        not rax
+L0000000000402303: 48 89 35 66 0D 00 00                            mov M0000000000403070,rsi
+L000000000040230A: 48 89 05 6F 0D 00 00                            mov M0000000000403080,rax
+L0000000000402311: 48 83 C4 40                                     add rsp,64
+L0000000000402315: 5B                                              pop rbx
+L0000000000402316: 5E                                              pop rsi
+L0000000000402317: 5F                                              pop rdi
+L0000000000402318: 5D                                              pop rbp
+L0000000000402319: 41 5C                                           pop r12
+L000000000040231B: C3                                              ret
+L0000000000402320: 48 B8 CC 5D 20 D2 66 D4 FF FF                   mov rax,0xFFFFD466D2205DCC
+L000000000040232A: 48 BE 33 A2 DF 2D 99 2B 00 00                   mov rsi,0x00002B992DDFA233
+L0000000000402334: EB CD                                           jmp L0000000000402303
+;; End of Function L0000000000402260
+
+;; Function __impprintf @ L0000000000402C48
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == [8, ]
+L0000000000402C48: FF 25 BE 66 00 00                               jmp printf
+;; End of Function __impprintf @ L0000000000402C48
+
+;; Function L00000000004024F0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004024F0: 53                                              push rbx
+L00000000004024F1: 48 83 EC 30                                     sub rsp,48
+L00000000004024F5: 48 89 CB                                        mov rbx,rcx
+L00000000004024F8: 48 8B 0D 31 55 00 00                            mov rcx,M0000000000407A30
+L00000000004024FF: E8 BC F1 FF FF                                  call L00000000004016C0
+L0000000000402504: 48 83 F8 FF                                     cmp rax,-1
+L0000000000402508: 48 89 44 24 20                                  mov [rsp+0x20],rax
+L000000000040250D: 74 76                                           jz L0000000000402585
+L000000000040250F: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000402514: E8 7F 07 00 00                                  call __impstrlen
+L0000000000402519: 48 8B 0D 10 55 00 00                            mov rcx,M0000000000407A30
+L0000000000402520: E8 9B F1 FF FF                                  call L00000000004016C0
+L0000000000402525: 48 8B 0D 0C 55 00 00                            mov rcx,M0000000000407A38
+L000000000040252C: 48 89 44 24 20                                  mov [rsp+0x20],rax
+L0000000000402531: E8 8A F1 FF FF                                  call L00000000004016C0
+L0000000000402536: 48 8D 54 24 20                                  lea rdx,[rsp+0x20]
+L000000000040253B: 4C 8D 44 24 28                                  lea r8,[rsp+0x28]
+L0000000000402540: 48 89 D9                                        mov rcx,rbx
+L0000000000402543: 48 89 44 24 28                                  mov [rsp+0x28],rax
+L0000000000402548: E8 53 07 00 00                                  call __imp__getmainargs
+L000000000040254D: 48 8B 4C 24 20                                  mov rcx,[rsp+0x20]
+L0000000000402552: 48 89 C3                                        mov rbx,rax
+L0000000000402555: E8 76 F1 FF FF                                  call L00000000004016D0
+L000000000040255A: 48 8B 4C 24 28                                  mov rcx,[rsp+0x28]
+L000000000040255F: 48 89 05 CA 54 00 00                            mov M0000000000407A30,rax
+L0000000000402566: E8 65 F1 FF FF                                  call L00000000004016D0
+L000000000040256B: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000402570: 48 89 05 C1 54 00 00                            mov M0000000000407A38,rax
+L0000000000402577: E8 2C 07 00 00                                  call __impM0000000000409324
+L000000000040257C: 48 89 D8                                        mov rax,rbx
+L000000000040257F: 48 83 C4 30                                     add rsp,48
+L0000000000402583: 5B                                              pop rbx
+L0000000000402584: C3                                              ret
+L0000000000402585: 48 8B 05 A4 1D 00 00                            mov rax,M0000000000404330
+L000000000040258C: 48 89 D9                                        mov rcx,rbx
+L000000000040258F: FF 10                                           call [rax]
+L0000000000402591: 48 83 C4 30                                     add rsp,48
+L0000000000402595: 5B                                              pop rbx
+L0000000000402596: C3                                              ret
+;; End of Function L00000000004024F0
+
+;; Function L00000000004011B0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004011B0: 41 55                                           push r13
+L00000000004011B2: 41 54                                           push r12
+L00000000004011B4: 55                                              push rbp
+L00000000004011B5: 57                                              push rdi
+L00000000004011B6: 56                                              push rsi
+L00000000004011B7: 53                                              push rbx
+L00000000004011B8: 48 81 EC 98 00 00 00                            sub rsp,0x98
+L00000000004011BF: 48 8B 2D 5A 32 00 00                            mov rbp,M0000000000404420
+L00000000004011C6: 31 C0                                           xor eax,eax
+L00000000004011C8: B9 0D 00 00 00                                  mov ecx,0x0D
+L00000000004011CD: 48 8D 54 24 20                                  lea rdx,[rsp+0x20]
+L00000000004011D2: 44 8B 4D 00                                     mov r9d,[rbp+0x0]
+L00000000004011D6: 48 89 D7                                        mov rdi,rdx
+L00000000004011D9: F3 48 AB                                        rep stosq 
+L00000000004011DC: 45 85 C9                                        test r9d,r9d
+L00000000004011DF: 0F 85 AB 02 00 00                               jnz L0000000000401490
+L00000000004011E5: 65 48 8B 04 25 30 00 00 00                      mov rax,[gs:0x30]
+L00000000004011EE: 48 8B 1D 5B 31 00 00                            mov rbx,M0000000000404350
+L00000000004011F5: 48 8B 70 08                                     mov rsi,[rax+0x8]
+L00000000004011F9: 31 FF                                           xor edi,edi
+L00000000004011FB: 4C 8B 25 72 80 00 00                            mov r12,M0000000000409274
+L0000000000401202: EB 11                                           jmp L0000000000401215
+L0000000000401204: 48 39 C6                                        cmp rsi,rax
+L0000000000401207: 0F 84 23 02 00 00                               jz L0000000000401430
+L000000000040120D: B9 E8 03 00 00                                  mov ecx,0x03E8
+L0000000000401212: 41 FF D4                                        call r12
+L0000000000401215: 48 89 F8                                        mov rax,rdi
+L0000000000401218: F0 48 0F B1 33                                  lock cmpxchg [rbx],rsi
+L000000000040121D: 48 85 C0                                        test rax,rax
+L0000000000401220: 75 E2                                           jnz L0000000000401204
+L0000000000401222: 48 8B 35 37 31 00 00                            mov rsi,M0000000000404360
+L0000000000401229: 31 FF                                           xor edi,edi
+L000000000040122B: 8B 06                                           mov eax,[rsi]
+L000000000040122D: 83 F8 01                                        cmp eax,1
+L0000000000401230: 0F 84 11 02 00 00                               jz L0000000000401447
+L0000000000401236: 8B 06                                           mov eax,[rsi]
+L0000000000401238: 85 C0                                           test eax,eax
+L000000000040123A: 0F 84 60 02 00 00                               jz L00000000004014A0
+L0000000000401240: C7 05 BA 5D 00 00 01 00 00 00                   mov M0000000000407004,0x01
+L000000000040124A: 8B 06                                           mov eax,[rsi]
+L000000000040124C: 83 F8 01                                        cmp eax,1
+L000000000040124F: 0F 84 07 02 00 00                               jz L000000000040145C
+L0000000000401255: 85 FF                                           test edi,edi
+L0000000000401257: 0F 84 23 02 00 00                               jz L0000000000401480
+L000000000040125D: 48 8B 05 7C 30 00 00                            mov rax,M00000000004042E0
+L0000000000401264: 48 8B 00                                        mov rax,[rax]
+L0000000000401267: 48 85 C0                                        test rax,rax
+L000000000040126A: 74 0C                                           jz L0000000000401278
+L000000000040126C: 45 31 C0                                        xor r8d,r8d
+L000000000040126F: BA 02 00 00 00                                  mov edx,0x02
+L0000000000401274: 31 C9                                           xor ecx,ecx
+L0000000000401276: FF D0                                           call rax
+L0000000000401278: E8 B3 07 00 00                                  call L0000000000401A30
+L000000000040127D: 48 8D 0D 4C 0D 00 00                            lea rcx,offset L0000000000401FD0
+L0000000000401284: FF 15 E2 7F 00 00                               call M000000000040926C
+L000000000040128A: 48 8B 15 AF 30 00 00                            mov rdx,M0000000000404340
+L0000000000401291: 48 89 02                                        mov [rdx],rax
+L0000000000401294: E8 47 0C 00 00                                  call L0000000000401EE0
+L0000000000401299: 48 8D 0D 60 FD FF FF                            lea rcx,offset L0000000000401000
+L00000000004012A0: E8 6B 19 00 00                                  call L0000000000402C10
+L00000000004012A5: E8 E6 0E 00 00                                  call L0000000000402190
+L00000000004012AA: 48 8B 05 3F 30 00 00                            mov rax,M00000000004042F0
+L00000000004012B1: 48 89 05 60 67 00 00                            mov M0000000000407A18,rax
+L00000000004012B8: 48 8B 05 51 30 00 00                            mov rax,M0000000000404310
+L00000000004012BF: 48 8B 00                                        mov rax,[rax]
+L00000000004012C2: 48 8B 00                                        mov rax,[rax]
+L00000000004012C5: 48 85 C0                                        test rax,rax
+L00000000004012C8: 74 4D                                           jz L0000000000401317
+L00000000004012CA: 31 C9                                           xor ecx,ecx
+L00000000004012CC: EB 14                                           jmp L00000000004012E2
+L00000000004012D0: 84 D2                                           test dl,dl
+L00000000004012D2: 74 3C                                           jz L0000000000401310
+L00000000004012D4: 83 E1 01                                        and ecx,1
+L00000000004012D7: 74 2B                                           jz L0000000000401304
+L00000000004012D9: B9 01 00 00 00                                  mov ecx,0x01
+L00000000004012DE: 48 83 C0 01                                     add rax,1
+L00000000004012E2: 0F B6 10                                        movzx edx,byte [rax]
+L00000000004012E5: 80 FA 20                                        cmp dl,0x20
+L00000000004012E8: 7E E6                                           jng L00000000004012D0
+L00000000004012EA: 41 89 C8                                        mov r8d,ecx
+L00000000004012ED: 41 83 F0 01                                     xor r8d,1
+L00000000004012F1: 80 FA 22                                        cmp dl,0x22
+L00000000004012F4: 41 0F 44 C8                                     cmovz ecx,r8d
+L00000000004012F8: EB E4                                           jmp L00000000004012DE
+L0000000000401300: 84 D2                                           test dl,dl
+L0000000000401302: 74 0C                                           jz L0000000000401310
+L0000000000401304: 48 83 C0 01                                     add rax,1
+L0000000000401308: 0F B6 10                                        movzx edx,byte [rax]
+L000000000040130B: 80 FA 20                                        cmp dl,0x20
+L000000000040130E: 7E F0                                           jng L0000000000401300
+L0000000000401310: 48 89 05 F9 66 00 00                            mov M0000000000407A10,rax
+L0000000000401317: 44 8B 45 00                                     mov r8d,[rbp+0x0]
+L000000000040131B: 45 85 C0                                        test r8d,r8d
+L000000000040131E: 74 16                                           jz L0000000000401336
+L0000000000401320: F6 44 24 5C 01                                  test byte [rsp+0x5c],0x01
+L0000000000401325: B8 0A 00 00 00                                  mov eax,0x0A
+L000000000040132A: 0F 85 F1 00 00 00                               jnz L0000000000401421
+L0000000000401330: 89 05 CA 1C 00 00                               mov M0000000000403000,eax
+L0000000000401336: 44 8B 25 EB 5C 00 00                            mov r12d,M0000000000407028
+L000000000040133D: 45 8D 6C 24 01                                  lea r13d,[r12+0x1]
+L0000000000401342: 4D 63 ED                                        movsxd r13,r13d
+L0000000000401345: 49 C1 E5 03                                     shl r13,0x03
+L0000000000401349: 4C 89 E9                                        mov rcx,r13
+L000000000040134C: E8 CF 18 00 00                                  call __impM000000000040935C
+L0000000000401351: 45 85 E4                                        test r12d,r12d
+L0000000000401354: 48 89 C5                                        mov rbp,rax
+L0000000000401357: 48 8B 3D C2 5C 00 00                            mov rdi,M0000000000407020
+L000000000040135E: 0F 8E 5A 01 00 00                               jng L00000000004014BE
+L0000000000401364: 31 DB                                           xor ebx,ebx
+L0000000000401366: 66 2E 0F 1F 84 00 00 00 00 00                   nop word [cs:rax+rax+0x0]
+L0000000000401370: 48 8B 0C DF                                     mov rcx,[rdi+rbx*8]
+L0000000000401374: E8 AF 18 00 00                                  call __impM000000000040937C
+L0000000000401379: 48 8D 70 01                                     lea rsi,[rax+0x1]
+L000000000040137D: 48 89 F1                                        mov rcx,rsi
+L0000000000401380: E8 9B 18 00 00                                  call __impM000000000040935C
+L0000000000401385: 48 89 44 DD 00                                  mov [rbp+rbx*8+0x0],rax
+L000000000040138A: 48 8B 14 DF                                     mov rdx,[rdi+rbx*8]
+L000000000040138E: 48 89 C1                                        mov rcx,rax
+L0000000000401391: 49 89 F0                                        mov r8,rsi
+L0000000000401394: 48 83 C3 01                                     add rbx,1
+L0000000000401398: E8 93 18 00 00                                  call __impM0000000000409364
+L000000000040139D: 41 39 DC                                        cmp r12d,ebx
+L00000000004013A0: 7F CE                                           jg L0000000000401370
+L00000000004013A2: 49 83 ED 08                                     sub r13,8
+L00000000004013A6: 4A C7 44 2D 00 00 00 00 00                      mov qword [rbp+r13+0x0],0x00
+L00000000004013AF: 48 89 2D 6A 5C 00 00                            mov M0000000000407020,rbp
+L00000000004013B6: E8 85 0E 00 00                                  call L0000000000402240
+L00000000004013BB: 48 8B 05 3E 2F 00 00                            mov rax,M0000000000404300
+L00000000004013C2: 48 8B 15 4F 5C 00 00                            mov rdx,M0000000000407018
+L00000000004013C9: 8B 0D 59 5C 00 00                               mov ecx,M0000000000407028
+L00000000004013CF: 48 8B 00                                        mov rax,[rax]
+L00000000004013D2: 48 89 10                                        mov [rax],rdx
+L00000000004013D5: 4C 8B 05 3C 5C 00 00                            mov r8,M0000000000407018
+L00000000004013DC: 48 8B 15 3D 5C 00 00                            mov rdx,M0000000000407020
+L00000000004013E3: E8 78 02 00 00                                  call main
+L00000000004013E8: 8B 0D 1A 5C 00 00                               mov ecx,M0000000000407008
+L00000000004013EE: 89 05 18 5C 00 00                               mov M000000000040700C,eax
+L00000000004013F4: 85 C9                                           test ecx,ecx
+L00000000004013F6: 0F 84 CA 00 00 00                               jz L00000000004014C6
+L00000000004013FC: 8B 15 02 5C 00 00                               mov edx,M0000000000407004
+L0000000000401402: 85 D2                                           test edx,edx
+L0000000000401404: 75 0B                                           jnz L0000000000401411
+L0000000000401406: E8 2D 18 00 00                                  call __impfree
+L000000000040140B: 8B 05 FB 5B 00 00                               mov eax,M000000000040700C
+L0000000000401411: 48 81 C4 98 00 00 00                            add rsp,0x98
+L0000000000401418: 5B                                              pop rbx
+L0000000000401419: 5E                                              pop rsi
+L000000000040141A: 5F                                              pop rdi
+L000000000040141B: 5D                                              pop rbp
+L000000000040141C: 41 5C                                           pop r12
+L000000000040141E: 41 5D                                           pop r13
+L0000000000401420: C3                                              ret
+L0000000000401421: 0F B7 44 24 60                                  movzx eax,word [rsp+0x60]
+L0000000000401426: E9 05 FF FF FF                                  jmp L0000000000401330
+L0000000000401430: 48 8B 35 29 2F 00 00                            mov rsi,M0000000000404360
+L0000000000401437: BF 01 00 00 00                                  mov edi,0x01
+L000000000040143C: 8B 06                                           mov eax,[rsi]
+L000000000040143E: 83 F8 01                                        cmp eax,1
+L0000000000401441: 0F 85 EF FD FF FF                               jnz L0000000000401236
+L0000000000401447: B9 1F 00 00 00                                  mov ecx,0x1F
+L000000000040144C: E8 EF 17 00 00                                  call __impexit
+L0000000000401451: 8B 06                                           mov eax,[rsi]
+L0000000000401453: 83 F8 01                                        cmp eax,1
+L0000000000401456: 0F 85 F9 FD FF FF                               jnz L0000000000401255
+L000000000040145C: 48 8B 15 3D 2F 00 00                            mov rdx,M00000000004043A0
+L0000000000401463: 48 8B 0D 26 2F 00 00                            mov rcx,M0000000000404390
+L000000000040146A: E8 D9 17 00 00                                  call __impprintf
+L000000000040146F: 85 FF                                           test edi,edi
+L0000000000401471: C7 06 02 00 00 00                               mov dword [rsi],0x02
+L0000000000401477: 0F 85 E0 FD FF FF                               jnz L000000000040125D
+L000000000040147D: 0F 1F 00                                        nop dword [rax]
+L0000000000401480: 31 C0                                           xor eax,eax
+L0000000000401482: 48 87 03                                        xchg rax,[rbx]
+L0000000000401485: E9 D3 FD FF FF                                  jmp L000000000040125D
+L0000000000401490: 48 89 D1                                        mov rcx,rdx
+L0000000000401493: FF 15 83 7D 00 00                               call RtlAddFunctionTable
+L0000000000401499: E9 47 FD FF FF                                  jmp L00000000004011E5
+L00000000004014A0: 48 8B 15 19 2F 00 00                            mov rdx,M00000000004043C0
+L00000000004014A7: 48 8B 0D 02 2F 00 00                            mov rcx,M00000000004043B0
+L00000000004014AE: C7 06 01 00 00 00                               mov dword [rsi],0x01
+L00000000004014B4: E8 8F 17 00 00                                  call __impprintf
+L00000000004014B9: E9 8C FD FF FF                                  jmp L000000000040124A
+L00000000004014BE: 45 31 ED                                        xor r13d,r13d
+L00000000004014C1: E9 E0 FE FF FF                                  jmp L00000000004013A6
+L00000000004014C6: 89 C1                                           mov ecx,eax
+L00000000004014C8: E8 83 17 00 00                                  call __impM000000000040933C
+L00000000004014CD: 90                                              nop
+L00000000004014CE: 66 90                                           xchg ax,ax
+L00000000004014D0: 48 83 EC 28                                     sub rsp,40
+L00000000004014D4: 48 8B 05 45 2F 00 00                            mov rax,M0000000000404420
+L00000000004014DB: C7 00 01 00 00 00                               mov dword [rax],0x01
+L00000000004014E1: E8 7A 0D 00 00                                  call L0000000000402260
+L00000000004014E6: E8 C5 FC FF FF                                  call L00000000004011B0
+L00000000004014EB: 90                                              nop
+L00000000004014EC: 90                                              nop
+L00000000004014ED: 48 83 C4 28                                     add rsp,40
+L00000000004014F1: C3                                              ret
+;; End of Function L00000000004011B0
+
+;; Function __impM000000000040935C @ L0000000000402C20
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C20: FF 25 36 67 00 00                               jmp M000000000040935C
+;; End of Function __impM000000000040935C @ L0000000000402C20
+
+;; Function func4 @ L00000000004015C8
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L00000000004015C8: 55                                              push rbp
+L00000000004015C9: 48 89 E5                                        mov rbp,rsp
+L00000000004015CC: 48 83 EC 30                                     sub rsp,48
+L00000000004015D0: 48 89 4D 10                                     mov [rbp+0x10],rcx
+L00000000004015D4: 48 8B 45 10                                     mov rax,[rbp+0x10]
+L00000000004015D8: 48 83 C0 01                                     add rax,1
+L00000000004015DC: 48 89 45 F8                                     mov [rbp-0x8],rax
+L00000000004015E0: 48 8B 45 F8                                     mov rax,[rbp-0x8]
+L00000000004015E4: 48 89 C2                                        mov rdx,rax
+L00000000004015E7: 48 8D 0D 12 2A 00 00                            lea rcx,offset M0000000000404000
+L00000000004015EE: E8 65 16 00 00                                  call __impM000000000040936C
+L00000000004015F3: B8 01 00 00 00                                  mov eax,0x01
+L00000000004015F8: 48 83 C4 30                                     add rsp,48
+L00000000004015FC: 5D                                              pop rbp
+L00000000004015FD: C3                                              ret
+;; End of Function func4 @ L00000000004015C8
+
+;; Function L0000000000401A30
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401A30: 55                                              push rbp
+L0000000000401A31: 41 56                                           push r14
+L0000000000401A33: 41 55                                           push r13
+L0000000000401A35: 41 54                                           push r12
+L0000000000401A37: 57                                              push rdi
+L0000000000401A38: 56                                              push rsi
+L0000000000401A39: 53                                              push rbx
+L0000000000401A3A: 48 89 E5                                        mov rbp,rsp
+L0000000000401A3D: 48 83 EC 60                                     sub rsp,96
+L0000000000401A41: 8B 1D 09 56 00 00                               mov ebx,M0000000000407050
+L0000000000401A47: 85 DB                                           test ebx,ebx
+L0000000000401A49: 74 15                                           jz L0000000000401A60
+L0000000000401A4B: 48 89 EC                                        mov rsp,rbp
+L0000000000401A4E: 5B                                              pop rbx
+L0000000000401A4F: 5E                                              pop rsi
+L0000000000401A50: 5F                                              pop rdi
+L0000000000401A51: 41 5C                                           pop r12
+L0000000000401A53: 41 5D                                           pop r13
+L0000000000401A55: 41 5E                                           pop r14
+L0000000000401A57: 5D                                              pop rbp
+L0000000000401A58: C3                                              ret
+L0000000000401A60: C7 05 E6 55 00 00 01 00 00 00                   mov M0000000000407050,0x01
+L0000000000401A6A: E8 E1 0C 00 00                                  call L0000000000402750
+L0000000000401A6F: 48 98                                           cdqe
+L0000000000401A71: 48 8D 04 40                                     lea rax,[rax+rax*2]
+L0000000000401A75: 48 8D 04 C5 1E 00 00 00                         lea rax,[rax*8+0x1e]
+L0000000000401A7D: 48 83 E0 F0                                     and rax,-16
+L0000000000401A81: E8 1A 11 00 00                                  call L0000000000402BA0
+L0000000000401A86: 48 8B 35 33 28 00 00                            mov rsi,M00000000004042C0
+L0000000000401A8D: 48 8B 1D 3C 28 00 00                            mov rbx,M00000000004042D0
+L0000000000401A94: 48 29 C4                                        sub rsp,rax
+L0000000000401A97: C7 05 B3 55 00 00 00 00 00 00                   mov M0000000000407054,0x00
+L0000000000401AA1: 48 8D 44 24 20                                  lea rax,[rsp+0x20]
+L0000000000401AA6: 48 89 05 AB 55 00 00                            mov M0000000000407058,rax
+L0000000000401AAD: 48 89 F0                                        mov rax,rsi
+L0000000000401AB0: 48 29 D8                                        sub rax,rbx
+L0000000000401AB3: 48 83 F8 07                                     cmp rax,7
+L0000000000401AB7: 7E 92                                           jng L0000000000401A4B
+L0000000000401AB9: 48 83 F8 0B                                     cmp rax,11
+L0000000000401ABD: 7E 26                                           jng L0000000000401AE5
+L0000000000401ABF: 44 8B 1B                                        mov r11d,[rbx]
+L0000000000401AC2: 45 85 DB                                        test r11d,r11d
+L0000000000401AC5: 0F 85 45 01 00 00                               jnz L0000000000401C10
+L0000000000401ACB: 44 8B 53 04                                     mov r10d,[rbx+0x4]
+L0000000000401ACF: 45 85 D2                                        test r10d,r10d
+L0000000000401AD2: 0F 85 38 01 00 00                               jnz L0000000000401C10
+L0000000000401AD8: 44 8B 4B 08                                     mov r9d,[rbx+0x8]
+L0000000000401ADC: 45 85 C9                                        test r9d,r9d
+L0000000000401ADF: 75 1B                                           jnz L0000000000401AFC
+L0000000000401AE1: 48 83 C3 0C                                     add rbx,12
+L0000000000401AE5: 44 8B 03                                        mov r8d,[rbx]
+L0000000000401AE8: 45 85 C0                                        test r8d,r8d
+L0000000000401AEB: 0F 85 1F 01 00 00                               jnz L0000000000401C10
+L0000000000401AF1: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401AF4: 85 C9                                           test ecx,ecx
+L0000000000401AF6: 0F 85 14 01 00 00                               jnz L0000000000401C10
+L0000000000401AFC: 8B 53 08                                        mov edx,[rbx+0x8]
+L0000000000401AFF: 83 FA 01                                        cmp edx,1
+L0000000000401B02: 0F 85 14 02 00 00                               jnz L0000000000401D1C
+L0000000000401B08: 48 83 C3 0C                                     add rbx,12
+L0000000000401B0C: 48 39 F3                                        cmp rbx,rsi
+L0000000000401B0F: 0F 83 36 FF FF FF                               jnc L0000000000401A4B
+L0000000000401B15: 4C 8B 25 D4 27 00 00                            mov r12,M00000000004042F0
+L0000000000401B1C: 4C 8D 6D D0                                     lea r13,[rbp-0x30]
+L0000000000401B20: 49 BE 00 00 00 00 FF FF FF FF                   mov r14,0xFFFFFFFF00000000
+L0000000000401B2A: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401B2D: 8B 03                                           mov eax,[rbx]
+L0000000000401B2F: 0F B6 53 08                                     movzx edx,byte [rbx+0x8]
+L0000000000401B33: 4C 01 E0                                        add rax,r12
+L0000000000401B36: 4C 01 E1                                        add rcx,r12
+L0000000000401B39: 83 FA 10                                        cmp edx,16
+L0000000000401B3C: 4C 8B 00                                        mov r8,[rax]
+L0000000000401B3F: 0F 84 41 01 00 00                               jz L0000000000401C86
+L0000000000401B45: 0F 86 02 01 00 00                               jna L0000000000401C4D
+L0000000000401B4B: 83 FA 20                                        cmp edx,32
+L0000000000401B4E: 0F 84 7B 01 00 00                               jz L0000000000401CCF
+L0000000000401B54: 83 FA 40                                        cmp edx,64
+L0000000000401B57: 0F 85 5E 01 00 00                               jnz L0000000000401CBB
+L0000000000401B5D: 49 29 C0                                        sub r8,rax
+L0000000000401B60: 4C 89 EA                                        mov rdx,r13
+L0000000000401B63: 4C 89 EF                                        mov rdi,r13
+L0000000000401B66: 4C 89 C0                                        mov rax,r8
+L0000000000401B69: 48 03 01                                        add rax,[rcx]
+L0000000000401B6C: 41 B8 08 00 00 00                               mov r8d,0x08
+L0000000000401B72: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401B76: E8 45 FD FF FF                                  call L00000000004018C0
+L0000000000401B7B: 48 83 C3 0C                                     add rbx,12
+L0000000000401B7F: 48 39 F3                                        cmp rbx,rsi
+L0000000000401B82: 72 A6                                           jc L0000000000401B2A
+L0000000000401B84: 8B 05 CA 54 00 00                               mov eax,M0000000000407054
+L0000000000401B8A: 31 DB                                           xor ebx,ebx
+L0000000000401B8C: 31 F6                                           xor esi,esi
+L0000000000401B8E: 85 C0                                           test eax,eax
+L0000000000401B90: 0F 8E B5 FE FF FF                               jng L0000000000401A4B
+L0000000000401B96: 4C 8B 35 FF 76 00 00                            mov r14,M000000000040929C
+L0000000000401B9D: 4C 8D 6D CC                                     lea r13,[rbp-0x34]
+L0000000000401BA1: 4C 8B 25 EC 76 00 00                            mov r12,M0000000000409294
+L0000000000401BA8: EB 19                                           jmp L0000000000401BC3
+L0000000000401BB0: 83 C6 01                                        add esi,1
+L0000000000401BB3: 48 83 C3 18                                     add rbx,24
+L0000000000401BB7: 3B 35 97 54 00 00                               cmp esi,M0000000000407054
+L0000000000401BBD: 0F 8D 88 FE FF FF                               jnl L0000000000401A4B
+L0000000000401BC3: 48 89 D8                                        mov rax,rbx
+L0000000000401BC6: 48 03 05 8B 54 00 00                            add rax,M0000000000407058
+L0000000000401BCD: 8B 10                                           mov edx,[rax]
+L0000000000401BCF: 85 D2                                           test edx,edx
+L0000000000401BD1: 74 DD                                           jz L0000000000401BB0
+L0000000000401BD3: 48 8B 48 08                                     mov rcx,[rax+0x8]
+L0000000000401BD7: 41 B8 30 00 00 00                               mov r8d,0x30
+L0000000000401BDD: 48 89 FA                                        mov rdx,rdi
+L0000000000401BE0: 41 FF D6                                        call r14
+L0000000000401BE3: 48 85 C0                                        test rax,rax
+L0000000000401BE6: 0F 84 12 01 00 00                               jz L0000000000401CFE
+L0000000000401BEC: 48 8B 05 65 54 00 00                            mov rax,M0000000000407058
+L0000000000401BF3: 4D 89 E9                                        mov r9,r13
+L0000000000401BF6: 48 8B 55 E8                                     mov rdx,[rbp-0x18]
+L0000000000401BFA: 48 8B 4D D0                                     mov rcx,[rbp-0x30]
+L0000000000401BFE: 44 8B 04 18                                     mov r8d,[rax+rbx]
+L0000000000401C02: 41 FF D4                                        call r12
+L0000000000401C05: EB A9                                           jmp L0000000000401BB0
+L0000000000401C10: 48 39 F3                                        cmp rbx,rsi
+L0000000000401C13: 0F 83 32 FE FF FF                               jnc L0000000000401A4B
+L0000000000401C19: 4C 8B 25 D0 26 00 00                            mov r12,M00000000004042F0
+L0000000000401C20: 48 8D 7D D0                                     lea rdi,[rbp-0x30]
+L0000000000401C24: 8B 4B 04                                        mov ecx,[rbx+0x4]
+L0000000000401C27: 8B 03                                           mov eax,[rbx]
+L0000000000401C29: 41 B8 04 00 00 00                               mov r8d,0x04
+L0000000000401C2F: 48 89 FA                                        mov rdx,rdi
+L0000000000401C32: 48 83 C3 08                                     add rbx,8
+L0000000000401C36: 4C 01 E1                                        add rcx,r12
+L0000000000401C39: 03 01                                           add eax,[rcx]
+L0000000000401C3B: 89 45 D0                                        mov [rbp-0x30],eax
+L0000000000401C3E: E8 7D FC FF FF                                  call L00000000004018C0
+L0000000000401C43: 48 39 F3                                        cmp rbx,rsi
+L0000000000401C46: 72 DC                                           jc L0000000000401C24
+L0000000000401C48: E9 37 FF FF FF                                  jmp L0000000000401B84
+L0000000000401C4D: 83 FA 08                                        cmp edx,8
+L0000000000401C50: 75 69                                           jnz L0000000000401CBB
+L0000000000401C52: 0F B6 11                                        movzx edx,byte [rcx]
+L0000000000401C55: 4C 89 EF                                        mov rdi,r13
+L0000000000401C58: 49 89 D2                                        mov r10,rdx
+L0000000000401C5B: 49 81 CA 00 FF FF FF                            or r10,0xFFFFFFFFFFFFFF00
+L0000000000401C62: 84 D2                                           test dl,dl
+L0000000000401C64: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401C68: 48 29 C2                                        sub rdx,rax
+L0000000000401C6B: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401C6F: 41 B8 01 00 00 00                               mov r8d,0x01
+L0000000000401C75: 4C 89 EA                                        mov rdx,r13
+L0000000000401C78: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401C7C: E8 3F FC FF FF                                  call L00000000004018C0
+L0000000000401C81: E9 F5 FE FF FF                                  jmp L0000000000401B7B
+L0000000000401C86: 0F B7 11                                        movzx edx,word [rcx]
+L0000000000401C89: 4C 89 EF                                        mov rdi,r13
+L0000000000401C8C: 49 89 D2                                        mov r10,rdx
+L0000000000401C8F: 49 81 CA 00 00 FF FF                            or r10,0xFFFFFFFFFFFF0000
+L0000000000401C96: 66 85 D2                                        test dx,dx
+L0000000000401C99: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401C9D: 48 29 C2                                        sub rdx,rax
+L0000000000401CA0: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401CA4: 41 B8 02 00 00 00                               mov r8d,0x02
+L0000000000401CAA: 4C 89 EA                                        mov rdx,r13
+L0000000000401CAD: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401CB1: E8 0A FC FF FF                                  call L00000000004018C0
+L0000000000401CB6: E9 C0 FE FF FF                                  jmp L0000000000401B7B
+L0000000000401CBB: 48 8D 0D 66 25 00 00                            lea rcx,offset M0000000000404228
+L0000000000401CC2: 48 C7 45 D0 00 00 00 00                         mov qword [rbp-0x30],0x00
+L0000000000401CCA: E8 81 FB FF FF                                  call L0000000000401850
+L0000000000401CCF: 8B 11                                           mov edx,[rcx]
+L0000000000401CD1: 4C 89 EF                                        mov rdi,r13
+L0000000000401CD4: 49 89 D2                                        mov r10,rdx
+L0000000000401CD7: 4D 09 F2                                        or r10,r14
+L0000000000401CDA: 85 D2                                           test edx,edx
+L0000000000401CDC: 49 0F 48 D2                                     cmovs rdx,r10
+L0000000000401CE0: 48 29 C2                                        sub rdx,rax
+L0000000000401CE3: 49 8D 04 10                                     lea rax,[r8+rdx]
+L0000000000401CE7: 41 B8 04 00 00 00                               mov r8d,0x04
+L0000000000401CED: 4C 89 EA                                        mov rdx,r13
+L0000000000401CF0: 48 89 45 D0                                     mov [rbp-0x30],rax
+L0000000000401CF4: E8 C7 FB FF FF                                  call L00000000004018C0
+L0000000000401CF9: E9 7D FE FF FF                                  jmp L0000000000401B7B
+L0000000000401CFE: 48 03 1D 53 53 00 00                            add rbx,M0000000000407058
+L0000000000401D05: 48 8D 0D 84 24 00 00                            lea rcx,offset M0000000000404190
+L0000000000401D0C: 48 8B 43 10                                     mov rax,[rbx+0x10]
+L0000000000401D10: 4C 8B 43 08                                     mov r8,[rbx+0x8]
+L0000000000401D14: 8B 50 08                                        mov edx,[rax+0x8]
+L0000000000401D17: E8 34 FB FF FF                                  call L0000000000401850
+L0000000000401D1C: 48 8D 0D CD 24 00 00                            lea rcx,offset M00000000004041F0
+L0000000000401D23: E8 28 FB FF FF                                  call L0000000000401850
+L0000000000401D28: 90                                              nop
+L0000000000401D29: 90                                              nop
+L0000000000401D2A: 90                                              nop
+L0000000000401D2B: 90                                              nop
+L0000000000401D2C: 90                                              nop
+L0000000000401D2D: 90                                              nop
+L0000000000401D2E: 90                                              nop
+L0000000000401D2F: 90                                              nop
+L0000000000401D30: 48 83 EC 28                                     sub rsp,40
+L0000000000401D34: 8B 01                                           mov eax,[rcx]
+L0000000000401D36: 3D 91 00 00 C0                                  cmp eax,0xC0000091
+L0000000000401D3B: 77 63                                           ja L0000000000401DA0
+L0000000000401D3D: 3D 8D 00 00 C0                                  cmp eax,0xC000008D
+L0000000000401D42: 73 7B                                           jnc L0000000000401DBF
+L0000000000401D44: 3D 08 00 00 C0                                  cmp eax,0xC0000008
+L0000000000401D49: 0F 84 11 01 00 00                               jz L0000000000401E60
+L0000000000401D4F: 0F 87 DB 00 00 00                               ja L0000000000401E30
+L0000000000401D55: 3D 02 00 00 80                                  cmp eax,0x80000002
+L0000000000401D5A: 0F 84 00 01 00 00                               jz L0000000000401E60
+L0000000000401D60: 3D 05 00 00 C0                                  cmp eax,0xC0000005
+L0000000000401D65: 0F 85 D3 00 00 00                               jnz L0000000000401E3E
+L0000000000401D6B: 31 D2                                           xor edx,edx
+L0000000000401D6D: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401D72: E8 19 0F 00 00                                  call __impM0000000000409374
+L0000000000401D77: 48 83 F8 01                                     cmp rax,1
+L0000000000401D7B: 0F 84 3F 01 00 00                               jz L0000000000401EC0
+L0000000000401D81: 48 85 C0                                        test rax,rax
+L0000000000401D84: 0F 84 16 01 00 00                               jz L0000000000401EA0
+L0000000000401D8A: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401D8F: FF D0                                           call rax
+L0000000000401D91: 31 C0                                           xor eax,eax
+L0000000000401D93: 48 83 C4 28                                     add rsp,40
+L0000000000401D97: C3                                              ret
+L0000000000401DA0: 3D 94 00 00 C0                                  cmp eax,0xC0000094
+L0000000000401DA5: 0F 84 C5 00 00 00                               jz L0000000000401E70
+L0000000000401DAB: 77 43                                           ja L0000000000401DF0
+L0000000000401DAD: 3D 92 00 00 C0                                  cmp eax,0xC0000092
+L0000000000401DB2: 0F 84 A8 00 00 00                               jz L0000000000401E60
+L0000000000401DB8: 3D 93 00 00 C0                                  cmp eax,0xC0000093
+L0000000000401DBD: 75 7F                                           jnz L0000000000401E3E
+L0000000000401DBF: 31 D2                                           xor edx,edx
+L0000000000401DC1: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401DC6: E8 C5 0E 00 00                                  call __impM0000000000409374
+L0000000000401DCB: 48 83 F8 01                                     cmp rax,1
+L0000000000401DCF: 48 89 C2                                        mov rdx,rax
+L0000000000401DD2: 74 74                                           jz L0000000000401E48
+L0000000000401DD4: 48 85 D2                                        test rdx,rdx
+L0000000000401DD7: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401DDC: 74 B5                                           jz L0000000000401D93
+L0000000000401DDE: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401DE3: FF D2                                           call rdx
+L0000000000401DE5: 31 C0                                           xor eax,eax
+L0000000000401DE7: 48 83 C4 28                                     add rsp,40
+L0000000000401DEB: C3                                              ret
+L0000000000401DF0: 3D 95 00 00 C0                                  cmp eax,0xC0000095
+L0000000000401DF5: 74 69                                           jz L0000000000401E60
+L0000000000401DF7: 3D 96 00 00 C0                                  cmp eax,0xC0000096
+L0000000000401DFC: 75 40                                           jnz L0000000000401E3E
+L0000000000401DFE: 31 D2                                           xor edx,edx
+L0000000000401E00: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401E05: E8 86 0E 00 00                                  call __impM0000000000409374
+L0000000000401E0A: 48 83 F8 01                                     cmp rax,1
+L0000000000401E0E: 0F 84 96 00 00 00                               jz L0000000000401EAA
+L0000000000401E14: 48 85 C0                                        test rax,rax
+L0000000000401E17: 0F 84 83 00 00 00                               jz L0000000000401EA0
+L0000000000401E1D: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401E22: FF D0                                           call rax
+L0000000000401E24: 31 C0                                           xor eax,eax
+L0000000000401E26: E9 68 FF FF FF                                  jmp L0000000000401D93
+L0000000000401E30: 3D 1D 00 00 C0                                  cmp eax,0xC000001D
+L0000000000401E35: 74 C7                                           jz L0000000000401DFE
+L0000000000401E37: 3D 8C 00 00 C0                                  cmp eax,0xC000008C
+L0000000000401E3C: 74 22                                           jz L0000000000401E60
+L0000000000401E3E: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401E43: 48 83 C4 28                                     add rsp,40
+L0000000000401E47: C3                                              ret
+L0000000000401E48: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401E4D: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E52: E8 39 0E 00 00                                  call __impM0000000000409374
+L0000000000401E57: E8 34 03 00 00                                  call L0000000000402190
+L0000000000401E5C: 0F 1F 40 00                                     nop dword [rax+0x0]
+L0000000000401E60: 31 C0                                           xor eax,eax
+L0000000000401E62: 48 83 C4 28                                     add rsp,40
+L0000000000401E66: C3                                              ret
+L0000000000401E70: 31 D2                                           xor edx,edx
+L0000000000401E72: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E77: E8 14 0E 00 00                                  call __impM0000000000409374
+L0000000000401E7C: 48 83 F8 01                                     cmp rax,1
+L0000000000401E80: 48 89 C2                                        mov rdx,rax
+L0000000000401E83: 0F 85 4B FF FF FF                               jnz L0000000000401DD4
+L0000000000401E89: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401E8E: B9 08 00 00 00                                  mov ecx,0x08
+L0000000000401E93: E8 F8 0D 00 00                                  call __impM0000000000409374
+L0000000000401E98: 31 C0                                           xor eax,eax
+L0000000000401E9A: E9 F4 FE FF FF                                  jmp L0000000000401D93
+L0000000000401EA0: B8 04 00 00 00                                  mov eax,0x04
+L0000000000401EA5: 48 83 C4 28                                     add rsp,40
+L0000000000401EA9: C3                                              ret
+L0000000000401EAA: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401EAF: B9 04 00 00 00                                  mov ecx,0x04
+L0000000000401EB4: E8 D7 0D 00 00                                  call __impM0000000000409374
+L0000000000401EB9: 31 C0                                           xor eax,eax
+L0000000000401EBB: E9 D3 FE FF FF                                  jmp L0000000000401D93
+L0000000000401EC0: BA 01 00 00 00                                  mov edx,0x01
+L0000000000401EC5: B9 0B 00 00 00                                  mov ecx,0x0B
+L0000000000401ECA: E8 C1 0D 00 00                                  call __impM0000000000409374
+L0000000000401ECF: 31 C0                                           xor eax,eax
+L0000000000401ED1: E9 BD FE FF FF                                  jmp L0000000000401D93
+;; End of Function L0000000000401A30
+
+;; Function __impM000000000040937C @ L0000000000402C28
+flags =  FF_JUMPERFUNC FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000402C28: FF 25 4E 67 00 00                               jmp M000000000040937C
+;; End of Function __impM000000000040937C @ L0000000000402C28
+
+;; Function L0000000000401EE0
+flags =  FF_64BITFUNC
+ArgSizeRange == (whole)
+L0000000000401EE0: 41 54                                           push r12
+L0000000000401EE2: 55                                              push rbp
+L0000000000401EE3: 57                                              push rdi
+L0000000000401EE4: 56                                              push rsi
+L0000000000401EE5: 53                                              push rbx
+L0000000000401EE6: 48 83 EC 20                                     sub rsp,32
+L0000000000401EEA: E8 31 09 00 00                                  call L0000000000402820
+L0000000000401EEF: 48 89 C5                                        mov rbp,rax
+L0000000000401EF2: 8B 05 90 51 00 00                               mov eax,M0000000000407088
+L0000000000401EF8: 85 C0                                           test eax,eax
+L0000000000401EFA: 75 25                                           jnz L0000000000401F21
+L0000000000401EFC: 48 85 ED                                        test rbp,rbp
+L0000000000401EFF: 74 20                                           jz L0000000000401F21
+L0000000000401F01: 48 8D 0D 58 23 00 00                            lea rcx,offset M0000000000404260
+L0000000000401F08: C7 05 76 51 00 00 01 00 00 00                   mov M0000000000407088,0x01
+L0000000000401F12: E8 49 07 00 00                                  call L0000000000402660
+L0000000000401F17: 48 85 C0                                        test rax,rax
+L0000000000401F1A: 74 14                                           jz L0000000000401F30
+L0000000000401F1C: B8 01 00 00 00                                  mov eax,0x01
+L0000000000401F21: 48 83 C4 20                                     add rsp,32
+L0000000000401F25: 5B                                              pop rbx
+L0000000000401F26: 5E                                              pop rsi
+L0000000000401F27: 5F                                              pop rdi
+L0000000000401F28: 5D                                              pop rbp
+L0000000000401F29: 41 5C                                           pop r12
+L0000000000401F2B: C3                                              ret
+L0000000000401F30: 48 8D 1D 89 52 00 00                            lea rbx,offset M00000000004071C0
+L0000000000401F37: B9 30 00 00 00                                  mov ecx,0x30
+L0000000000401F3C: 48 8D 15 7D 51 00 00                            lea rdx,offset M00000000004070C0
+L0000000000401F43: 4C 8D 25 E6 FD FF FF                            lea r12,offset L0000000000401D30
+L0000000000401F4A: 31 F6                                           xor esi,esi
+L0000000000401F4C: 48 89 DF                                        mov rdi,rbx
+L0000000000401F4F: F3 48 AB                                        rep stosq 
+L0000000000401F52: 48 89 D7                                        mov rdi,rdx
+L0000000000401F55: 49 29 EC                                        sub r12,rbp
+L0000000000401F58: B1 20                                           mov cl,0x20
+L0000000000401F5A: F3 48 AB                                        rep stosq 
+L0000000000401F5D: 48 89 D7                                        mov rdi,rdx
+L0000000000401F60: EB 2E                                           jmp L0000000000401F90
+L0000000000401F62: C6 07 09                                        mov byte [rdi],0x09
+L0000000000401F65: 44 89 67 04                                     mov [rdi+0x4],r12d
+L0000000000401F69: 48 83 C6 01                                     add rsi,1
+L0000000000401F6D: 8B 50 0C                                        mov edx,[rax+0xc]
+L0000000000401F70: 48 83 C3 0C                                     add rbx,12
+L0000000000401F74: 89 53 F4                                        mov [rbx-0xc],edx
+L0000000000401F77: 03 50 08                                        add edx,[rax+0x8]
+L0000000000401F7A: 48 89 F8                                        mov rax,rdi
+L0000000000401F7D: 48 29 E8                                        sub rax,rbp
+L0000000000401F80: 48 83 C7 08                                     add rdi,8
+L0000000000401F84: 89 43 FC                                        mov [rbx-0x4],eax
+L0000000000401F87: 89 53 F8                                        mov [rbx-0x8],edx
+L0000000000401F8A: 48 83 FE 20                                     cmp rsi,32
+L0000000000401F8E: 74 35                                           jz L0000000000401FC5
+L0000000000401F90: 48 89 F1                                        mov rcx,rsi
+L0000000000401F93: E8 F8 07 00 00                                  call L0000000000402790
+L0000000000401F98: 48 85 C0                                        test rax,rax
+L0000000000401F9B: 75 C5                                           jnz L0000000000401F62
+L0000000000401F9D: 48 85 F6                                        test rsi,rsi
+L0000000000401FA0: 0F 84 76 FF FF FF                               jz L0000000000401F1C
+L0000000000401FA6: 89 F2                                           mov edx,esi
+L0000000000401FA8: 0F 1F 84 00 00 00 00 00                         nop dword [rax+rax+0x0]
+L0000000000401FB0: 49 89 E8                                        mov r8,rbp
+L0000000000401FB3: 48 8D 0D 06 52 00 00                            lea rcx,offset M00000000004071C0
+L0000000000401FBA: FF 15 8C 72 00 00                               call M000000000040924C
+L0000000000401FC0: E9 57 FF FF FF                                  jmp L0000000000401F1C
+L0000000000401FC5: BA 20 00 00 00                                  mov edx,0x20
+L0000000000401FCA: EB E4                                           jmp L0000000000401FB0
+;; End of Function L0000000000401EE0
+

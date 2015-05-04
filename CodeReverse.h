@@ -127,6 +127,22 @@ public:
     void Set(value_type value) {
         m_min = m_max = value;
     }
+
+    std::string str() const {
+        std::string ret;
+        if (whole()) {
+            ret = "(whole)";
+        } else {
+            ret += "[";
+            ret += std::to_string(Min());
+            ret += ", ";
+            if (Max() != CR_Range::npos) {
+                ret += std::to_string(Max());
+            }
+            ret += "]";
+        }
+        return ret;
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////

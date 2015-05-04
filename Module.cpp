@@ -1066,9 +1066,9 @@ retry:;
                     auto& func = ns.LogFunc(rtype.m_sub_id);
 
                     if (func.m_ellipsis) {
-                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 8);
+                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 4);
                     } else {
-                        cf->ArgSizeRange().Set(func.m_params.size() * 8);
+                        cf->ArgSizeRange().Set(func.m_params.size() * 4);
                     }
                 }
             }
@@ -1199,9 +1199,9 @@ retry:;
                     }
 
                     if (func.m_ellipsis) {
-                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 4);
+                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 8);
                     } else {
-                        cf->ArgSizeRange().Set(func.m_params.size() * 4);
+                        cf->ArgSizeRange().Set(func.m_params.size() * 8);
                     }
                 }
             }
