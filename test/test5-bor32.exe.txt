@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////
-// CodeReverse 0.1.9 (32-bit) for gcc        //
+// CodeReverse 0.2.0 (32-bit) for gcc        //
 // https://github.com/katahiromz/CodeReverse //
 // katayama.hirofumi.mz@gmail.com            //
 ///////////////////////////////////////////////
@@ -342,13 +342,13 @@ L00408460: C3                                  ret
 ;; End of Function L004083BC
 
 ;; Function __impGetLocalTime @ L0040A21A
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A21A: FF 25 20 31 41 00                   jmp GetLocalTime
 ;; End of Function __impGetLocalTime @ L0040A21A
 
 ;; Function __impCloseHandle @ L0040A1D8
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A1D8: FF 25 F4 30 41 00                   jmp CloseHandle
 ;; End of Function __impCloseHandle @ L0040A1D8
@@ -383,7 +383,7 @@ L00407089: C3                                  ret
 ;; End of Function L0040703C
 
 ;; Function __impGetVersion @ L0040A250
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [0, 0]
 L0040A250: FF 25 44 31 41 00                   jmp GetVersion
 ;; End of Function __impGetVersion @ L0040A250
@@ -450,13 +450,13 @@ L0040573C: C3                                  ret
 ;; End of Function L004056CC
 
 ;; Function __impGetStdHandle @ L0040A244
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A244: FF 25 3C 31 41 00                   jmp GetStdHandle
 ;; End of Function __impGetStdHandle @ L0040A244
 
 ;; Function __impMessageBoxA @ L0040A2EE
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [16, 16]
 L0040A2EE: FF 25 C0 31 41 00                   jmp MessageBoxA
 ;; End of Function __impMessageBoxA @ L0040A2EE
@@ -491,7 +491,7 @@ L0040716B: C3                                  ret
 ;; End of Function L00407128
 
 ;; Function __impGetCurrentThreadId @ L0040A202
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [0, 0]
 L0040A202: FF 25 10 31 41 00                   jmp GetCurrentThreadId
 ;; End of Function __impGetCurrentThreadId @ L0040A202
@@ -544,7 +544,7 @@ L00406F91: C3                                  ret
 ;; End of Function L00406F3C
 
 ;; Function __impGetModuleFileNameA @ L0040A220
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [12, 12]
 L0040A220: FF 25 24 31 41 00                   jmp GetModuleFileNameA
 ;; End of Function __impGetModuleFileNameA @ L0040A220
@@ -1012,7 +1012,7 @@ L004083B9: C3                                  ret
 ;; End of Function L00408394
 
 ;; Function __impEnterCriticalSection @ L0040A1E4
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A1E4: FF 25 FC 30 41 00                   jmp EnterCriticalSection
 ;; End of Function __impEnterCriticalSection @ L0040A1E4
@@ -1085,13 +1085,13 @@ L004085BF: C3                                  ret
 ;; End of Function L0040855C
 
 ;; Function __impInitializeCriticalSection @ L0040A26E
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A26E: FF 25 58 31 41 00                   jmp InitializeCriticalSection
 ;; End of Function __impInitializeCriticalSection @ L0040A26E
 
 ;; Function L0040225C
-flags = FF_RETURNONLY
+flags = FF_CDECL FF_RETURNONLY
 ArgSizeRange == (whole)
 L0040225C: C3                                  ret
 ;; End of Function L0040225C
@@ -1422,7 +1422,7 @@ L00402F26: C3                                  ret
 ;; End of Function L00402F00
 
 ;; Function L00401564
-flags = FF_RETURNONLY
+flags = FF_CDECL FF_RETURNONLY
 ArgSizeRange == (whole)
 L00401564: C3                                  ret
 ;; End of Function L00401564
@@ -1605,7 +1605,7 @@ L00401059: E9 A2 1E 00 00                      jmp L00402F00
 ;; End of Function __GetExceptDLLinfo @ L00401059
 
 ;; Function __impLeaveCriticalSection @ L0040A274
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A274: FF 25 5C 31 41 00                   jmp LeaveCriticalSection
 ;; End of Function __impLeaveCriticalSection @ L0040A274
@@ -1949,19 +1949,19 @@ L00401483: C3                                  ret
 ;; End of Function L00401474
 
 ;; Function __impEnumThreadWindows @ L0040A2E8
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [12, 12]
 L0040A2E8: FF 25 BC 31 41 00                   jmp EnumThreadWindows
 ;; End of Function __impEnumThreadWindows @ L0040A2E8
 
 ;; Function __impGetModuleHandleA @ L0040A226
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A226: FF 25 28 31 41 00                   jmp GetModuleHandleA
 ;; End of Function __impGetModuleHandleA @ L0040A226
 
 ;; Function __impExitProcess @ L0040A1EA
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A1EA: FF 25 00 31 41 00                   jmp ExitProcess
 ;; End of Function __impExitProcess @ L0040A1EA
@@ -2025,13 +2025,13 @@ L00401271: C3                                  ret
 ;; End of Function _main @ L00401238
 
 ;; Function L00402260
-flags = FF_RETURNONLY
+flags = FF_CDECL FF_RETURNONLY
 ArgSizeRange == (whole)
 L00402260: C3                                  ret
 ;; End of Function L00402260
 
 ;; Function __impWriteFile @ L0040A2E0
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [20, 20]
 L0040A2E0: FF 25 A4 31 41 00                   jmp WriteFile
 ;; End of Function __impWriteFile @ L0040A2E0
@@ -2061,7 +2061,7 @@ L004011F4: C2 08 00                            ret 0x08
 ;; End of Function func4 @ L004011C1
 
 ;; Function __impGetStartupInfoA @ L0040A23E
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040A23E: FF 25 38 31 41 00                   jmp GetStartupInfoA
 ;; End of Function __impGetStartupInfoA @ L0040A23E
@@ -2156,7 +2156,7 @@ L00405436: C3                                  ret
 ;; End of Function L00405408
 
 ;; Function __impGetCommandLineA @ L0040A1FC
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [0, 0]
 L0040A1FC: FF 25 0C 31 41 00                   jmp GetCommandLineA
 ;; End of Function __impGetCommandLineA @ L0040A1FC
@@ -2258,7 +2258,7 @@ L00407C42: C3                                  ret
 ;; End of Function L00407C24
 
 ;; Function __impGetEnvironmentStrings @ L0040A208
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [0, 0]
 L0040A208: FF 25 14 31 41 00                   jmp GetEnvironmentStrings
 ;; End of Function __impGetEnvironmentStrings @ L0040A208
@@ -2271,7 +2271,7 @@ L00407FBE: C3                                  ret
 ;; End of Function L00407FBC
 
 ;; Function __impCreateFileA @ L0040A1DE
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [28, 28]
 L0040A1DE: FF 25 F8 30 41 00                   jmp CreateFileA
 ;; End of Function __impCreateFileA @ L0040A1DE

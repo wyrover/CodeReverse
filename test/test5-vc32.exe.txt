@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////
-// CodeReverse 0.1.9 (32-bit) for gcc        //
+// CodeReverse 0.2.0 (32-bit) for gcc        //
 // https://github.com/katahiromz/CodeReverse //
 // katayama.hirofumi.mz@gmail.com            //
 ///////////////////////////////////////////////
@@ -7046,7 +7046,7 @@ L00407741: C2 04 00                            ret 0x04
 ;; End of Function L00407725
 
 ;; Function __impIsProcessorFeaturePresent @ L0040C1F8
-flags = FF_JUMPERFUNC
+flags = FF_JUMPERFUNC FF_STDCALL
 ArgSizeRange == [4, 4]
 L0040C1F8: FF 25 10 D0 40 00                   jmp IsProcessorFeaturePresent
 ;; End of Function __impIsProcessorFeaturePresent @ L0040C1F8

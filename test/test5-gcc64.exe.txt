@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////
-// CodeReverse 0.1.9 (64-bit) for gcc        //
+// CodeReverse 0.2.0 (64-bit) for gcc        //
 // https://github.com/katahiromz/CodeReverse //
 // katayama.hirofumi.mz@gmail.com            //
 ///////////////////////////////////////////////
