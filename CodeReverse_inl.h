@@ -10,12 +10,14 @@ inline CR_TriBool::CR_TriBool(bool b) :
 inline CR_TriBool::CR_TriBool(const CR_TriBool& tb) :
     m_value(tb.m_value) { }
 
-inline void CR_TriBool::operator=(const CR_TriBool& tb) {
+inline CR_TriBool& CR_TriBool::operator=(const CR_TriBool& tb) {
     m_value = tb.m_value;
+    return *this;
 }
 
-inline void CR_TriBool::operator=(bool b) {
+inline CR_TriBool& CR_TriBool::operator=(bool b) {
     m_value = (b ? TB_TRUE : TB_FALSE);
+    return *this;
 }
 
 inline bool CR_TriBool::operator==(const CR_TriBool& tb) const {

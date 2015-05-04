@@ -163,7 +163,7 @@ class CR_Operand {
 public:
     CR_Operand();
     CR_Operand(const CR_Operand& opr);
-    void operator=(const CR_Operand& opr);
+    CR_Operand& operator=(const CR_Operand& opr);
     virtual ~CR_Operand();
     void Copy(const CR_Operand& opr);
     void clear();
@@ -228,7 +228,7 @@ class CR_OpCode32 {
 public:
     CR_OpCode32();
     CR_OpCode32(const CR_OpCode32& oc);
-    void operator=(const CR_OpCode32& oc);
+    CR_OpCode32& operator=(const CR_OpCode32& oc);
     virtual ~CR_OpCode32();
     void clear();
 
@@ -276,7 +276,7 @@ class CR_OpCode64 {
 public:
     CR_OpCode64();
     CR_OpCode64(const CR_OpCode64& oc);
-    void operator=(const CR_OpCode64& oc);
+    CR_OpCode64& operator=(const CR_OpCode64& oc);
     virtual ~CR_OpCode64();
     void clear();
 
@@ -332,12 +332,11 @@ typedef CR_VecSet<CR_DataMemberEntry> CR_DataMemberEntries;
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc32 - code function for 32-bit
 
-class CR_CodeFunc32
-{
+class CR_CodeFunc32 {
 public:
     CR_CodeFunc32();
     CR_CodeFunc32(const CR_CodeFunc32& cf);
-    void operator=(const CR_CodeFunc32& cf);
+    CR_CodeFunc32& operator=(const CR_CodeFunc32& cf);
     virtual ~CR_CodeFunc32();
     void Copy(const CR_CodeFunc32& cf);
     void clear();
@@ -378,12 +377,11 @@ typedef shared_ptr<CR_CodeFunc32> CR_ShdCodeFunc32;
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc64 - code function for 64-bit
 
-class CR_CodeFunc64
-{
+class CR_CodeFunc64 {
 public:
     CR_CodeFunc64();
     CR_CodeFunc64(const CR_CodeFunc64& cf);
-    void operator=(const CR_CodeFunc64& cf);
+    CR_CodeFunc64& operator=(const CR_CodeFunc64& cf);
     virtual ~CR_CodeFunc64();
     void Copy(const CR_CodeFunc64& cf);
     void clear();
@@ -422,16 +420,14 @@ protected:
 typedef shared_ptr<CR_CodeFunc64> CR_ShdCodeFunc64;
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_DisAsmInfo32 - disassembly info for 32-bit
+// CR_DecompInfo32 - decompilation information for 32-bit
 
-class CR_DisAsmInfo32
-{
+class CR_DecompInfo32 {
 public:
-    CR_DisAsmInfo32();
-    CR_DisAsmInfo32(const CR_DisAsmInfo32& info);
-    void operator=(const CR_DisAsmInfo32& info);
-    virtual ~CR_DisAsmInfo32();
-    void Copy(const CR_DisAsmInfo32& info);
+    CR_DecompInfo32();
+    CR_DecompInfo32(const CR_DecompInfo32& info);
+    CR_DecompInfo32& operator=(const CR_DecompInfo32& info);
+    virtual ~CR_DecompInfo32();
     void clear();
 
 public:
@@ -441,12 +437,16 @@ public:
     std::map<CR_Addr32, CR_ShdCodeFunc32>&       MapAddrToCodeFunc();
     CR_OpCode32 *                                MapAddrToOpCode(CR_Addr32 addr);
     CR_CodeFunc32 *                              MapAddrToCodeFunc(CR_Addr32 addr);
+    shared_ptr<CR_ErrorInfo>&                    ErrorInfo();
+    CR_NameScope&                                NameScope();
     // const accessors
     const std::map<CR_Addr32, CR_ShdOpCode32>&   MapAddrToOpCode() const;
     const CR_Addr32Set&                          Entrances() const;
     const std::map<CR_Addr32, CR_ShdCodeFunc32>& MapAddrToCodeFunc() const;
     const CR_OpCode32 *                          MapAddrToOpCode(CR_Addr32 addr) const;
     const CR_CodeFunc32 *                        MapAddrToCodeFunc(CR_Addr32 addr) const;
+    const shared_ptr<CR_ErrorInfo>&              ErrorInfo() const;
+    const CR_NameScope&                          NameScope() const;
 
 protected:
     // map virtual address to asm code
@@ -455,19 +455,22 @@ protected:
     CR_Addr32Set                                 m_sEntrances;
     // map addr to code function
     std::map<CR_Addr32, CR_ShdCodeFunc32>        m_mAddrToCodeFunc;
+    // error info
+    shared_ptr<CR_ErrorInfo>                     m_error_info;
+    // name scope
+    CR_NameScope                                 m_namescope;
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_DisAsmInfo64 - disassembly info for 64-bit
+// CR_DecompInfo64 - decompilation information for 64-bit
 
-class CR_DisAsmInfo64
+class CR_DecompInfo64
 {
 public:
-    CR_DisAsmInfo64();
-    CR_DisAsmInfo64(const CR_DisAsmInfo64& info);
-    void operator=(const CR_DisAsmInfo64& info);
-    virtual ~CR_DisAsmInfo64();
-    void Copy(const CR_DisAsmInfo64& info);
+    CR_DecompInfo64();
+    CR_DecompInfo64(const CR_DecompInfo64& info);
+    CR_DecompInfo64& operator=(const CR_DecompInfo64& info);
+    virtual ~CR_DecompInfo64();
     void clear();
 
 public:
@@ -477,12 +480,16 @@ public:
     std::map<CR_Addr64, CR_ShdCodeFunc64>&       MapAddrToCodeFunc();
     CR_OpCode64 *                                MapAddrToOpCode(CR_Addr64 addr);
     CR_CodeFunc64 *                              MapAddrToCodeFunc(CR_Addr64 addr);
+    shared_ptr<CR_ErrorInfo>&                    ErrorInfo();
+    CR_NameScope&                                NameScope();
     // const accessors
     const std::map<CR_Addr64, CR_ShdOpCode64>&   MapAddrToOpCode() const;
     const CR_Addr64Set&                          Entrances() const;
     const std::map<CR_Addr64, CR_ShdCodeFunc64>& MapAddrToCodeFunc() const;
     const CR_OpCode64 *                          MapAddrToOpCode(CR_Addr64 addr) const;
     const CR_CodeFunc64 *                        MapAddrToCodeFunc(CR_Addr64 addr) const;
+    const shared_ptr<CR_ErrorInfo>&              ErrorInfo() const;
+    const CR_NameScope&                          NameScope() const;
 
 protected:
     // map virtual address to asm code
@@ -491,6 +498,10 @@ protected:
     CR_Addr64Set                                 m_sEntrances;
     // map addr to code function
     std::map<CR_Addr64, CR_ShdCodeFunc64>        m_mAddrToCodeFunc;
+    // error info
+    shared_ptr<CR_ErrorInfo>                     m_error_info;
+    // name scope
+    CR_NameScope                                 m_namescope;
 };
 
 ////////////////////////////////////////////////////////////////////////////

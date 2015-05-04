@@ -40,8 +40,8 @@ public:
     CR_TriBool(bool b);
     CR_TriBool(const CR_TriBool& tb);
 
-    void operator=(bool b);
-    void operator=(const CR_TriBool& tb);
+    CR_TriBool& operator=(bool b);
+    CR_TriBool& operator=(const CR_TriBool& tb);
     bool operator==(const CR_TriBool& tb) const;
     bool operator!=(const CR_TriBool& tb) const;
     void clear();

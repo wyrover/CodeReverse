@@ -82,6 +82,7 @@ void CrShowHelp(void) {
     fprintf(stderr, " -d    Dump delayload info\n");
     fprintf(stderr, " -p    Parse input file and do semantic analysis\n");
     fprintf(stderr, " -a    Dump disassembly\n");
+    fprintf(stderr, " -d    Dump decompiled codes\n");
 #ifdef _WIN64
     fprintf(stderr, " -32   32-bit mode\n");
     fprintf(stderr, " -64   64-bit mode (default)\n");
@@ -171,12 +172,13 @@ int main(int argc, char **argv) {
         MODE_DUMP_RESOURCE,
         MODE_DUMP_DELAYLOAD,
         MODE_DUMP_DISASM,
+        MODE_DUMP_DECOMPILE,
         MODE_64BIT
     };
 
     std::string prefix, suffix, wonders_ver = "8.1";
 
-    bool modes[8];
+    bool modes[9];
     memset(modes, 0, sizeof(modes));
     modes[MODE_ANSI] = false;
     #ifdef _WIN64
@@ -232,6 +234,9 @@ int main(int argc, char **argv) {
             } else if (ch == 'p' || ch == 'P') {
                 modes[MODE_DUMP_DISASM] = true;
                 defaulted = false;
+            } else if (ch == 'd' || ch == 'D') {
+                modes[MODE_DUMP_DECOMPILE] = true;
+                defaulted = false;
             } else if (strcmp(arg, "-32") == 0 || strcmp(arg, "--32") == 0) {
                 modes[MODE_64BIT] = false;
             } else if (strcmp(arg, "-64") == 0 || strcmp(arg, "--64") == 0) {
@@ -246,7 +251,7 @@ int main(int argc, char **argv) {
     }
 
     if (defaulted) {
-        for (int i = 0; i <= MODE_DUMP_DISASM; ++i) {
+        for (int i = 0; i <= MODE_DUMP_DECOMPILE; ++i) {
             modes[i] = true;
         }
     }
@@ -327,12 +332,11 @@ int main(int argc, char **argv) {
         return cr_exit_bits_mismatched;
     }
 
-    shared_ptr<CR_ErrorInfo> error_info = make_shared<CR_ErrorInfo>();
-
     if (modes[MODE_64BIT]) {
-        CR_NameScope ns(error_info, true);
+        CR_DecompInfo64 info;
+
         fprintf(stderr, "Loading type info...\n");
-        if (!ns.LoadFromFiles(prefix, suffix)) {
+        if (!info.NameScope().LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: It requires Wonders API.\n");
             fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
         } else {
@@ -340,20 +344,29 @@ int main(int argc, char **argv) {
         }
 
         fprintf(stderr, "Disassembling...\n");
-        CR_DisAsmInfo64 info;
         module.DisAsm64(info);
-        module.FixupAsm64(info, ns);
         fprintf(stderr, "Disassembled.\n");
+
+        fprintf(stderr, "Decompiling...\n");
+        module.FixupAsm64(info);
+        module.Decompile64(info);
+        //fprintf(stderr, "Decompiled.\n");
 
         if (modes[MODE_DUMP_DISASM]) {
             fprintf(stderr, "Dumping disassembly...\n");
             module.DumpDisAsm64(stdout, info);
             fprintf(stderr, "Dumped.\n");
         }
+        if (modes[MODE_DUMP_DECOMPILE]) {
+            fprintf(stderr, "Dumping decompiled codes...\n");
+            module.DumpDecompile64(stdout, info);
+            fprintf(stderr, "Dumped.\n");
+        }
     } else {
-        CR_NameScope ns(error_info, false);
+        CR_DecompInfo32 info;
+
         fprintf(stderr, "Loading type info...\n");
-        if (!ns.LoadFromFiles(prefix, suffix)) {
+        if (!info.NameScope().LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: It requires Wonders API.\n");
             fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
         } else {
@@ -361,14 +374,22 @@ int main(int argc, char **argv) {
         }
 
         fprintf(stderr, "Disassembling...\n");
-        CR_DisAsmInfo32 info;
         module.DisAsm32(info);
-        module.FixupAsm32(info, ns);
         fprintf(stderr, "Disassembled.\n");
+
+        fprintf(stderr, "Decompiling...\n");
+        module.FixupAsm32(info);
+        module.Decompile32(info);
+        //fprintf(stderr, "Decompiled.\n");
 
         if (modes[MODE_DUMP_DISASM]) {
             fprintf(stderr, "Dumping disassembly...\n");
             module.DumpDisAsm32(stdout, info);
+            fprintf(stderr, "Dumped.\n");
+        }
+        if (modes[MODE_DUMP_DECOMPILE]) {
+            fprintf(stderr, "Dumping decompiled codes...\n");
+            module.DumpDecompile32(stdout, info);
             fprintf(stderr, "Dumped.\n");
         }
     }

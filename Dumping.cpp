@@ -960,7 +960,7 @@ void CR_Module::DumpDelayLoad(std::FILE *fp) {
 ////////////////////////////////////////////////////////////////////////////
 // CR_Module::DumpDisAsm32
 
-BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
+BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
     for (auto& entrance : info.Entrances()) {
@@ -995,7 +995,7 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
 
         auto& range = cf->ArgSizeRange();
         fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
-        DumpDisAsmFunc32(fp, info, entrance);
+        _DumpDisAsmFunc32(fp, info, entrance);
 
         if (pszName)
             fprintf(fp, ";; End of Function %s @ L%08lX\n\n", pszName, cf->Addr());
@@ -1005,7 +1005,7 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info) {
     return TRUE;
 } // CR_Module::DumpDisAsm32
 
-BOOL CR_Module::DumpDisAsmFunc32(std::FILE *fp, CR_DisAsmInfo32& info, CR_Addr32 func) {
+BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr32 func) {
     auto end = info.MapAddrToOpCode().end();
     for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode32 *oc = it->second.get();
@@ -1042,12 +1042,12 @@ BOOL CR_Module::DumpDisAsmFunc32(std::FILE *fp, CR_DisAsmInfo32& info, CR_Addr32
     }
 
     return TRUE;
-} // CR_Module::DumpDisAsmFunc32
+} // CR_Module::_DumpDisAsmFunc32
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Module::DumpDisAsm64
 
-BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
+BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
     for (auto& entrance : info.Entrances()) {
@@ -1075,7 +1075,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
 
         auto& range = cf->ArgSizeRange();
         fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
-        DumpDisAsmFunc64(fp, info, entrance);
+        _DumpDisAsmFunc64(fp, info, entrance);
 
         if (pszName)
             fprintf(fp, ";; End of Function %s @ L%08lX%08lX\n\n", pszName,
@@ -1087,7 +1087,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info) {
     return TRUE;
 } // CR_Module::DumpDisAsm64
 
-BOOL CR_Module::DumpDisAsmFunc64(std::FILE *fp, CR_DisAsmInfo64& info, CR_Addr64 func) {
+BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr64 func) {
     auto end = info.MapAddrToOpCode().end();
     for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode64 *oc = it->second.get();
@@ -1125,6 +1125,16 @@ BOOL CR_Module::DumpDisAsmFunc64(std::FILE *fp, CR_DisAsmInfo64& info, CR_Addr64
     }
 
     return TRUE;
-} // CR_Module::DumpDisAsmFunc64
+} // CR_Module::_DumpDisAsmFunc64
+
+////////////////////////////////////////////////////////////////////////////
+
+BOOL CR_Module::DumpDecompile32(std::FILE *fp, CR_DecompInfo32& info) {
+    return TRUE;
+}
+
+BOOL CR_Module::DumpDecompile64(std::FILE *fp, CR_DecompInfo64& info) {
+    return TRUE;
+}
 
 ////////////////////////////////////////////////////////////////////////////

@@ -152,19 +152,16 @@ public:
     const char *FuncNameFromVA64(CR_Addr64 addr) const;
 
 public:
-    BOOL DisAsmAddr32(CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va);
-    BOOL DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va);
-    BOOL DisAsm32(CR_DisAsmInfo32& info);
-    BOOL DisAsm64(CR_DisAsmInfo64& info);
+    BOOL DisAsmAddr32(CR_DecompInfo32& info, CR_Addr32 func, CR_Addr32 va);
+    BOOL DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va);
+    BOOL DisAsm32(CR_DecompInfo32& info);
+    BOOL DisAsm64(CR_DecompInfo64& info);
 
-    BOOL FixupAsm32(CR_DisAsmInfo32& info, CR_NameScope& ns);
-    BOOL FixupAsm64(CR_DisAsmInfo64& info, CR_NameScope& ns);
+    BOOL FixupAsm32(CR_DecompInfo32& info);
+    BOOL FixupAsm64(CR_DecompInfo64& info);
 
-    BOOL DecompileAddr32(CR_DisAsmInfo32& info, CR_Addr32 va);
-    BOOL DecompileAddr64(CR_DisAsmInfo64& info, CR_Addr64 va);
-    BOOL Decompile32(CR_DisAsmInfo32& info);
-    BOOL Decompile64(CR_DisAsmInfo64& info);
-    BOOL Decompile();
+    BOOL Decompile32(CR_DecompInfo32& info);
+    BOOL Decompile64(CR_DecompInfo64& info);
 
 public:
     void DumpHeaders(std::FILE *fp);
@@ -180,11 +177,14 @@ public:
     void _DumpDelayLoad32(std::FILE *fp);
     void _DumpDelayLoad64(std::FILE *fp);
 
-    BOOL DumpDisAsm32(std::FILE *fp, CR_DisAsmInfo32& info);
-    BOOL DumpDisAsmFunc32(std::FILE *fp, CR_DisAsmInfo32& info, CR_Addr32 func);
+    BOOL DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info);
+    BOOL DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info);
 
-    BOOL DumpDisAsm64(std::FILE *fp, CR_DisAsmInfo64& info);
-    BOOL DumpDisAsmFunc64(std::FILE *fp, CR_DisAsmInfo64& info, CR_Addr64 func);
+    BOOL _DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr32 func);
+    BOOL _DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr64 func);
+
+    BOOL DumpDecompile32(std::FILE *fp, CR_DecompInfo32& info);
+    BOOL DumpDecompile64(std::FILE *fp, CR_DecompInfo64& info);
 
 protected:
     tstring                         m_strFileName;

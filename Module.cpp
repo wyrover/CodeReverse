@@ -460,7 +460,7 @@ int32_t disasm(uint8_t *data, char *output, int outbufsize, int segsize,
                int64_t offset, int autosync, uint32_t prefer);
 
 BOOL CR_Module::DisAsmAddr32(
-    CR_DisAsmInfo32& info, CR_Addr32 func, CR_Addr32 va)
+    CR_DecompInfo32& info, CR_Addr32 func, CR_Addr32 va)
 {
     if (!IsModuleLoaded() || !Is32Bit())
         return FALSE;
@@ -649,7 +649,7 @@ BOOL CR_Module::DisAsmAddr32(
     return TRUE;
 } // CR_Module::DisAsmAddr32
 
-BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va) {
+BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va) {
     if (!IsModuleLoaded() || !Is64Bit())
         return FALSE;
 
@@ -835,7 +835,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DisAsmInfo64& info, CR_Addr64 func, CR_Addr64 va
     return TRUE;
 } // CR_Module::DisAsmAddr64
 
-BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info) {
+BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
     if (!IsModuleLoaded() || !Is32Bit())
         return FALSE;
 
@@ -895,7 +895,7 @@ BOOL CR_Module::DisAsm32(CR_DisAsmInfo32& info) {
     return TRUE;
 } // CR_Module::DisAsm32
 
-BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info) {
+BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
     if (!IsModuleLoaded() || !Is64Bit())
         return FALSE;
 
@@ -954,8 +954,9 @@ BOOL CR_Module::DisAsm64(CR_DisAsmInfo64& info) {
     return TRUE;
 } // CR_Module::DisAsm64
 
-BOOL CR_Module::FixupAsm32(CR_DisAsmInfo32& info, CR_NameScope& ns) {
+BOOL CR_Module::FixupAsm32(CR_DecompInfo32& info) {
     bool must_retry;
+    CR_NameScope& ns = info.NameScope();
 
 retry:;
     must_retry = false;
@@ -1089,8 +1090,9 @@ retry:;
     return TRUE;
 } // CR_Module::FixupAsm32
 
-BOOL CR_Module::FixupAsm64(CR_DisAsmInfo64& info, CR_NameScope& ns) {
+BOOL CR_Module::FixupAsm64(CR_DecompInfo64& info) {
     bool must_retry;
+    CR_NameScope& ns = info.NameScope();
 
 retry:;
     must_retry = false;
@@ -1349,19 +1351,11 @@ void CR_Module::DumpResource(std::FILE *fp) {
 ////////////////////////////////////////////////////////////////////////////
 // decompiling
 
-BOOL CR_Module::DecompileAddr32(CR_DisAsmInfo32& info, CR_Addr32 va) {
+BOOL CR_Module::Decompile32(CR_DecompInfo32& info) {
     return FALSE;
 }
 
-BOOL CR_Module::DecompileAddr64(CR_DisAsmInfo64& info, CR_Addr64 va) {
-    return FALSE;
-}
-
-BOOL CR_Module::Decompile32(CR_DisAsmInfo32& info) {
-    return FALSE;
-}
-
-BOOL CR_Module::Decompile64(CR_DisAsmInfo64& info) {
+BOOL CR_Module::Decompile64(CR_DecompInfo64& info) {
     return FALSE;
 }
 
