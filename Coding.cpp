@@ -272,13 +272,11 @@ static const CR_X86RegInfo cr_reg_entries[] = {
 };
 
 CR_RegType CrRegGetType(const char *name, int bits) {
-    const std::size_t size =
-        sizeof(cr_reg_entries) / sizeof(cr_reg_entries[0]);
-    for (std::size_t i = 0; i < size; ++i) {
-        if (bits >= cr_reg_entries[i].bits &&
-            _stricmp(cr_reg_entries[i].name, name) == 0)
+    for (auto& entry : cr_reg_entries) {
+        if (bits >= entry.bits &&
+            _stricmp(entry.name, name) == 0)
         {
-            return cr_reg_entries[i].type;
+            return entry.type;
         }
     }
     return cr_x86_REGNONE;
@@ -346,25 +344,24 @@ BOOL CrRegInReg(const char *reg1, const char *reg2) {
         {"r15b", "r15w", "r15d", "r15"},
     };
 
-    const std::size_t size = sizeof(s) / sizeof(s[0]);
-    for (std::size_t i = 0; i < size; ++i) {
-        if (std::strcmp(reg1, s[i][0]) == 0) {
-            if ((s[i][1] && std::strcmp(reg2, s[i][1]) == 0) ||
-                (s[i][2] && std::strcmp(reg2, s[i][2]) == 0) ||
-                (s[i][3] && std::strcmp(reg2, s[i][3]) == 0))
+    for (auto& entry : s) {
+        if (std::strcmp(reg1, entry[0]) == 0) {
+            if ((entry[1] && std::strcmp(reg2, entry[1]) == 0) ||
+                (entry[2] && std::strcmp(reg2, entry[2]) == 0) ||
+                (entry[3] && std::strcmp(reg2, entry[3]) == 0))
             {
                 return TRUE;
             }
         }
-        if (std::strcmp(reg1, s[i][1]) == 0) {
-            if ((s[i][2] && std::strcmp(reg2, s[i][2]) == 0) ||
-                (s[i][3] && std::strcmp(reg2, s[i][3]) == 0))
+        if (std::strcmp(reg1, entry[1]) == 0) {
+            if ((entry[2] && std::strcmp(reg2, entry[2]) == 0) ||
+                (entry[3] && std::strcmp(reg2, entry[3]) == 0))
             {
                 return TRUE;
             }
         }
-        if (std::strcmp(reg1, s[i][2]) == 0) {
-            if (s[i][3] && std::strcmp(reg2, s[i][3]) == 0)
+        if (std::strcmp(reg1, entry[2]) == 0) {
+            if (entry[3] && std::strcmp(reg2, entry[3]) == 0)
                 return TRUE;
         }
     }
@@ -381,54 +378,60 @@ BOOL CrRegOverlapsReg(const char *reg1, const char *reg2) {
 
 void CR_Operand::Copy(const CR_Operand& opr) {
     Text() = opr.Text();
-    OperandType() = opr.OperandType();
+    BaseReg() = opr.BaseReg();
+    IndexReg() = opr.IndexReg();
+    Seg() = opr.Seg();
+    OperandFlags() = opr.OperandFlags();
     Size() = opr.Size();
     Value64() = opr.Value64();
-    MemExpr() = opr.MemExpr();
     IsInteger() = opr.IsInteger();
     IsPointer() = opr.IsPointer();
     IsFunction() = opr.IsFunction();
+    Disp() = opr.Disp();
+    Scale() = opr.Scale();
 }
 
 void CR_Operand::clear() {
     Text().clear();
-    OperandType() = OT_NONE;
+    BaseReg().clear();
+    IndexReg().clear();
+    Seg().clear();
+    OperandFlags() = 0;
     Size() = 0;
     Value64() = 0;
-    MemExpr().clear();
     IsInteger().clear();
     IsPointer().clear();
     IsFunction().clear();
+    Disp() = 0;
+    Scale() = 1;
 }
 
 void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed) {
     Text() = CrValue32(val, is_signed);
-    OperandType() = OT_IMM;
+    SetOperandType(cr_OF_IMM);
     Value64() = val;
 }
 
 void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed) {
     Text() = CrValue64(val, is_signed);
-    OperandType() = OT_IMM;
+    SetOperandType(cr_OF_IMM);
     Value64() = val;
 }
 
 bool CR_Operand::operator==(const CR_Operand& opr) const {
     return
         Text() == opr.Text() &&
-        OperandType() == opr.OperandType() &&
+        OperandFlags() == opr.OperandFlags() &&
         Size() == opr.Size() &&
-        Value64() == opr.Value64() &&
-        MemExpr() == opr.MemExpr();
+        Value64() == opr.Value64();
 }
 
 bool CR_Operand::operator!=(const CR_Operand& opr) const {
     return
         Text() != opr.Text() ||
-        OperandType() != opr.OperandType() ||
+        OperandFlags() != opr.OperandFlags() ||
         Size() != opr.Size() ||
-        Value64() != opr.Value64() ||
-        MemExpr() != opr.MemExpr();
+        Value64() != opr.Value64();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -441,7 +444,8 @@ void CR_Operand::ParseText(int bits) {
 
     DWORD size = CrRegGetSize(p, bits);
     if (size != 0) {
-        OperandType() = OT_REG;
+        BaseReg() = p;
+        SetOperandType(cr_OF_REG);
         Size() = size;
         return;
     }
@@ -482,16 +486,18 @@ void CR_Operand::ParseText(int bits) {
         p += 4;
 
     if (p[0] == '+' || p[0] == '-') {
-        char *endptr;
-        long long value = _strtoi64(p, &endptr, 16);
+        long long value = _strtoi64(p, NULL, 16);
         SetImm64(value, true);
-    } else if (p[0] == '0' && p[1] == 'x') {
-        char *endptr;
-        unsigned long long value = _strtoui64(p, &endptr, 16);
+        return;
+    }
+    if (isdigit(p[0])) {
+        unsigned long long value = _strtoui64(p, NULL, 0);
         Value64() = value;
         SetImm64(value, false);
-    } else if (p[0] == '[') {
-        p++;
+        return;
+    }
+    if (p[0] == '[') {
+        ++p;
         *strchr(p, ']') = '\0';
 
         if (strncmp(p, "word ", 5) == 0) {
@@ -506,21 +512,127 @@ void CR_Operand::ParseText(int bits) {
             p += 4;
         }
 
+        // is there segment register?
+        char *q = strchr(p, ':');
+        if (q) {
+            *q++ = 0;
+            Seg() = p;
+            p = q;
+        }
+
         DWORD size;
         if ((size = CrRegGetSize(p, bits)) != 0) {
-            OperandType() = OT_MEMREG;
+            BaseReg() = p;
+            SetOperandType(cr_OF_MEMREG);
             return;
         }
 
-        CR_Addr64 addr;
-        char *endptr;
-        if (isdigit(*p)) {
-            addr = _strtoui64(p, &endptr, 16);
-            SetMemImm(addr);
+        // find '+' or '-'
+        bool minus1 = false;
+        q = p + strcspn(p, "+-");
+        if (*q == 0) {
+            if (isdigit(*p)) {
+                CR_Addr64 addr = _strtoui64(p, NULL, 16);
+                Value64() = addr;
+                SetOperandType(cr_OF_MEMIMM);
+            } else {
+                assert(0);
+            }
+            return;
         } else {
-            SetMemExpr(p);
+            minus1 = (*q == '-');
+        }
+        *q++ = 0;
+
+        // find '*'
+        char *r = strchr(p, '*');
+        if (r) {
+            // eax*4+0x1e
+            // eax*4+0x4
+            // ebx*4+0x402800
+            // edi*4+0x0
+            *r++ = 0;
+            IndexReg() = p;
+            Scale() = strtol(r, NULL, 0);
+            if (minus1) {
+                Disp() = -strtol(q, NULL, 0);
+            } else {
+                Disp() = strtol(q, NULL, 0);
+            }
+            SetOperandType(cr_OF_MEMINDEX);
+            return;
+        }
+
+        // find '+' or '-'
+        bool minus2 = false;
+        r = q + strcspn(q, "+-");
+        if (*r == 0) {
+            char *s = strchr(q, '*');
+            if (s) {
+                // ebx+ebx*2
+                *s++ = 0;
+                BaseReg() = p;
+                IndexReg() = q;
+                Scale() = strtol(s, NULL, 0);
+                Disp() = 0;
+                SetOperandType(cr_OF_MEMINDEX);
+                return;
+            } else {
+                if (isdigit(*q)) {
+                    // esp+0x1f
+                    BaseReg() = p;
+                    IndexReg().clear();
+                    Scale() = 0;
+                    if (minus1) {
+                        Disp() = -strtol(q, NULL, 0);
+                    } else {
+                        Disp() = strtol(q, NULL, 0);
+                    }
+                    SetOperandType(cr_OF_MEMINDEX);
+                    return;
+                } else {
+                    // esi+eax
+                    BaseReg() = p;
+                    IndexReg() = q;
+                    Scale() = 1;
+                    Disp() = 0;
+                    SetOperandType(cr_OF_MEMINDEX);
+                    return;
+                }
+            }
+        } else {
+            minus2 = (*r == '-');
+            *r++ = 0;
+            char *s = strchr(q, '*');
+            if (s) {
+                // rbp+rax*4+0x0
+                *s++ = 0;
+                BaseReg() = p;
+                IndexReg() = q;
+                Scale() = strtol(s, NULL, 0);
+                if (minus2) {
+                    Disp() = -strtol(r, NULL, 0);
+                } else {
+                    Disp() = strtol(r, NULL, 0);
+                }
+                SetOperandType(cr_OF_MEMINDEX);
+                return;
+            } else {
+                // rbp+rax+0x0
+                BaseReg() = p;
+                IndexReg() = q;
+                Scale() = 1;
+                if (minus2) {
+                    Disp() = -strtol(r, NULL, 0);
+                } else {
+                    Disp() = strtol(r, NULL, 0);
+                }
+                SetOperandType(cr_OF_MEMINDEX);
+                return;
+            }
         }
     }
+    assert(0);
 } // CR_Operand::ParseText
 
 ////////////////////////////////////////////////////////////////////////////
@@ -603,7 +715,7 @@ void CR_OpCode32::clear() {
     Name().clear();
     Operands().clear();
     Codes().clear();
-    OpCodeType() = OCT_MISC;
+    OpCodeType() = cr_OCT_MISC;
     CondCode() = C_NONE;
 }
 
@@ -613,20 +725,15 @@ void CR_OpCode32::ParseText(const char *text) {
 
     char *q = buf;
 
-    if (strncmp(q, "cs ", 3) == 0 ||
-        strncmp(q, "ss ", 3) == 0 ||
-        strncmp(q, "ds ", 3) == 0 ||
-        strncmp(q, "es ", 3) == 0 ||
-        strncmp(q, "fs ", 3) == 0 ||
-        strncmp(q, "gs ", 3) == 0)
+    if (strncmp(q, "cs ", 3) == 0 || strncmp(q, "ss ", 3) == 0 ||
+        strncmp(q, "ds ", 3) == 0 || strncmp(q, "es ", 3) == 0 ||
+        strncmp(q, "fs ", 3) == 0 || strncmp(q, "gs ", 3) == 0)
     {
         q += 3;
     }
 
-    if (strncmp(q, "a16 ", 4) == 0 ||
-        strncmp(q, "o16 ", 4) == 0 ||
-        strncmp(q, "o32 ", 4) == 0 ||
-        strncmp(q, "o64 ", 4) == 0)
+    if (strncmp(q, "a16 ", 4) == 0 || strncmp(q, "o16 ", 4) == 0 ||
+        strncmp(q, "o32 ", 4) == 0 || strncmp(q, "o64 ", 4) == 0)
     {
         q += 4;
     }
@@ -677,7 +784,7 @@ void CR_OpCode32::ParseText(const char *text) {
             Operands().insert(opr);
         }
         Name() = q;
-        OpCodeType() = OCT_RETURN;
+        OpCodeType() = cr_OCT_RETURN;
         return;
     }
 
@@ -692,14 +799,14 @@ void CR_OpCode32::ParseText(const char *text) {
                 CondCode() = cr_ccentries[i].cc;
 
                 if (strncmp(cr_ccentries[i].name, "loop", 4) == 0) {
-                    OpCodeType() = OCT_LOOP;
+                    OpCodeType() = cr_OCT_LOOP;
                 } else if (CondCode() == C_NONE) {
                     if (_stricmp(cr_ccentries[i].name, "call") == 0)
-                        OpCodeType() = OCT_CALL;
+                        OpCodeType() = cr_OCT_CALL;
                     else
-                        OpCodeType() = OCT_JMP;
+                        OpCodeType() = cr_OCT_JMP;
                 } else {
-                    OpCodeType() = OCT_JCC;
+                    OpCodeType() = cr_OCT_JCC;
                 }
 
                 p++;
@@ -727,7 +834,7 @@ void CR_OpCode32::ParseText(const char *text) {
     if (_stricmp(q, "push") == 0 || _stricmp(q, "pop") == 0 ||
         _stricmp(q, "enter") == 0 || _stricmp(q, "leave") == 0)
     {
-        OpCodeType() = OCT_STACKOP;
+        OpCodeType() = cr_OCT_STACKOP;
     }
 
     Operands().clear();
@@ -771,7 +878,7 @@ void CR_OpCode64::clear() {
     Name().clear();
     Operands().clear();
     Codes().clear();
-    OpCodeType() = OCT_MISC;
+    OpCodeType() = cr_OCT_MISC;
     CondCode() = C_NONE;
 }
 
@@ -829,29 +936,27 @@ void CR_OpCode64::ParseText(const char *text) {
             Operands().insert(opr);
         }
         Name() = q;
-        OpCodeType() = OCT_RETURN;
+        OpCodeType() = cr_OCT_RETURN;
         return;
     }
 
     if (q[0] == 'c' || q[0] == 'l' || q[0] == 'j') {
-        const std::size_t size =
-            sizeof(cr_ccentries) / sizeof(cr_ccentries[0]);
-        for (std::size_t i = 0; i < size; ++i) {
-            if (strncmp(q, cr_ccentries[i].name, strlen(cr_ccentries[i].name)) == 0) {
+        for (auto& entry : cr_ccentries) {
+            if (strncmp(q, entry.name, strlen(entry.name)) == 0) {
                 char *p = strchr(q, ' ');
                 *p = '\0';
-                Name() = cr_ccentries[i].name;
-                CondCode() = cr_ccentries[i].cc;
+                Name() = entry.name;
+                CondCode() = entry.cc;
 
-                if (strncmp(cr_ccentries[i].name, "loop", 4) == 0) {
-                    OpCodeType() = OCT_LOOP;
+                if (strncmp(entry.name, "loop", 4) == 0) {
+                    OpCodeType() = cr_OCT_LOOP;
                 } else if (CondCode() == C_NONE) {
-                    if (_stricmp(cr_ccentries[i].name, "call") == 0)
-                        OpCodeType() = OCT_CALL;
+                    if (_stricmp(entry.name, "call") == 0)
+                        OpCodeType() = cr_OCT_CALL;
                     else
-                        OpCodeType() = OCT_JMP;
+                        OpCodeType() = cr_OCT_JMP;
                 } else {
-                    OpCodeType() = OCT_JCC;
+                    OpCodeType() = cr_OCT_JCC;
                 }
 
                 p++;
@@ -879,7 +984,7 @@ void CR_OpCode64::ParseText(const char *text) {
     if (_stricmp(q, "push") == 0 || _stricmp(q, "pop") == 0 ||
         _stricmp(q, "enter") == 0 || _stricmp(q, "leave") == 0)
     {
-        OpCodeType() = OCT_STACKOP;
+        OpCodeType() = cr_OCT_STACKOP;
     }
 
     Operands().clear();

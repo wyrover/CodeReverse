@@ -470,10 +470,10 @@ BOOL CR_Module::DisAsmAddr32(
     CR_Addr32 addr;
 
     // add or retrieve the code function
-    CR_CodeFunc32 *cf = info.MapAddrToCodeFunc(func);
+    CR_CodeFunc32 *cf = info.CodeFuncFromAddr(func);
     if (cf == NULL) {
         info.MapAddrToCodeFunc().emplace(func, make_shared<CR_CodeFunc32>());
-        cf = info.MapAddrToCodeFunc(func);
+        cf = info.CodeFuncFromAddr(func);
     }
     assert(cf);
     if (func == va) {
@@ -488,10 +488,10 @@ BOOL CR_Module::DisAsmAddr32(
     LPBYTE iend = m_pLoadedImage + pCode->RVA + pCode->SizeOfRawData;
     while (input < iend) {
         // add or retrieve op.code
-        CR_OpCode32 *oc = info.MapAddrToOpCode(va);
+        CR_OpCode32 *oc = info.OpCodeFromAddr(va);
         if (oc == NULL) {
-            info.MapAddrToOpCode()[va] = make_shared<CR_OpCode32>();
-            oc = info.MapAddrToOpCode(va);
+            info.MapAddrToOpCode().emplace(va, make_shared<CR_OpCode32>());
+            oc = info.OpCodeFromAddr(va);
         }
         assert(oc);
         if (oc->FuncAddrs().count(func) > 0)
@@ -503,7 +503,7 @@ BOOL CR_Module::DisAsmAddr32(
         // add function address for this op.code
         oc->FuncAddrs().emplace(func);
         if (oc->FuncAddrs().size() > 1) {
-            cf->FuncFlags() |= FF_FUNCINFUNC;   // function in function
+            cf->FuncFlags() |= cr_FF_FUNCINFUNC;   // function in function
         }
 
         // disassemble
@@ -513,9 +513,9 @@ BOOL CR_Module::DisAsmAddr32(
         if (!len || input + len > iend) {
             len = 1;
             oc->Name() = "???";
-            oc->OpCodeType() = OCT_UNKNOWN;
+            oc->OpCodeType() = cr_OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
-            cf->FuncFlags() |= FF_DONTDECOMPBUTDISASM;
+            cf->FuncFlags() |= cr_FF_DONTDECOMPBUTDISASM;
         } else {
             oc->ParseText(outbuf);
         }
@@ -528,10 +528,10 @@ BOOL CR_Module::DisAsmAddr32(
 
         BOOL bBreak = FALSE;
         switch (oc->OpCodeType()) {
-        case OCT_JCC:
+        case cr_OCT_JCC:
             // conditional jump
-            switch (oc->Operand(0)->OperandType()) {
-            case OT_IMM: case OT_FUNCNAME:
+            switch (oc->Operand(0)->GetOperandType()) {
+            case cr_OF_IMM: case cr_OF_FUNCNAME:
                 addr = oc->Operand(0)->Value32();
                 cf->Jumpers().emplace(va);
                 cf->Jumpees().emplace(addr);
@@ -541,24 +541,24 @@ BOOL CR_Module::DisAsmAddr32(
             }
             break;
 
-        case OCT_JMP:
+        case cr_OCT_JMP:
             // jump
-            switch (oc->Operand(0)->OperandType()) {
-            case OT_IMM:
+            switch (oc->Operand(0)->GetOperandType()) {
+            case cr_OF_IMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncFlags() |= FF_JUMPERFUNC;
+                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
 
                     addr = oc->Operand(0)->Value32();
                     info.Entrances().emplace(addr);
                     cf->Callers().emplace(va);
 
                     CR_CodeFunc32 *newcf;
-                    newcf = info.MapAddrToCodeFunc(addr);
+                    newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc32>());
-                        newcf = info.MapAddrToCodeFunc(addr);
+                        newcf = info.CodeFuncFromAddr(addr);
                     }
                     newcf->Addr() = addr;
                     newcf->Callees().emplace(func);
@@ -569,19 +569,19 @@ BOOL CR_Module::DisAsmAddr32(
                 }
                 break;
 
-            case OT_FUNCNAME:
+            case cr_OF_FUNCNAME:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncFlags() |= FF_JUMPERFUNC;
+                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
                 break;
 
-            case OT_MEMIMM:
+            case cr_OF_MEMIMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncFlags() |= FF_JUMPERFUNC;
+                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
@@ -593,20 +593,20 @@ BOOL CR_Module::DisAsmAddr32(
             bBreak = TRUE;
             break;
 
-        case OCT_CALL:
+        case cr_OCT_CALL:
             // call
-            switch (oc->Operand(0)->OperandType()) {
-            case OT_IMM:
+            switch (oc->Operand(0)->GetOperandType()) {
+            case cr_OF_IMM:
                 // function call
                 addr = oc->Operand(0)->Value32();
                 info.Entrances().emplace(addr);
                 cf->Callers().emplace(va);
                 {
-                    CR_CodeFunc32 *newcf = info.MapAddrToCodeFunc(addr);
+                    CR_CodeFunc32 *newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc32>());
-                        newcf = info.MapAddrToCodeFunc(addr);
+                        newcf = info.CodeFuncFromAddr(addr);
                     }
                     newcf->Addr() = addr;
                     newcf->Callees().emplace(func);
@@ -618,17 +618,17 @@ BOOL CR_Module::DisAsmAddr32(
             }
             break;
 
-        case OCT_RETURN:
+        case cr_OCT_RETURN:
             // return
-            if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
+            if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
                 // func is __stdcall
-                cf->FuncFlags() |= FF_STDCALL;
+                cf->FuncFlags() |= cr_FF_STDCALL;
                 cf->ArgSizeRange().Set(oc->Operand(0)->Value32());
             } else {
                 // func is not __stdcall
-                cf->FuncFlags() |= FF_NOTSTDCALL;
+                cf->FuncFlags() |= cr_FF_NOTSTDCALL;
                 if (func == va) {
-                    cf->FuncFlags() |= FF_RETURNONLY | FF_CDECL;
+                    cf->FuncFlags() |= cr_FF_RETURNONLY | cr_FF_CDECL;
                 }
             }
             bBreak = TRUE;
@@ -659,10 +659,10 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
     CR_Addr64 addr;
 
     // add or retrieve the code function
-    CR_CodeFunc64 *cf = info.MapAddrToCodeFunc(func);
+    CR_CodeFunc64 *cf = info.CodeFuncFromAddr(func);
     if (cf == NULL) {
         info.MapAddrToCodeFunc().emplace(func, make_shared<CR_CodeFunc64>());
-        cf = info.MapAddrToCodeFunc(func);
+        cf = info.CodeFuncFromAddr(func);
     }
     assert(cf);
     if (func == va) {
@@ -677,11 +677,10 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
     LPBYTE iend = m_pLoadedImage + pCode->RVA + pCode->SizeOfRawData;
     while (input < iend) {
         // add or retrieve op.code
-        CR_OpCode64 *oc = info.MapAddrToOpCode(va);
+        CR_OpCode64 *oc = info.OpCodeFromAddr(va);
         if (oc == NULL) {
-            info.MapAddrToOpCode()[va] =
-                make_shared<CR_OpCode64>();
-            oc = info.MapAddrToOpCode(va);
+            info.MapAddrToOpCode().emplace(va, make_shared<CR_OpCode64>());
+            oc = info.OpCodeFromAddr(va);
         }
         assert(oc);
         if (oc->FuncAddrs().count(func) > 0)
@@ -693,7 +692,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
         // add function address for this op.code
         oc->FuncAddrs().emplace(func);
         if (oc->FuncAddrs().size() > 1) {
-            cf->FuncFlags() |= FF_FUNCINFUNC;   // function in function
+            cf->FuncFlags() |= cr_FF_FUNCINFUNC;   // function in function
         }
 
         // disassemble
@@ -703,9 +702,9 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
         if (!len || input + len > iend) {
             len = 1;
             oc->Name() = "???";
-            oc->OpCodeType() = OCT_UNKNOWN;
+            oc->OpCodeType() = cr_OCT_UNKNOWN;
             // don't decompile if any unknown instruction.
-            cf->FuncFlags() |= FF_DONTDECOMPBUTDISASM;
+            cf->FuncFlags() |= cr_FF_DONTDECOMPBUTDISASM;
         } else {
             oc->ParseText(outbuf);
         }
@@ -718,10 +717,10 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
 
         BOOL bBreak = FALSE;
         switch (oc->OpCodeType()) {
-        case OCT_JCC:
+        case cr_OCT_JCC:
             // conditional jump
-            switch (oc->Operand(0)->OperandType()) {
-            case OT_IMM:
+            switch (oc->Operand(0)->GetOperandType()) {
+            case cr_OF_IMM:
                 addr = oc->Operand(0)->Value64();
                 cf->Jumpers().emplace(va);
                 cf->Jumpees().emplace(addr);
@@ -732,23 +731,23 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             }
             break;
 
-        case OCT_JMP:
+        case cr_OCT_JMP:
             // jump
-            switch (oc->Operand(0)->OperandType()) {
-            case OT_IMM:
+            switch (oc->Operand(0)->GetOperandType()) {
+            case cr_OF_IMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncFlags() |= FF_JUMPERFUNC;
+                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
 
                     addr = oc->Operand(0)->Value64();
                     info.Entrances().emplace(addr);
                     cf->Callers().emplace(va);
 
-                    CR_CodeFunc64 *newcf = info.MapAddrToCodeFunc(addr);
+                    CR_CodeFunc64 *newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc64>());
-                        newcf = info.MapAddrToCodeFunc(addr);
+                        newcf = info.CodeFuncFromAddr(addr);
                     }
                     newcf->Addr() = addr;
                     newcf->Callees().emplace(func);
@@ -759,19 +758,19 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                 }
                 break;
 
-            case OT_FUNCNAME:
+            case cr_OF_FUNCNAME:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncFlags() |= FF_JUMPERFUNC;
+                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
                 break;
 
-            case OT_MEMIMM:
+            case cr_OF_MEMIMM:
                 if (func == va) {
                     // func is jumper
-                    cf->FuncFlags() |= FF_JUMPERFUNC;
+                    cf->FuncFlags() |= cr_FF_JUMPERFUNC;
 
                     bBreak = TRUE;
                 }
@@ -783,20 +782,20 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             bBreak = TRUE;
             break;
 
-        case OCT_CALL:
+        case cr_OCT_CALL:
             // call
-            switch (oc->Operand(0)->OperandType()) {
-            case OT_IMM:
+            switch (oc->Operand(0)->GetOperandType()) {
+            case cr_OF_IMM:
                 // function call
                 addr = oc->Operand(0)->Value64();
                 info.Entrances().emplace(addr);
                 cf->Callers().emplace(va);
                 {
-                    CR_CodeFunc64 *newcf = info.MapAddrToCodeFunc(addr);
+                    CR_CodeFunc64 *newcf = info.CodeFuncFromAddr(addr);
                     if (newcf == NULL) {
                         info.MapAddrToCodeFunc().emplace(
                             addr, make_shared<CR_CodeFunc64>());
-                        newcf = info.MapAddrToCodeFunc(addr);
+                        newcf = info.CodeFuncFromAddr(addr);
                     }
                     newcf->Addr() = addr;
                     newcf->Callees().emplace(func);
@@ -808,13 +807,13 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             }
             break;
 
-        case OCT_RETURN:
+        case cr_OCT_RETURN:
             // return
-            if (oc->Operands().size() && oc->Operand(0)->OperandType() == OT_IMM) {
+            if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
                 cf->ArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {
                 if (func == va) {
-                    cf->FuncFlags() |= FF_RETURNONLY;
+                    cf->FuncFlags() |= cr_FF_RETURNONLY;
                 }
             }
             bBreak = TRUE;
@@ -849,7 +848,7 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
         codefunc->ArgSizeRange().Set(0);
-        codefunc->FuncFlags() |= FF_CDECL;
+        codefunc->FuncFlags() |= cr_FF_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
         MapFuncNameToRVA().emplace(codefunc->Name(), RVA);
@@ -867,15 +866,15 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
     // disasm entrances
     {
         std::size_t size;
-        CR_Addr32Set addrset;
+        CR_Addr32Set addrs;
         do {
-            addrset = info.Entrances();
-            size = addrset.size();
+            addrs = info.Entrances();
+            size = addrs.size();
 
-            for (auto addr : addrset) {
+            for (auto addr : addrs) {
                 DisAsmAddr32(info, addr, addr);
 
-                CR_CodeFunc32 *cf = info.MapAddrToCodeFunc(addr);
+                CR_CodeFunc32 *cf = info.CodeFuncFromAddr(addr);
                 assert(cf);
 
                 CR_Addr32Set jumpees;
@@ -889,7 +888,7 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
             }
 
             // info.Entrances() may grow in DisAsmAddr32
-        } while(size < info.Entrances().size());
+        } while (size < info.Entrances().size());
     }
 
     return TRUE;
@@ -926,15 +925,15 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
     // disasm entrances
     {
         std::size_t size;
-        CR_Addr64Set addrset;
+        CR_Addr64Set addrs;
         do {
-            addrset = info.Entrances();
-            size = addrset.size();
+            addrs = info.Entrances();
+            size = addrs.size();
 
-            for (auto addr : addrset) {
+            for (auto addr : addrs) {
                 DisAsmAddr64(info, addr, addr);
 
-                CR_CodeFunc64 *cf = info.MapAddrToCodeFunc(addr);
+                CR_CodeFunc64 *cf = info.CodeFuncFromAddr(addr);
                 assert(cf);
 
                 CR_Addr64Set jumpees;
@@ -948,7 +947,7 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
             }
 
             // info.Entrances() may grow in DisAsmAddr64
-        } while(size < info.Entrances().size());
+        } while (size < info.Entrances().size());
     }
 
     return TRUE;
@@ -964,7 +963,7 @@ retry:;
     for (auto it : info.MapAddrToOpCode()) {
         auto& operands = it.second.get()->Operands();
         for (auto& opr : operands) {
-            if (opr.OperandType() == OT_MEMIMM) {
+            if (opr.GetOperandType() == cr_OF_MEMIMM) {
                 CR_Addr32 addr = opr.Value32();
                 auto name = FuncNameFromRVA(addr);
                 if (name) {
@@ -981,22 +980,22 @@ retry:;
         }
 
         switch (it.second->OpCodeType()) {
-        case OCT_JMP:
-        case OCT_LOOP:
-        case OCT_JCC:
-        case OCT_CALL:
-            if (operands[0].OperandType() == OT_MEMIMM) {
+        case cr_OCT_JMP:
+        case cr_OCT_LOOP:
+        case cr_OCT_JCC:
+        case cr_OCT_CALL:
+            if (operands[0].GetOperandType() == cr_OF_MEMIMM) {
                 CR_Addr32 addr = operands[0].Value32();
                 const char *pName = FuncNameFromVA32(addr);
                 if (pName) {
                     operands[0].SetFuncName(pName);
                     must_retry = true;
                 }
-            } else if (operands[0].OperandType() == OT_IMM) {
+            } else if (operands[0].GetOperandType() == cr_OF_IMM) {
                 CR_Addr32 addr = operands[0].Value32();
                 const char *pName = FuncNameFromVA32(addr);
                 if (pName) {
-                    if (operands[0].OperandType() != OT_FUNCNAME) {
+                    if ((operands[0].OperandFlags() & cr_OF_FUNCNAME) == 0) {
                         operands[0].SetFuncName(pName);
                         must_retry = true;
                     }
@@ -1006,7 +1005,7 @@ retry:;
             }
             break;
 
-        case OCT_MISC:
+        case cr_OCT_MISC:
             if (it.second->Name() == "mov" ||
                 it.second->Name() == "cmp" ||
                 it.second->Name() == "test" ||
@@ -1037,9 +1036,9 @@ retry:;
         CR_CodeFunc32 *cf = it.second.get();
         assert(cf);
 
-        if ((cf->FuncFlags() & FF_JUMPERFUNC) && cf->Name().empty()) {
+        if ((cf->FuncFlags() & cr_FF_JUMPERFUNC) && cf->Name().empty()) {
             CR_Addr32 addr = cf->Addr();
-            CR_OpCode32 *oc = info.MapAddrToOpCode(addr);
+            CR_OpCode32 *oc = info.OpCodeFromAddr(addr);
             assert(oc);
             auto& operands = oc->Operands();
             cf->Name() = std::string("__imp") + operands[0].Text();
@@ -1060,11 +1059,11 @@ retry:;
                     auto& func = ns.LogFunc(rtype.m_sub_id);
 
                     if (rtype.m_flags & TF_CDECL) {
-                        cf->FuncFlags() |= FF_CDECL;
+                        cf->FuncFlags() |= cr_FF_CDECL;
                     } else if (rtype.m_flags & TF_STDCALL) {
-                        cf->FuncFlags() |= FF_STDCALL;
+                        cf->FuncFlags() |= cr_FF_STDCALL;
                     } else if (rtype.m_flags & TF_FASTCALL) {
-                        cf->FuncFlags() |= FF_FASTCALL;
+                        cf->FuncFlags() |= cr_FF_FASTCALL;
                     }
 
                     if (func.m_ellipsis) {
@@ -1101,7 +1100,7 @@ retry:;
     for (auto it : info.MapAddrToOpCode()) {
         auto& operands = it.second.get()->Operands();
         for (auto& opr : operands) {
-            if (opr.OperandType() == OT_MEMIMM) {
+            if (opr.GetOperandType() == cr_OF_MEMIMM) {
                 CR_Addr64 addr = opr.Value64();
                 auto name = FuncNameFromVA64(addr);
                 if (name) {
@@ -1118,20 +1117,20 @@ retry:;
         }
 
         switch (it.second->OpCodeType()) {
-        case OCT_JMP:
-        case OCT_LOOP:
-        case OCT_JCC:
-        case OCT_CALL:
-            if (operands[0].OperandType() == OT_MEMIMM) {
+        case cr_OCT_JMP:
+        case cr_OCT_LOOP:
+        case cr_OCT_JCC:
+        case cr_OCT_CALL:
+            if (operands[0].GetOperandType() == cr_OF_MEMIMM) {
                 CR_Addr64 addr = operands[0].Value64();
                 const char *pName = FuncNameFromVA64(addr);
                 if (pName) {
-                    if (operands[0].OperandType() != OT_FUNCNAME) {
+                    if ((operands[0].OperandFlags() & cr_OF_FUNCNAME) == 0) {
                         operands[0].SetFuncName(pName);
                         must_retry = true;
                     }
                 }
-            } else if (operands[0].OperandType() == OT_IMM) {
+            } else if (operands[0].GetOperandType() == cr_OF_IMM) {
                 CR_Addr64 addr = operands[0].Value64();
                 const char *pName = FuncNameFromVA64(addr);
                 if (pName) {
@@ -1143,7 +1142,7 @@ retry:;
             }
             break;
 
-        case OCT_MISC:
+        case cr_OCT_MISC:
             if (it.second->Name() == "mov" || it.second->Name() == "cmp" ||
                 it.second->Name() == "test" || it.second->Name() == "and" ||
                 it.second->Name() == "sub" || it.second->Name().find("cmov") == 0)
@@ -1172,9 +1171,9 @@ retry:;
         CR_CodeFunc64 *cf = it.second.get();
         assert(cf);
 
-        if ((cf->FuncFlags() & FF_JUMPERFUNC) && cf->Name().empty()) {
+        if ((cf->FuncFlags() & cr_FF_JUMPERFUNC) && cf->Name().empty()) {
             CR_Addr64 addr = cf->Addr();
-            CR_OpCode64 *oc = info.MapAddrToOpCode(addr);
+            CR_OpCode64 *oc = info.OpCodeFromAddr(addr);
             assert(oc);
             auto& operands = oc->Operands();
             cf->Name() = std::string("__imp") + operands[0].Text();
@@ -1190,11 +1189,11 @@ retry:;
                     auto& func = ns.LogFunc(rtype.m_sub_id);
 
                     if (rtype.m_flags & TF_CDECL) {
-                        cf->FuncFlags() |= FF_CDECL;
+                        cf->FuncFlags() |= cr_FF_CDECL;
                     } else if (rtype.m_flags & TF_STDCALL) {
-                        cf->FuncFlags() |= FF_STDCALL;
+                        cf->FuncFlags() |= cr_FF_STDCALL;
                     } else if (rtype.m_flags & TF_FASTCALL) {
-                        cf->FuncFlags() |= FF_FASTCALL;
+                        cf->FuncFlags() |= cr_FF_FASTCALL;
                     }
 
                     if (func.m_ellipsis) {

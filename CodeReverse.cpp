@@ -348,7 +348,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Disassembled.\n");
 
         fprintf(stderr, "Decompiling...\n");
-        module.FixupAsm64(info);
+        //module.FixupAsm64(info);
         module.Decompile64(info);
         //fprintf(stderr, "Decompiled.\n");
 
@@ -378,7 +378,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Disassembled.\n");
 
         fprintf(stderr, "Decompiling...\n");
-        module.FixupAsm32(info);
+        //module.FixupAsm32(info);
         module.Decompile32(info);
         //fprintf(stderr, "Decompiled.\n");
 

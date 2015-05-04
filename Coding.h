@@ -29,33 +29,20 @@ enum CR_CondCode {
 // CR_FuncFlags - function flags
 
 typedef unsigned long CR_FuncFlags;
-
-// unknown
-static const CR_FuncFlags FF_UNKNOWN                = 0;
-// __cdecl
-static const CR_FuncFlags FF_CDECL                  = (1 << 1);
-// __stdcall
-static const CR_FuncFlags FF_STDCALL                = (1 << 2);
-// __fastcall
-static const CR_FuncFlags FF_FASTCALL               = (1 << 3);
-// thiscall
-static const CR_FuncFlags FF_THISCALL               = (1 << 4);
-// 64-bit function
-static const CR_FuncFlags FF_64BITFUNC              = (1 << 5);
-// jumper function
-static const CR_FuncFlags FF_JUMPERFUNC             = (1 << 6);
-// function in function
-static const CR_FuncFlags FF_FUNCINFUNC             = (1 << 7);
-// leaf function
-static const CR_FuncFlags FF_LEAFFUNC               = (1 << 8);
-// return-only function
-static const CR_FuncFlags FF_RETURNONLY             = (1 << 9);
-// not __stdcall
-static const CR_FuncFlags FF_NOTSTDCALL             = (1 << 10);
-// don't decompile but disasm
-static const CR_FuncFlags FF_DONTDECOMPBUTDISASM    = (1 << 11);
-// ignore
-static const CR_FuncFlags FF_IGNORE                 = (1 << 12);
+static const CR_FuncFlags
+    cr_FF_UNKNOWN             = 0,    // unknown
+    cr_FF_CDECL               = (1 << 1),   // __cdecl
+    cr_FF_STDCALL             = (1 << 2),   // __stdcall
+    cr_FF_FASTCALL            = (1 << 3),   // __fastcall
+    cr_FF_THISCALL            = (1 << 4),   // thiscall
+    cr_FF_64BITFUNC           = (1 << 5),   // 64-bit function
+    cr_FF_JUMPERFUNC          = (1 << 6),   // jumper function
+    cr_FF_FUNCINFUNC          = (1 << 7),   // function in function
+    cr_FF_LEAFFUNC            = (1 << 8),   // leaf function
+    cr_FF_RETURNONLY          = (1 << 9),   // return-only function
+    cr_FF_NOTSTDCALL          = (1 << 10),  // not __stdcall
+    cr_FF_DONTDECOMPBUTDISASM = (1 << 11),  // don't decompile but disasm
+    cr_FF_IGNORE              = (1 << 12);  // ignore
 
 ////////////////////////////////////////////////////////////////////////////
 // x86 registers
@@ -132,29 +119,28 @@ const char * CrFlagGetName(CR_FlagType type, int bits);
 // CR_OpCodeType - op.code type
 
 enum CR_OpCodeType {
-    OCT_MISC,    // misc
-    OCT_JMP,     // jump
-    OCT_JCC,     // conditional jump
-    OCT_CALL,    // call
-    OCT_LOOP,    // loop
-    OCT_RETURN,  // ret
-    OCT_STACKOP, // stack operation
-    OCT_UNKNOWN  // unknown
+    cr_OCT_MISC,    // misc
+    cr_OCT_JMP,     // jump
+    cr_OCT_JCC,     // conditional jump
+    cr_OCT_CALL,    // call
+    cr_OCT_LOOP,    // loop
+    cr_OCT_RETURN,  // ret
+    cr_OCT_STACKOP, // stack operation
+    cr_OCT_UNKNOWN  // unknown
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_OperandType - type of operand
+// CR_OperandFlags - type of operand
 
-enum CR_OperandType {
-    OT_NONE,        // none
-    OT_REG,         // registry
-    OT_MEMREG,      // memory access by a register
-    OT_MEMIMM,      // memory access by an immediate
-    OT_MEMEXPR,     // memory access by an expression
-    OT_IMM,         // immediate
-    OT_FUNCNAME,    // function name
-    OT_EXPR         // expression
-};
+typedef unsigned long CR_OperandFlags;
+static const CR_OperandFlags
+    cr_OF_REG          = (1 << 0),     // registry
+    cr_OF_MEMREG       = (1 << 1),     // memory access by register
+    cr_OF_MEMIMM       = (1 << 2),     // memory access by immediate
+    cr_OF_MEMINDEX     = (1 << 4),     // memory access by index
+    cr_OF_IMM          = (1 << 5),     // immediate
+    cr_OF_TYPEMASK     = 0x1F,
+    cr_OF_FUNCNAME     = (1 << 6);     // function name
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
@@ -169,13 +155,12 @@ public:
     void clear();
     bool operator==(const CR_Operand& opr) const;
     bool operator!=(const CR_Operand& opr) const;
+    CR_OperandFlags GetOperandType() const;
+    void SetOperandType(CR_OperandFlags flags);
 
 public:
-    void SetReg(const char *name);
     void SetFuncName(const char *name);
-    void SetLabel(const char *label);
     void SetMemImm(CR_Addr64 addr);
-    void SetMemExpr(const char *expr);
     void SetImm32(CR_Addr32 val, BOOL is_signed);
     void SetImm64(CR_Addr64 val, BOOL is_signed);
     void ParseText(int bits);
@@ -183,37 +168,49 @@ public:
 public:
     // accessors
     std::string&            Text();
-    CR_OperandType&         OperandType();
+    std::string&            BaseReg();
+    std::string&            IndexReg();
+    std::string&            Seg();
+    CR_OperandFlags&        OperandFlags();
     DWORD&                  Size();
     CR_Addr32&              Value32();
     CR_Addr64&              Value64();
-    std::string&            MemExpr();
     CR_TriBool&             IsInteger();
     CR_TriBool&             IsPointer();
     CR_TriBool&             IsFunction();
+    CR_Addr32&              Disp();
+    char&                   Scale();
     // const accessors
     const std::string&      Text() const;
-    const CR_OperandType&   OperandType() const;
+    const std::string&      BaseReg() const;
+    const std::string&      IndexReg() const;
+    const std::string&      Seg() const;
+    const CR_OperandFlags&  OperandFlags() const;
     const DWORD&            Size() const;
     const CR_Addr32&        Value32() const;
     const CR_Addr64&        Value64() const;
-    const std::string&      MemExpr() const;
     const CR_TriBool&       IsInteger() const;
     const CR_TriBool&       IsPointer() const;
     const CR_TriBool&       IsFunction() const;
+    const CR_Addr32&        Disp() const;
+    const char&             Scale() const;
 
 protected:
     std::string             m_text;
-    CR_OperandType          m_ot;
+    std::string             m_basereg;
+    std::string             m_indexreg;
+    std::string             m_seg;
+    CR_OperandFlags         m_flags;
     DWORD                   m_size;
     union {
         CR_Addr64           m_value64;
         CR_Addr32           m_value32;
     };
-    std::string             m_memexpr;
     CR_TriBool              m_is_integer;
     CR_TriBool              m_is_pointer;
     CR_TriBool              m_is_function;
+    CR_Addr32               m_disp;
+    char                    m_scale;
 }; // class CR_Operand
 
 ////////////////////////////////////////////////////////////////////////////
@@ -435,16 +432,16 @@ public:
     std::map<CR_Addr32, CR_ShdOpCode32>&         MapAddrToOpCode();
     CR_Addr32Set&                                Entrances();
     std::map<CR_Addr32, CR_ShdCodeFunc32>&       MapAddrToCodeFunc();
-    CR_OpCode32 *                                MapAddrToOpCode(CR_Addr32 addr);
-    CR_CodeFunc32 *                              MapAddrToCodeFunc(CR_Addr32 addr);
+    CR_OpCode32 *                                OpCodeFromAddr(CR_Addr32 addr);
+    CR_CodeFunc32 *                              CodeFuncFromAddr(CR_Addr32 addr);
     shared_ptr<CR_ErrorInfo>&                    ErrorInfo();
     CR_NameScope&                                NameScope();
     // const accessors
     const std::map<CR_Addr32, CR_ShdOpCode32>&   MapAddrToOpCode() const;
     const CR_Addr32Set&                          Entrances() const;
     const std::map<CR_Addr32, CR_ShdCodeFunc32>& MapAddrToCodeFunc() const;
-    const CR_OpCode32 *                          MapAddrToOpCode(CR_Addr32 addr) const;
-    const CR_CodeFunc32 *                        MapAddrToCodeFunc(CR_Addr32 addr) const;
+    const CR_OpCode32 *                          OpCodeFromAddr(CR_Addr32 addr) const;
+    const CR_CodeFunc32 *                        CodeFuncFromAddr(CR_Addr32 addr) const;
     const shared_ptr<CR_ErrorInfo>&              ErrorInfo() const;
     const CR_NameScope&                          NameScope() const;
 
@@ -478,16 +475,16 @@ public:
     std::map<CR_Addr64, CR_ShdOpCode64>&         MapAddrToOpCode();
     CR_Addr64Set&                                Entrances();
     std::map<CR_Addr64, CR_ShdCodeFunc64>&       MapAddrToCodeFunc();
-    CR_OpCode64 *                                MapAddrToOpCode(CR_Addr64 addr);
-    CR_CodeFunc64 *                              MapAddrToCodeFunc(CR_Addr64 addr);
+    CR_OpCode64 *                                OpCodeFromAddr(CR_Addr64 addr);
+    CR_CodeFunc64 *                              CodeFuncFromAddr(CR_Addr64 addr);
     shared_ptr<CR_ErrorInfo>&                    ErrorInfo();
     CR_NameScope&                                NameScope();
     // const accessors
     const std::map<CR_Addr64, CR_ShdOpCode64>&   MapAddrToOpCode() const;
     const CR_Addr64Set&                          Entrances() const;
     const std::map<CR_Addr64, CR_ShdCodeFunc64>& MapAddrToCodeFunc() const;
-    const CR_OpCode64 *                          MapAddrToOpCode(CR_Addr64 addr) const;
-    const CR_CodeFunc64 *                        MapAddrToCodeFunc(CR_Addr64 addr) const;
+    const CR_OpCode64 *                          OpCodeFromAddr(CR_Addr64 addr) const;
+    const CR_CodeFunc64 *                        CodeFuncFromAddr(CR_Addr64 addr) const;
     const shared_ptr<CR_ErrorInfo>&              ErrorInfo() const;
     const CR_NameScope&                          NameScope() const;
 

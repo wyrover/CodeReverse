@@ -964,9 +964,9 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
     for (auto& entrance : info.Entrances()) {
-        CR_CodeFunc32 *cf = info.MapAddrToCodeFunc(entrance);
+        CR_CodeFunc32 *cf = info.CodeFuncFromAddr(entrance);
         assert(cf);
-        if (cf->FuncFlags() & FF_IGNORE)
+        if (cf->FuncFlags() & cr_FF_IGNORE)
             continue;
 
         const char *pszName = FuncNameFromVA32(cf->Addr());
@@ -976,20 +976,20 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
             fprintf(fp, ";; Function L%08lX\n", cf->Addr());
 
         fprintf(fp, "flags =");
-        if (cf->FuncFlags() & FF_JUMPERFUNC) {
-            fprintf(fp, " FF_JUMPERFUNC");
+        if (cf->FuncFlags() & cr_FF_JUMPERFUNC) {
+            fprintf(fp, " cr_FF_JUMPERFUNC");
         }
-        if (cf->FuncFlags() & FF_CDECL) {
-            fprintf(fp, " FF_CDECL");
+        if (cf->FuncFlags() & cr_FF_CDECL) {
+            fprintf(fp, " cr_FF_CDECL");
         }
-        if (cf->FuncFlags() & FF_STDCALL) {
-            fprintf(fp, " FF_STDCALL");
+        if (cf->FuncFlags() & cr_FF_STDCALL) {
+            fprintf(fp, " cr_FF_STDCALL");
         }
-        if (cf->FuncFlags() & FF_FASTCALL) {
-            fprintf(fp, " FF_FASTCALL");
+        if (cf->FuncFlags() & cr_FF_FASTCALL) {
+            fprintf(fp, " cr_FF_FASTCALL");
         }
-        if (cf->FuncFlags() & FF_RETURNONLY) {
-            fprintf(fp, " FF_RETURNONLY");
+        if (cf->FuncFlags() & cr_FF_RETURNONLY) {
+            fprintf(fp, " cr_FF_RETURNONLY");
         }
         fprintf(fp, "\n");
 
@@ -1051,9 +1051,9 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
     printf("\n### DISASSEMBLY ###\n\n");
 
     for (auto& entrance : info.Entrances()) {
-        CR_CodeFunc64 *cf = info.MapAddrToCodeFunc(entrance);
+        CR_CodeFunc64 *cf = info.CodeFuncFromAddr(entrance);
         assert(cf);
-        if (cf->FuncFlags() & FF_IGNORE)
+        if (cf->FuncFlags() & cr_FF_IGNORE)
             continue;
 
         const char *pszName = FuncNameFromVA64(cf->Addr());
@@ -1065,12 +1065,12 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
             fprintf(fp, ";; Function L%08lX%08lX\n", HILONG(cf->Addr()), LOLONG(cf->Addr()));
 
         fprintf(fp, "flags = ");
-        if (cf->FuncFlags() & FF_JUMPERFUNC)
-            fprintf(fp, " FF_JUMPERFUNC");
-        if (cf->FuncFlags() & FF_RETURNONLY)
-            fprintf(fp, " FF_RETURNONLY");
-        if (cf->FuncFlags() & FF_64BITFUNC)
-            fprintf(fp, " FF_64BITFUNC");
+        if (cf->FuncFlags() & cr_FF_JUMPERFUNC)
+            fprintf(fp, " cr_FF_JUMPERFUNC");
+        if (cf->FuncFlags() & cr_FF_RETURNONLY)
+            fprintf(fp, " cr_FF_RETURNONLY");
+        if (cf->FuncFlags() & cr_FF_64BITFUNC)
+            fprintf(fp, " cr_FF_64BITFUNC");
         fprintf(fp, "\n");
 
         auto& range = cf->ArgSizeRange();

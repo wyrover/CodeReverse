@@ -23,30 +23,23 @@ inline CR_Operand& CR_Operand::operator=(const CR_Operand& opr) {
     return *this;
 }
 
-inline void CR_Operand::SetReg(const char *name) {
-    Text() = name;
-    OperandType() = OT_REG;
-    Size() = CrRegGetSize(name, 64);
+inline CR_OperandFlags CR_Operand::GetOperandType() const {
+    return OperandFlags() & cr_OF_TYPEMASK;
+}
+
+inline void CR_Operand::SetOperandType(CR_OperandFlags flags) {
+    OperandFlags() &= ~cr_OF_TYPEMASK;
+    OperandFlags() |= flags;
 }
 
 inline void CR_Operand::SetFuncName(const char *name) {
     Text() = name;
-    OperandType() = OT_FUNCNAME;
-}
-
-inline void CR_Operand::SetLabel(const char *label) {
-    Text() = label;
-    OperandType() = OT_IMM;
+    OperandFlags() |= cr_OF_FUNCNAME;
 }
 
 inline void CR_Operand::SetMemImm(CR_Addr64 addr) {
-    OperandType() = OT_MEMIMM;
     Value64() = addr;
-}
-
-inline void CR_Operand::SetMemExpr(const char *exp) {
-    OperandType() = OT_MEMEXPR;
-    MemExpr() = exp;
+    SetOperandType(cr_OF_MEMIMM);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -56,8 +49,20 @@ inline std::string& CR_Operand::Text() {
     return m_text;
 }
 
-inline CR_OperandType& CR_Operand::OperandType() {
-    return m_ot;
+inline std::string& CR_Operand::BaseReg() {
+    return m_basereg;
+}
+
+inline std::string& CR_Operand::IndexReg() {
+    return m_indexreg;
+}
+
+inline std::string& CR_Operand::Seg() {
+    return m_seg;
+}
+
+inline CR_OperandFlags& CR_Operand::OperandFlags() {
+    return m_flags;
 }
 
 inline DWORD& CR_Operand::Size() {
@@ -72,10 +77,6 @@ inline CR_Addr64& CR_Operand::Value64() {
     return m_value64;
 }
 
-inline std::string& CR_Operand::MemExpr() {
-    return m_memexpr;
-}
-
 inline CR_TriBool& CR_Operand::IsInteger() {
     return m_is_integer;
 }
@@ -88,6 +89,14 @@ inline CR_TriBool& CR_Operand::IsFunction() {
     return m_is_function;
 }
 
+inline CR_Addr32& CR_Operand::Disp() {
+    return m_disp;
+}
+
+inline char& CR_Operand::Scale() {
+    return m_scale;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand const accessors
 
@@ -95,8 +104,20 @@ inline const std::string& CR_Operand::Text() const {
     return m_text;
 }
 
-inline const CR_OperandType& CR_Operand::OperandType() const {
-    return m_ot;
+inline const std::string& CR_Operand::BaseReg() const {
+    return m_basereg;
+}
+
+inline const std::string& CR_Operand::IndexReg() const {
+    return m_indexreg;
+}
+
+inline const std::string& CR_Operand::Seg() const {
+    return m_seg;
+}
+
+inline const CR_OperandFlags& CR_Operand::OperandFlags() const {
+    return m_flags;
 }
 
 inline const DWORD& CR_Operand::Size() const {
@@ -111,10 +132,6 @@ inline const CR_Addr64& CR_Operand::Value64() const {
     return m_value64;
 }
 
-inline const std::string& CR_Operand::MemExpr() const {
-    return m_memexpr;
-}
-
 inline const CR_TriBool& CR_Operand::IsInteger() const {
     return m_is_integer;
 }
@@ -125,6 +142,14 @@ inline const CR_TriBool& CR_Operand::IsPointer() const {
 
 inline const CR_TriBool& CR_Operand::IsFunction() const {
     return m_is_function;
+}
+
+inline const CR_Addr32& CR_Operand::Disp() const {
+    return m_disp;
+}
+
+inline const char& CR_Operand::Scale() const {
+    return m_scale;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -487,7 +512,7 @@ inline void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
 inline void CR_CodeFunc32::clear() {
     Addr() = 0;
     Name().clear();
-    FuncFlags() = FF_UNKNOWN;
+    FuncFlags() = 0;
     ArgSizeRange().clear();
 }
 
@@ -519,7 +544,7 @@ inline void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
 inline void CR_CodeFunc64::clear() {
     Addr() = 0;
     Name().clear();
-    FuncFlags() = FF_64BITFUNC;
+    FuncFlags() = cr_FF_64BITFUNC;
     ArgSizeRange().clear();
 }
 
@@ -680,7 +705,7 @@ inline const shared_ptr<CR_ErrorInfo>& CR_DecompInfo64::ErrorInfo() const {
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo32
 
-inline CR_CodeFunc32 *CR_DecompInfo32::MapAddrToCodeFunc(CR_Addr32 addr) {
+inline CR_CodeFunc32 *CR_DecompInfo32::CodeFuncFromAddr(CR_Addr32 addr) {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -689,7 +714,7 @@ inline CR_CodeFunc32 *CR_DecompInfo32::MapAddrToCodeFunc(CR_Addr32 addr) {
 }
 
 inline const CR_CodeFunc32 *
-CR_DecompInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const {
+CR_DecompInfo32::CodeFuncFromAddr(CR_Addr32 addr) const {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -697,7 +722,7 @@ CR_DecompInfo32::MapAddrToCodeFunc(CR_Addr32 addr) const {
         return NULL;
 }
 
-inline CR_OpCode32 *CR_DecompInfo32::MapAddrToOpCode(CR_Addr32 addr) {
+inline CR_OpCode32 *CR_DecompInfo32::OpCodeFromAddr(CR_Addr32 addr) {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -706,7 +731,7 @@ inline CR_OpCode32 *CR_DecompInfo32::MapAddrToOpCode(CR_Addr32 addr) {
 }
 
 inline const CR_OpCode32 *
-CR_DecompInfo32::MapAddrToOpCode(CR_Addr32 addr) const {
+CR_DecompInfo32::OpCodeFromAddr(CR_Addr32 addr) const {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -724,7 +749,7 @@ inline void CR_DecompInfo32::clear() {
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo64
 
-inline CR_CodeFunc64 *CR_DecompInfo64::MapAddrToCodeFunc(CR_Addr64 addr) {
+inline CR_CodeFunc64 *CR_DecompInfo64::CodeFuncFromAddr(CR_Addr64 addr) {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -733,7 +758,7 @@ inline CR_CodeFunc64 *CR_DecompInfo64::MapAddrToCodeFunc(CR_Addr64 addr) {
 }
 
 inline const CR_CodeFunc64 *
-CR_DecompInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const {
+CR_DecompInfo64::CodeFuncFromAddr(CR_Addr64 addr) const {
     auto it = MapAddrToCodeFunc().find(addr);
     if (it != MapAddrToCodeFunc().end())
         return it->second.get();
@@ -741,7 +766,7 @@ CR_DecompInfo64::MapAddrToCodeFunc(CR_Addr64 addr) const {
         return NULL;
 }
 
-inline CR_OpCode64 *CR_DecompInfo64::MapAddrToOpCode(CR_Addr64 addr) {
+inline CR_OpCode64 *CR_DecompInfo64::OpCodeFromAddr(CR_Addr64 addr) {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
@@ -750,7 +775,7 @@ inline CR_OpCode64 *CR_DecompInfo64::MapAddrToOpCode(CR_Addr64 addr) {
 }
 
 inline const CR_OpCode64 *
-CR_DecompInfo64::MapAddrToOpCode(CR_Addr64 addr) const {
+CR_DecompInfo64::OpCodeFromAddr(CR_Addr64 addr) const {
     auto it = MapAddrToOpCode().find(addr);
     if (it != MapAddrToOpCode().end())
         return it->second.get();
