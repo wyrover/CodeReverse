@@ -88,6 +88,8 @@ public:
             ret += ", ";
             if (Max() != CR_Range::npos) {
                 ret += std::to_string(Max());
+            } else {
+                ret += "npos";
             }
             ret += "]";
         }

@@ -130,10 +130,10 @@ enum CR_OpCodeType {
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_OperandFlags - type of operand
+// CR_DataFlags - the flags of data
 
-typedef unsigned long CR_OperandFlags;
-static const CR_OperandFlags
+typedef unsigned long CR_DataFlags;
+static const CR_DataFlags
     cr_OF_REG           = 0x01,         // registry
     cr_OF_MEMREG        = 0x02,         // memory access by register
     cr_OF_MEMIMM        = 0x03,         // memory access by immediate
@@ -158,10 +158,10 @@ public:
     void Copy(const CR_Operand& opr);
     void clear();
 
-    CR_OperandFlags GetOperandType() const;
-    void SetOperandType(CR_OperandFlags flags);
+    CR_DataFlags GetOperandType() const;
+    void SetOperandType(CR_DataFlags flags);
 
-    void ModifyFlags(CR_OperandFlags add, CR_OperandFlags remove);
+    void ModifyFlags(CR_DataFlags add, CR_DataFlags remove);
 
 public:
     void ParseText(int bits);
@@ -177,7 +177,7 @@ public:
     std::string&            BaseReg();
     std::string&            IndexReg();
     std::string&            Seg();
-    CR_OperandFlags&        OperandFlags();
+    CR_DataFlags&           DataFlags();
     DWORD&                  Size();
     CR_Addr32&              Value32();
     CR_Addr64&              Value64();
@@ -190,7 +190,7 @@ public:
     const std::string&      BaseReg() const;
     const std::string&      IndexReg() const;
     const std::string&      Seg() const;
-    const CR_OperandFlags&  OperandFlags() const;
+    const CR_DataFlags&     DataFlags() const;
     const DWORD&            Size() const;
     const CR_Addr32&        Value32() const;
     const CR_Addr64&        Value64() const;
@@ -204,7 +204,7 @@ protected:
     std::string             m_basereg;          // base register
     std::string             m_indexreg;         // index register
     std::string             m_seg;              // segment register
-    CR_OperandFlags         m_flags;            // operand flags
+    CR_DataFlags            m_flags;            // operand flags
     DWORD                   m_size;             // size
     union {
         CR_Addr64           m_value64;          // 64-bit value
@@ -808,7 +808,7 @@ struct CR_Storage32 {
 
     StorageFlags                    m_storage_flags;
     std::vector<BYTE>               m_data_bytes;
-    std::vector<CR_OperandFlags>    m_data_flags;
+    std::vector<CR_DataFlags>       m_data_flags;
     std::vector<CR_AccessMember>    m_accesses;
 
     void AddHead(CR_Addr32 size);
@@ -819,14 +819,16 @@ struct CR_Storage32 {
 
 class CR_X86Machine {
 public:
-    typedef std::unordered_map<std::string,CR_Storage32> name_to_storage_type;
+    typedef std::unordered_map<std::string,CR_Storage32> name_to_storage;
 public:
     CR_X86Machine() { }
+    AddModule();
 
-          name_to_storage_type& MapNameToStorage();
-    const name_to_storage_type& MapNameToStorage() const;
+          name_to_storage& MapNameToStorage();
+    const name_to_storage& MapNameToStorage() const;
 
-    name_to_storage_type m_mNameToStorage;
+protected:
+    name_to_storage m_mNameToStorage;
 };
 
 ////////////////////////////////////////////////////////////////////////////

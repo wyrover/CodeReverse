@@ -23,18 +23,18 @@ inline CR_Operand& CR_Operand::operator=(const CR_Operand& opr) {
     return *this;
 }
 
-inline CR_OperandFlags CR_Operand::GetOperandType() const {
-    return OperandFlags() & cr_OF_TYPEMASK;
+inline CR_DataFlags CR_Operand::GetOperandType() const {
+    return DataFlags() & cr_OF_TYPEMASK;
 }
 
-inline void CR_Operand::SetOperandType(CR_OperandFlags flags) {
+inline void CR_Operand::SetOperandType(CR_DataFlags flags) {
     CR_Operand::ModifyFlags(flags, cr_OF_TYPEMASK);
 }
 
 inline void
-CR_Operand::ModifyFlags(CR_OperandFlags add, CR_OperandFlags remove) {
-    OperandFlags() &= ~remove;
-    OperandFlags() |= add;
+CR_Operand::ModifyFlags(CR_DataFlags add, CR_DataFlags remove) {
+    DataFlags() &= ~remove;
+    DataFlags() |= add;
 }
 
 inline void CR_Operand::SetMemImm(CR_Addr64 addr) {
@@ -65,7 +65,7 @@ inline std::string& CR_Operand::Seg() {
     return m_seg;
 }
 
-inline CR_OperandFlags& CR_Operand::OperandFlags() {
+inline CR_DataFlags& CR_Operand::DataFlags() {
     return m_flags;
 }
 
@@ -116,7 +116,7 @@ inline const std::string& CR_Operand::Seg() const {
     return m_seg;
 }
 
-inline const CR_OperandFlags& CR_Operand::OperandFlags() const {
+inline const CR_DataFlags& CR_Operand::DataFlags() const {
     return m_flags;
 }
 

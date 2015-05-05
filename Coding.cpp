@@ -382,7 +382,7 @@ void CR_Operand::Copy(const CR_Operand& opr) {
     BaseReg() = opr.BaseReg();
     IndexReg() = opr.IndexReg();
     Seg() = opr.Seg();
-    OperandFlags() = opr.OperandFlags();
+    DataFlags() = opr.DataFlags();
     Size() = opr.Size();
     Value64() = opr.Value64();
     Disp() = opr.Disp();
@@ -396,7 +396,7 @@ void CR_Operand::clear() {
     BaseReg().clear();
     IndexReg().clear();
     Seg().clear();
-    OperandFlags() = 0;
+    DataFlags() = 0;
     Size() = 0;
     Value64() = 0;
     Disp() = 0;
