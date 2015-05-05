@@ -797,8 +797,17 @@ typedef struct CR_X64_CORE {
 
 ////////////////////////////////////////////////////////////////////////////
 
-struct CR_DataBlock32 {
-    CR_DataBytes                    m_data_bytes;
+struct CR_Storage32 {
+    typedef unsigned long StorageFlags;
+    static const StorageFlags
+        CORE    = (1 << 0),
+        STACK   = (1 << 1),
+        HEAP    = (1 << 2),
+        CODE    = (1 << 3),
+        DATA    = (1 << 4);
+
+    StorageFlags                    m_storage_flags;
+    std::vector<BYTE>               m_data_bytes;
     std::vector<CR_OperandFlags>    m_data_flags;
     std::vector<CR_AccessMember>    m_accesses;
 
@@ -809,7 +818,15 @@ struct CR_DataBlock32 {
 };
 
 class CR_X86Machine {
-    std::unordered_map<std::string,CR_DataBlock32> m_mNameToDataBlock;
+public:
+    typedef std::unordered_map<std::string,CR_Storage32> name_to_storage_type;
+public:
+    CR_X86Machine() { }
+
+          name_to_storage_type& MapNameToStorage();
+    const name_to_storage_type& MapNameToStorage() const;
+
+    name_to_storage_type m_mNameToStorage;
 };
 
 ////////////////////////////////////////////////////////////////////////////

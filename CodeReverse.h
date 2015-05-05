@@ -270,10 +270,9 @@ typedef std::unordered_set<CR_Addr64> CR_Addr64Set;
 typedef CR_VecSet<std::string> CR_Strings;
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_DataByte, CR_DataBytes
+// CR_DataBytes
 
-typedef BYTE CR_DataByte;
-typedef std::vector<CR_DataByte> CR_DataBytes;
+typedef std::vector<BYTE> CR_DataBytes;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_ErrorInfo
