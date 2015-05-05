@@ -8,9 +8,6 @@
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
 
-// logo
-extern const char * const cr_logo;
-
 ////////////////////////////////////////////////////////////////////////////
 // LOLONG, HILONG, MAKELONGLONG
 
@@ -30,53 +27,6 @@ extern const char * const cr_logo;
 
 typedef unsigned long       CR_Addr32;
 typedef unsigned long long  CR_Addr64;
-
-////////////////////////////////////////////////////////////////////////////
-// CR_TriBool - logical value of three states
-
-class CR_TriBool {
-public:
-    CR_TriBool();
-    CR_TriBool(bool b);
-    CR_TriBool(const CR_TriBool& tb);
-
-    CR_TriBool& operator=(bool b);
-    CR_TriBool& operator=(const CR_TriBool& tb);
-    bool operator==(const CR_TriBool& tb) const;
-    bool operator!=(const CR_TriBool& tb) const;
-    void clear();
-
-    bool CanBeTrue() const;
-    bool CanBeFalse() const;
-    bool CanBeUnknown() const;
-
-    bool IsFalse() const;
-    bool IsTrue() const;
-    bool IsUnknown() const;
-
-    void SetFalse();
-    void SetTrue();
-    void SetUnknown();
-    void AssumeEqual(      CR_TriBool& tb);
-    void AssumeEqual(const CR_TriBool& tb);
-
-    void LogicalNot();
-    void LogicalAnd(const CR_TriBool& tb);
-    void LogicalOr(const CR_TriBool& tb);
-    void LogicalAnd(const CR_TriBool& tb1, const CR_TriBool& tb2);
-    void LogicalOr(const CR_TriBool& tb1, const CR_TriBool& tb2);
-
-    void Equal(const CR_TriBool& tb);
-    void NotEqual(const CR_TriBool& tb);
-    void Equal(const CR_TriBool& tb1, const CR_TriBool& tb2);
-    void NotEqual(const CR_TriBool& tb1, const CR_TriBool& tb2);
-
-protected:
-    static const char TB_UNKNOWN    = -1;
-    static const char TB_FALSE      = 0;
-    static const char TB_TRUE       = 1;
-    char m_value;
-};
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Range -- closed range
@@ -250,8 +200,7 @@ public:
     }
 }; // class CR_VecSet<ITEM_T>
 
-namespace std
-{
+namespace std {
     template <typename ITEM_T>
     inline void swap(CR_VecSet<ITEM_T>& vs1, CR_VecSet<ITEM_T>& vs2) {
         vs1.swap(vs2);
@@ -329,15 +278,15 @@ public:
           error_container& errors()         { return m_errors; }
     const error_container& errors() const   { return m_errors; }
 
-    void emit_all(std::ostream& out = std::cerr) {
+    void emit_all(std::FILE *fp = stderr) {
         for (auto& e : errors()) {
-            out << e << std::endl;
+            fprintf(fp, "%s\n", e.c_str());
         }
         for (auto& w : warnings()) {
-            out << w << std::endl;
+            fprintf(fp, "%s\n", w.c_str());
         }
         for (auto& n : notices()) {
-            out << n << std::endl;
+            fprintf(fp, "%s\n", n.c_str());
         }
     }
 

@@ -21,39 +21,6 @@ const char * const cr_logo =
     "///////////////////////////////////////////////\n";
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_TriBool - logical value of three states
-
-void CR_TriBool::LogicalAnd(const CR_TriBool& tb1, const CR_TriBool& tb2) {
-    if (tb1.m_value == TB_FALSE || tb2.m_value == TB_FALSE)
-        m_value = TB_FALSE;
-    else if (tb1.m_value == TB_TRUE)
-        m_value = tb2.m_value;
-    else if (tb2.m_value == TB_TRUE)
-        m_value = tb1.m_value;
-    else
-        m_value = TB_UNKNOWN;
-}
-
-void CR_TriBool::LogicalOr(const CR_TriBool& tb1, const CR_TriBool& tb2) {
-    if (tb1.m_value == TB_TRUE || tb2.m_value == TB_TRUE)
-        m_value = TB_TRUE;
-    else if (tb1.m_value == TB_FALSE)
-        m_value = tb2.m_value;
-    else if (tb2.m_value == TB_FALSE)
-        m_value = tb1.m_value;
-    else
-        m_value = TB_UNKNOWN;
-}
-
-void CR_TriBool::Equal(const CR_TriBool& tb1, const CR_TriBool& tb2) {
-    if (tb1.m_value == TB_UNKNOWN || tb2.m_value == TB_UNKNOWN) {
-        m_value = TB_UNKNOWN;
-        return;
-    }
-    m_value = (tb1.m_value == tb2.m_value ? TB_TRUE : TB_FALSE);
-}
-
-////////////////////////////////////////////////////////////////////////////
 
 void CrShowHelp(void) {
 #ifdef _WIN64

@@ -1994,7 +1994,7 @@ bool CR_NameScope::IsConstantType(CR_TypeID tid) const {
         }
     }
     return false;
-}
+} // CR_NameScope::IsConstantType
 
 // is it an array type?
 bool CR_NameScope::IsArrayType(CR_TypeID tid) const {
@@ -2013,7 +2013,7 @@ bool CR_NameScope::IsArrayType(CR_TypeID tid) const {
         }
     }
     return false;
-}
+} // CR_NameScope::IsArrayType
 
 // is it a struct type?
 bool CR_NameScope::IsStructType(CR_TypeID tid) const {
@@ -2032,7 +2032,7 @@ bool CR_NameScope::IsStructType(CR_TypeID tid) const {
         }
     }
     return false;
-}
+} // CR_NameScope::IsStructType
 
 // is it a union type?
 bool CR_NameScope::IsUnionType(CR_TypeID tid) const {
@@ -2051,7 +2051,7 @@ bool CR_NameScope::IsUnionType(CR_TypeID tid) const {
         }
     }
     return false;
-}
+} // CR_NameScope::IsUnionType
 
 // is it a struct or union type?
 bool CR_NameScope::IsStructOrUnionType(CR_TypeID tid) const {
@@ -2082,7 +2082,7 @@ CR_TypeID CR_NameScope::ResolveAlias(CR_TypeID tid) const {
         }
     }
     return tid;
-}
+} // CR_NameScope::ResolveAlias
 
 CR_TypeID CR_NameScope::ResolveAliasAndCV(CR_TypeID tid) const {
     while (tid != cr_invalid_id) {
@@ -2098,7 +2098,7 @@ CR_TypeID CR_NameScope::ResolveAliasAndCV(CR_TypeID tid) const {
         }
     }
     return tid;
-}
+} // CR_NameScope::ResolveAliasAndCV
 
 CR_TypeID CR_NameScope::TypeIDFromFlags(CR_TypeFlags flags) const {
     const size_t siz = m_types.size();
@@ -2153,7 +2153,7 @@ void CR_NameScope::AddStructMembers(
             }
         }
     }
-}
+} // CR_NameScope::AddStructMembers
 
 void CR_NameScope::AddAccessMembers(
     std::vector<CR_AccessMember>& members,
@@ -2215,7 +2215,7 @@ void CR_NameScope::AddAccessMembers(
         member.m_bits = bits;
         members.emplace_back(member);
     }
-}
+} // CR_NameScope::AddAccessMembers
 
 CR_TypeID CR_NameScope::AddConstCharType() {
     return AddConstType(m_char_type);

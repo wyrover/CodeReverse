@@ -49,7 +49,7 @@ std::string CrValue32(unsigned long value, BOOL is_signed) {
         }
     }
     return buf;
-}
+} // CrValue32
 
 std::string CrValue64(unsigned long long value, BOOL is_signed) {
     char buf[32];
@@ -69,7 +69,7 @@ std::string CrValue64(unsigned long long value, BOOL is_signed) {
         sprintf(buf, "0x%08lX%08lX", HILONG(value), LOLONG(value));
     }
     return buf;
-}
+} // CrValue64
 
 ////////////////////////////////////////////////////////////////////////////
 // x86 flags
