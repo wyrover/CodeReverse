@@ -134,13 +134,17 @@ enum CR_OpCodeType {
 
 typedef unsigned long CR_OperandFlags;
 static const CR_OperandFlags
-    cr_OF_REG          = (1 << 0),     // registry
-    cr_OF_MEMREG       = (1 << 1),     // memory access by register
-    cr_OF_MEMIMM       = (1 << 2),     // memory access by immediate
-    cr_OF_MEMINDEX     = (1 << 4),     // memory access by index
-    cr_OF_IMM          = (1 << 5),     // immediate
-    cr_OF_TYPEMASK     = 0x3F,
-    cr_OF_FUNCNAME     = (1 << 6);     // function name
+    cr_OF_REG           = (1 << 0),     // registry
+    cr_OF_MEMREG        = (1 << 1),     // memory access by register
+    cr_OF_MEMIMM        = (1 << 2),     // memory access by immediate
+    cr_OF_MEMINDEX      = (1 << 3),     // memory access by index
+    cr_OF_IMM           = (1 << 4),     // immediate
+    cr_OF_TYPEMASK      = 0x1F,
+    cr_OF_FUNCNAME      = (1 << 5),     // function name
+    cr_OF_ISINTEGER     = (1 << 6),     // is an integer?
+    cr_OF_ISPOINTER     = (1 << 7),     // is a pointer?
+    cr_OF_ISFUNCTION    = (1 << 8),     // is a function?
+    cr_OF_ISMAGICPTR    = (1 << 9);     // is a magic pointer?
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
@@ -157,6 +161,7 @@ public:
     bool operator!=(const CR_Operand& opr) const;
     CR_OperandFlags GetOperandType() const;
     void SetOperandType(CR_OperandFlags flags);
+    void ModifyFlags(CR_OperandFlags add, CR_OperandFlags remove);
 
 public:
     void SetFuncName(const char *name);
@@ -177,6 +182,7 @@ public:
     CR_Addr64&              Value64();
     CR_Addr32&              Disp();
     char&                   Scale();
+    CR_TypeID&              TypeID();
     // const accessors
     const std::string&      Text() const;
     const std::string&      BaseReg() const;
@@ -188,6 +194,7 @@ public:
     const CR_Addr64&        Value64() const;
     const CR_Addr32&        Disp() const;
     const char&             Scale() const;
+    const CR_TypeID&        TypeID() const;
 
 protected:
     std::string             m_text;
@@ -202,6 +209,7 @@ protected:
     };
     CR_Addr32               m_disp;
     char                    m_scale;
+    CR_TypeID               m_type_id;
 }; // class CR_Operand
 
 ////////////////////////////////////////////////////////////////////////////
@@ -448,8 +456,7 @@ protected:
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo64 - decompilation information for 64-bit
 
-class CR_DecompInfo64
-{
+class CR_DecompInfo64 {
 public:
     CR_DecompInfo64();
     CR_DecompInfo64(const CR_DecompInfo64& info);
@@ -487,6 +494,303 @@ protected:
     // name scope
     CR_NameScope                                 m_namescope;
 };
+
+////////////////////////////////////////////////////////////////////////////
+// CR_X86_CPU -- x86 CPU
+
+#ifdef __GNUC__
+    #define CR_ANONYMOUS_STRUCT __extension__
+#else
+    #define CR_ANONYMOUS_STRUCT
+#endif
+
+typedef struct CR_X86_CPU {
+    union {
+        DWORDLONG   edx_eax;
+        CR_ANONYMOUS_STRUCT struct {
+            union {
+                DWORD       eax;
+                WORD        ax;
+                CR_ANONYMOUS_STRUCT struct {
+                    BYTE    al;
+                    BYTE    ah;
+                };
+            };
+            union {
+                DWORD       edx;
+                WORD        dx;
+                CR_ANONYMOUS_STRUCT struct {
+                    BYTE    dl;
+                    BYTE    dh;
+                };
+            };
+        };
+    };
+    union {
+        DWORD       ebx;
+        WORD        bx;
+        CR_ANONYMOUS_STRUCT struct {
+            BYTE    bl;
+            BYTE    bh;
+        };
+    };
+    union {
+        DWORD       ecx;
+        WORD        cx;
+        CR_ANONYMOUS_STRUCT struct {
+            BYTE    cl;
+            BYTE    ch;
+        };
+    };
+    union {
+        DWORD       edi;
+        WORD        di;
+    };
+    union {
+        DWORD       esi;
+        WORD        si;
+    };
+    union {
+        DWORD       ebp;
+        WORD        bp;
+    };
+    union {
+        DWORD       esp;
+        WORD        sp;
+    };
+    union {
+        DWORD       eip;
+        WORD        ip;
+    };
+    union {
+        DWORD       eflags;
+        WORD        flags;
+    };
+    union {
+        WORD        segs[6];
+        CR_ANONYMOUS_STRUCT struct {
+            WORD    cs;
+            WORD    ds;
+            WORD    ss;
+            WORD    es;
+            WORD    fs;
+            WORD    gs;
+        };
+    };
+} CR_X86_CPU;
+
+////////////////////////////////////////////////////////////////////////////
+// CR_X64_CPU -- x64 CPU
+
+typedef struct CR_X64_CPU {
+    union {
+        DWORDLONG   rdx_rax;
+        CR_ANONYMOUS_STRUCT struct {
+            union {
+                DWORDLONG   rax;
+                DWORD       eax;
+                WORD        ax;
+                CR_ANONYMOUS_STRUCT struct {
+                    BYTE    al;
+                    BYTE    ah;
+                };
+            };
+            union {
+                DWORDLONG   rdx;
+                DWORD       edx;
+                WORD        dx;
+                CR_ANONYMOUS_STRUCT struct {
+                    BYTE    dl;
+                    BYTE    dh;
+                };
+            };
+        };
+    };
+    union {
+        DWORDLONG   rbx;
+        DWORD       ebx;
+        WORD        bx;
+        CR_ANONYMOUS_STRUCT struct {
+            BYTE    bl;
+            BYTE    bh;
+        };
+    };
+    union {
+        DWORDLONG   rcx;
+        DWORD       ecx;
+        WORD        cx;
+        CR_ANONYMOUS_STRUCT struct {
+            BYTE    cl;
+            BYTE    ch;
+        };
+    };
+    union {
+        DWORDLONG   rdi;
+        DWORD       edi;
+        WORD        di;
+        BYTE        dil;
+    };
+    union {
+        DWORDLONG   rsi;
+        DWORD       esi;
+        WORD        si;
+        BYTE        sil;
+    };
+    union {
+        DWORDLONG   rbp;
+        DWORD       ebp;
+        WORD        bp;
+        BYTE        bpl;
+    };
+    union {
+        DWORDLONG   rsp;
+        DWORD       esp;
+        WORD        sp;
+        BYTE        spl;
+    };
+    union {
+        DWORDLONG   r8;
+        DWORD       r8d;
+        WORD        r8w;
+        BYTE        r8l;
+    };
+    union {
+        DWORDLONG   r9;
+        DWORD       r9d;
+        WORD        r9w;
+        BYTE        r9l;
+    };
+    union {
+        DWORDLONG   r10;
+        DWORD       r10d;
+        WORD        r10w;
+        BYTE        r10l;
+    };
+    union {
+        DWORDLONG   r11;
+        DWORD       r11d;
+        WORD        r11w;
+        BYTE        r11l;
+    };
+    union {
+        DWORDLONG   r12;
+        DWORD       r12d;
+        WORD        r12w;
+        BYTE        r12l;
+    };
+    union {
+        DWORDLONG   r13;
+        DWORD       r13d;
+        WORD        r13w;
+        BYTE        r13l;
+    };
+    union {
+        DWORDLONG   r14;
+        DWORD       r14d;
+        WORD        r14w;
+        BYTE        r14l;
+    };
+    union {
+        DWORDLONG   r15;
+        DWORD       r15d;
+        WORD        r15w;
+        BYTE        r15l;
+    };
+    union {
+        DWORDLONG   rip;
+        DWORD       eip;
+        WORD        ip;
+    };
+    union {
+        DWORDLONG   rflags;
+        DWORD       eflags;
+        WORD        flags;
+    };
+    union {
+        WORD        segs[6];
+        CR_ANONYMOUS_STRUCT struct {
+            WORD    cs;
+            WORD    ds;
+            WORD    ss;
+            WORD    es;
+            WORD    fs;
+            WORD    gs;
+        };
+    };
+} CR_X64_CPU;
+
+////////////////////////////////////////////////////////////////////////////
+// CR_FPU_WORD, CR_QWORD, CR_DQWORD
+
+// 80-bit data
+typedef union CR_FPU_WORD {
+    char        b[10];
+    short       w[5];
+    double      d;
+    float       f;
+} CR_FPU_WORD;
+
+// 64-bit data
+typedef union CR_QWORD {
+    DWORDLONG   qw[1];
+    double      d[1];
+    DWORD       dw[2];
+    float       f[2];
+    WORD        w[4];
+    BYTE        b[8];
+} CR_QWORD;
+
+// 128-bit data
+typedef union CR_DQWORD {
+    M128A       dqw[1];
+    DWORDLONG   qw[2];
+    double      d[2];
+    DWORD       dw[4];
+    float       f[4];
+    WORD        w[8];
+    BYTE        b[16];
+} CR_DQWORD;
+
+////////////////////////////////////////////////////////////////////////////
+// CR_X87_FPU, CR_MMX, CR_XMM, CR_SSE
+
+typedef struct CR_X87_FPU {
+    CR_FPU_WORD     st[8];
+    WORD            control;
+    WORD            status;
+    WORD            tag;
+    DWORDLONG       instruction;
+    DWORDLONG       operand;
+} CR_X87_FPU;
+
+typedef struct CR_MMX {
+    CR_QWORD mm[8];
+} CR_MMX;
+
+typedef struct CR_XMM {
+    CR_DQWORD xmm[8];
+} CR_XMM;
+
+typedef struct CR_SSE {
+    CR_XMM      xmm;
+    CR_MMX      mmx;
+    DWORD       mxcsr;
+} CR_SSE;
+
+////////////////////////////////////////////////////////////////////////////
+// CR_X86_CORE, CR_X64_CORE
+
+typedef struct CR_X86_CORE {
+    CR_X86_CPU cpu;
+    CR_X87_FPU fpu;
+    CR_SSE     sse;
+} CR_X86_CORE;
+
+typedef struct CR_X64_CORE {
+    CR_X64_CPU cpu;
+    CR_X87_FPU fpu;
+    CR_SSE     sse;
+} CR_X64_CORE;
 
 ////////////////////////////////////////////////////////////////////////////
 

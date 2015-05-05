@@ -157,6 +157,9 @@ public:
     BOOL DisAsm32(CR_DecompInfo32& info);
     BOOL DisAsm64(CR_DecompInfo64& info);
 
+    BOOL AnalyzeOperands32(CR_DecompInfo32& info, CR_Addr32 func);
+    BOOL AnalyzeOperands64(CR_DecompInfo64& info, CR_Addr64 func);
+
     BOOL FixupAsm32(CR_DecompInfo32& info);
     BOOL FixupAsm64(CR_DecompInfo64& info);
 

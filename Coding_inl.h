@@ -28,8 +28,13 @@ inline CR_OperandFlags CR_Operand::GetOperandType() const {
 }
 
 inline void CR_Operand::SetOperandType(CR_OperandFlags flags) {
-    OperandFlags() &= ~cr_OF_TYPEMASK;
-    OperandFlags() |= flags;
+    CR_Operand::ModifyFlags(flags, cr_OF_TYPEMASK);
+}
+
+inline void
+CR_Operand::ModifyFlags(CR_OperandFlags add, CR_OperandFlags remove) {
+    OperandFlags() &= ~remove;
+    OperandFlags() |= add;
 }
 
 inline void CR_Operand::SetFuncName(const char *name) {
@@ -85,6 +90,10 @@ inline char& CR_Operand::Scale() {
     return m_scale;
 }
 
+inline CR_TypeID& CR_Operand::TypeID() {
+    return m_type_id;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand const accessors
 
@@ -126,6 +135,10 @@ inline const CR_Addr32& CR_Operand::Disp() const {
 
 inline const char& CR_Operand::Scale() const {
     return m_scale;
+}
+
+inline const CR_TypeID& CR_Operand::TypeID() const{
+    return m_type_id;
 }
 
 ////////////////////////////////////////////////////////////////////////////

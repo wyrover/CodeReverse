@@ -96,28 +96,20 @@ typedef CR_VecSet<CR_ID>        CR_IDSet;
 // a set of type id
 typedef CR_VecSet<CR_TypeID>    CR_TypeSet;
 
-// invalid address
-#ifdef _WIN64
-    #define cr_invalid_address      0xDEADFACEDEADFACEULL
-#else
-    #define cr_invalid_address      0xDEADFACEUL
-#endif
-
 ////////////////////////////////////////////////////////////////////////////
 // CR_TypedValue --- typed value
 
 struct CR_TypedValue {
-    void *      m_ptr;
-    size_t      m_size;
-    CR_TypeID   m_type_id;
-    unsigned long long m_addr;
-    std::string m_text;
-    std::string m_extra;
+    void *          m_ptr;
+    size_t          m_size;
+    CR_TypeID       m_type_id;
+    std::string     m_expr_addr;    // expressed address
+    std::string     m_text;
+    std::string     m_extra;
 
-    CR_TypedValue() : m_ptr(NULL), m_size(0), m_type_id(cr_invalid_id),
-                      m_addr(cr_invalid_address) { }
-    CR_TypedValue(CR_TypeID tid) : m_ptr(NULL), m_size(0), m_type_id(tid),
-                                   m_addr(cr_invalid_address) { }
+    CR_TypedValue() : m_ptr(NULL), m_size(0), m_type_id(cr_invalid_id) { }
+    CR_TypedValue(CR_TypeID tid) : m_ptr(NULL), m_size(0), m_type_id(tid)
+    { }
     CR_TypedValue(const void *ptr, size_t size);
     virtual ~CR_TypedValue();
 
@@ -263,22 +255,25 @@ struct CR_LogFunc {
 }; // struct CR_LogFunc
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_AccessMember --- accessible member
+// CR_StructMember --- accessible member
 
-struct CR_AccessMember {
+struct CR_StructMember {
     CR_TypeID       m_type_id;
     std::string     m_name;
     int             m_bit_offset;
     int             m_bits;
-    CR_AccessMember() = default;
-    CR_AccessMember(CR_TypeID tid, const std::string& name,
+    CR_StructMember() = default;
+    CR_StructMember(CR_TypeID tid, const std::string& name,
         int bit_offset = 0, int bits = -1) :
             m_type_id(tid), m_name(name),
                 m_bit_offset(bit_offset), m_bits(bits) { }
 };
 
-bool operator==(const CR_AccessMember& mem1, const CR_AccessMember& mem2);
-bool operator!=(const CR_AccessMember& mem1, const CR_AccessMember& mem2);
+bool operator==(const CR_StructMember& mem1, const CR_StructMember& mem2);
+bool operator!=(const CR_StructMember& mem1, const CR_StructMember& mem2);
+
+// NOTE: CR_AccessMember is same as CR_StructMember except meaning of m_bits.
+typedef CR_StructMember CR_AccessMember;
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_LogStruct --- logical structure or union
@@ -291,7 +286,7 @@ struct CR_LogStruct {
     int                     m_alignas;          // _Alignas(#)
     bool                    m_alignas_explicit;
     bool                    m_is_complete;      // is it complete?
-    std::vector<CR_AccessMember>    m_members;  // members
+    std::vector<CR_StructMember>    m_members;  // members
 
     CR_LogStruct(bool is_struct = true) :
         m_is_struct(is_struct), m_pack(8), m_align(0), m_alignas(0),
@@ -509,9 +504,6 @@ public:
     // &var
     CR_TypedValue Address(const CR_TypedValue& value) const;
 
-          void *GetAddressPointer(unsigned long long addr, size_t size);
-    const void *GetAddressPointer(unsigned long long addr, size_t size) const;
-
     int GetIntValue(const CR_TypedValue& value) const;
     void SetIntValue(CR_TypedValue& value, int n) const;
     void SetValue(CR_TypedValue& value, CR_TypeID tid, const void *ptr,
@@ -615,11 +607,11 @@ public:
 
     // get member list of struct or union
     void GetStructMemberList(
-        CR_StructID sid, std::vector<CR_AccessMember>& members) const;
+        CR_StructID sid, std::vector<CR_StructMember>& members) const;
 
     // get access member list of a type
     void GetAccessMemberList(
-        const std::string& prefix, CR_TypeID tid, 
+        const std::string& name, CR_TypeID tid, 
         std::vector<CR_AccessMember>& members) const;
 
     void AddAccess(std::vector<CR_AccessMember>& members,

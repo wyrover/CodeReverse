@@ -926,6 +926,18 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
     return TRUE;
 } // CR_Module::DisAsm64
 
+////////////////////////////////////////////////////////////////////////////
+
+BOOL CR_Module::AnalyzeOperands32(CR_DecompInfo32& info, CR_Addr32 func) {
+    return TRUE;
+}
+
+BOOL CR_Module::AnalyzeOperands64(CR_DecompInfo64& info, CR_Addr64 func) {
+    return TRUE;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 BOOL CR_Module::FixupAsm32(CR_DecompInfo32& info) {
     bool must_retry;
     CR_NameScope& ns = info.NameScope();

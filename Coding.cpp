@@ -386,6 +386,7 @@ void CR_Operand::Copy(const CR_Operand& opr) {
     Value64() = opr.Value64();
     Disp() = opr.Disp();
     Scale() = opr.Scale();
+    TypeID() = opr.TypeID();
 }
 
 void CR_Operand::clear() {
@@ -398,6 +399,7 @@ void CR_Operand::clear() {
     Value64() = 0;
     Disp() = 0;
     Scale() = 1;
+    TypeID() = cr_invalid_id;
 }
 
 void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed) {
