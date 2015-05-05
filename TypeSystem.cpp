@@ -2188,7 +2188,7 @@ void CR_NameScope::AddAccessMembers(
         std::vector<CR_AccessMember> new_members;
         for (auto& mem : ls.m_members) {
             CR_AccessMember member = mem;
-            if (name.size()) {
+            if (name.size() && member.m_name.size()) {
                 // there is a name
                 member.m_name = name + "." + member.m_name;
             }
@@ -2207,7 +2207,7 @@ void CR_NameScope::AddAccessMembers(
                        new_members.begin(), new_members.end());
     }
     // add self
-    {
+    if (name.size()) {
         CR_AccessMember member;
         member.m_type_id = rtid;
         member.m_name = name;
