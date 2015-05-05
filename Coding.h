@@ -796,8 +796,9 @@ typedef struct CR_X64_CORE {
 } CR_X64_CORE;
 
 ////////////////////////////////////////////////////////////////////////////
+// CR_Storage
 
-struct CR_Storage32 {
+struct CR_Storage {
     typedef unsigned long StorageFlags;
     static const StorageFlags
         CORE    = (1 << 0),
@@ -805,30 +806,20 @@ struct CR_Storage32 {
         HEAP    = (1 << 2),
         CODE    = (1 << 3),
         DATA    = (1 << 4);
-
     StorageFlags                    m_storage_flags;
+
+    CR_Storage(StorageFlags storage_flags = 0, size_t siz = 0) :
+        m_storage_flags(storage_flags) { resize(siz); }
+
+    size_t size() const;
+    bool empty() const;
+    void resize(size_t size);
+
     std::vector<BYTE>               m_data_bytes;
     std::vector<CR_DataFlags>       m_data_flags;
+
     std::vector<CR_AccessMember>    m_accesses;
-
-    void AddHead(CR_Addr32 size);
-    void AddTail(CR_Addr32 size);
-    void RemoveHead(CR_Addr32 size);
-    void RemoveTail(CR_Addr32 size);
-};
-
-class CR_X86Machine {
-public:
-    typedef std::unordered_map<std::string,CR_Storage32> name_to_storage;
-public:
-    CR_X86Machine() { }
-    AddModule();
-
-          name_to_storage& MapNameToStorage();
-    const name_to_storage& MapNameToStorage() const;
-
-protected:
-    name_to_storage m_mNameToStorage;
+    void limit_access();
 };
 
 ////////////////////////////////////////////////////////////////////////////

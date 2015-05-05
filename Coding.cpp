@@ -1718,3 +1718,17 @@ BOOL CrGetAsmIO64(
 }
 
 ////////////////////////////////////////////////////////////////////////////
+
+void CR_Storage::limit_access() {
+    std::vector<CR_AccessMember> new_accesses;
+    for (auto& access : m_accesses) {
+        if (0 <= access.m_bit_offset) {
+            if (access.m_bit_offset < int(size() * 8)) {
+                new_accesses.emplace_back(access);
+            }
+        }
+    }
+    m_accesses = new_accesses;
+}
+
+////////////////////////////////////////////////////////////////////////////

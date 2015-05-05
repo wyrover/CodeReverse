@@ -227,6 +227,37 @@ protected:
 }; // class CR_Module
 
 ////////////////////////////////////////////////////////////////////////////
+// CR_X86Machine, CR_X64Machine
+
+class CR_X86Machine {
+public:
+    typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
+public:
+    CR_X86Machine() { }
+    void AddModule(const CR_Module& mod);
+
+          name_to_storage& MapNameToStorage();
+    const name_to_storage& MapNameToStorage() const;
+
+protected:
+    name_to_storage m_mNameToStorage;
+};
+
+class CR_X64Machine {
+public:
+    typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
+public:
+    CR_X64Machine() { }
+    void AddModule(const CR_Module& mod);
+
+          name_to_storage& MapNameToStorage();
+    const name_to_storage& MapNameToStorage() const;
+
+protected:
+    name_to_storage m_mNameToStorage;
+};
+
+////////////////////////////////////////////////////////////////////////////
 // Dumping.cpp
 
 const char *CrGetTimeStampString(DWORD TimeStamp);

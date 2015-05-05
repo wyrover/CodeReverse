@@ -783,3 +783,22 @@ inline void CR_DecompInfo64::clear() {
 }
 
 ////////////////////////////////////////////////////////////////////////////
+// CR_Storage
+
+inline size_t CR_Storage::size() const {
+    assert(m_data_bytes.size() == m_data_flags.size());
+    return m_data_bytes.size();
+}
+
+inline bool CR_Storage::empty() const {
+    assert(m_data_bytes.size() == m_data_flags.size());
+    return m_data_bytes.size() == 0;
+}
+
+inline void CR_Storage::resize(size_t size) {
+    m_data_bytes.resize(size);
+    m_data_flags.resize(size);
+    limit_access();
+}
+
+////////////////////////////////////////////////////////////////////////////
