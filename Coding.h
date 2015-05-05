@@ -134,17 +134,17 @@ enum CR_OpCodeType {
 
 typedef unsigned long CR_OperandFlags;
 static const CR_OperandFlags
-    cr_OF_REG           = (1 << 0),     // registry
-    cr_OF_MEMREG        = (1 << 1),     // memory access by register
-    cr_OF_MEMIMM        = (1 << 2),     // memory access by immediate
-    cr_OF_MEMINDEX      = (1 << 3),     // memory access by index
-    cr_OF_IMM           = (1 << 4),     // immediate
-    cr_OF_TYPEMASK      = 0x1F,
-    cr_OF_FUNCNAME      = (1 << 5),     // function name
-    cr_OF_ISINTEGER     = (1 << 6),     // is an integer?
-    cr_OF_ISPOINTER     = (1 << 7),     // is a pointer?
-    cr_OF_ISFUNCTION    = (1 << 8),     // is a function?
-    cr_OF_ISMAGICPTR    = (1 << 9);     // is a magic pointer?
+    cr_OF_REG           = 0x01,         // registry
+    cr_OF_MEMREG        = 0x02,         // memory access by register
+    cr_OF_MEMIMM        = 0x03,         // memory access by immediate
+    cr_OF_MEMINDEX      = 0x04,         // memory access by index
+    cr_OF_IMM           = 0x05,         // immediate
+    cr_OF_TYPEMASK      = 0x07,
+    cr_OF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
+    cr_OF_ISINTEGER     = (1 << 4),     // is an integer?
+    cr_OF_ISDATAPOINTER = (1 << 5),     // is a pointer to data?
+    cr_OF_ISFUNCPOINTER = (1 << 6),     // is a pointer to a function?
+    cr_OF_ISMAGIC       = (1 << 7);     // is a magic pointer?
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
@@ -157,22 +157,23 @@ public:
     virtual ~CR_Operand();
     void Copy(const CR_Operand& opr);
     void clear();
-    bool operator==(const CR_Operand& opr) const;
-    bool operator!=(const CR_Operand& opr) const;
+
     CR_OperandFlags GetOperandType() const;
     void SetOperandType(CR_OperandFlags flags);
+
     void ModifyFlags(CR_OperandFlags add, CR_OperandFlags remove);
 
 public:
-    void SetFuncName(const char *name);
+    void ParseText(int bits);
     void SetMemImm(CR_Addr64 addr);
     void SetImm32(CR_Addr32 val, BOOL is_signed);
     void SetImm64(CR_Addr64 val, BOOL is_signed);
-    void ParseText(int bits);
+    void SetExprAddrOnMemIndex();
 
 public:
     // accessors
     std::string&            Text();
+    std::string&            ExprAddr();
     std::string&            BaseReg();
     std::string&            IndexReg();
     std::string&            Seg();
@@ -185,6 +186,7 @@ public:
     CR_TypeID&              TypeID();
     // const accessors
     const std::string&      Text() const;
+    const std::string&      ExprAddr() const;
     const std::string&      BaseReg() const;
     const std::string&      IndexReg() const;
     const std::string&      Seg() const;
@@ -197,19 +199,20 @@ public:
     const CR_TypeID&        TypeID() const;
 
 protected:
-    std::string             m_text;
-    std::string             m_basereg;
-    std::string             m_indexreg;
-    std::string             m_seg;
-    CR_OperandFlags         m_flags;
-    DWORD                   m_size;
+    std::string             m_text;             // text
+    std::string             m_expr_addr;        // expressed address
+    std::string             m_basereg;          // base register
+    std::string             m_indexreg;         // index register
+    std::string             m_seg;              // segment register
+    CR_OperandFlags         m_flags;            // operand flags
+    DWORD                   m_size;             // size
     union {
-        CR_Addr64           m_value64;
-        CR_Addr32           m_value32;
+        CR_Addr64           m_value64;          // 64-bit value
+        CR_Addr32           m_value32;          // 32-bit value
     };
-    CR_Addr32               m_disp;
-    char                    m_scale;
-    CR_TypeID               m_type_id;
+    CR_Addr32               m_disp;             // displacement
+    char                    m_scale;            // scale
+    CR_TypeID               m_type_id;          // type_id
 }; // class CR_Operand
 
 ////////////////////////////////////////////////////////////////////////////
@@ -341,7 +344,7 @@ public:
     CR_Addr32&                          Addr();
     std::string&                        Name();
     CR_FuncFlags&                       FuncFlags();
-    CR_Range&                           ArgSizeRange();
+    CR_Range&                           StackArgSizeRange();
     CR_Addr32Set&                       Jumpees();
     CR_Addr32Set&                       Jumpers();
     CR_Addr32Set&                       Callees();
@@ -350,7 +353,7 @@ public:
     const CR_Addr32&                    Addr() const;
     const std::string&                  Name() const;
     const CR_FuncFlags&                 FuncFlags() const;
-    const CR_Range&                     ArgSizeRange() const;
+    const CR_Range&                     StackArgSizeRange() const;
     const CR_Addr32Set&                 Jumpees() const;
     const CR_Addr32Set&                 Jumpers() const;
     const CR_Addr32Set&                 Callees() const;
@@ -359,7 +362,7 @@ protected:
     CR_Addr32                           m_addr;
     std::string                         m_name;
     CR_FuncFlags                        m_dwFuncFlags;
-    CR_Range                            m_ArgSizeRange;
+    CR_Range                            m_StackArgSizeRange;
     CR_Addr32Set                        m_jumpees;
     CR_Addr32Set                        m_jumpers;
     CR_Addr32Set                        m_callees;
@@ -384,7 +387,7 @@ public:
     CR_Addr64&                          Addr();
     std::string&                        Name();
     CR_FuncFlags&                       FuncFlags();
-    CR_Range&                           ArgSizeRange();
+    CR_Range&                           StackArgSizeRange();
     CR_Addr64Set&                       Jumpees();
     CR_Addr64Set&                       Jumpers();
     CR_Addr64Set&                       Callees();
@@ -393,7 +396,7 @@ public:
     const CR_Addr64&                    Addr() const;
     const std::string&                  Name() const;
     const CR_FuncFlags&                 FuncFlags() const;
-    const CR_Range&                     ArgSizeRange() const;
+    const CR_Range&                     StackArgSizeRange() const;
     const CR_Addr64Set&                 Jumpees() const;
     const CR_Addr64Set&                 Jumpers() const;
     const CR_Addr64Set&                 Callees() const;
@@ -402,7 +405,7 @@ protected:
     CR_Addr64                           m_addr;
     std::string                         m_name;
     CR_FuncFlags                        m_dwFuncFlags;
-    CR_Range                            m_ArgSizeRange;
+    CR_Range                            m_StackArgSizeRange;
     CR_Addr64Set                        m_jumpees;
     CR_Addr64Set                        m_jumpers;
     CR_Addr64Set                        m_callees;
@@ -791,6 +794,23 @@ typedef struct CR_X64_CORE {
     CR_X87_FPU fpu;
     CR_SSE     sse;
 } CR_X64_CORE;
+
+////////////////////////////////////////////////////////////////////////////
+
+struct CR_DataBlock32 {
+    CR_DataBytes                    m_data_bytes;
+    std::vector<CR_OperandFlags>    m_data_flags;
+    std::vector<CR_AccessMember>    m_accesses;
+
+    void AddHead(CR_Addr32 size);
+    void AddTail(CR_Addr32 size);
+    void RemoveHead(CR_Addr32 size);
+    void RemoveTail(CR_Addr32 size);
+};
+
+class CR_X86Machine {
+    std::unordered_map<std::string,CR_DataBlock32> m_mNameToDataBlock;
+};
 
 ////////////////////////////////////////////////////////////////////////////
 

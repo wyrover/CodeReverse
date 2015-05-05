@@ -609,7 +609,7 @@ BOOL CR_Module::DisAsmAddr32(
             if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
                 // func is __stdcall
                 cf->FuncFlags() |= cr_FF_STDCALL;
-                cf->ArgSizeRange().Set(oc->Operand(0)->Value32());
+                cf->StackArgSizeRange().Set(oc->Operand(0)->Value32());
             } else {
                 // func is not __stdcall
                 cf->FuncFlags() |= cr_FF_NOTSTDCALL;
@@ -783,7 +783,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
 
         case cr_OCT_RETURN: // return
             if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
-                cf->ArgSizeRange().Set(oc->Operand(0)->Value64());
+                cf->StackArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {
                 if (func == va) {
                     cf->FuncFlags() |= cr_FF_RETURNONLY;
@@ -820,7 +820,7 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
         auto codefunc = make_shared<CR_CodeFunc32>();
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
-        codefunc->ArgSizeRange().Set(0);
+        codefunc->StackArgSizeRange().Set(0);
         codefunc->FuncFlags() |= cr_FF_CDECL;
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
@@ -880,7 +880,7 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
         auto codefunc = make_shared<CR_CodeFunc64>();
         codefunc->Addr() = va;
         codefunc->Name() = "EntryPoint";
-        codefunc->ArgSizeRange().Set(0);
+        codefunc->StackArgSizeRange().Set(0);
         info.MapAddrToCodeFunc().emplace(va, codefunc);
         MapRVAToFuncName().emplace(RVA, codefunc->Name());
         MapFuncNameToRVA().emplace(codefunc->Name(), RVA);
@@ -935,279 +935,6 @@ BOOL CR_Module::AnalyzeOperands32(CR_DecompInfo32& info, CR_Addr32 func) {
 BOOL CR_Module::AnalyzeOperands64(CR_DecompInfo64& info, CR_Addr64 func) {
     return TRUE;
 }
-
-////////////////////////////////////////////////////////////////////////////
-
-BOOL CR_Module::FixupAsm32(CR_DecompInfo32& info) {
-    bool must_retry;
-    CR_NameScope& ns = info.NameScope();
-
-retry:;
-    must_retry = false;
-
-    for (auto it : info.MapAddrToOpCode()) {
-        auto& operands = it.second.get()->Operands();
-        for (auto& opr : operands) {
-            if (opr.GetOperandType() == cr_OF_MEMIMM) {
-                CR_Addr32 addr = opr.Value32();
-                auto name = FuncNameFromRVA(addr);
-                if (name) {
-                    opr.SetFuncName(name);
-                    must_retry = true;
-                } else {
-                    if (AddressInData32(addr)) {
-                        opr.Text() = "M" + Cr8Hex(addr);
-                    } else if (AddressInCode32(addr)) {
-                        opr.Text() = "L" + Cr8Hex(addr);
-                    }
-                }
-            }
-        }
-
-        switch (it.second->OpCodeType()) {
-        case cr_OCT_JMP:
-        case cr_OCT_LOOP:
-        case cr_OCT_JCC:
-        case cr_OCT_CALL:
-            if (operands[0].GetOperandType() == cr_OF_MEMIMM) {
-                CR_Addr32 addr = operands[0].Value32();
-                const char *pName = FuncNameFromVA32(addr);
-                if (pName) {
-                    operands[0].SetFuncName(pName);
-                    must_retry = true;
-                }
-            } else if (operands[0].GetOperandType() == cr_OF_IMM) {
-                CR_Addr32 addr = operands[0].Value32();
-                const char *pName = FuncNameFromVA32(addr);
-                if (pName) {
-                    if ((operands[0].OperandFlags() & cr_OF_FUNCNAME) == 0) {
-                        operands[0].SetFuncName(pName);
-                        must_retry = true;
-                    }
-                } else if (AddressInCode32(addr)) {
-                    operands[0].Text() = "L" + Cr8Hex(addr);
-                }
-            }
-            break;
-
-        case cr_OCT_MISC:
-            if (it.second->Name() == "mov" ||
-                it.second->Name() == "cmp" ||
-                it.second->Name() == "test" ||
-                it.second->Name() == "and" ||
-                it.second->Name() == "sub" ||
-                it.second->Name().find("cmov") == 0)
-            {
-                if (operands[0].Size() == 0)
-                    operands[0].Size() = operands[1].Size();
-                else if (operands[1].Size() == 0)
-                    operands[1].Size() = operands[0].Size();
-            } else if (it.second->Name() == "lea") {
-                CR_Addr32 addr = operands[1].Value32();
-                if (AddressInData32(addr)) {
-                    operands[1].Text() = "offset M" + Cr8Hex(addr);
-                } else if (AddressInCode32(addr)) {
-                    operands[1].Text() = "offset L" + Cr8Hex(addr);
-                }
-            }
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    for (auto it : info.MapAddrToCodeFunc()) {
-        CR_CodeFunc32 *cf = it.second.get();
-        assert(cf);
-
-        if ((cf->FuncFlags() & cr_FF_JUMPERFUNC) && cf->Name().empty()) {
-            CR_Addr32 addr = cf->Addr();
-            CR_OpCode32 *oc = info.OpCodeFromAddr(addr);
-            assert(oc);
-            auto& operands = oc->Operands();
-            cf->Name() = std::string("__imp") + operands[0].Text();
-
-            auto RVA = RVAFromVA32(addr);
-            MapRVAToFuncName().emplace(RVA, cf->Name());
-            MapFuncNameToRVA().emplace(cf->Name(), RVA);
-            must_retry = true;
-
-            auto it = ns.MapNameToVarID().find(operands[0].Text());
-            if (it != ns.MapNameToVarID().end()) {
-                auto vid = it->second;
-                auto& var = ns.LogVar(vid);
-                auto tid = var.m_typed_value.m_type_id;
-                if (ns.IsFuncType(tid)) {
-                    auto rtid = ns.ResolveAliasAndCV(tid);
-                    auto& rtype = ns.LogType(rtid);
-                    auto& func = ns.LogFunc(rtype.m_sub_id);
-
-                    if (rtype.m_flags & TF_CDECL) {
-                        cf->FuncFlags() |= cr_FF_CDECL;
-                    } else if (rtype.m_flags & TF_STDCALL) {
-                        cf->FuncFlags() |= cr_FF_STDCALL;
-                    } else if (rtype.m_flags & TF_FASTCALL) {
-                        cf->FuncFlags() |= cr_FF_FASTCALL;
-                    }
-
-                    if (func.m_ellipsis) {
-                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 4);
-                    } else {
-                        cf->ArgSizeRange().Set(func.m_params.size() * 4);
-                    }
-                }
-            }
-        }
-
-        DWORD rva = RVAFromVA32(cf->Addr());
-        auto es = ExportSymbolFromRVA(rva);
-        if (es && cf->Name() != es->pszName) {
-            cf->Name() = es->pszName;
-            must_retry = true;
-        }
-    }
-
-    if (must_retry)
-        goto retry;
-
-    return TRUE;
-} // CR_Module::FixupAsm32
-
-BOOL CR_Module::FixupAsm64(CR_DecompInfo64& info) {
-    bool must_retry;
-    CR_NameScope& ns = info.NameScope();
-
-retry:;
-    must_retry = false;
-
-    // convert addresses
-    for (auto it : info.MapAddrToOpCode()) {
-        auto& operands = it.second.get()->Operands();
-        for (auto& opr : operands) {
-            if (opr.GetOperandType() == cr_OF_MEMIMM) {
-                CR_Addr64 addr = opr.Value64();
-                auto name = FuncNameFromVA64(addr);
-                if (name) {
-                    opr.SetFuncName(name);
-                    must_retry = true;
-                } else {
-                    if (AddressInData64(addr)) {
-                        opr.Text() = "M" + Cr16Hex(addr);
-                    } else if (AddressInCode64(addr)) {
-                        opr.Text() = "L" + Cr16Hex(addr);
-                    }
-                }
-            }
-        }
-
-        switch (it.second->OpCodeType()) {
-        case cr_OCT_JMP:
-        case cr_OCT_LOOP:
-        case cr_OCT_JCC:
-        case cr_OCT_CALL:
-            if (operands[0].GetOperandType() == cr_OF_MEMIMM) {
-                CR_Addr64 addr = operands[0].Value64();
-                const char *pName = FuncNameFromVA64(addr);
-                if (pName) {
-                    if ((operands[0].OperandFlags() & cr_OF_FUNCNAME) == 0) {
-                        operands[0].SetFuncName(pName);
-                        must_retry = true;
-                    }
-                }
-            } else if (operands[0].GetOperandType() == cr_OF_IMM) {
-                CR_Addr64 addr = operands[0].Value64();
-                const char *pName = FuncNameFromVA64(addr);
-                if (pName) {
-                    operands[0].SetFuncName(pName);
-                    must_retry = true;
-                } else if (AddressInCode64(addr)) {
-                    operands[0].Text() = "L" + Cr16Hex(addr);
-                }
-            }
-            break;
-
-        case cr_OCT_MISC:
-            if (it.second->Name() == "mov" || it.second->Name() == "cmp" ||
-                it.second->Name() == "test" || it.second->Name() == "and" ||
-                it.second->Name() == "sub" || it.second->Name().find("cmov") == 0)
-            {
-                if (operands[0].Size() == 0)
-                    operands[0].Size() = operands[1].Size();
-                else if (operands[1].Size() == 0)
-                    operands[1].Size() = operands[0].Size();
-            } else if (it.second->Name() == "lea") {
-                CR_Addr64 addr = operands[1].Value64();
-                if (AddressInData64(addr)) {
-                    operands[1].Text() = "offset M" + Cr16Hex(addr);
-                } else if (AddressInCode64(addr)) {
-                    operands[1].Text() = "offset L" + Cr16Hex(addr);
-                }
-            }
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    // fix up jumper functions
-    for (auto it : info.MapAddrToCodeFunc()) {
-        CR_CodeFunc64 *cf = it.second.get();
-        assert(cf);
-
-        if ((cf->FuncFlags() & cr_FF_JUMPERFUNC) && cf->Name().empty()) {
-            CR_Addr64 addr = cf->Addr();
-            CR_OpCode64 *oc = info.OpCodeFromAddr(addr);
-            assert(oc);
-            auto& operands = oc->Operands();
-            cf->Name() = std::string("__imp") + operands[0].Text();
-
-            auto it = ns.MapNameToVarID().find(operands[0].Text());
-            if (it != ns.MapNameToVarID().end()) {
-                auto vid = it->second;
-                auto& var = ns.LogVar(vid);
-                auto tid = var.m_typed_value.m_type_id;
-                if (ns.IsFuncType(tid)) {
-                    auto rtid = ns.ResolveAliasAndCV(tid);
-                    auto& rtype = ns.LogType(rtid);
-                    auto& func = ns.LogFunc(rtype.m_sub_id);
-
-                    if (rtype.m_flags & TF_CDECL) {
-                        cf->FuncFlags() |= cr_FF_CDECL;
-                    } else if (rtype.m_flags & TF_STDCALL) {
-                        cf->FuncFlags() |= cr_FF_STDCALL;
-                    } else if (rtype.m_flags & TF_FASTCALL) {
-                        cf->FuncFlags() |= cr_FF_FASTCALL;
-                    }
-
-                    if (func.m_ellipsis) {
-                        cf->ArgSizeRange().LimitMin(func.m_params.size() * 8);
-                    } else {
-                        cf->ArgSizeRange().Set(func.m_params.size() * 8);
-                    }
-                }
-            }
-
-            auto RVA = RVAFromVA64(addr);
-            MapRVAToFuncName().emplace(RVA, cf->Name());
-            MapFuncNameToRVA().emplace(cf->Name(), RVA);
-            must_retry = true;
-        }
-
-        DWORD rva = RVAFromVA64(cf->Addr());
-        auto es = ExportSymbolFromRVA(rva);
-        if (es && cf->Name() != es->pszName) {
-            cf->Name() = es->pszName;
-            must_retry = true;
-        }
-    }
-
-    if (must_retry)
-        goto retry;
-
-    return TRUE;
-} // CR_Module::FixupAsm64
 
 ////////////////////////////////////////////////////////////////////////////
 // resource

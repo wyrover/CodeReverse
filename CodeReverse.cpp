@@ -12,22 +12,13 @@
 const char * const cr_logo =
     "///////////////////////////////////////////////\n"
 #ifdef _WIN64
-# ifdef __GNUC__
-    "// CodeReverse 0.2.0 (64-bit) for gcc        //\n"
-# elif defined(_MSC_VER)
-    "// CodeReverse 0.2.0 (64-bit) for cl         //\n"
-# endif
+    "// CodeReverse 0.2.1 (64-bit)                //\n"
 #else   // ndef _WIN64
-# ifdef __GNUC__
-    "// CodeReverse 0.2.0 (32-bit) for gcc        //\n"
-# elif defined(_MSC_VER)
-    "// CodeReverse 0.2.0 (32-bit) for cl         //\n"
-# endif
+    "// CodeReverse 0.2.1 (32-bit)                //\n"
 #endif  // ndef _WIN64
     "// https://github.com/katahiromz/CodeReverse //\n"
     "// katayama.hirofumi.mz@gmail.com            //\n"
     "///////////////////////////////////////////////\n";
-
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_TriBool - logical value of three states
@@ -84,11 +75,11 @@ void CrShowHelp(void) {
     fprintf(stderr, " -a    Dump disassembly\n");
     fprintf(stderr, " -d    Dump decompiled codes\n");
 #ifdef _WIN64
-    fprintf(stderr, " -32   32-bit mode\n");
-    fprintf(stderr, " -64   64-bit mode (default)\n");
+    fprintf(stderr, " -m32  32-bit mode\n");
+    fprintf(stderr, " -m64  64-bit mode (default)\n");
 #else
-    fprintf(stderr, " -32   32-bit mode (default)\n");
-    fprintf(stderr, " -64   64-bit mode\n");
+    fprintf(stderr, " -m32  32-bit mode (default)\n");
+    fprintf(stderr, " -m64  64-bit mode\n");
 #endif
     fprintf(stderr, " --prefix PREFIX   Wonders API prefix\n");
     fprintf(stderr, " --suffix SUFFIX   Wonders API suffix\n");
@@ -237,9 +228,9 @@ int main(int argc, char **argv) {
             } else if (ch == 'd' || ch == 'D') {
                 modes[MODE_DUMP_DECOMPILE] = true;
                 defaulted = false;
-            } else if (strcmp(arg, "-32") == 0 || strcmp(arg, "--32") == 0) {
+            } else if (strcmp(arg, "-m32") == 0) {
                 modes[MODE_64BIT] = false;
-            } else if (strcmp(arg, "-64") == 0 || strcmp(arg, "--64") == 0) {
+            } else if (strcmp(arg, "-m64") == 0) {
                 modes[MODE_64BIT] = true;
             } else {
                 fprintf(stderr, "ERROR: invalid option '%s'\n", arg);

@@ -378,6 +378,7 @@ BOOL CrRegOverlapsReg(const char *reg1, const char *reg2) {
 
 void CR_Operand::Copy(const CR_Operand& opr) {
     Text() = opr.Text();
+    ExprAddr() = opr.ExprAddr();
     BaseReg() = opr.BaseReg();
     IndexReg() = opr.IndexReg();
     Seg() = opr.Seg();
@@ -391,6 +392,7 @@ void CR_Operand::Copy(const CR_Operand& opr) {
 
 void CR_Operand::clear() {
     Text().clear();
+    ExprAddr().clear();
     BaseReg().clear();
     IndexReg().clear();
     Seg().clear();
@@ -398,36 +400,44 @@ void CR_Operand::clear() {
     Size() = 0;
     Value64() = 0;
     Disp() = 0;
-    Scale() = 1;
+    Scale() = 0;
     TypeID() = cr_invalid_id;
 }
 
 void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed) {
     Text() = CrValue32(val, is_signed);
+    ExprAddr().clear();
     SetOperandType(cr_OF_IMM);
     Value64() = val;
 }
 
 void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed) {
     Text() = CrValue64(val, is_signed);
+    ExprAddr().clear();
     SetOperandType(cr_OF_IMM);
     Value64() = val;
 }
 
-bool CR_Operand::operator==(const CR_Operand& opr) const {
-    return
-        Text() == opr.Text() &&
-        OperandFlags() == opr.OperandFlags() &&
-        Size() == opr.Size() &&
-        Value64() == opr.Value64();
-}
-
-bool CR_Operand::operator!=(const CR_Operand& opr) const {
-    return
-        Text() != opr.Text() ||
-        OperandFlags() != opr.OperandFlags() ||
-        Size() != opr.Size() ||
-        Value64() != opr.Value64();
+void CR_Operand::SetExprAddrOnMemIndex() {
+    std::string expr;
+    if (BaseReg().size()) {
+        expr += BaseReg();
+    }
+    if (IndexReg().size() && Scale() != 0) {
+        if (BaseReg().size()) {
+            expr += "+";
+        }
+        expr += IndexReg();
+        expr += std::to_string(Scale());
+    }
+    if (Disp() > 0) {
+        expr += "+";
+        expr += std::to_string(Disp());
+    } else if (Disp() < 0) {
+        expr += "-";
+        expr += std::to_string(Disp());
+    }
+    ExprAddr() = expr;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -441,6 +451,7 @@ void CR_Operand::ParseText(int bits) {
     DWORD size = CrRegGetSize(p, bits);
     if (size != 0) {
         BaseReg() = p;
+        ExprAddr().clear();
         SetOperandType(cr_OF_REG);
         Size() = size;
         return;
@@ -476,19 +487,19 @@ void CR_Operand::ParseText(int bits) {
     }
 
     // near or far
-    if (strncmp(p, "near ", 5) == 0)
+    if (strncmp(p, "near ", 5) == 0) {
         p += 5;
-    else if (strncmp(p, "far ", 4) == 0)
+    } else if (strncmp(p, "far ", 4) == 0) {
         p += 4;
+    }
 
     if (p[0] == '+' || p[0] == '-') {
-        long long value = _strtoi64(p, NULL, 16);
+        long long value = std::strtoll(p, NULL, 0);
         SetImm64(value, true);
         return;
     }
     if (isdigit(p[0])) {
-        unsigned long long value = _strtoui64(p, NULL, 0);
-        Value64() = value;
+        unsigned long long value = std::strtoull(p, NULL, 0);
         SetImm64(value, false);
         return;
     }
@@ -520,6 +531,7 @@ void CR_Operand::ParseText(int bits) {
         if ((size = CrRegGetSize(p, bits)) != 0) {
             BaseReg() = p;
             SetOperandType(cr_OF_MEMREG);
+            ExprAddr() = BaseReg();
             return;
         }
 
@@ -528,9 +540,10 @@ void CR_Operand::ParseText(int bits) {
         q = p + strcspn(p, "+-");
         if (*q == 0) {
             if (isdigit(*p)) {
-                CR_Addr64 addr = _strtoui64(p, NULL, 16);
+                CR_Addr64 addr = std::strtoull(p, NULL, 0);
                 Value64() = addr;
                 SetOperandType(cr_OF_MEMIMM);
+                ExprAddr() = std::to_string(addr);
             } else {
                 assert(0);
             }
@@ -557,6 +570,7 @@ void CR_Operand::ParseText(int bits) {
                 Disp() = strtol(q, NULL, 0);
             }
             SetOperandType(cr_OF_MEMINDEX);
+            SetExprAddrOnMemIndex();
             return;
         }
 
@@ -573,6 +587,11 @@ void CR_Operand::ParseText(int bits) {
                 Scale() = char(strtol(s, NULL, 0));
                 Disp() = 0;
                 SetOperandType(cr_OF_MEMINDEX);
+                if (BaseReg() == IndexReg()) {
+                    BaseReg().clear();
+                    Scale() += 1;
+                }
+                SetExprAddrOnMemIndex();
                 return;
             } else {
                 if (isdigit(*q)) {
@@ -586,6 +605,7 @@ void CR_Operand::ParseText(int bits) {
                         Disp() = strtol(q, NULL, 0);
                     }
                     SetOperandType(cr_OF_MEMINDEX);
+                    SetExprAddrOnMemIndex();
                     return;
                 } else {
                     // esi+eax
@@ -594,6 +614,11 @@ void CR_Operand::ParseText(int bits) {
                     Scale() = 1;
                     Disp() = 0;
                     SetOperandType(cr_OF_MEMINDEX);
+                    if (BaseReg() == IndexReg()) {
+                        BaseReg().clear();
+                        Scale() = 2;
+                    }
+                    SetExprAddrOnMemIndex();
                     return;
                 }
             }
@@ -613,6 +638,11 @@ void CR_Operand::ParseText(int bits) {
                     Disp() = strtol(r, NULL, 0);
                 }
                 SetOperandType(cr_OF_MEMINDEX);
+                if (BaseReg() == IndexReg()) {
+                    BaseReg().clear();
+                    Scale() += 1;
+                }
+                SetExprAddrOnMemIndex();
                 return;
             } else {
                 // rbp+rax+0x0
@@ -625,6 +655,11 @@ void CR_Operand::ParseText(int bits) {
                     Disp() = strtol(r, NULL, 0);
                 }
                 SetOperandType(cr_OF_MEMINDEX);
+                if (BaseReg() == IndexReg()) {
+                    BaseReg().clear();
+                    Scale() += 1;
+                }
+                SetExprAddrOnMemIndex();
                 return;
             }
         }

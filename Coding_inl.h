@@ -37,11 +37,6 @@ CR_Operand::ModifyFlags(CR_OperandFlags add, CR_OperandFlags remove) {
     OperandFlags() |= add;
 }
 
-inline void CR_Operand::SetFuncName(const char *name) {
-    Text() = name;
-    OperandFlags() |= cr_OF_FUNCNAME;
-}
-
 inline void CR_Operand::SetMemImm(CR_Addr64 addr) {
     Value64() = addr;
     SetOperandType(cr_OF_MEMIMM);
@@ -52,6 +47,10 @@ inline void CR_Operand::SetMemImm(CR_Addr64 addr) {
 
 inline std::string& CR_Operand::Text() {
     return m_text;
+}
+
+inline std::string& CR_Operand::ExprAddr() {
+    return m_expr_addr;
 }
 
 inline std::string& CR_Operand::BaseReg() {
@@ -99,6 +98,10 @@ inline CR_TypeID& CR_Operand::TypeID() {
 
 inline const std::string& CR_Operand::Text() const {
     return m_text;
+}
+
+inline const std::string& CR_Operand::ExprAddr() const {
+    return m_expr_addr;
 }
 
 inline const std::string& CR_Operand::BaseReg() const {
@@ -348,8 +351,8 @@ inline CR_FuncFlags& CR_CodeFunc32::FuncFlags() {
     return m_dwFuncFlags;
 }
 
-inline CR_Range& CR_CodeFunc32::ArgSizeRange() {
-    return m_ArgSizeRange;
+inline CR_Range& CR_CodeFunc32::StackArgSizeRange() {
+    return m_StackArgSizeRange;
 }
 
 inline CR_Addr32Set& CR_CodeFunc32::Jumpees() {
@@ -383,8 +386,8 @@ inline const CR_FuncFlags& CR_CodeFunc32::FuncFlags() const {
     return m_dwFuncFlags;
 }
 
-inline const CR_Range& CR_CodeFunc32::ArgSizeRange() const {
-    return m_ArgSizeRange;
+inline const CR_Range& CR_CodeFunc32::StackArgSizeRange() const {
+    return m_StackArgSizeRange;
 }
 
 inline const CR_Addr32Set& CR_CodeFunc32::Jumpees() const {
@@ -418,8 +421,8 @@ inline CR_FuncFlags& CR_CodeFunc64::FuncFlags() {
     return m_dwFuncFlags;
 }
 
-inline CR_Range& CR_CodeFunc64::ArgSizeRange() {
-    return m_ArgSizeRange;
+inline CR_Range& CR_CodeFunc64::StackArgSizeRange() {
+    return m_StackArgSizeRange;
 }
 
 inline CR_Addr64Set& CR_CodeFunc64::Jumpees() {
@@ -453,8 +456,8 @@ inline const CR_FuncFlags& CR_CodeFunc64::FuncFlags() const {
     return m_dwFuncFlags;
 }
 
-inline const CR_Range& CR_CodeFunc64::ArgSizeRange() const {
-    return m_ArgSizeRange;
+inline const CR_Range& CR_CodeFunc64::StackArgSizeRange() const {
+    return m_StackArgSizeRange;
 }
 
 inline const CR_Addr64Set& CR_CodeFunc64::Jumpees() const {
@@ -495,14 +498,14 @@ inline void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
     Addr() = cf.Addr();
     Name() = cf.Name();
     FuncFlags() = cf.FuncFlags();
-    ArgSizeRange() = cf.ArgSizeRange();
+    StackArgSizeRange() = cf.StackArgSizeRange();
 }
 
 inline void CR_CodeFunc32::clear() {
     Addr() = 0;
     Name().clear();
     FuncFlags() = 0;
-    ArgSizeRange().clear();
+    StackArgSizeRange().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -527,14 +530,14 @@ inline void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
     Addr() = cf.Addr();
     Name() = cf.Name();
     FuncFlags() = cf.FuncFlags();
-    ArgSizeRange() = cf.ArgSizeRange();
+    StackArgSizeRange() = cf.StackArgSizeRange();
 }
 
 inline void CR_CodeFunc64::clear() {
     Addr() = 0;
     Name().clear();
     FuncFlags() = cr_FF_64BITFUNC;
-    ArgSizeRange().clear();
+    StackArgSizeRange().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////

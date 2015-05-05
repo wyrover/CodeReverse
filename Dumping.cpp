@@ -1050,8 +1050,8 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
         CrDumpFuncFlags(fp, cf->FuncFlags());
         fprintf(fp, "\n");
 
-        auto& range = cf->ArgSizeRange();
-        fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
+        auto& range = cf->StackArgSizeRange();
+        fprintf(fp, "StackArgSizeRange == %s\n", range.str().c_str());
 
         CrDumpFuncExtra32(fp, cf);
 
@@ -1128,8 +1128,8 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
         CrDumpFuncFlags(fp, cf->FuncFlags());
         fprintf(fp, "\n");
 
-        auto& range = cf->ArgSizeRange();
-        fprintf(fp, "ArgSizeRange == %s\n", range.str().c_str());
+        auto& range = cf->StackArgSizeRange();
+        fprintf(fp, "StackArgSizeRange == %s\n", range.str().c_str());
 
         CrDumpFuncExtra64(fp, cf);
 
