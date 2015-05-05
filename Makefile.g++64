@@ -46,6 +46,7 @@ CR_HEADERS = \
 	CodeReverse_inl.h \
 	Module.h \
 	Module_inl.h \
+	TypeSystem.h \
 	TextToText.hpp \
 	TextToText_inl.hpp \
 	StringAssortNew.h

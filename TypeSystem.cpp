@@ -673,9 +673,9 @@ bool CR_LogType::operator!=(const CR_LogType& type) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_StructMember
+// CR_AccessMember
 
-bool operator==(const CR_StructMember& mem1, const CR_StructMember& mem2) {
+bool operator==(const CR_AccessMember& mem1, const CR_AccessMember& mem2) {
     return
         mem1.m_type_id      == mem2.m_type_id &&
         mem1.m_name         == mem2.m_name &&
@@ -684,7 +684,7 @@ bool operator==(const CR_StructMember& mem1, const CR_StructMember& mem2) {
 
 }
 
-bool operator!=(const CR_StructMember& mem1, const CR_StructMember& mem2) {
+bool operator!=(const CR_AccessMember& mem1, const CR_AccessMember& mem2) {
     return
         mem1.m_type_id      != mem2.m_type_id ||
         mem1.m_name         != mem2.m_name ||
@@ -2125,9 +2125,8 @@ std::string CR_NameScope::NameFromTypeID(CR_TypeID tid) const {
         return "";
 }
 
-void
-CR_NameScope::GetStructMemberList(
-    CR_StructID sid, std::vector<CR_StructMember>& members) const
+void CR_NameScope::GetStructMemberList(
+    CR_StructID sid, std::vector<CR_AccessMember>& members) const
 {
     members.clear();
     auto& ls = LogStruct(sid);
@@ -2135,19 +2134,84 @@ CR_NameScope::GetStructMemberList(
         if (mem.m_name.size()) {
             members.emplace_back(mem);
         } else {
-            CR_TypeID tid = ResolveAlias(mem.m_type_id);
-            auto& type = LogType(tid);
-            if (type.m_flags & (TF_STRUCT | TF_UNION)) {
-                std::vector<CR_StructMember> children;
-                GetStructMemberList(type.m_sub_id, children);
+            CR_TypeID rtid = ResolveAliasAndCV(mem.m_type_id);
+            auto& rtype = LogType(rtid);
+            if (rtype.m_flags & (TF_STRUCT | TF_UNION)) {
+                std::vector<CR_AccessMember> children;
+                GetStructMemberList(rtype.m_sub_id, children);
                 for (auto& child : children) {
                     child.m_bit_offset += mem.m_bit_offset;
                 }
                 members.insert(members.end(),
-                    children.begin(), children.end());
+                               children.begin(), children.end());
             }
         }
     }
+}
+
+void CR_NameScope::GetAccessMemberList(
+    const std::string& prefix, CR_TypeID tid,
+    std::vector<CR_AccessMember>& members) const
+{
+    members.clear();
+    auto rtid = ResolveAliasAndCV(tid);
+    auto& rtype = LogType(rtid);
+    if (rtype.m_flags & TF_ARRAY) {
+        auto sub_id = rtype.m_sub_id;
+        auto item_size = LogType(sub_id).m_size;
+        for (size_t i = 0; i < rtype.m_count; ++i) {
+            CR_AccessMember member;
+            member.m_type_id = sub_id;
+            member.m_name = prefix + "[" + std::to_string(i) + "]";
+            member.m_bit_offset = (item_size * 8) * i;
+            member.m_bits = -1;
+            members.emplace_back(member);
+
+            std::vector<CR_AccessMember> children;
+            GetAccessMemberList(member.m_name, sub_id, children);
+            for (auto& child : children) {
+                child.m_bit_offset += member.m_bit_offset;
+            }
+            members.insert(members.end(),
+                           children.begin(), children.end());
+        }
+    } else if (rtype.m_flags & (TF_STRUCT | TF_UNION)) {
+        auto sid = rtype.m_sub_id;
+        GetStructMemberList(sid, members);
+        std::vector<CR_AccessMember> new_members;
+        for (auto& mem : members) {
+            if (prefix.size()) {
+                mem.m_name = prefix + "." + mem.m_name;
+            }
+            std::vector<CR_AccessMember> children;
+            GetAccessMemberList(mem.m_name, mem.m_type_id, children);
+            for (auto& child : children) {
+                child.m_bit_offset += mem.m_bit_offset;
+            }
+            new_members.insert(new_members.end(),
+                               children.begin(), children.end());
+        }
+        members.insert(members.end(),
+                       new_members.begin(), new_members.end());
+    }
+    CR_AccessMember member;
+    member.m_type_id = rtid;
+    member.m_name = prefix;
+    member.m_bit_offset = 0;
+    member.m_bits = -1;
+    members.emplace_back(member);
+}
+
+void CR_NameScope::AddAccess(std::vector<CR_AccessMember>& members,
+    CR_TypeID tid, const std::string& name, int bit_offset/* = 0*/)
+{
+    std::vector<CR_AccessMember> children;
+    GetAccessMemberList(name, tid, children);
+    for (auto& child : children) {
+        child.m_bit_offset += bit_offset;
+    }
+    members.insert(members.end(),
+                   children.begin(), children.end());
 }
 
 CR_TypeID CR_NameScope::AddConstCharType() {
@@ -2575,7 +2639,7 @@ CR_TypedValue CR_NameScope::Dot(
     }
     auto tid = ResolveAlias(struct_value.m_type_id);
     auto& struct_type = LogType(tid);
-    std::vector<CR_StructMember> children;
+    std::vector<CR_AccessMember> children;
     GetStructMemberList(struct_type.m_sub_id, children);
     bool is_set = false;
     for (auto& child : children) {
