@@ -1059,13 +1059,107 @@ void CR_Module::DumpResource(std::FILE *fp) {
 } // CR_Module::DumpResource
 
 ////////////////////////////////////////////////////////////////////////////
+
+CR_Strings CR_X86Machine::StorageNames() const {
+    CR_Strings ret;
+    for (auto& pair : MapNameToStorage()) {
+        ret.push_back(pair.first);
+    }
+    return ret;
+}
+
+CR_Strings CR_X64Machine::StorageNames() const {
+    CR_Strings ret;
+    for (auto& pair : MapNameToStorage()) {
+        ret.push_back(pair.first);
+    }
+    return ret;
+}
+
+/*virtual*/ void
+CR_X86Machine::ReadStorage(const std::string& expr_addr, size_t siz) {
+}
+
+/*virtual*/ void
+CR_X86Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
+}
+
+/*virtual*/ void
+CR_X64Machine::ReadStorage(const std::string& expr_addr, size_t siz) {
+}
+
+/*virtual*/ void
+CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
+}
+
+/*virtual*/ BOOL CR_X86Machine::Init(shared_ptr<CR_Module>& mod) {
+    assert(mod);
+    MapNameToStorage().clear();
+    MapNameToStorage().emplace("core", CR_CoreStorage32());
+    MapNameToStorage().emplace("stack", CR_StackStorage());
+    DWORD num_sect = mod->NumberOfSections();
+    for (DWORD i = 0; i < num_sect; ++i) {
+        auto pSection = mod->SectionHeader(i);
+        assert(pSection);
+        if (pSection->Characteristics & IMAGE_SCN_MEM_EXECUTE) {
+            // it's code
+            continue;
+        }
+        std::string name = "data" + std::to_string(i);
+        if (pSection->Characteristics & IMAGE_SCN_MEM_WRITE) {
+            CR_DataStorage
+                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
+                        mod->GetData(pSection->RVA));
+            MapNameToStorage().emplace(name, storage);
+        } else {
+            CR_ReadOnlyDataStorage
+                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
+                        mod->GetData(pSection->RVA));
+            MapNameToStorage().emplace(name, storage);
+        }
+    }
+    return TRUE;
+}
+
+/*virtual*/ BOOL CR_X64Machine::Init(shared_ptr<CR_Module>& mod) {
+    assert(mod);
+    MapNameToStorage().clear();
+    MapNameToStorage().emplace("core", CR_CoreStorage32());
+    MapNameToStorage().emplace("stack", CR_StackStorage());
+    DWORD num_sect = mod->NumberOfSections();
+    for (DWORD i = 0; i < num_sect; ++i) {
+        auto pSection = mod->SectionHeader(i);
+        assert(pSection);
+        if (pSection->Characteristics & IMAGE_SCN_MEM_EXECUTE) {
+            // it's code
+            continue;
+        }
+        std::string name = "data" + std::to_string(i);
+        if (pSection->Characteristics & IMAGE_SCN_MEM_WRITE) {
+            CR_DataStorage
+                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
+                        mod->GetData(pSection->RVA));
+            MapNameToStorage().emplace(name, storage);
+        } else {
+            CR_ReadOnlyDataStorage
+                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
+                        mod->GetData(pSection->RVA));
+            MapNameToStorage().emplace(name, storage);
+        }
+    }
+    return TRUE;
+}
+
+////////////////////////////////////////////////////////////////////////////
 // decompiling
 
 BOOL CR_Module::Decompile32(CR_DecompInfo32& info) {
+    //CR_X86Machine machine;
     return FALSE;
 }
 
 BOOL CR_Module::Decompile64(CR_DecompInfo64& info) {
+    //CR_X64Machine machine;
     return FALSE;
 }
 

@@ -334,3 +334,25 @@ inline BOOL CR_Module::AddressInCode64(CR_Addr64 va) const {
 } // CR_Module::AddressInCode64
 
 ////////////////////////////////////////////////////////////////////////////
+
+inline std::unordered_map<std::string,CR_Storage>&
+CR_X86Machine::MapNameToStorage() {
+    return m_mNameToStorage;
+}
+
+inline const std::unordered_map<std::string,CR_Storage>&
+CR_X86Machine::MapNameToStorage() const {
+    return m_mNameToStorage;
+}
+
+inline std::unordered_map<std::string,CR_Storage>&
+CR_X64Machine::MapNameToStorage() {
+    return m_mNameToStorage;
+}
+
+inline const std::unordered_map<std::string,CR_Storage>&
+CR_X64Machine::MapNameToStorage() const {
+    return m_mNameToStorage;
+}
+
+////////////////////////////////////////////////////////////////////////////

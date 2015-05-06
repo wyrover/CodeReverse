@@ -139,12 +139,14 @@ static const CR_DataFlags
     cr_OF_MEMIMM        = 0x03,         // memory access by immediate
     cr_OF_MEMINDEX      = 0x04,         // memory access by index
     cr_OF_IMM           = 0x05,         // immediate
-    cr_OF_TYPEMASK      = 0x07,
+    cr_OF_TYPEMASK      = 0x07,         // the mask bits of type
     cr_OF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
     cr_OF_ISINTEGER     = (1 << 4),     // is an integer?
     cr_OF_ISDATAPOINTER = (1 << 5),     // is a pointer to data?
     cr_OF_ISFUNCPOINTER = (1 << 6),     // is a pointer to a function?
-    cr_OF_ISMAGIC       = (1 << 7);     // is a magic pointer?
+    cr_OF_ISMAGIC       = (1 << 7),     // is a magic pointer?
+    cr_OF_ISCONTINUOUS  = (1 << 8),     // is continuous to the next byte?
+    cr_OF_ISREADONLY    = (1 << 9);     // is read-only?
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
@@ -897,12 +899,7 @@ struct CR_DataStorage : CR_Storage {
 
 struct CR_ReadOnlyDataStorage : CR_Storage {
     CR_ReadOnlyDataStorage(
-        size_t storage_siz, size_t data_size = 0, void *ptr = NULL) :
-        CR_Storage(CR_Storage::DATA | CR_Storage::READONLY, storage_siz)
-    {
-        assert(data_size <= storage_siz);
-        memcpy(m_data_bytes.data(), ptr, data_size);
-    }
+        size_t storage_siz, size_t data_size = 0, void *ptr = NULL);
 };
 
 struct CR_CpuStorage32 : CR_Storage {

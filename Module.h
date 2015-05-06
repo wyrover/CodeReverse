@@ -234,17 +234,19 @@ public:
     typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
 public:
     CR_X86Machine() { }
-    void AddModule(shared_ptr<CR_Module>& mod);
 
-    virtual void ReadStorage(const std::string& expr_addr);
-    virtual void WriteStorage(const std::string& expr_addr);
+    virtual BOOL Init(shared_ptr<CR_Module>& mod);
+    virtual void ReadStorage(const std::string& expr_addr, size_t siz);
+    virtual void WriteStorage(const std::string& expr_addr, size_t siz);
 
           name_to_storage& MapNameToStorage();
     const name_to_storage& MapNameToStorage() const;
 
+    CR_Strings StorageNames() const;
+
 protected:
-    std::vector<shared_ptr<CR_Module>>  m_modules;
-    name_to_storage                     m_mNameToStorage;
+    shared_ptr<CR_Module>   m_modules;
+    name_to_storage         m_mNameToStorage;
 };
 
 class CR_X64Machine {
@@ -252,19 +254,19 @@ public:
     typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
 public:
     CR_X64Machine() { }
-    void AddModule(shared_ptr<CR_Module>& mod);
 
-    virtual void ReadStorage(const std::string& expr_addr);
-    virtual void WriteStorage(const std::string& expr_addr);
+    virtual BOOL Init(shared_ptr<CR_Module>& mod);
+    virtual void ReadStorage(const std::string& expr_addr, size_t siz);
+    virtual void WriteStorage(const std::string& expr_addr, size_t siz);
 
           name_to_storage& MapNameToStorage();
     const name_to_storage& MapNameToStorage() const;
 
-    void Init();
+    CR_Strings StorageNames() const;
 
 protected:
-    std::vector<shared_ptr<CR_Module>>  m_modules;
-    name_to_storage                     m_mNameToStorage;
+    shared_ptr<CR_Module>   m_modules;
+    name_to_storage         m_mNameToStorage;
 };
 
 ////////////////////////////////////////////////////////////////////////////

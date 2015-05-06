@@ -1933,4 +1933,15 @@ void CR_CoreStorage64::Init() {
     }
 }
 
+CR_ReadOnlyDataStorage::CR_ReadOnlyDataStorage(
+    size_t storage_siz, size_t data_size/* = 0*/, void *ptr/* = NULL*/) :
+    CR_Storage(CR_Storage::DATA | CR_Storage::READONLY, storage_siz)
+{
+    assert(data_size <= storage_siz);
+    memcpy(m_data_bytes.data(), ptr, data_size);
+    for (size_t i = 0; i < storage_siz; ++i) {
+        m_data_flags[i] |= cr_OF_ISIMMEDIATE | cr_OF_ISREADONLY;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////
