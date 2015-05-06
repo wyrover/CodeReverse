@@ -419,6 +419,9 @@ typedef shared_ptr<CR_CodeFunc64> CR_ShdCodeFunc64;
 
 class CR_DecompInfo32 {
 public:
+    typedef std::map<CR_Addr32, CR_ShdOpCode32>     addr_to_shdopcode;
+    typedef std::map<CR_Addr32, CR_ShdCodeFunc32>   addr_to_shdcodefunc;
+public:
     CR_DecompInfo32();
     CR_DecompInfo32(const CR_DecompInfo32& info);
     CR_DecompInfo32& operator=(const CR_DecompInfo32& info);
@@ -427,39 +430,42 @@ public:
 
 public:
     // accessors
-    std::map<CR_Addr32, CR_ShdOpCode32>&         MapAddrToOpCode();
-    CR_Addr32Set&                                Entrances();
-    std::map<CR_Addr32, CR_ShdCodeFunc32>&       MapAddrToCodeFunc();
-    CR_OpCode32 *                                OpCodeFromAddr(CR_Addr32 addr);
-    CR_CodeFunc32 *                              CodeFuncFromAddr(CR_Addr32 addr);
-    shared_ptr<CR_ErrorInfo>&                    ErrorInfo();
-    CR_NameScope&                                NameScope();
+    addr_to_shdopcode&              MapAddrToOpCode();
+    CR_Addr32Set&                   Entrances();
+    addr_to_shdcodefunc&            MapAddrToCodeFunc();
+    CR_OpCode32 *                   OpCodeFromAddr(CR_Addr32 addr);
+    CR_CodeFunc32 *                 CodeFuncFromAddr(CR_Addr32 addr);
+    shared_ptr<CR_ErrorInfo>&       ErrorInfo();
+    CR_NameScope&                   NameScope();
     // const accessors
-    const std::map<CR_Addr32, CR_ShdOpCode32>&   MapAddrToOpCode() const;
-    const CR_Addr32Set&                          Entrances() const;
-    const std::map<CR_Addr32, CR_ShdCodeFunc32>& MapAddrToCodeFunc() const;
-    const CR_OpCode32 *                          OpCodeFromAddr(CR_Addr32 addr) const;
-    const CR_CodeFunc32 *                        CodeFuncFromAddr(CR_Addr32 addr) const;
-    const shared_ptr<CR_ErrorInfo>&              ErrorInfo() const;
-    const CR_NameScope&                          NameScope() const;
+    const addr_to_shdopcode&        MapAddrToOpCode() const;
+    const CR_Addr32Set&             Entrances() const;
+    const addr_to_shdcodefunc&      MapAddrToCodeFunc() const;
+    const CR_OpCode32 *             OpCodeFromAddr(CR_Addr32 addr) const;
+    const CR_CodeFunc32 *           CodeFuncFromAddr(CR_Addr32 addr) const;
+    const shared_ptr<CR_ErrorInfo>& ErrorInfo() const;
+    const CR_NameScope&             NameScope() const;
 
 protected:
     // map virtual address to asm code
-    std::map<CR_Addr32, CR_ShdOpCode32>          m_mAddrToOpCode;
+    addr_to_shdopcode               m_mAddrToOpCode;
     // entrances
-    CR_Addr32Set                                 m_sEntrances;
+    CR_Addr32Set                    m_sEntrances;
     // map addr to code function
-    std::map<CR_Addr32, CR_ShdCodeFunc32>        m_mAddrToCodeFunc;
+    addr_to_shdcodefunc             m_mAddrToCodeFunc;
     // error info
-    shared_ptr<CR_ErrorInfo>                     m_error_info;
+    shared_ptr<CR_ErrorInfo>        m_error_info;
     // name scope
-    CR_NameScope                                 m_namescope;
+    CR_NameScope                    m_namescope;
 };
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo64 - decompilation information for 64-bit
 
 class CR_DecompInfo64 {
+public:
+    typedef std::map<CR_Addr64, CR_ShdOpCode64>     addr_to_shdopcode;
+    typedef std::map<CR_Addr64, CR_ShdCodeFunc64>   addr_to_shdcodefunc;
 public:
     CR_DecompInfo64();
     CR_DecompInfo64(const CR_DecompInfo64& info);
@@ -469,33 +475,33 @@ public:
 
 public:
     // accessors
-    std::map<CR_Addr64, CR_ShdOpCode64>&         MapAddrToOpCode();
-    CR_Addr64Set&                                Entrances();
-    std::map<CR_Addr64, CR_ShdCodeFunc64>&       MapAddrToCodeFunc();
-    CR_OpCode64 *                                OpCodeFromAddr(CR_Addr64 addr);
-    CR_CodeFunc64 *                              CodeFuncFromAddr(CR_Addr64 addr);
-    shared_ptr<CR_ErrorInfo>&                    ErrorInfo();
-    CR_NameScope&                                NameScope();
+    addr_to_shdopcode&              MapAddrToOpCode();
+    CR_Addr64Set&                   Entrances();
+    addr_to_shdcodefunc&            MapAddrToCodeFunc();
+    CR_OpCode64 *                   OpCodeFromAddr(CR_Addr64 addr);
+    CR_CodeFunc64 *                 CodeFuncFromAddr(CR_Addr64 addr);
+    shared_ptr<CR_ErrorInfo>&       ErrorInfo();
+    CR_NameScope&                   NameScope();
     // const accessors
-    const std::map<CR_Addr64, CR_ShdOpCode64>&   MapAddrToOpCode() const;
-    const CR_Addr64Set&                          Entrances() const;
-    const std::map<CR_Addr64, CR_ShdCodeFunc64>& MapAddrToCodeFunc() const;
-    const CR_OpCode64 *                          OpCodeFromAddr(CR_Addr64 addr) const;
-    const CR_CodeFunc64 *                        CodeFuncFromAddr(CR_Addr64 addr) const;
-    const shared_ptr<CR_ErrorInfo>&              ErrorInfo() const;
-    const CR_NameScope&                          NameScope() const;
+    const addr_to_shdopcode&        MapAddrToOpCode() const;
+    const CR_Addr64Set&             Entrances() const;
+    const addr_to_shdcodefunc&      MapAddrToCodeFunc() const;
+    const CR_OpCode64 *             OpCodeFromAddr(CR_Addr64 addr) const;
+    const CR_CodeFunc64 *           CodeFuncFromAddr(CR_Addr64 addr) const;
+    const shared_ptr<CR_ErrorInfo>& ErrorInfo() const;
+    const CR_NameScope&             NameScope() const;
 
 protected:
     // map virtual address to asm code
-    std::map<CR_Addr64, CR_ShdOpCode64>          m_mAddrToOpCode;
+    addr_to_shdopcode               m_mAddrToOpCode;
     // entrances
-    CR_Addr64Set                                 m_sEntrances;
+    CR_Addr64Set                    m_sEntrances;
     // map addr to code function
-    std::map<CR_Addr64, CR_ShdCodeFunc64>        m_mAddrToCodeFunc;
+    addr_to_shdcodefunc             m_mAddrToCodeFunc;
     // error info
-    shared_ptr<CR_ErrorInfo>                     m_error_info;
+    shared_ptr<CR_ErrorInfo>        m_error_info;
     // name scope
-    CR_NameScope                                 m_namescope;
+    CR_NameScope                    m_namescope;
 };
 
 ////////////////////////////////////////////////////////////////////////////

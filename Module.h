@@ -227,20 +227,24 @@ protected:
 }; // class CR_Module
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_X86Machine, CR_X64Machine
+// CR_X86Machine, CR_X64Machine --- virtual machines
 
 class CR_X86Machine {
 public:
     typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
 public:
     CR_X86Machine() { }
-    void AddModule(const CR_Module& mod);
+    void AddModule(shared_ptr<CR_Module>& mod);
+
+    virtual void ReadStorage(const std::string& expr_addr);
+    virtual void WriteStorage(const std::string& expr_addr);
 
           name_to_storage& MapNameToStorage();
     const name_to_storage& MapNameToStorage() const;
 
 protected:
-    name_to_storage m_mNameToStorage;
+    std::vector<shared_ptr<CR_Module>>  m_modules;
+    name_to_storage                     m_mNameToStorage;
 };
 
 class CR_X64Machine {
@@ -248,13 +252,19 @@ public:
     typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
 public:
     CR_X64Machine() { }
-    void AddModule(const CR_Module& mod);
+    void AddModule(shared_ptr<CR_Module>& mod);
+
+    virtual void ReadStorage(const std::string& expr_addr);
+    virtual void WriteStorage(const std::string& expr_addr);
 
           name_to_storage& MapNameToStorage();
     const name_to_storage& MapNameToStorage() const;
 
+    void Init();
+
 protected:
-    name_to_storage m_mNameToStorage;
+    std::vector<shared_ptr<CR_Module>>  m_modules;
+    name_to_storage                     m_mNameToStorage;
 };
 
 ////////////////////////////////////////////////////////////////////////////

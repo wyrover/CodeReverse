@@ -290,41 +290,41 @@ int main(int argc, char **argv) {
     const char *pszModule = arg;
     fprintf(stderr, "Loading module %s...\n", pszModule);
 
-    CR_Module module;
-    if (!module.LoadModule(pszModule)) {
+    auto module = make_shared<CR_Module>();
+    if (!module->LoadModule(pszModule)) {
         fprintf(stderr, "ERROR: Cannot load module '%s', LastError = %lu\n",
-                pszModule, module.LastError());
+                pszModule, module->LastError());
         return cr_exit_cant_load;
     }
 
     if (modes[MODE_DUMP_HEADERS]) {
         fprintf(stderr, "Dumping module %s headers...\n", pszModule);
-        module.DumpHeaders(stdout);
+        module->DumpHeaders(stdout);
     }
     if (modes[MODE_DUMP_IMPORT]) {
         fprintf(stderr, "Dumping module %s import table...\n", pszModule);
-        module.DumpImportSymbols(stdout);
+        module->DumpImportSymbols(stdout);
     }
     if (modes[MODE_DUMP_EXPORT]) {
         fprintf(stderr, "Dumping module %s export table...\n", pszModule);
-        module.DumpExportSymbols(stdout);
+        module->DumpExportSymbols(stdout);
     }
     if (modes[MODE_DUMP_RESOURCE]) {
         fprintf(stderr, "Dumping module %s resource...\n", pszModule);
-        module.DumpResource(stdout);
+        module->DumpResource(stdout);
     }
     if (modes[MODE_DUMP_DELAYLOAD]) {
         fprintf(stderr, "Dumping module %s delayload info...\n", pszModule);
-        module.DumpDelayLoad(stdout);
+        module->DumpDelayLoad(stdout);
     }
 
-    if (module.Is64Bit() && !modes[MODE_64BIT]) {
+    if (module->Is64Bit() && !modes[MODE_64BIT]) {
         fprintf(stderr, "ERROR: Bits mismatched.\n");
         fprintf(stderr, "       The module was 64-bit and the mode was 32-bit.\n");
         return cr_exit_bits_mismatched;
     }
 
-    if (!module.Is64Bit() && modes[MODE_64BIT]) {
+    if (!module->Is64Bit() && modes[MODE_64BIT]) {
         fprintf(stderr, "ERROR: Bits mismatched.\n");
         fprintf(stderr, "       The module was 32-bit and the mode was 64-bit.\n");
         return cr_exit_bits_mismatched;
@@ -342,22 +342,22 @@ int main(int argc, char **argv) {
         }
 
         fprintf(stderr, "Disassembling...\n");
-        module.DisAsm64(info);
+        module->DisAsm64(info);
         fprintf(stderr, "Disassembled.\n");
 
         fprintf(stderr, "Decompiling...\n");
-        //module.FixupAsm64(info);
-        module.Decompile64(info);
+        //module->FixupAsm64(info);
+        module->Decompile64(info);
         //fprintf(stderr, "Decompiled.\n");
 
         if (modes[MODE_DUMP_DISASM]) {
             fprintf(stderr, "Dumping disassembly...\n");
-            module.DumpDisAsm64(stdout, info);
+            module->DumpDisAsm64(stdout, info);
             fprintf(stderr, "Dumped.\n");
         }
         if (modes[MODE_DUMP_DECOMPILE]) {
             fprintf(stderr, "Dumping decompiled codes...\n");
-            module.DumpDecompile64(stdout, info);
+            module->DumpDecompile64(stdout, info);
             fprintf(stderr, "Dumped.\n");
         }
     } else {
@@ -372,22 +372,22 @@ int main(int argc, char **argv) {
         }
 
         fprintf(stderr, "Disassembling...\n");
-        module.DisAsm32(info);
+        module->DisAsm32(info);
         fprintf(stderr, "Disassembled.\n");
 
         fprintf(stderr, "Decompiling...\n");
-        //module.FixupAsm32(info);
-        module.Decompile32(info);
+        //module->FixupAsm32(info);
+        module->Decompile32(info);
         //fprintf(stderr, "Decompiled.\n");
 
         if (modes[MODE_DUMP_DISASM]) {
             fprintf(stderr, "Dumping disassembly...\n");
-            module.DumpDisAsm32(stdout, info);
+            module->DumpDisAsm32(stdout, info);
             fprintf(stderr, "Dumped.\n");
         }
         if (modes[MODE_DUMP_DECOMPILE]) {
             fprintf(stderr, "Dumping decompiled codes...\n");
-            module.DumpDecompile32(stdout, info);
+            module->DumpDecompile32(stdout, info);
             fprintf(stderr, "Dumped.\n");
         }
     }
