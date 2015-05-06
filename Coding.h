@@ -870,6 +870,7 @@ struct CR_Storage {
     bool empty() const;
     void resize(size_t size);
 
+    std::string                     m_base_expr_addr;
     std::vector<BYTE>               m_data_bytes;
     std::vector<CR_DataFlags>       m_data_flags;
 

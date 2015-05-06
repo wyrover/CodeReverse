@@ -1108,14 +1108,20 @@ CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
         }
         std::string name = "data" + std::to_string(i);
         if (pSection->Characteristics & IMAGE_SCN_MEM_WRITE) {
+            DWORD RVA = pSection->RVA;
+            CR_Addr32 addr = mod->VA32FromRVA(RVA);
             CR_DataStorage
                 storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(pSection->RVA));
+                        mod->GetData(RVA));
+            storage.m_base_expr_addr = std::to_string(addr);
             MapNameToStorage().emplace(name, storage);
         } else {
+            DWORD RVA = pSection->RVA;
+            CR_Addr32 addr = mod->VA32FromRVA(RVA);
             CR_ReadOnlyDataStorage
                 storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(pSection->RVA));
+                        mod->GetData(RVA));
+            storage.m_base_expr_addr = std::to_string(addr);
             MapNameToStorage().emplace(name, storage);
         }
     }
@@ -1138,14 +1144,20 @@ CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
         }
         std::string name = "data" + std::to_string(i);
         if (pSection->Characteristics & IMAGE_SCN_MEM_WRITE) {
+            DWORD RVA = pSection->RVA;
+            CR_Addr64 addr = mod->VA64FromRVA(RVA);
             CR_DataStorage
                 storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(pSection->RVA));
+                        mod->GetData(RVA));
+            storage.m_base_expr_addr = std::to_string(addr);
             MapNameToStorage().emplace(name, storage);
         } else {
+            DWORD RVA = pSection->RVA;
+            CR_Addr64 addr = mod->VA64FromRVA(RVA);
             CR_ReadOnlyDataStorage
                 storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(pSection->RVA));
+                        mod->GetData(RVA));
+            storage.m_base_expr_addr = std::to_string(addr);
             MapNameToStorage().emplace(name, storage);
         }
     }
