@@ -1725,16 +1725,164 @@ BOOL CrGetAsmIO64(
 
 ////////////////////////////////////////////////////////////////////////////
 
-void CR_Storage::limit_access() {
-    std::vector<CR_AccessMember> new_accesses;
-    for (auto& access : m_accesses) {
-        if (0 <= access.m_bit_offset) {
-            if (access.m_bit_offset < int(size() * 8)) {
-                new_accesses.emplace_back(access);
-            }
-        }
-    }
-    m_accesses = new_accesses;
+void CR_CpuStorage32::Init() {
+    m_accesses.emplace_back(cr_invalid_id, "edx_eax", 0, 64);
+    m_accesses.emplace_back(cr_invalid_id, "eax", 0, 32);
+    m_accesses.emplace_back(cr_invalid_id, "ax", 0, 16);
+    m_accesses.emplace_back(cr_invalid_id, "al", 0, 8);
+    m_accesses.emplace_back(cr_invalid_id, "ah", 8, 8);
+    m_accesses.emplace_back(cr_invalid_id, "edx", 32, 32);
+    m_accesses.emplace_back(cr_invalid_id, "dx", 32, 16);
+    m_accesses.emplace_back(cr_invalid_id, "dl", 32, 8);
+    m_accesses.emplace_back(cr_invalid_id, "dh", 40, 8);
+    m_accesses.emplace_back(cr_invalid_id, "ebx", 64, 32);
+    m_accesses.emplace_back(cr_invalid_id, "bx", 64, 16);
+    m_accesses.emplace_back(cr_invalid_id, "bl", 64, 8);
+    m_accesses.emplace_back(cr_invalid_id, "bh", 72, 8);
+    m_accesses.emplace_back(cr_invalid_id, "ecx", 96, 32);
+    m_accesses.emplace_back(cr_invalid_id, "cx", 96, 16);
+    m_accesses.emplace_back(cr_invalid_id, "cl", 96, 8);
+    m_accesses.emplace_back(cr_invalid_id, "ch", 104, 8);
+    m_accesses.emplace_back(cr_invalid_id, "edi", 128, 32);
+    m_accesses.emplace_back(cr_invalid_id, "di", 128, 16);
+    m_accesses.emplace_back(cr_invalid_id, "esi", 160, 32);
+    m_accesses.emplace_back(cr_invalid_id, "si", 160, 16);
+    m_accesses.emplace_back(cr_invalid_id, "ebp", 192, 32);
+    m_accesses.emplace_back(cr_invalid_id, "bp", 192, 16);
+    m_accesses.emplace_back(cr_invalid_id, "esp", 224, 32);
+    m_accesses.emplace_back(cr_invalid_id, "sp", 224, 16);
+    m_accesses.emplace_back(cr_invalid_id, "eip", 256, 32);
+    m_accesses.emplace_back(cr_invalid_id, "ip", 256, 16);
+    m_accesses.emplace_back(cr_invalid_id, "eflags", 288, 32);
+    m_accesses.emplace_back(cr_invalid_id, "flags", 288, 16);
+    m_accesses.emplace_back(cr_invalid_id, "cs", 320, 16);
+    m_accesses.emplace_back(cr_invalid_id, "ds", 336, 16);
+    m_accesses.emplace_back(cr_invalid_id, "ss", 352, 16);
+    m_accesses.emplace_back(cr_invalid_id, "es", 368, 16);
+    m_accesses.emplace_back(cr_invalid_id, "fs", 384, 16);
+    m_accesses.emplace_back(cr_invalid_id, "gs", 400, 16);
+}
+
+void CR_CpuStorage64::Init() {
+    m_accesses.emplace_back(cr_invalid_id, "rdx_rax", 0, 64);
+    m_accesses.emplace_back(cr_invalid_id, "rax", 0, 64);
+    m_accesses.emplace_back(cr_invalid_id, "eax", 0, 32);
+    m_accesses.emplace_back(cr_invalid_id, "ax", 0, 16);
+    m_accesses.emplace_back(cr_invalid_id, "al", 0, 8);
+    m_accesses.emplace_back(cr_invalid_id, "ah", 8, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rdx", 64, 64);
+    m_accesses.emplace_back(cr_invalid_id, "edx", 64, 32);
+    m_accesses.emplace_back(cr_invalid_id, "dx", 64, 16);
+    m_accesses.emplace_back(cr_invalid_id, "dl", 64, 8);
+    m_accesses.emplace_back(cr_invalid_id, "dh", 72, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rbx", 128, 64);
+    m_accesses.emplace_back(cr_invalid_id, "ebx", 128, 32);
+    m_accesses.emplace_back(cr_invalid_id, "bx", 128, 16);
+    m_accesses.emplace_back(cr_invalid_id, "bl", 128, 8);
+    m_accesses.emplace_back(cr_invalid_id, "bh", 136, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rcx", 192, 64);
+    m_accesses.emplace_back(cr_invalid_id, "ecx", 192, 32);
+    m_accesses.emplace_back(cr_invalid_id, "cx", 192, 16);
+    m_accesses.emplace_back(cr_invalid_id, "cl", 192, 8);
+    m_accesses.emplace_back(cr_invalid_id, "ch", 200, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rdi", 256, 64);
+    m_accesses.emplace_back(cr_invalid_id, "edi", 256, 32);
+    m_accesses.emplace_back(cr_invalid_id, "di", 256, 16);
+    m_accesses.emplace_back(cr_invalid_id, "dil", 256, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rsi", 320, 64);
+    m_accesses.emplace_back(cr_invalid_id, "esi", 320, 32);
+    m_accesses.emplace_back(cr_invalid_id, "si", 320, 16);
+    m_accesses.emplace_back(cr_invalid_id, "sil", 320, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rbp", 384, 64);
+    m_accesses.emplace_back(cr_invalid_id, "ebp", 384, 32);
+    m_accesses.emplace_back(cr_invalid_id, "bp", 384, 16);
+    m_accesses.emplace_back(cr_invalid_id, "bpl", 384, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rsp", 448, 64);
+    m_accesses.emplace_back(cr_invalid_id, "esp", 448, 32);
+    m_accesses.emplace_back(cr_invalid_id, "sp", 448, 16);
+    m_accesses.emplace_back(cr_invalid_id, "spl", 448, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r8", 512, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r8d", 512, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r8w", 512, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r8l", 512, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r9", 576, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r9d", 576, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r9w", 576, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r9l", 576, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r10", 640, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r10d", 640, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r10w", 640, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r10l", 640, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r11", 704, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r11d", 704, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r11w", 704, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r11l", 704, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r12", 768, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r12d", 768, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r12w", 768, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r12l", 768, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r13", 832, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r13d", 832, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r13w", 832, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r13l", 832, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r14", 896, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r14d", 896, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r14w", 896, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r14l", 896, 8);
+    m_accesses.emplace_back(cr_invalid_id, "r15", 960, 64);
+    m_accesses.emplace_back(cr_invalid_id, "r15d", 960, 32);
+    m_accesses.emplace_back(cr_invalid_id, "r15w", 960, 16);
+    m_accesses.emplace_back(cr_invalid_id, "r15l", 960, 8);
+    m_accesses.emplace_back(cr_invalid_id, "rip", 1024, 64);
+    m_accesses.emplace_back(cr_invalid_id, "eip", 1024, 32);
+    m_accesses.emplace_back(cr_invalid_id, "ip", 1024, 16);
+    m_accesses.emplace_back(cr_invalid_id, "rflags", 1088, 64);
+    m_accesses.emplace_back(cr_invalid_id, "eflags", 1088, 32);
+    m_accesses.emplace_back(cr_invalid_id, "flags", 1088, 16);
+    m_accesses.emplace_back(cr_invalid_id, "cs", 1152, 16);
+    m_accesses.emplace_back(cr_invalid_id, "ds", 1168, 16);
+    m_accesses.emplace_back(cr_invalid_id, "ss", 1184, 16);
+    m_accesses.emplace_back(cr_invalid_id, "es", 1200, 16);
+    m_accesses.emplace_back(cr_invalid_id, "fs", 1216, 16);
+    m_accesses.emplace_back(cr_invalid_id, "gs", 1232, 16);
+}
+
+void CR_X87FpuStorage::Init() {
+    m_accesses.emplace_back(cr_invalid_id, "st0", 0, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st1", 80, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st2", 160, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st3", 240, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st4", 320, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st5", 400, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st6", 480, 80);
+    m_accesses.emplace_back(cr_invalid_id, "st7", 560, 80);
+    m_accesses.emplace_back(cr_invalid_id, "control", 640, 16);
+    m_accesses.emplace_back(cr_invalid_id, "status", 656, 16);
+    m_accesses.emplace_back(cr_invalid_id, "tag", 672, 16);
+    m_accesses.emplace_back(cr_invalid_id, "instruction", 688, 64);
+    m_accesses.emplace_back(cr_invalid_id, "operand", 752, 64);
+}
+
+void CR_MmxStorage::Init() {
+    m_accesses.emplace_back(cr_invalid_id, "mm0", 0, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm1", 64, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm2", 128, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm3", 192, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm4", 256, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm5", 320, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm6", 384, 64);
+    m_accesses.emplace_back(cr_invalid_id, "mm7", 448, 64);
+}
+
+void CR_XmmStorage::Init() {
+    m_accesses.emplace_back(cr_invalid_id, "xmm0", 0, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm1", 128, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm2", 256, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm3", 384, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm4", 512, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm5", 640, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm6", 768, 128);
+    m_accesses.emplace_back(cr_invalid_id, "xmm7", 896, 128);
 }
 
 ////////////////////////////////////////////////////////////////////////////

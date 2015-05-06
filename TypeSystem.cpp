@@ -2161,6 +2161,18 @@ void CR_NameScope::AddAccessMembers(
     int bit_offset/* = 0*/, int bits/* = -1*/) const
 {
     auto rtid = ResolveAliasAndCV(tid);
+    if (rtid == cr_invalid_id) {
+        assert(bits != -1);
+        if (name.size()) {
+            CR_AccessMember member;
+            member.m_type_id = rtid;
+            member.m_name = name;
+            member.m_bit_offset = bit_offset;
+            member.m_bits = bits;
+            members.emplace_back(member);
+        }
+        return;
+    }
     auto& rtype = LogType(rtid);
     if (bits == -1) {
         bits = rtype.m_size * 8;

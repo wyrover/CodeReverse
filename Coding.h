@@ -507,6 +507,7 @@ protected:
     #define CR_ANONYMOUS_STRUCT
 #endif
 
+#include <pshpack1.h>
 typedef struct CR_X86_CPU {
     union {
         DWORDLONG   edx_eax;
@@ -581,10 +582,12 @@ typedef struct CR_X86_CPU {
         };
     };
 } CR_X86_CPU;
+#include <poppack.h>
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_X64_CPU -- x64 CPU
 
+#include <pshpack1.h>
 typedef struct CR_X64_CPU {
     union {
         DWORDLONG   rdx_rax;
@@ -721,9 +724,12 @@ typedef struct CR_X64_CPU {
         };
     };
 } CR_X64_CPU;
+#include <poppack.h>
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_FPU_WORD, CR_QWORD, CR_DQWORD
+
+#include <pshpack1.h>
 
 // 80-bit data
 typedef union CR_FPU_WORD {
@@ -754,8 +760,12 @@ typedef union CR_DQWORD {
     BYTE        b[16];
 } CR_DQWORD;
 
+#include <poppack.h>
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_X87_FPU, CR_MMX, CR_XMM, CR_SSE
+
+#include <pshpack1.h>
 
 typedef struct CR_X87_FPU {
     CR_FPU_WORD     st[8];
@@ -780,9 +790,12 @@ typedef struct CR_SSE {
     DWORD       mxcsr;
 } CR_SSE;
 
+#include <poppack.h>
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_X86_CORE, CR_X64_CORE
 
+#include <pshpack1.h>
 typedef struct CR_X86_CORE {
     CR_X86_CPU cpu;
     CR_X87_FPU fpu;
@@ -794,6 +807,7 @@ typedef struct CR_X64_CORE {
     CR_X87_FPU fpu;
     CR_SSE     sse;
 } CR_X64_CORE;
+#include <poppack.h>
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Storage
@@ -819,7 +833,60 @@ struct CR_Storage {
     std::vector<CR_DataFlags>       m_data_flags;
 
     std::vector<CR_AccessMember>    m_accesses;
-    void limit_access();
+};
+
+////////////////////////////////////////////////////////////////////////////
+
+struct CR_StackStorage : CR_Storage {
+    CR_StackStorage() :
+        CR_Storage(CR_Storage::STACK, static_cast<size_t>(cr_stack_size))
+    {
+    }
+};
+
+struct CR_CpuStorage32 : CR_Storage {
+    CR_CpuStorage32() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_X86_CPU))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_CpuStorage64 : CR_Storage {
+    CR_CpuStorage64() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_X64_CPU))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_X87FpuStorage : CR_Storage {
+    CR_X87FpuStorage() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_X87_FPU))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_MmxStorage : CR_Storage {
+    CR_MmxStorage() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_MMX))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_XmmStorage : CR_Storage {
+    CR_XmmStorage() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_XMM))
+    {
+        Init();
+    }
+    void Init();
 };
 
 ////////////////////////////////////////////////////////////////////////////
