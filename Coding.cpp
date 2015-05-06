@@ -507,6 +507,14 @@ void CR_Operand::ParseText(int bits) {
         ++p;
         *strchr(p, ']') = '\0';
 
+        // is there segment register?
+        char *q = strchr(p, ':');
+        if (q) {
+            *q++ = 0;
+            Seg() = p;
+            p = q;
+        }
+
         if (strncmp(p, "word ", 5) == 0) {
             p += 5;
         } else if (strncmp(p, "dword ", 6) == 0) {
@@ -517,14 +525,6 @@ void CR_Operand::ParseText(int bits) {
 
         if (strncmp(p, "rel ", 4) == 0) {
             p += 4;
-        }
-
-        // is there segment register?
-        char *q = strchr(p, ':');
-        if (q) {
-            *q++ = 0;
-            Seg() = p;
-            p = q;
         }
 
         DWORD size;
@@ -545,6 +545,9 @@ void CR_Operand::ParseText(int bits) {
                 SetOperandType(cr_OF_MEMIMM);
                 ExprAddr() = std::to_string(addr);
             } else {
+                #if 0
+                    fprintf(stderr, "%s\n", Text().c_str());
+                #endif
                 assert(0);
             }
             return;
@@ -664,6 +667,9 @@ void CR_Operand::ParseText(int bits) {
             }
         }
     }
+    #if 0
+        fprintf(stderr, "%s\n", Text().c_str());
+    #endif
     assert(0);
 } // CR_Operand::ParseText
 
@@ -771,10 +777,8 @@ void CR_OpCode32::ParseText(const char *text) {
     }
 
     if (q[0] == 'r' && q[1] == 'e') {
-        const std::size_t size =
-            sizeof(cr_rep_insns) / sizeof(cr_rep_insns[0]);
-        for (std::size_t i = 0; i < size; ++i) {
-            if (_stricmp(q, cr_rep_insns[i]) == 0) {
+        for (auto& entry : cr_rep_insns) {
+            if (_stricmp(q, entry) == 0) {
                 Name() = q;
                 char *p = q + strlen(q) - 1;
 
@@ -858,8 +862,10 @@ void CR_OpCode32::ParseText(const char *text) {
 
     if (strncmp(q, "lock ", 5) == 0)
         p = strchr(p + 1, ' ');
+    if (strncmp(q, "wait ", 5) == 0)
+        p = strchr(p + 1, ' ');
 
-    *p = '\0';
+    *p++ = '\0';
     Name() = q;
     if (_stricmp(q, "push") == 0 || _stricmp(q, "pop") == 0 ||
         _stricmp(q, "enter") == 0 || _stricmp(q, "leave") == 0)
@@ -868,7 +874,7 @@ void CR_OpCode32::ParseText(const char *text) {
     }
 
     Operands().clear();
-    p = strtok(p + 1, ",");
+    p = strtok(p, ",");
     if (p) {
         CR_Operand opr;
         opr.Text() = p;
@@ -924,10 +930,8 @@ void CR_OpCode64::ParseText(const char *text) {
     }
 
     if (q[0] == 'r' && q[1] == 'e') {
-        const std::size_t size =
-            sizeof(cr_rep_insns) / sizeof(cr_rep_insns[0]);
-        for (std::size_t i = 0; i < size; ++i) {
-            if (_stricmp(q, cr_rep_insns[i]) == 0) {
+        for (auto& entry : cr_rep_insns) {
+            if (_stricmp(q, entry) == 0) {
                 Name() = q;
                 char *p = q + strlen(q) - 1;
 
@@ -1008,8 +1012,10 @@ void CR_OpCode64::ParseText(const char *text) {
 
     if (strncmp(q, "lock ", 5) == 0)
         p = strchr(p + 1, ' ');
+    if (strncmp(q, "wait ", 5) == 0)
+        p = strchr(p + 1, ' ');
 
-    *p = '\0';
+    *p++ = '\0';
     Name() = q;
     if (_stricmp(q, "push") == 0 || _stricmp(q, "pop") == 0 ||
         _stricmp(q, "enter") == 0 || _stricmp(q, "leave") == 0)
@@ -1018,7 +1024,7 @@ void CR_OpCode64::ParseText(const char *text) {
     }
 
     Operands().clear();
-    p = strtok(p + 1, ",");
+    p = strtok(p, ",");
     if (p) {
         CR_Operand opr;
         opr.Text() = p;

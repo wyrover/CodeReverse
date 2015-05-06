@@ -20,6 +20,10 @@ const char * const cr_logo =
     "// katayama.hirofumi.mz@gmail.com            //\n"
     "///////////////////////////////////////////////\n";
 
+#define cr_default_stack_size "4KB"
+
+CR_Addr64 cr_stack_size;
+
 ////////////////////////////////////////////////////////////////////////////
 
 void CrShowHelp(void) {
@@ -33,14 +37,14 @@ void CrShowHelp(void) {
     fprintf(stderr, "\n");
     fprintf(stderr, "Options:\n");
     fprintf(stderr, " -a    ANSI mode (not Unicode)\n");
-    fprintf(stderr, " -h    Dump headers\n");
-    fprintf(stderr, " -i    Dump import table\n");
-    fprintf(stderr, " -e    Dump export table\n");
-    fprintf(stderr, " -r    Dump resource\n");
-    fprintf(stderr, " -d    Dump delayload info\n");
-    fprintf(stderr, " -p    Parse input file and do semantic analysis\n");
-    fprintf(stderr, " -a    Dump disassembly\n");
-    fprintf(stderr, " -d    Dump decompiled codes\n");
+    fprintf(stderr, " -h    dump headers\n");
+    fprintf(stderr, " -i    dump import table\n");
+    fprintf(stderr, " -e    dump export table\n");
+    fprintf(stderr, " -r    dump resource\n");
+    fprintf(stderr, " -d    dump delayload info\n");
+    fprintf(stderr, " -p    parse input file and do semantic analysis\n");
+    fprintf(stderr, " -a    dump disassembly\n");
+    fprintf(stderr, " -d    dump decompiled codes\n");
 #ifdef _WIN64
     fprintf(stderr, " -m32  32-bit mode\n");
     fprintf(stderr, " -m64  64-bit mode (default)\n");
@@ -51,6 +55,7 @@ void CrShowHelp(void) {
     fprintf(stderr, " --prefix PREFIX   Wonders API prefix\n");
     fprintf(stderr, " --suffix SUFFIX   Wonders API suffix\n");
     fprintf(stderr, " --wonders VER     Wonders API version (98/Me/2000/XP/Vista/7/8.1)\n");
+    fprintf(stderr, " --stack SIZE      stack size (default: " cr_default_stack_size ")\n");
 }
 
 void CrDumpCommandLine(int argc, char **argv) {
@@ -72,6 +77,34 @@ void CrDumpCommandLine(int argc, char **argv) {
     }
     printf("\n");
     fflush(stdout);
+}
+
+std::string CrFormatBytes(CR_Addr64 size) {
+    if (size >= 1024 * 1024 * 1024) {
+        size /= 1024 * 1024 * 1024;
+        return std::to_string(size) + "GB";
+    }
+    if (size >= 1024 * 1024) {
+        size /= 1024 * 1024;
+        return std::to_string(size) + "MB";
+    }
+    if (size >= 1024) {
+        size /= 1024;
+        return std::to_string(size) + "KB";
+    }
+    return std::to_string(size) + "B";
+}
+
+CR_Addr64 CrParseBytes(const char *str) {
+    CR_Addr64 bytes = std::strtoull(str, NULL, 0);
+    if (strchr(str, 'K') || strchr(str, 'k')) {
+        bytes *= 1024;
+    } else if (strchr(str, 'M') || strchr(str, 'm')) {
+        bytes *= 1024 * 1024;
+    } else if (strchr(str, 'G') || strchr(str, 'g')) {
+        bytes *= 1024 * 1024 * 1024;
+    }
+    return bytes;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -145,11 +178,16 @@ int main(int argc, char **argv) {
         modes[MODE_64BIT] = false;
     #endif
 
+    cr_stack_size = CrParseBytes(cr_default_stack_size);
+
     const char *arg = NULL;
     bool defaulted = true;
     for (int i = 1; i < argc; ++i) {
         arg = argv[i];
-        if (lstrcmpiA(arg, "--prefix") == 0) {
+        if (lstrcmpiA(arg, "--stack") == 0) {
+            ++i;
+            cr_stack_size = CrParseBytes(argv[i]);
+        } else if (lstrcmpiA(arg, "--prefix") == 0) {
             ++i;
             prefix = argv[i];
         } else if (lstrcmpiA(arg, "--suffix") == 0) {
@@ -244,6 +282,8 @@ int main(int argc, char **argv) {
         }
     }
 
+    fprintf(stderr, "Stack Size: %s (%llu)\n",
+            CrFormatBytes(cr_stack_size).c_str(), cr_stack_size);
     fprintf(stderr, "Wonders API prefix: %s\n", prefix.c_str());
     fprintf(stderr, "Wonders API suffix: %s\n", suffix.c_str());
 
