@@ -796,8 +796,8 @@ inline bool CR_Storage::empty() const {
 }
 
 inline void CR_Storage::resize(size_t size) {
-    m_data_bytes.resize(size);
-    m_data_flags.resize(size);
+    m_data_bytes.resize(size, 0);
+    m_data_flags.resize(size, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////

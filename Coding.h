@@ -768,7 +768,19 @@ typedef union CR_DQWORD {
 #include <pshpack1.h>
 
 typedef struct CR_X87_FPU {
-    CR_FPU_WORD     st[8];
+    union {
+        CR_FPU_WORD     st[8];
+        CR_ANONYMOUS_STRUCT struct {
+            CR_FPU_WORD     st0;
+            CR_FPU_WORD     st1;
+            CR_FPU_WORD     st2;
+            CR_FPU_WORD     st3;
+            CR_FPU_WORD     st4;
+            CR_FPU_WORD     st5;
+            CR_FPU_WORD     st6;
+            CR_FPU_WORD     st7;
+        };
+    };
     WORD            control;
     WORD            status;
     WORD            tag;
@@ -778,15 +790,35 @@ typedef struct CR_X87_FPU {
 
 typedef struct CR_MMX {
     CR_QWORD mm[8];
+    CR_ANONYMOUS_STRUCT struct {
+        CR_QWORD mm0;
+        CR_QWORD mm1;
+        CR_QWORD mm2;
+        CR_QWORD mm3;
+        CR_QWORD mm4;
+        CR_QWORD mm5;
+        CR_QWORD mm6;
+        CR_QWORD mm7;
+    };
 } CR_MMX;
 
 typedef struct CR_XMM {
     CR_DQWORD xmm[8];
+    CR_ANONYMOUS_STRUCT struct {
+        CR_DQWORD xmm0;
+        CR_DQWORD xmm1;
+        CR_DQWORD xmm2;
+        CR_DQWORD xmm3;
+        CR_DQWORD xmm4;
+        CR_DQWORD xmm5;
+        CR_DQWORD xmm6;
+        CR_DQWORD xmm7;
+    };
 } CR_XMM;
 
 typedef struct CR_SSE {
-    CR_XMM      xmm;
     CR_MMX      mmx;
+    CR_XMM      xmm;
     DWORD       mxcsr;
 } CR_SSE;
 
@@ -815,11 +847,12 @@ typedef struct CR_X64_CORE {
 struct CR_Storage {
     typedef unsigned long StorageFlags;
     static const StorageFlags
-        CORE    = (1 << 0),
-        STACK   = (1 << 1),
-        HEAP    = (1 << 2),
-        CODE    = (1 << 3),
-        DATA    = (1 << 4);
+        CORE        = (1 << 0),
+        STACK       = (1 << 1),
+        HEAP        = (1 << 2),
+        CODE        = (1 << 3),
+        DATA        = (1 << 4),
+        READONLY    = (1 << 5);
     StorageFlags                    m_storage_flags;
 
     CR_Storage(StorageFlags storage_flags = 0, size_t siz = 0) :
@@ -836,11 +869,33 @@ struct CR_Storage {
 };
 
 ////////////////////////////////////////////////////////////////////////////
+// storages
 
 struct CR_StackStorage : CR_Storage {
-    CR_StackStorage() :
-        CR_Storage(CR_Storage::STACK, static_cast<size_t>(cr_stack_size))
+    CR_StackStorage(size_t siz = static_cast<size_t>(cr_stack_size)) :
+        CR_Storage(CR_Storage::STACK, siz) { }
+};
+
+struct CR_HeapStorage : CR_Storage {
+    CR_HeapStorage(size_t siz) : CR_Storage(CR_Storage::HEAP, siz) { }
+};
+
+struct CR_DataStorage : CR_Storage {
+    CR_DataStorage(size_t storage_siz, size_t data_size = 0, void *ptr = NULL) :
+        CR_Storage(CR_Storage::DATA, storage_siz)
     {
+        assert(data_size <= storage_siz);
+        memcpy(m_data_bytes.data(), ptr, data_size);
+    }
+};
+
+struct CR_ReadOnlyDataStorage : CR_Storage {
+    CR_ReadOnlyDataStorage(
+        size_t storage_siz, size_t data_size = 0, void *ptr = NULL) :
+        CR_Storage(CR_Storage::DATA | CR_Storage::READONLY, storage_siz)
+    {
+        assert(data_size <= storage_siz);
+        memcpy(m_data_bytes.data(), ptr, data_size);
     }
 };
 
@@ -883,6 +938,33 @@ struct CR_MmxStorage : CR_Storage {
 struct CR_XmmStorage : CR_Storage {
     CR_XmmStorage() :
         CR_Storage(CR_Storage::CORE, sizeof(CR_XMM))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_SseStorage : CR_Storage {
+    CR_SseStorage() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_SSE))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_CoreStorage32 : CR_Storage {
+    CR_CoreStorage32() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_X86_CORE))
+    {
+        Init();
+    }
+    void Init();
+};
+
+struct CR_CoreStorage64 : CR_Storage {
+    CR_CoreStorage64() :
+        CR_Storage(CR_Storage::CORE, sizeof(CR_X64_CORE))
     {
         Init();
     }

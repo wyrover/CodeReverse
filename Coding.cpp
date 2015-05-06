@@ -1885,4 +1885,52 @@ void CR_XmmStorage::Init() {
     m_accesses.emplace_back(cr_invalid_id, "xmm7", 896, 128);
 }
 
+void CR_SseStorage::Init() {
+    CR_MmxStorage mmx;
+    for (auto& access : mmx.m_accesses) {
+        m_accesses.emplace_back(access);
+    }
+    CR_XmmStorage xmm;
+    for (auto& access : xmm.m_accesses) {
+        access.m_bit_offset += sizeof(CR_MMX) * 8;
+        m_accesses.emplace_back(access);
+    }
+    size_t bit_offset = (sizeof(CR_MMX) + sizeof(CR_XMM)) * 8;
+    m_accesses.emplace_back(cr_invalid_id, "mxcsr", bit_offset, 4);
+}
+
+void CR_CoreStorage32::Init() {
+    CR_CpuStorage32 cpu;
+    for (auto& access : cpu.m_accesses) {
+        m_accesses.emplace_back(access);
+    }
+    CR_X87FpuStorage fpu;
+    for (auto& access : fpu.m_accesses) {
+        access.m_bit_offset += sizeof(CR_X86_CPU) * 8;
+        m_accesses.emplace_back(access);
+    }
+    CR_SseStorage sse;
+    for (auto& access : sse.m_accesses) {
+        access.m_bit_offset += (sizeof(CR_X86_CPU) + sizeof(CR_X87_FPU)) * 8;
+        m_accesses.emplace_back(access);
+    }
+}
+
+void CR_CoreStorage64::Init() {
+    CR_CpuStorage64 cpu;
+    for (auto& access : cpu.m_accesses) {
+        m_accesses.emplace_back(access);
+    }
+    CR_X87FpuStorage fpu;
+    for (auto& access : fpu.m_accesses) {
+        access.m_bit_offset += sizeof(CR_X64_CPU) * 8;
+        m_accesses.emplace_back(access);
+    }
+    CR_SseStorage sse;
+    for (auto& access : sse.m_accesses) {
+        access.m_bit_offset += (sizeof(CR_X64_CPU) + sizeof(CR_X87_FPU)) * 8;
+        m_accesses.emplace_back(access);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////
