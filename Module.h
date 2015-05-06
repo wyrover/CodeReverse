@@ -126,10 +126,10 @@ public:
           CR_Strings& ImportDllNames();
     const CR_Strings& ImportDllNames() const;
 
-          CR_VecSet<CR_ImportSymbol>& ImportSymbols();
-    const CR_VecSet<CR_ImportSymbol>& ImportSymbols() const;
-          CR_VecSet<CR_ExportSymbol>& ExportSymbols();
-    const CR_VecSet<CR_ExportSymbol>& ExportSymbols() const;
+          std::vector<CR_ImportSymbol>& ImportSymbols();
+    const std::vector<CR_ImportSymbol>& ImportSymbols() const;
+          std::vector<CR_ExportSymbol>& ExportSymbols();
+    const std::vector<CR_ExportSymbol>& ExportSymbols() const;
 
     const CR_ImportSymbol *ImportSymbolFromRVA(DWORD RVA) const;
     const CR_ExportSymbol *ExportSymbolFromRVA(DWORD RVA) const;
@@ -212,8 +212,8 @@ protected:
     REAL_IMAGE_DATA_DIRECTORY *     m_pDataDirectories;
 
     CR_Strings                      m_vecImportDllNames;
-    CR_VecSet<CR_ImportSymbol>      m_vecImportSymbols;
-    CR_VecSet<CR_ExportSymbol>      m_vecExportSymbols;
+    std::vector<CR_ImportSymbol>    m_vecImportSymbols;
+    std::vector<CR_ExportSymbol>    m_vecExportSymbols;
     CR_VecSet<ImgDelayDescr>        m_vecDelayLoadDescriptors;
 
     std::unordered_map<DWORD,std::string> m_mRVAToFuncNameMap;
@@ -222,8 +222,8 @@ protected:
     BOOL _LoadImage(LPVOID Data);
     BOOL _LoadNTHeaders(LPVOID Data);
     BOOL _GetImportDllNames(CR_Strings& names);
-    BOOL _GetImportSymbols(DWORD dll_index, CR_VecSet<CR_ImportSymbol>& symbols);
-    BOOL _GetExportSymbols(CR_VecSet<CR_ExportSymbol>& symbols);
+    BOOL _GetImportSymbols(DWORD dll_index, std::vector<CR_ImportSymbol>& symbols);
+    BOOL _GetExportSymbols(std::vector<CR_ExportSymbol>& symbols);
 }; // class CR_Module
 
 ////////////////////////////////////////////////////////////////////////////

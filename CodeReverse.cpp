@@ -282,7 +282,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    fprintf(stderr, "Stack Size: %s (%llu)\n",
+    fprintf(stderr, "stack size: %s (%llu)\n",
             CrFormatBytes(cr_stack_size).c_str(), cr_stack_size);
     fprintf(stderr, "Wonders API prefix: %s\n", prefix.c_str());
     fprintf(stderr, "Wonders API suffix: %s\n", suffix.c_str());

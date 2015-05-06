@@ -232,7 +232,7 @@ BOOL CR_Module::LoadImportTables() {
 
     const DWORD siz = static_cast<DWORD>(ImportDllNames().size());
     for (DWORD i = 0; i < siz; ++i) {
-        CR_VecSet<CR_ImportSymbol> symbols;
+        std::vector<CR_ImportSymbol> symbols;
         if (_GetImportSymbols(i, symbols)) {
             for (auto& symbol : symbols) {
                 symbol.iDLL = i;
@@ -247,8 +247,7 @@ BOOL CR_Module::LoadImportTables() {
 } // CR_Module::LoadImportTables
 
 BOOL CR_Module::LoadExportTable() {
-    CR_VecSet<CR_ExportSymbol> symbols;
-
+    std::vector<CR_ExportSymbol> symbols;
     if (!_GetExportSymbols(ExportSymbols()))
         return FALSE;
 
@@ -302,7 +301,7 @@ BOOL CR_Module::_GetImportDllNames(CR_Strings& names) {
 } // CR_Module::_GetImportDllNames
 
 BOOL CR_Module::_GetImportSymbols(
-    DWORD dll_index, CR_VecSet<CR_ImportSymbol>& symbols)
+    DWORD dll_index, std::vector<CR_ImportSymbol>& symbols)
 {
     symbols.clear();
 
@@ -344,7 +343,7 @@ BOOL CR_Module::_GetImportSymbols(
                         symbol.wHint = pIBN->Hint;
                         symbol.pszName = reinterpret_cast<char *>(pIBN->Name);
                     }
-                    symbols.insert(symbol);
+                    symbols.emplace_back(symbol);
                 }
             }
         } else {
@@ -370,7 +369,7 @@ BOOL CR_Module::_GetImportSymbols(
                         symbol.wHint = pIBN->Hint;
                         symbol.pszName = reinterpret_cast<char *>(pIBN->Name);
                     }
-                    symbols.insert(symbol);
+                    symbols.emplace_back(symbol);
                 }
             }
         }
@@ -380,7 +379,7 @@ BOOL CR_Module::_GetImportSymbols(
     return TRUE;
 } // CR_Module::_GetImportSymbols
 
-BOOL CR_Module::_GetExportSymbols(CR_VecSet<CR_ExportSymbol>& symbols) {
+BOOL CR_Module::_GetExportSymbols(std::vector<CR_ExportSymbol>& symbols) {
     symbols.clear();
 
     auto pDir = ExportDirectory();
@@ -404,7 +403,7 @@ BOOL CR_Module::_GetExportSymbols(CR_VecSet<CR_ExportSymbol>& symbols) {
         symbol.pszName = reinterpret_cast<char *>(GetData(pENPT[i]));
         symbol.dwOrdinal = pDir->Base + wOrdinal;
         symbol.pszForwarded = NULL;
-        symbols.insert(symbol);
+        symbols.emplace_back(symbol);
     }
 
     for (i = 0; i < pDir->NumberOfFunctions; ++i) {
@@ -428,7 +427,7 @@ BOOL CR_Module::_GetExportSymbols(CR_VecSet<CR_ExportSymbol>& symbols) {
             symbol.pszForwarded = NULL;
         }
         symbol.dwOrdinal = pDir->Base + i;
-        symbols.insert(symbol);
+        symbols.emplace_back(symbol);
     }
 
     return TRUE;

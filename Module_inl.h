@@ -219,19 +219,19 @@ inline DWORD CR_Module::RVAOfEntryPoint() const {
         return 0;
 }
 
-inline CR_VecSet<CR_ImportSymbol>& CR_Module::ImportSymbols() {
+inline std::vector<CR_ImportSymbol>& CR_Module::ImportSymbols() {
     return m_vecImportSymbols;
 }
 
-inline const CR_VecSet<CR_ImportSymbol>& CR_Module::ImportSymbols() const {
+inline const std::vector<CR_ImportSymbol>& CR_Module::ImportSymbols() const {
     return m_vecImportSymbols;
 }
 
-inline CR_VecSet<CR_ExportSymbol>& CR_Module::ExportSymbols() {
+inline std::vector<CR_ExportSymbol>& CR_Module::ExportSymbols() {
     return m_vecExportSymbols;
 }
 
-inline const CR_VecSet<CR_ExportSymbol>& CR_Module::ExportSymbols() const {
+inline const std::vector<CR_ExportSymbol>& CR_Module::ExportSymbols() const {
     return m_vecExportSymbols;
 }
 
