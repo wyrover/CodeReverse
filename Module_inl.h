@@ -355,4 +355,44 @@ CR_X64Machine::MapNameToStorage() const {
     return m_mNameToStorage;
 }
 
+inline CR_Storage *
+CR_X86Machine::StorageFromName(const std::string& name) {
+    auto it = MapNameToStorage().find(name);
+    if (it == MapNameToStorage().end()) {
+        return NULL;
+    } else {
+        return &it->second;
+    }
+}
+
+inline const CR_Storage *
+CR_X86Machine::StorageFromName(const std::string& name) const {
+    auto it = MapNameToStorage().find(name);
+    if (it == MapNameToStorage().end()) {
+        return NULL;
+    } else {
+        return &it->second;
+    }
+}
+
+inline CR_Storage *
+CR_X64Machine::StorageFromName(const std::string& name) {
+    auto it = MapNameToStorage().find(name);
+    if (it == MapNameToStorage().end()) {
+        return NULL;
+    } else {
+        return &it->second;
+    }
+}
+
+inline const CR_Storage *
+CR_X64Machine::StorageFromName(const std::string& name) const {
+    auto it = MapNameToStorage().find(name);
+    if (it == MapNameToStorage().end()) {
+        return NULL;
+    } else {
+        return &it->second;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////

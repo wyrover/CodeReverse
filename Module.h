@@ -242,10 +242,13 @@ public:
           name_to_storage& MapNameToStorage();
     const name_to_storage& MapNameToStorage() const;
 
+          CR_Storage *StorageFromName(const std::string& name);
+    const CR_Storage *StorageFromName(const std::string& name) const;
+
     CR_Strings StorageNames() const;
 
 protected:
-    shared_ptr<CR_Module>   m_modules;
+    shared_ptr<CR_Module>   m_module;
     name_to_storage         m_mNameToStorage;
 };
 
@@ -262,10 +265,13 @@ public:
           name_to_storage& MapNameToStorage();
     const name_to_storage& MapNameToStorage() const;
 
+          CR_Storage *StorageFromName(const std::string& name);
+    const CR_Storage *StorageFromName(const std::string& name) const;
+
     CR_Strings StorageNames() const;
 
 protected:
-    shared_ptr<CR_Module>   m_modules;
+    shared_ptr<CR_Module>   m_module;
     name_to_storage         m_mNameToStorage;
 };
 

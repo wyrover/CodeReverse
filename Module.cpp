@@ -1094,6 +1094,7 @@ CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
 
 /*virtual*/ BOOL CR_X86Machine::Init(shared_ptr<CR_Module>& mod) {
     assert(mod);
+    m_module = mod;
     MapNameToStorage().clear();
     MapNameToStorage().emplace("core", CR_CoreStorage32());
     MapNameToStorage().emplace("stack", CR_StackStorage());
@@ -1123,6 +1124,7 @@ CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
 
 /*virtual*/ BOOL CR_X64Machine::Init(shared_ptr<CR_Module>& mod) {
     assert(mod);
+    m_module = mod;
     MapNameToStorage().clear();
     MapNameToStorage().emplace("core", CR_CoreStorage32());
     MapNameToStorage().emplace("stack", CR_StackStorage());
