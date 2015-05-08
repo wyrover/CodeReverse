@@ -6,5 +6,47 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include <windows.h>
+#include <dlgs.h>
 
 1 ICON "CodeReverse.ico"
+
+// UTF-8
+#pragma code_page(65001)
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     0, 2, 2, 0
+PRODUCTVERSION  0, 2, 2, 0
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_APP
+{
+    // Japanese
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "041103A4"
+        {
+            VALUE "CompanyName", "片山博文MZ\0"
+            VALUE "FileDescription", "CodeReverse\0"
+            VALUE "FileVersion", "0.2.2\0"
+            VALUE "LegalCopyright", "Copyright (C) 2013-2014 片山博文MZ. All Rights Reserved.\0"
+            VALUE "ProductName", "CodeReverse\0"
+            VALUE "ProductVersion", "0.2.2\0"
+        }
+    }
+    // English (U.S.)
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904E4"
+        {
+            VALUE "CompanyName", "Katayama Hirofumi MZ\0"
+            VALUE "FileDescription", "CodeReverse\0"
+            VALUE "FileVersion", "0.2.2\0"
+            VALUE "LegalCopyright", "Copyright (C) 2013-2014 Katayama Hirofumi MZ. All Rights Reserved.\0"
+            VALUE "ProductName", "CodeReverse\0"
+            VALUE "ProductVersion", "0.2.2\0"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0411, 0x03A4
+    }
+}
