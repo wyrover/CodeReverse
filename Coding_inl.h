@@ -24,11 +24,11 @@ inline CR_Operand& CR_Operand::operator=(const CR_Operand& opr) {
 }
 
 inline CR_DataFlags CR_Operand::GetOperandType() const {
-    return DataFlags() & cr_OF_TYPEMASK;
+    return DataFlags() & cr_DF_TYPEMASK;
 }
 
 inline void CR_Operand::SetOperandType(CR_DataFlags flags) {
-    CR_Operand::ModifyFlags(flags, cr_OF_TYPEMASK);
+    CR_Operand::ModifyFlags(flags, cr_DF_TYPEMASK);
 }
 
 inline void
@@ -39,7 +39,7 @@ CR_Operand::ModifyFlags(CR_DataFlags add, CR_DataFlags remove) {
 
 inline void CR_Operand::SetMemImm(CR_Addr64 addr) {
     Value64() = addr;
-    SetOperandType(cr_OF_MEMIMM);
+    SetOperandType(cr_DF_MEMIMM);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -93,6 +93,10 @@ inline CR_TypeID& CR_Operand::TypeID() {
     return m_type_id;
 }
 
+inline std::string& CR_Operand::ExprValue() {
+    return m_expr_value;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand const accessors
 
@@ -142,6 +146,10 @@ inline const char& CR_Operand::Scale() const {
 
 inline const CR_TypeID& CR_Operand::TypeID() const{
     return m_type_id;
+}
+
+inline const std::string& CR_Operand::ExprValue() const {
+    return m_expr_value;
 }
 
 ////////////////////////////////////////////////////////////////////////////

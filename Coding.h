@@ -16,6 +16,27 @@ std::string CrValue32(unsigned long value, BOOL is_signed);
 std::string CrValue64(unsigned long long value, BOOL is_signed);
 
 ////////////////////////////////////////////////////////////////////////////
+// getting assembly instruction input/output information
+
+struct CR_X86_ASM_IO {
+    const char *name;
+    int num_args;
+    const char *in;
+    const char *out;
+    int osize;
+};
+
+BOOL CrGetAsmIO16(
+    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
+    std::set<std::string>& out, int osize);
+BOOL CrGetAsmIO32(
+    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
+    std::set<std::string>& out, int osize);
+BOOL CrGetAsmIO64(
+    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
+    std::set<std::string>& out, int osize);
+
+////////////////////////////////////////////////////////////////////////////
 // CR_CondCode - condition code
 
 enum CR_CondCode {
@@ -134,19 +155,21 @@ enum CR_OpCodeType {
 
 typedef unsigned long CR_DataFlags;
 static const CR_DataFlags
-    cr_OF_REG           = 0x01,         // registry
-    cr_OF_MEMREG        = 0x02,         // memory access by register
-    cr_OF_MEMIMM        = 0x03,         // memory access by immediate
-    cr_OF_MEMINDEX      = 0x04,         // memory access by index
-    cr_OF_IMM           = 0x05,         // immediate
-    cr_OF_TYPEMASK      = 0x07,         // the mask bits of type
-    cr_OF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
-    cr_OF_ISINTEGER     = (1 << 4),     // is an integer?
-    cr_OF_ISDATAPOINTER = (1 << 5),     // is a pointer to data?
-    cr_OF_ISFUNCPOINTER = (1 << 6),     // is a pointer to a function?
-    cr_OF_ISMAGIC       = (1 << 7),     // is a magic pointer?
-    cr_OF_ISCONTINUOUS  = (1 << 8),     // is continuous to the next byte?
-    cr_OF_ISREADONLY    = (1 << 9);     // is read-only?
+    cr_DF_REG           = 0x01,         // registry
+    cr_DF_MEMREG        = 0x02,         // memory access by register
+    cr_DF_MEMIMM        = 0x03,         // memory access by immediate
+    cr_DF_MEMINDEX      = 0x04,         // memory access by index
+    cr_DF_IMM           = 0x05,         // immediate
+    cr_DF_TYPEMASK      = 0x07,         // the mask bits of type
+    cr_DF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
+    cr_DF_ISINTEGER     = (1 << 4),     // is an integer?
+    cr_DF_ISDATAPOINTER = (1 << 5),     // is a pointer to data?
+    cr_DF_ISFUNCPOINTER = (1 << 6),     // is a pointer to a function?
+    cr_DF_ISMAGIC       = (1 << 7),     // is a magic pointer?
+    cr_DF_ISCONTINUOUS  = (1 << 8),     // is continuous to the next byte?
+    cr_DF_ISREADONLY    = (1 << 9),     // is read-only?
+    cr_DF_INPUTTED      = (1 << 10),    // is inputted?
+    cr_DF_OUTPUTTED     = (1 << 11);    // is outputted?
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
@@ -186,6 +209,7 @@ public:
     CR_Addr32&              Disp();
     char&                   Scale();
     CR_TypeID&              TypeID();
+    std::string&            ExprValue();
     // const accessors
     const std::string&      Text() const;
     const std::string&      ExprAddr() const;
@@ -199,6 +223,7 @@ public:
     const CR_Addr32&        Disp() const;
     const char&             Scale() const;
     const CR_TypeID&        TypeID() const;
+    const std::string&      ExprValue() const;
 
 protected:
     std::string             m_text;             // text
@@ -215,6 +240,7 @@ protected:
     CR_Addr32               m_disp;             // displacement
     char                    m_scale;            // scale
     CR_TypeID               m_type_id;          // type_id
+    std::string             m_expr_value;       // expressed value
 }; // class CR_Operand
 
 ////////////////////////////////////////////////////////////////////////////
@@ -869,6 +895,9 @@ struct CR_Storage {
     size_t size() const;
     bool empty() const;
     void resize(size_t size);
+
+    void InputAccess(size_t index, size_t siz);
+    void OutputAccess(size_t index, size_t siz);
 
     std::string                     m_base_expr_addr;
     std::vector<BYTE>               m_data_bytes;

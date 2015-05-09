@@ -250,10 +250,10 @@ static const CR_X86RegInfo cr_reg_entries[] = {
     {"ip", cr_x86_REG16, 0},
     {"eip", cr_x86_REG32, 32},
     {"rip", cr_x86_REG64, 64},
-    {"es", cr_x86_SEGREG, 64},
+    {"es", cr_x86_SEGREG, 0},
     {"cs", cr_x86_SEGREG, 0},
-    {"ss", cr_x86_SEGREG, 64},
-    {"ds", cr_x86_SEGREG, 64},
+    {"ss", cr_x86_SEGREG, 0},
+    {"ds", cr_x86_SEGREG, 0},
     {"fs", cr_x86_SEGREG, 32},
     {"gs", cr_x86_SEGREG, 32},
     {"dx:ax", cr_x86_COMPREG32, 0},
@@ -388,6 +388,7 @@ void CR_Operand::Copy(const CR_Operand& opr) {
     Disp() = opr.Disp();
     Scale() = opr.Scale();
     TypeID() = opr.TypeID();
+    ExprValue() = opr.ExprValue();
 }
 
 void CR_Operand::clear() {
@@ -402,19 +403,20 @@ void CR_Operand::clear() {
     Disp() = 0;
     Scale() = 0;
     TypeID() = cr_invalid_id;
+    ExprValue().clear();
 }
 
 void CR_Operand::SetImm32(CR_Addr32 val, BOOL is_signed) {
     Text() = CrValue32(val, is_signed);
     ExprAddr().clear();
-    SetOperandType(cr_OF_IMM);
+    SetOperandType(cr_DF_IMM);
     Value64() = val;
 }
 
 void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed) {
     Text() = CrValue64(val, is_signed);
     ExprAddr().clear();
-    SetOperandType(cr_OF_IMM);
+    SetOperandType(cr_DF_IMM);
     Value64() = val;
 }
 
@@ -452,7 +454,7 @@ void CR_Operand::ParseText(int bits) {
     if (size != 0) {
         BaseReg() = p;
         ExprAddr().clear();
-        SetOperandType(cr_OF_REG);
+        SetOperandType(cr_DF_REG);
         Size() = size;
         return;
     }
@@ -530,7 +532,7 @@ void CR_Operand::ParseText(int bits) {
         DWORD size;
         if ((size = CrRegGetSize(p, bits)) != 0) {
             BaseReg() = p;
-            SetOperandType(cr_OF_MEMREG);
+            SetOperandType(cr_DF_MEMREG);
             ExprAddr() = BaseReg();
             return;
         }
@@ -542,7 +544,7 @@ void CR_Operand::ParseText(int bits) {
             if (isdigit(*p)) {
                 CR_Addr64 addr = std::strtoull(p, NULL, 0);
                 Value64() = addr;
-                SetOperandType(cr_OF_MEMIMM);
+                SetOperandType(cr_DF_MEMIMM);
                 ExprAddr() = std::to_string(addr);
             } else {
                 #if 0
@@ -572,7 +574,7 @@ void CR_Operand::ParseText(int bits) {
             } else {
                 Disp() = strtol(q, NULL, 0);
             }
-            SetOperandType(cr_OF_MEMINDEX);
+            SetOperandType(cr_DF_MEMINDEX);
             SetExprAddrOnMemIndex();
             return;
         }
@@ -589,7 +591,7 @@ void CR_Operand::ParseText(int bits) {
                 IndexReg() = q;
                 Scale() = char(strtol(s, NULL, 0));
                 Disp() = 0;
-                SetOperandType(cr_OF_MEMINDEX);
+                SetOperandType(cr_DF_MEMINDEX);
                 if (BaseReg() == IndexReg()) {
                     BaseReg().clear();
                     Scale() += 1;
@@ -607,7 +609,7 @@ void CR_Operand::ParseText(int bits) {
                     } else {
                         Disp() = strtol(q, NULL, 0);
                     }
-                    SetOperandType(cr_OF_MEMINDEX);
+                    SetOperandType(cr_DF_MEMINDEX);
                     SetExprAddrOnMemIndex();
                     return;
                 } else {
@@ -616,7 +618,7 @@ void CR_Operand::ParseText(int bits) {
                     IndexReg() = q;
                     Scale() = 1;
                     Disp() = 0;
-                    SetOperandType(cr_OF_MEMINDEX);
+                    SetOperandType(cr_DF_MEMINDEX);
                     if (BaseReg() == IndexReg()) {
                         BaseReg().clear();
                         Scale() = 2;
@@ -640,7 +642,7 @@ void CR_Operand::ParseText(int bits) {
                 } else {
                     Disp() = strtol(r, NULL, 0);
                 }
-                SetOperandType(cr_OF_MEMINDEX);
+                SetOperandType(cr_DF_MEMINDEX);
                 if (BaseReg() == IndexReg()) {
                     BaseReg().clear();
                     Scale() += 1;
@@ -657,7 +659,7 @@ void CR_Operand::ParseText(int bits) {
                 } else {
                     Disp() = strtol(r, NULL, 0);
                 }
-                SetOperandType(cr_OF_MEMINDEX);
+                SetOperandType(cr_DF_MEMINDEX);
                 if (BaseReg() == IndexReg()) {
                     BaseReg().clear();
                     Scale() += 1;
@@ -667,8 +669,8 @@ void CR_Operand::ParseText(int bits) {
             }
         }
     }
-    #if 0
-        fprintf(stderr, "%s\n", Text().c_str());
+    #ifdef _DEBUG
+        fprintf(stderr, "ERROR for Operand %s\n", Text().c_str());
     #endif
     assert(0);
 } // CR_Operand::ParseText
@@ -893,7 +895,13 @@ void CR_OpCode32::ParseText(const char *text) {
         }
         Operand(0)->ParseText(32);
     }
-}
+
+    if (_stricmp(q, "mov") == 0 && Operands().size()) {
+        if (Operand(0)->Text() == "esp" || Operand(0)->Text() == "ebp") {
+            OpCodeType() = cr_OCT_STACKOP;
+        }
+    }
+} // CR_OpCode32::ParseText
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64
@@ -1043,7 +1051,13 @@ void CR_OpCode64::ParseText(const char *text) {
         }
         Operand(0)->ParseText(64);
     }
-}
+
+    if (_stricmp(q, "mov") == 0 && Operands().size()) {
+        if (Operand(0)->Text() == "rsp" || Operand(0)->Text() == "rbp") {
+            OpCodeType() = cr_OCT_STACKOP;
+        }
+    }
+} // CR_OpCode64::ParseText
 
 ////////////////////////////////////////////////////////////////////////////
 // CrGetAsmIO16, CrGetAsmIO32, CrGetAsmIO64
@@ -1061,18 +1075,9 @@ void CrStrSplitToSet(
     free(str);
 }
 
-// assembly instruction input/output information
-struct X86ASMIO {
-    const char *name;
-    int num_args;
-    const char *in;
-    const char *out;
-    int osize;
-};
-
 static int CrCompareAsmIO(const void *a, const void *b) {
-    const X86ASMIO *x = (const X86ASMIO *)a;
-    const X86ASMIO *y = (const X86ASMIO *)b;
+    const CR_X86_ASM_IO *x = (const CR_X86_ASM_IO *)a;
+    const CR_X86_ASM_IO *y = (const CR_X86_ASM_IO *)b;
     int cmp = strcmp(x->name, y->name);
     if (cmp != 0)
         return cmp;
@@ -1089,10 +1094,10 @@ static int CrCompareAsmIO(const void *a, const void *b) {
 }
 
 BOOL CrGetAsmIO16(
-    X86ASMIO *key, std::set<std::string>& in, 
+    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
     std::set<std::string>& out, int osize)
 {
-    static const X86ASMIO s_table[] = {
+    static const CR_X86_ASM_IO s_table[] = {
         {"aaa", 0, "al,ah,AF", "al,ah,AF,CF,OF,SF,ZF,PF,SFeqOF", 0},
         {"aad", 0, "al,ah", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
         {"aam", 0, "al", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
@@ -1213,9 +1218,9 @@ BOOL CrGetAsmIO16(
     };
 
     const std::size_t size = sizeof(s_table) / sizeof(s_table[0]);
-    const X86ASMIO *p = 
-        reinterpret_cast<const X86ASMIO *>(
-            bsearch(key, s_table, size, sizeof(X86ASMIO), CrCompareAsmIO));
+    const CR_X86_ASM_IO *p = 
+        reinterpret_cast<const CR_X86_ASM_IO *>(
+            bsearch(key, s_table, size, sizeof(CR_X86_ASM_IO), CrCompareAsmIO));
     if (p == NULL)
         return FALSE;
 
@@ -1230,10 +1235,11 @@ BOOL CrGetAsmIO16(
     return TRUE;
 }
 
-BOOL CrGetAsmIO32(X86ASMIO *key, std::set<std::string>& in, 
+BOOL CrGetAsmIO32(
+    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
     std::set<std::string>& out, int osize)
 {
-    static const X86ASMIO s_table[] = {
+    static const CR_X86_ASM_IO s_table[] = {
         {"aaa", 0, "al,ah,AF", "al,ah,AF,CF,OF,SF,ZF,PF,SFeqOF", 0},
         {"aad", 0, "al,ah", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
         {"aam", 0, "al", "al,ah,ZF,SF,OF,AF,PF,CF,SFeqOF", 0},
@@ -1449,9 +1455,9 @@ BOOL CrGetAsmIO32(X86ASMIO *key, std::set<std::string>& in,
     };
 
     const std::size_t size = sizeof(s_table) / sizeof(s_table[0]);
-    const X86ASMIO *p =
-        reinterpret_cast<const X86ASMIO *>(
-            bsearch(key, s_table, size, sizeof(X86ASMIO), CrCompareAsmIO));
+    const CR_X86_ASM_IO *p =
+        reinterpret_cast<const CR_X86_ASM_IO *>(
+            bsearch(key, s_table, size, sizeof(CR_X86_ASM_IO), CrCompareAsmIO));
     if (p == NULL)
         return FALSE;
 
@@ -1469,10 +1475,10 @@ BOOL CrGetAsmIO32(X86ASMIO *key, std::set<std::string>& in,
 }
 
 BOOL CrGetAsmIO64(
-    X86ASMIO *key, std::set<std::string>& in, 
+    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
     std::set<std::string>& out, int osize)
 {
-    static const X86ASMIO s_table[] = {
+    static const CR_X86_ASM_IO s_table[] = {
         {"adc", 2, "$0,$1,CF", "$0,OF,ZF,SF,CF,AF,PF,SFeqOF", 0},
         {"add", 2, "$0,$1", "$0,OF,ZF,SF,CF,AF,PF,SFeqOF", 0},
         {"and", 2, "$0,$1", "$0,ZF,SF,CF,OF,AF,PF,SFeqOF", 0},
@@ -1704,9 +1710,9 @@ BOOL CrGetAsmIO64(
     };
 
     const std::size_t size = sizeof(s_table) / sizeof(s_table[0]);
-    const X86ASMIO *p =
-        reinterpret_cast<const X86ASMIO *>(
-            bsearch(key, s_table, size, sizeof(X86ASMIO), CrCompareAsmIO));
+    const CR_X86_ASM_IO *p =
+        reinterpret_cast<const CR_X86_ASM_IO *>(
+            bsearch(key, s_table, size, sizeof(CR_X86_ASM_IO), CrCompareAsmIO));
     if (p == NULL)
         return FALSE;
 
@@ -1724,6 +1730,29 @@ BOOL CrGetAsmIO64(
 }
 
 ////////////////////////////////////////////////////////////////////////////
+// storages
+
+void CR_Storage::InputAccess(size_t index, size_t siz) {
+    for (auto& access : m_accesses) {
+        if (size_t(access.m_bit_offset) == index * 8 &&
+            size_t(access.m_bits) == siz * 8)
+        {
+            if ((m_data_flags[index] & cr_DF_OUTPUTTED) == 0) {
+                m_data_flags[index] |= cr_DF_INPUTTED;
+            }
+        }
+    }
+}
+
+void CR_Storage::OutputAccess(size_t index, size_t siz) {
+    for (auto& access : m_accesses) {
+        if (size_t(access.m_bit_offset) == index * 8 &&
+            size_t(access.m_bits) == siz * 8)
+        {
+            m_data_flags[index] |= cr_DF_OUTPUTTED;
+        }
+    }
+}
 
 void CR_CpuStorage32::Init() {
     m_accesses.emplace_back(cr_invalid_id, "edx_eax", 0, 64);
@@ -1940,7 +1969,7 @@ CR_ReadOnlyDataStorage::CR_ReadOnlyDataStorage(
     assert(data_size <= storage_siz);
     memcpy(m_data_bytes.data(), ptr, data_size);
     for (size_t i = 0; i < storage_siz; ++i) {
-        m_data_flags[i] |= cr_OF_ISIMMEDIATE | cr_OF_ISREADONLY;
+        m_data_flags[i] |= cr_DF_ISIMMEDIATE | cr_DF_ISREADONLY;
     }
 }
 

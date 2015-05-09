@@ -1078,27 +1078,56 @@ BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr3
 
         CrDumpCodes(fp, oc->Codes(), 32);
 
-        switch (oc->Operands().size()) {
-        case 3:
-            fprintf(fp, "%s %s,%s,%s\n", oc->Name().c_str(),
-                oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str(),
-                oc->Operand(2)->Text().c_str());
-            break;
+        #ifdef _DEBUG
+            switch (oc->Operands().size()) {
+            case 3:
+                fprintf(fp, "%s %s{%lu},%s{%lu},%s{%lu}\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(0)->Size(),
+                    oc->Operand(1)->Text().c_str(), oc->Operand(1)->Size(),
+                    oc->Operand(2)->Text().c_str(), oc->Operand(2)->Size()
+                );
+                break;
 
-        case 2:
-            fprintf(fp, "%s %s,%s\n", oc->Name().c_str(),
-                oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str());
-            break;
+            case 2:
+                fprintf(fp, "%s %s{%lu},%s{%lu}\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(0)->Size(),
+                    oc->Operand(1)->Text().c_str(), oc->Operand(1)->Size()
+                );
+                break;
 
-        case 1:
-            fprintf(fp, "%s %s\n", oc->Name().c_str(),
-                oc->Operand(0)->Text().c_str());
-            break;
+            case 1:
+                fprintf(fp, "%s %s{%lu}\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(0)->Size()
+                );
+                break;
 
-        case 0:
-            fprintf(fp, "%s\n", oc->Name().c_str());
-            break;
-        }
+            case 0:
+                fprintf(fp, "%s\n", oc->Name().c_str());
+                break;
+            }
+        #else
+            switch (oc->Operands().size()) {
+            case 3:
+                fprintf(fp, "%s %s,%s,%s\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str(),
+                    oc->Operand(2)->Text().c_str());
+                break;
+
+            case 2:
+                fprintf(fp, "%s %s,%s\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str());
+                break;
+
+            case 1:
+                fprintf(fp, "%s %s\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str());
+                break;
+
+            case 0:
+                fprintf(fp, "%s\n", oc->Name().c_str());
+                break;
+            }
+        #endif
     }
 
     return TRUE;
@@ -1158,28 +1187,58 @@ BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr6
 
         CrDumpCodes(fp, oc->Codes(), 64);
 
-        switch (oc->Operands().size())
-        {
-        case 3:
-            fprintf(fp, "%s %s,%s,%s\n", oc->Name().c_str(),
-                oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str(),
-                oc->Operand(2)->Text().c_str());
-            break;
+        #ifdef _DEBUG
+            switch (oc->Operands().size())
+            {
+            case 3:
+                fprintf(fp, "%s %s{%lu},%s{%lu},%s{%lu}\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(0)->Size(),
+                    oc->Operand(1)->Text().c_str(), oc->Operand(1)->Size(),
+                    oc->Operand(2)->Text().c_str(), oc->Operand(2)->Size()
+                );
+                break;
 
-        case 2:
-            fprintf(fp, "%s %s,%s\n", oc->Name().c_str(),
-                oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str());
-            break;
+            case 2:
+                fprintf(fp, "%s %s{%lu},%s{%lu}\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(0)->Size(),
+                    oc->Operand(1)->Text().c_str(), oc->Operand(1)->Size()
+                );
+                break;
 
-        case 1:
-            fprintf(fp, "%s %s\n", oc->Name().c_str(),
-                oc->Operand(0)->Text().c_str());
-            break;
+            case 1:
+                fprintf(fp, "%s %s{%lu}\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(0)->Size()
+                );
+                break;
 
-        case 0:
-            fprintf(fp, "%s\n", oc->Name().c_str());
-            break;
-        }
+            case 0:
+                fprintf(fp, "%s\n", oc->Name().c_str());
+                break;
+            }
+        #else
+            switch (oc->Operands().size())
+            {
+            case 3:
+                fprintf(fp, "%s %s,%s,%s\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str(),
+                    oc->Operand(2)->Text().c_str());
+                break;
+
+            case 2:
+                fprintf(fp, "%s %s,%s\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str(), oc->Operand(1)->Text().c_str());
+                break;
+
+            case 1:
+                fprintf(fp, "%s %s\n", oc->Name().c_str(),
+                    oc->Operand(0)->Text().c_str());
+                break;
+
+            case 0:
+                fprintf(fp, "%s\n", oc->Name().c_str());
+                break;
+            }
+        #endif
     }
 
     return TRUE;

@@ -27,7 +27,7 @@ FILETYPE        VFT_APP
             VALUE "CompanyName", "片山博文MZ\0"
             VALUE "FileDescription", "CodeReverse\0"
             VALUE "FileVersion", "0.2.2\0"
-            VALUE "LegalCopyright", "Copyright (C) 2013-2014 片山博文MZ. All Rights Reserved.\0"
+            VALUE "LegalCopyright", "Copyright (C) 2013-2015 片山博文MZ. All Rights Reserved.\0"
             VALUE "ProductName", "CodeReverse\0"
             VALUE "ProductVersion", "0.2.2\0"
         }
@@ -40,7 +40,7 @@ FILETYPE        VFT_APP
             VALUE "CompanyName", "Katayama Hirofumi MZ\0"
             VALUE "FileDescription", "CodeReverse\0"
             VALUE "FileVersion", "0.2.2\0"
-            VALUE "LegalCopyright", "Copyright (C) 2013-2014 Katayama Hirofumi MZ. All Rights Reserved.\0"
+            VALUE "LegalCopyright", "Copyright (C) 2013-2015 Katayama Hirofumi MZ. All Rights Reserved.\0"
             VALUE "ProductName", "CodeReverse\0"
             VALUE "ProductVersion", "0.2.2\0"
         }

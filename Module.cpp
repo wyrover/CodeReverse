@@ -519,6 +519,62 @@ BOOL CR_Module::DisAsmAddr32(
             oc->ParseText(outbuf);
         }
 
+        // complement operand size
+        if (oc->Name() == "mov" || oc->Name() == "cmp" ||
+            oc->Name() == "test" || oc->Name() == "and" ||
+            oc->Name() == "or" || oc->Name() == "xor" || 
+            oc->Name() == "add" || oc->Name() == "sub" ||
+            oc->Name().find("cmov") == 0)
+        {
+            assert(oc->Operands().size() >= 2);
+            if (oc->Operand(0)->Size() == 0)
+                oc->Operand(0)->Size() = oc->Operand(1)->Size();
+            else if (oc->Operand(1)->Size() == 0) {
+                oc->Operand(1)->Size() = oc->Operand(0)->Size();
+            }
+        } else if (oc->Name() == "imul") {
+            if (oc->Operands().size() == 2 &&
+                (oc->Operand(1)->GetOperandType() == cr_DF_MEMREG ||
+                 oc->Operand(1)->GetOperandType() == cr_DF_MEMIMM ||
+                 oc->Operand(1)->GetOperandType() == cr_DF_MEMINDEX))
+            {
+                if (oc->Operand(1)->Size() == 0) {
+                    oc->Operand(1)->Size() = oc->Operand(0)->Size();
+                }
+            }
+        } else if (oc->OpCodeType() == cr_OCT_JMP ||
+                   oc->OpCodeType() == cr_OCT_JCC ||
+                   oc->OpCodeType() == cr_OCT_CALL)
+        {
+            oc->Operand(0)->Size() = 4;
+        } else if (oc->Name() == "ret" && oc->Operands().size() == 1) {
+            oc->Operand(0)->Size() = 4;
+        } else if (oc->Name() == "lea") {
+            oc->Operand(1)->Size() = 4;
+        } else if (oc->Name() == "sal" || oc->Name() == "sar" ||
+                   oc->Name() == "shl" || oc->Name() == "shr" ||
+                   oc->Name() == "rol" || oc->Name() == "ror" ||
+                   oc->Name() == "rcl" || oc->Name() == "rcr")
+        {
+            oc->Operand(1)->Size() = 1;
+        } else if (oc->Name() == "bt" || oc->Name() == "btc" ||
+                   oc->Name() == "btr" || oc->Name() == "bts")
+        {
+            if (oc->Operand(1)->GetOperandType() == cr_DF_IMM) {
+                oc->Operand(1)->Size() = 1;
+            }
+        } else if (oc->Operands().size() >= 2) {
+            if (oc->Operand(0)->Text().find("xmm") == 0) {
+                if (oc->Operand(1)->Size() == 0) {
+                    oc->Operand(1)->Size() = oc->Operand(0)->Size();
+                }
+            } else if (oc->Operand(1)->Text().find("xmm") == 0) {
+                if (oc->Operand(0)->Size() == 0) {
+                    oc->Operand(0)->Size() = oc->Operand(1)->Size();
+                }
+            }
+        }
+
         // add asm codes to op.code
         if (oc->Codes().empty()) {
             for (int i = 0; i < len; ++i)
@@ -529,7 +585,7 @@ BOOL CR_Module::DisAsmAddr32(
         switch (oc->OpCodeType()) {
         case cr_OCT_JCC:    // conditional jump
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM:
+            case cr_DF_IMM:
                 addr = oc->Operand(0)->Value32();
                 cf->Jumpers().emplace(va);
                 cf->Jumpees().emplace(addr);
@@ -541,7 +597,7 @@ BOOL CR_Module::DisAsmAddr32(
 
         case cr_OCT_JMP:    // jump
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM:
+            case cr_DF_IMM:
                 if (func == va) {
                     // func is jumper
                     cf->FuncFlags() |= cr_FF_JUMPERFUNC;
@@ -565,7 +621,7 @@ BOOL CR_Module::DisAsmAddr32(
                 }
                 break;
 
-            case cr_OF_MEMIMM:
+            case cr_DF_MEMIMM:
                 if (func == va) {
                     // func is jumper
                     cf->FuncFlags() |= cr_FF_JUMPERFUNC;
@@ -582,7 +638,7 @@ BOOL CR_Module::DisAsmAddr32(
 
         case cr_OCT_CALL:   // call
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM:
+            case cr_DF_IMM:
                 // function call
                 addr = oc->Operand(0)->Value32();
                 info.Entrances().emplace(addr);
@@ -605,7 +661,7 @@ BOOL CR_Module::DisAsmAddr32(
             break;
 
         case cr_OCT_RETURN: // return
-            if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
+            if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_DF_IMM) {
                 // func is __stdcall
                 cf->FuncFlags() |= cr_FF_STDCALL;
                 cf->StackArgSizeRange().Set(oc->Operand(0)->Value32());
@@ -694,6 +750,62 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             oc->ParseText(outbuf);
         }
 
+        // complement operand size
+        if (oc->Name() == "mov" || oc->Name() == "cmp" ||
+            oc->Name() == "test" || oc->Name() == "and" ||
+            oc->Name() == "or" || oc->Name() == "xor" || 
+            oc->Name() == "add" || oc->Name() == "sub" ||
+            oc->Name().find("cmov") == 0)
+        {
+            assert(oc->Operands().size() >= 2);
+            if (oc->Operand(0)->Size() == 0)
+                oc->Operand(0)->Size() = oc->Operand(1)->Size();
+            else if (oc->Operand(1)->Size() == 0) {
+                oc->Operand(1)->Size() = oc->Operand(0)->Size();
+            }
+        } else if (oc->Name() == "imul") {
+            if (oc->Operands().size() == 2 &&
+                (oc->Operand(1)->GetOperandType() == cr_DF_MEMREG ||
+                 oc->Operand(1)->GetOperandType() == cr_DF_MEMIMM ||
+                 oc->Operand(1)->GetOperandType() == cr_DF_MEMINDEX))
+            {
+                if (oc->Operand(1)->Size() == 0) {
+                    oc->Operand(1)->Size() = oc->Operand(0)->Size();
+                }
+            }
+        } else if (oc->OpCodeType() == cr_OCT_JMP ||
+                   oc->OpCodeType() == cr_OCT_JCC ||
+                   oc->OpCodeType() == cr_OCT_CALL)
+        {
+            oc->Operand(0)->Size() = 8;
+        } else if (oc->Name() == "ret" && oc->Operands().size() == 1) {
+            oc->Operand(0)->Size() = 8;
+        } else if (oc->Name() == "lea") {
+            oc->Operand(1)->Size() = 8;
+        } else if (oc->Name() == "sal" || oc->Name() == "sar" ||
+                   oc->Name() == "shl" || oc->Name() == "shr" ||
+                   oc->Name() == "rol" || oc->Name() == "ror" ||
+                   oc->Name() == "rcl" || oc->Name() == "rcr")
+        {
+            oc->Operand(1)->Size() = 1;
+        } else if (oc->Name() == "bt" || oc->Name() == "btc" ||
+                   oc->Name() == "btr" || oc->Name() == "bts")
+        {
+            if (oc->Operand(1)->GetOperandType() == cr_DF_IMM) {
+                oc->Operand(1)->Size() = 1;
+            }
+        } else if (oc->Operands().size() >= 2) {
+            if (oc->Operand(0)->Text().find("xmm") == 0) {
+                if (oc->Operand(1)->Size() == 0) {
+                    oc->Operand(1)->Size() = oc->Operand(0)->Size();
+                }
+            } else if (oc->Operand(1)->Text().find("xmm") == 0) {
+                if (oc->Operand(0)->Size() == 0) {
+                    oc->Operand(0)->Size() = oc->Operand(1)->Size();
+                }
+            }
+        }
+
         // add asm codes to op.code
         if (oc->Codes().empty()) {
             for (int i = 0; i < len; ++i)
@@ -704,7 +816,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
         switch (oc->OpCodeType()) {
         case cr_OCT_JCC:    // conditional jump
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM:
+            case cr_DF_IMM:
                 addr = oc->Operand(0)->Value64();
                 cf->Jumpers().emplace(va);
                 cf->Jumpees().emplace(addr);
@@ -717,7 +829,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
 
         case cr_OCT_JMP:    // jump
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM:
+            case cr_DF_IMM:
                 if (func == va) {
                     // func is jumper
                     cf->FuncFlags() |= cr_FF_JUMPERFUNC;
@@ -741,7 +853,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                 }
                 break;
 
-            case cr_OF_MEMIMM:
+            case cr_DF_MEMIMM:
                 if (func == va) {
                     // func is jumper
                     cf->FuncFlags() |= cr_FF_JUMPERFUNC;
@@ -758,7 +870,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
 
         case cr_OCT_CALL:   // call
             switch (oc->Operand(0)->GetOperandType()) {
-            case cr_OF_IMM:
+            case cr_DF_IMM:
                 // function call
                 addr = oc->Operand(0)->Value64();
                 info.Entrances().emplace(addr);
@@ -781,7 +893,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             break;
 
         case cr_OCT_RETURN: // return
-            if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_OF_IMM) {
+            if (oc->Operands().size() && oc->Operand(0)->GetOperandType() == cr_DF_IMM) {
                 cf->StackArgSizeRange().Set(oc->Operand(0)->Value64());
             } else {
                 if (func == va) {
@@ -1168,6 +1280,8 @@ CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
 // decompiling
 
 BOOL CR_Module::Decompile32(CR_DecompInfo32& info) {
+    CR_NameScope& ns = info.NameScope();
+
     //CR_X86Machine machine;
     return FALSE;
 }
