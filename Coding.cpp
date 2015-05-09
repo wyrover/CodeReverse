@@ -967,6 +967,11 @@ void CR_OpCode64::ParseText(const char *text) {
         }
     }
 
+    if (strncmp(q, "rep ", 4) == 0)
+        q += 4;
+    if (strncmp(q, "repne ", 6) == 0)
+        q += 6;
+
     if (strncmp(q, "ret", 3) == 0 || strncmp(q, "iret", 4) == 0) {
         char *p = strchr(q, ' ');
         if (p) {

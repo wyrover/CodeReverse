@@ -523,8 +523,18 @@ BOOL CR_Module::DisAsmAddr32(
         if (oc->Name() == "mov" || oc->Name() == "cmp" ||
             oc->Name() == "test" || oc->Name() == "and" ||
             oc->Name() == "or" || oc->Name() == "xor" || 
-            oc->Name() == "add" || oc->Name() == "sub" ||
-            oc->Name().find("cmov") == 0)
+            oc->Name() == "add" || oc->Name() == "adc" || 
+            oc->Name() == "sub" || oc->Name() == "sbb" ||
+            oc->Name() == "xadd" || oc->Name() == "xchg" ||
+            oc->Name() == "cmpxchg" ||
+            oc->Name() == "lock mov" || oc->Name() == "lock cmp" ||
+            oc->Name() == "lock test" || oc->Name() == "lock and" ||
+            oc->Name() == "lock or" || oc->Name() == "lock xor" || 
+            oc->Name() == "lock add" || oc->Name() == "lock adc" || 
+            oc->Name() == "lock sub" || oc->Name() == "lock sbb" ||
+            oc->Name() == "lock xadd" || oc->Name() == "lock xchg" ||
+            oc->Name() == "lock cmpxchg" ||
+            oc->Name() == "movnti" || oc->Name().find("cmov") == 0)
         {
             assert(oc->Operands().size() >= 2);
             if (oc->Operand(0)->Size() == 0)
@@ -533,7 +543,7 @@ BOOL CR_Module::DisAsmAddr32(
                 oc->Operand(1)->Size() = oc->Operand(0)->Size();
             }
         } else if (oc->Name() == "imul") {
-            if (oc->Operands().size() == 2 &&
+            if (oc->Operands().size() >= 2 &&
                 (oc->Operand(1)->GetOperandType() == cr_DF_MEMREG ||
                  oc->Operand(1)->GetOperandType() == cr_DF_MEMIMM ||
                  oc->Operand(1)->GetOperandType() == cr_DF_MEMINDEX))
@@ -557,20 +567,34 @@ BOOL CR_Module::DisAsmAddr32(
                    oc->Name() == "rcl" || oc->Name() == "rcr")
         {
             oc->Operand(1)->Size() = 1;
-        } else if (oc->Name() == "bt" || oc->Name() == "btc" ||
-                   oc->Name() == "btr" || oc->Name() == "bts")
+        } else if (oc->Name() == "bt" ||
+                   oc->Name() == "btc" ||
+                   oc->Name() == "btr" ||
+                   oc->Name() == "bts" ||
+                   oc->Name() == "lock bt" ||
+                   oc->Name() == "lock btc" ||
+                   oc->Name() == "lock btr" ||
+                   oc->Name() == "lock bts")
         {
             if (oc->Operand(1)->GetOperandType() == cr_DF_IMM) {
                 oc->Operand(1)->Size() = 1;
             }
+        } else if (oc->Name() == "int" || oc->Name() == "prefetchnta") {
+            oc->Operand(0)->Size() = 1;
         } else if (oc->Operands().size() >= 2) {
             if (oc->Operand(0)->Text().find("xmm") == 0) {
                 if (oc->Operand(1)->Size() == 0) {
                     oc->Operand(1)->Size() = oc->Operand(0)->Size();
                 }
+                if (oc->Operands().size() == 3 && oc->Operand(2)->Size() == 0) {
+                    oc->Operand(2)->Size() = 1;
+                }
             } else if (oc->Operand(1)->Text().find("xmm") == 0) {
                 if (oc->Operand(0)->Size() == 0) {
                     oc->Operand(0)->Size() = oc->Operand(1)->Size();
+                }
+                if (oc->Operands().size() == 3 && oc->Operand(2)->Size() == 0) {
+                    oc->Operand(2)->Size() = 1;
                 }
             }
         }
@@ -754,8 +778,18 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
         if (oc->Name() == "mov" || oc->Name() == "cmp" ||
             oc->Name() == "test" || oc->Name() == "and" ||
             oc->Name() == "or" || oc->Name() == "xor" || 
-            oc->Name() == "add" || oc->Name() == "sub" ||
-            oc->Name().find("cmov") == 0)
+            oc->Name() == "add" || oc->Name() == "adc" || 
+            oc->Name() == "sub" || oc->Name() == "sbb" ||
+            oc->Name() == "xadd" || oc->Name() == "xchg" ||
+            oc->Name() == "cmpxchg" ||
+            oc->Name() == "lock mov" || oc->Name() == "lock cmp" ||
+            oc->Name() == "lock test" || oc->Name() == "lock and" ||
+            oc->Name() == "lock or" || oc->Name() == "lock xor" || 
+            oc->Name() == "lock add" || oc->Name() == "lock adc" || 
+            oc->Name() == "lock sub" || oc->Name() == "lock sbb" ||
+            oc->Name() == "lock xadd" || oc->Name() == "lock xchg" ||
+            oc->Name() == "lock cmpxchg" ||
+            oc->Name() == "movnti" || oc->Name().find("cmov") == 0)
         {
             assert(oc->Operands().size() >= 2);
             if (oc->Operand(0)->Size() == 0)
@@ -764,7 +798,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                 oc->Operand(1)->Size() = oc->Operand(0)->Size();
             }
         } else if (oc->Name() == "imul") {
-            if (oc->Operands().size() == 2 &&
+            if (oc->Operands().size() >= 2 &&
                 (oc->Operand(1)->GetOperandType() == cr_DF_MEMREG ||
                  oc->Operand(1)->GetOperandType() == cr_DF_MEMIMM ||
                  oc->Operand(1)->GetOperandType() == cr_DF_MEMINDEX))
@@ -788,20 +822,34 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                    oc->Name() == "rcl" || oc->Name() == "rcr")
         {
             oc->Operand(1)->Size() = 1;
-        } else if (oc->Name() == "bt" || oc->Name() == "btc" ||
-                   oc->Name() == "btr" || oc->Name() == "bts")
+        } else if (oc->Name() == "bt" ||
+                   oc->Name() == "btc" ||
+                   oc->Name() == "btr" ||
+                   oc->Name() == "bts" ||
+                   oc->Name() == "lock bt" ||
+                   oc->Name() == "lock btc" ||
+                   oc->Name() == "lock btr" ||
+                   oc->Name() == "lock bts")
         {
             if (oc->Operand(1)->GetOperandType() == cr_DF_IMM) {
                 oc->Operand(1)->Size() = 1;
             }
+        } else if (oc->Name() == "int" || oc->Name() == "prefetchnta") {
+            oc->Operand(0)->Size() = 1;
         } else if (oc->Operands().size() >= 2) {
             if (oc->Operand(0)->Text().find("xmm") == 0) {
                 if (oc->Operand(1)->Size() == 0) {
                     oc->Operand(1)->Size() = oc->Operand(0)->Size();
                 }
+                if (oc->Operands().size() == 3 && oc->Operand(2)->Size() == 0) {
+                    oc->Operand(2)->Size() = 1;
+                }
             } else if (oc->Operand(1)->Text().find("xmm") == 0) {
                 if (oc->Operand(0)->Size() == 0) {
                     oc->Operand(0)->Size() = oc->Operand(1)->Size();
+                }
+                if (oc->Operands().size() == 3 && oc->Operand(2)->Size() == 0) {
+                    oc->Operand(2)->Size() = 1;
                 }
             }
         }
