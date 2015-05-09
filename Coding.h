@@ -260,6 +260,7 @@ public:
     void clear();
 
     void ParseText(const char *text);
+    void DeductOperandSizes();
 
 public:
     // accessors
@@ -308,6 +309,7 @@ public:
     void clear();
 
     void ParseText(const char *text);
+    void DeductOperandSizes();
 
 public:
     // accessors

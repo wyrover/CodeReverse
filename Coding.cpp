@@ -903,6 +903,87 @@ void CR_OpCode32::ParseText(const char *text) {
     }
 } // CR_OpCode32::ParseText
 
+void CR_OpCode32::DeductOperandSizes() {
+    if (Name() == "mov" || Name() == "cmp" ||
+        Name() == "test" || Name() == "and" ||
+        Name() == "or" || Name() == "xor" || 
+        Name() == "add" || Name() == "adc" || 
+        Name() == "sub" || Name() == "sbb" ||
+        Name() == "xadd" || Name() == "xchg" ||
+        Name() == "cmpxchg" ||
+        Name() == "lock mov" || Name() == "lock cmp" ||
+        Name() == "lock test" || Name() == "lock and" ||
+        Name() == "lock or" || Name() == "lock xor" || 
+        Name() == "lock add" || Name() == "lock adc" || 
+        Name() == "lock sub" || Name() == "lock sbb" ||
+        Name() == "lock xadd" || Name() == "lock xchg" ||
+        Name() == "lock cmpxchg" ||
+        Name() == "movnti" || Name().find("cmov") == 0)
+    {
+        assert(Operands().size() >= 2);
+        if (Operand(0)->Size() == 0)
+            Operand(0)->Size() = Operand(1)->Size();
+        else if (Operand(1)->Size() == 0) {
+            Operand(1)->Size() = Operand(0)->Size();
+        }
+    } else if (Name() == "imul") {
+        if (Operands().size() >= 2 &&
+            (Operand(1)->GetOperandType() == cr_DF_MEMREG ||
+             Operand(1)->GetOperandType() == cr_DF_MEMIMM ||
+             Operand(1)->GetOperandType() == cr_DF_MEMINDEX))
+        {
+            if (Operand(1)->Size() == 0) {
+                Operand(1)->Size() = Operand(0)->Size();
+            }
+        }
+    } else if (OpCodeType() == cr_OCT_JMP ||
+               OpCodeType() == cr_OCT_JCC ||
+               OpCodeType() == cr_OCT_CALL)
+    {
+        Operand(0)->Size() = 4;
+    } else if (Name() == "ret" && Operands().size() == 1) {
+        Operand(0)->Size() = 4;
+    } else if (Name() == "lea") {
+        Operand(1)->Size() = 4;
+    } else if (Name() == "sal" || Name() == "sar" ||
+               Name() == "shl" || Name() == "shr" ||
+               Name() == "rol" || Name() == "ror" ||
+               Name() == "rcl" || Name() == "rcr")
+    {
+        Operand(1)->Size() = 1;
+    } else if (Name() == "bt" ||
+               Name() == "btc" ||
+               Name() == "btr" ||
+               Name() == "bts" ||
+               Name() == "lock bt" ||
+               Name() == "lock btc" ||
+               Name() == "lock btr" ||
+               Name() == "lock bts")
+    {
+        if (Operand(1)->GetOperandType() == cr_DF_IMM) {
+            Operand(1)->Size() = 1;
+        }
+    } else if (Name() == "int" || Name() == "prefetchnta") {
+        Operand(0)->Size() = 1;
+    } else if (Operands().size() >= 2) {
+        if (Operand(0)->Text().find("xmm") == 0) {
+            if (Operand(1)->Size() == 0) {
+                Operand(1)->Size() = Operand(0)->Size();
+            }
+            if (Operands().size() == 3 && Operand(2)->Size() == 0) {
+                Operand(2)->Size() = 1;
+            }
+        } else if (Operand(1)->Text().find("xmm") == 0) {
+            if (Operand(0)->Size() == 0) {
+                Operand(0)->Size() = Operand(1)->Size();
+            }
+            if (Operands().size() == 3 && Operand(2)->Size() == 0) {
+                Operand(2)->Size() = 1;
+            }
+        }
+    }
+} // CR_OpCode32::DeductOperandSizes
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64
 
@@ -1063,6 +1144,87 @@ void CR_OpCode64::ParseText(const char *text) {
         }
     }
 } // CR_OpCode64::ParseText
+
+void CR_OpCode64::DeductOperandSizes() {
+    if (Name() == "mov" || Name() == "cmp" ||
+        Name() == "test" || Name() == "and" ||
+        Name() == "or" || Name() == "xor" || 
+        Name() == "add" || Name() == "adc" || 
+        Name() == "sub" || Name() == "sbb" ||
+        Name() == "xadd" || Name() == "xchg" ||
+        Name() == "cmpxchg" ||
+        Name() == "lock mov" || Name() == "lock cmp" ||
+        Name() == "lock test" || Name() == "lock and" ||
+        Name() == "lock or" || Name() == "lock xor" || 
+        Name() == "lock add" || Name() == "lock adc" || 
+        Name() == "lock sub" || Name() == "lock sbb" ||
+        Name() == "lock xadd" || Name() == "lock xchg" ||
+        Name() == "lock cmpxchg" ||
+        Name() == "movnti" || Name().find("cmov") == 0)
+    {
+        assert(Operands().size() >= 2);
+        if (Operand(0)->Size() == 0)
+            Operand(0)->Size() = Operand(1)->Size();
+        else if (Operand(1)->Size() == 0) {
+            Operand(1)->Size() = Operand(0)->Size();
+        }
+    } else if (Name() == "imul") {
+        if (Operands().size() >= 2 &&
+            (Operand(1)->GetOperandType() == cr_DF_MEMREG ||
+             Operand(1)->GetOperandType() == cr_DF_MEMIMM ||
+             Operand(1)->GetOperandType() == cr_DF_MEMINDEX))
+        {
+            if (Operand(1)->Size() == 0) {
+                Operand(1)->Size() = Operand(0)->Size();
+            }
+        }
+    } else if (OpCodeType() == cr_OCT_JMP ||
+               OpCodeType() == cr_OCT_JCC ||
+               OpCodeType() == cr_OCT_CALL)
+    {
+        Operand(0)->Size() = 8;
+    } else if (Name() == "ret" && Operands().size() == 1) {
+        Operand(0)->Size() = 8;
+    } else if (Name() == "lea") {
+        Operand(1)->Size() = 8;
+    } else if (Name() == "sal" || Name() == "sar" ||
+               Name() == "shl" || Name() == "shr" ||
+               Name() == "rol" || Name() == "ror" ||
+               Name() == "rcl" || Name() == "rcr")
+    {
+        Operand(1)->Size() = 1;
+    } else if (Name() == "bt" ||
+               Name() == "btc" ||
+               Name() == "btr" ||
+               Name() == "bts" ||
+               Name() == "lock bt" ||
+               Name() == "lock btc" ||
+               Name() == "lock btr" ||
+               Name() == "lock bts")
+    {
+        if (Operand(1)->GetOperandType() == cr_DF_IMM) {
+            Operand(1)->Size() = 1;
+        }
+    } else if (Name() == "int" || Name() == "prefetchnta") {
+        Operand(0)->Size() = 1;
+    } else if (Operands().size() >= 2) {
+        if (Operand(0)->Text().find("xmm") == 0) {
+            if (Operand(1)->Size() == 0) {
+                Operand(1)->Size() = Operand(0)->Size();
+            }
+            if (Operands().size() == 3 && Operand(2)->Size() == 0) {
+                Operand(2)->Size() = 1;
+            }
+        } else if (Operand(1)->Text().find("xmm") == 0) {
+            if (Operand(0)->Size() == 0) {
+                Operand(0)->Size() = Operand(1)->Size();
+            }
+            if (Operands().size() == 3 && Operand(2)->Size() == 0) {
+                Operand(2)->Size() = 1;
+            }
+        }
+    }
+} // CR_OpCode64::DeductOperandSizes
 
 ////////////////////////////////////////////////////////////////////////////
 // CrGetAsmIO16, CrGetAsmIO32, CrGetAsmIO64
