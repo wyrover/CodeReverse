@@ -5522,7 +5522,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     v3.value = v2.value;
     commit v3;
@@ -5541,7 +5541,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     v3.value = v2.value;
     commit v3;
@@ -5560,7 +5560,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     v3.value = v2.value;
     commit v3;
@@ -5571,16 +5571,20 @@ pattern {
 
 pattern {
     assert($flags.DF == 0);
-    rep stosb;
+    asm rep stosb;
 } code {
-    $cpu.edi.type = $type.ptr($type.x8);
-    $cpu.al.type = $type.x8;
-    $cpu.ecx.type = $type.u32;
-    while ($cpu.ecx.value) {
-        $cr.memory($edi).value = $cpu.al.value;
-        $cpu.edi.value = $cpu.edi.value + 1;
-        $cpu.ecx.value = $cpu.ecx.value - 1;
-    }
+    renew $cpu.edi as v1;
+    commit v1;
+    renew $cpu.al as v2;
+    commit v2;
+    renew $cpu.ecx as v3;
+    commit v3;
+    $fn.memset(v1.pvalue, v2.value, v3.uvalue);
+    renew v1 as v4;
+    v4.pvalue = v1.pvalue + v3.uvalue;
+    commit v4;
+    updated $cpu.edi;
+    updated $cpu.ecx;
     assert($cpu.ecx.value == 0);
 }
 
@@ -5588,28 +5592,50 @@ pattern {
     assert($flags.DF);
     asm rep stosb;
 } code {
-    $cpu.edi.type = $type.ptr($type.x8);
-    $cpu.al.type = $type.x8;
-    $cpu.ecx.type = $type.u32;
-    while ($cpu.ecx.value) {
-        $cr.memory($edi).value = $cpu.al.value;
-        $cpu.edi.value = $cpu.edi.value - 1;
-        $cpu.ecx.value = $cpu.ecx.value - 1;
-    }
+    renew $cpu.edi as v1;
+    commit v1;
+    renew $cpu.al as v2;
+    commit v2;
+    renew $cpu.ecx as v3;
+    commit v3;
+    $fn.memset(v1.pvalue - v3.uvalue, v2.value, v3.uvalue);
+    renew v1 as v4;
+    v4.pvalue = v1.pvalue - v3.uvalue;
+    commit v4;
+    updated $cpu.edi;
+    updated $cpu.ecx;
     assert($cpu.ecx.value == 0);
 }
 
 pattern {
-    assert($flags.DF == 0);
+    assert(!$flags.DF);
     asm rep stosw;
 } code {
-    $cpu.edi.type = $type.ptr($type.x16);
-    $cpu.ax.type = $type.x16;
-    $cpu.ecx.type = $type.u32;
-    while ($cpu.ecx.value) {
-        $cr.memory($edi).value = $cpu.ax.value;
-        $cpu.edi.value = $cpu.edi.value + 2;
-        $cpu.ecx.value = $cpu.ecx.value - 1;
+    renew $cpu.edi as v1;
+    v1.type = $type.ptr($type.x16);
+    commit v1;
+    renew $cpu.ax as v2;
+    commit v2;
+    renew $cpu.ecx as v3;
+    v3.type = $type.u32;
+    commit v3;
+    for (;;) {
+        join v6 to v3;
+        if (v3.value == 0) {
+            break;
+        }
+        new v4;
+        v4.addr = v1.value;
+        v4.bits = $type.ref(v1.type);
+        v4.value = v2.value;
+        commit v4;
+        join v5 to v1;
+        renew v1 as v5;
+        v5.pvalue = v1.pvalue + 2;
+        commit v5;
+        renew v3 as v6;
+        v6.uvalue = v3.uvalue - 1;
+        commit v6;
     }
     assert($cpu.ecx.value == 0);
 }
@@ -5618,13 +5644,31 @@ pattern {
     assert($flags.DF);
     asm rep stosd;
 } code {
-    $cpu.edi.type = $type.ptr($type.x16);
-    $cpu.ax.type = $type.x16;
-    $cpu.ecx.type = $type.u32;
-    while ($cpu.ecx.value) {
-        $cr.memory($edi).value = $cpu.ax.value;
-        $cpu.edi.value = $cpu.edi.value - 2;
-        $cpu.ecx.value = $cpu.ecx.value - 1;
+    renew $cpu.edi as v1;
+    v1.type = $type.ptr($type.x16);
+    commit v1;
+    renew $cpu.ax as v2;
+    commit v2;
+    renew $cpu.ecx as v3;
+    v3.type = $type.u32;
+    commit v3;
+    for (;;) {
+        join v6 to v3;
+        if (v3.value == 0) {
+            break;
+        }
+        new v4;
+        v4.addr = v1.value;
+        v4.bits = $type.ref(v1.type);
+        v4.value = v2.value;
+        commit v4;
+        join v5 to v1;
+        renew v1 as v5;
+        v5.pvalue = v1.pvalue - 2;
+        commit v5;
+        renew v3 as v6;
+        v6.uvalue = v3.uvalue - 1;
+        commit v6;
     }
     assert($cpu.ecx.value == 0);
 }
@@ -5633,13 +5677,31 @@ pattern {
     assert(!$flags.DF);
     asm rep stosd;
 } code {
-    $cpu.edi.type = $type.ptr($type.x32);
-    $cpu.eax.type = $type.x32;
-    $cpu.ecx.type = $type.u32;
-    while ($cpu.ecx.value) {
-        $cr.memory($edi).value = $cpu.eax.value;
-        $cpu.edi.value = $cpu.edi.value + 4;
-        $cpu.ecx.value = $cpu.ecx.value - 1;
+    renew $cpu.edi as v1;
+    v1.type = $type.ptr($type.x32);
+    commit v1;
+    renew $cpu.ax as v2;
+    commit v2;
+    renew $cpu.ecx as v3;
+    v3.type = $type.u32;
+    commit v3;
+    for (;;) {
+        join v6 to v3;
+        if (v3.value == 0) {
+            break;
+        }
+        new v4;
+        v4.addr = v1.value;
+        v4.bits = $type.ref(v1.type);
+        v4.value = v2.value;
+        commit v4;
+        join v5 to v1;
+        renew v1 as v5;
+        v5.pvalue = v1.pvalue + 4;
+        commit v5;
+        renew v3 as v6;
+        v6.uvalue = v3.uvalue - 1;
+        commit v6;
     }
     assert($cpu.ecx.value == 0);
 }
@@ -5648,13 +5710,31 @@ pattern {
     assert($flags.DF);
     asm rep stosd;
 } code {
-    $cpu.edi.type = $type.ptr($type.x32);
-    $cpu.eax.type = $type.x32;
-    $cpu.ecx.type = $type.u32;
-    while ($cpu.ecx.value) {
-        $cr.memory($edi).value = $cpu.eax.value;
-        $cpu.edi.value = $cpu.edi.value - 4;
-        $cpu.ecx.value = $cpu.ecx.value - 1;
+    renew $cpu.edi as v1;
+    v1.type = $type.ptr($type.x32);
+    commit v1;
+    renew $cpu.ax as v2;
+    commit v2;
+    renew $cpu.ecx as v3;
+    v3.type = $type.u32;
+    commit v3;
+    for (;;) {
+        join v6 to v3;
+        if (v3.value == 0) {
+            break;
+        }
+        new v4;
+        v4.addr = v1.value;
+        v4.bits = $type.ref(v1.type);
+        v4.value = v2.value;
+        commit v4;
+        join v5 to v1;
+        renew v1 as v5;
+        v5.pvalue = v1.pvalue - 4;
+        commit v5;
+        renew v3 as v6;
+        v6.uvalue = v3.uvalue - 1;
+        commit v6;
     }
     assert($cpu.ecx.value == 0);
 }
@@ -5676,6 +5756,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
+    updated $1;
 }
 
 // sysenter();
@@ -5726,6 +5807,8 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
+    updated $1;
+    updated $2;
 }
 
 pattern {
@@ -5757,6 +5840,7 @@ pattern {
     renew v1 as v4;
     v4.value = v3.value;
     commit v4;
+    updated $cpu.al;
 }
 
 pattern {
@@ -5774,6 +5858,7 @@ pattern {
     $flags.CF = 0;
     $flags.PF = unknown;
     $flags.AF = unknown;
+    updated $1;
 }
 
 // xrstor($mem);
