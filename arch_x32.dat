@@ -5,7 +5,8 @@
 // This file is part of CodeReverse.
 // This file might be incomplete and/or incorrect.
 ////////////////////////////////////////////////////////////////////////////
-// $cpu: CPU
+// [Core]
+// $cpu:   CPU
 // $flags: CPU flags
 //
 // [Attributes]
@@ -24,7 +25,7 @@
 // $type.u32:   unsigned 32-bit type
 // $type.x32:   signed/unsigned 32-bit type
 // $type.ptr(ty):   make a pointer type to the type ty
-// $type.ref(ty):  	make a base type of the ptr type ty
+// $type.ref(ty):   make a base type of the ptr type ty
 //
 // [Values]
 // .value:  value
@@ -33,7 +34,7 @@
 // .pvalue: ptr value
 //
 // [Functions]
-// $fn.fname: 	a call of the function named fname
+// $fn.fname:   a call of the function named fname
 ////////////////////////////////////////////////////////////////////////////
 // updated's
 
@@ -1610,7 +1611,11 @@ pattern {
 pattern {
     asm cmc;
 } code {
-    $flags.CF = !$flags.CF;
+    if ($flags.CF) {
+        $flags.CF = 0;
+    } else {
+        $flags.CF = 1;
+    }
 }
 
 pattern {
@@ -3085,12 +3090,7 @@ pattern {
 pattern {
     asm ja $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.ZF && !$flags.CF;
-    commit v1;
-    if (v1.value) {
+    if (!($flags.ZF || $flags.CF)) {
         goto $1;
     }
 }
@@ -3098,12 +3098,7 @@ pattern {
 pattern {
     asm jae $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.CF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.CF) {
         goto $1;
     }
 }
@@ -3111,12 +3106,7 @@ pattern {
 pattern {
     asm jb $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.CF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.CF) {
         goto $1;
     }
 }
@@ -3124,12 +3114,7 @@ pattern {
 pattern {
     asm jbe $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.ZF || $flags.CF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.ZF || $flags.CF) {
         goto $1;
     }
 }
@@ -3137,12 +3122,7 @@ pattern {
 pattern {
     asm jc $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.CF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.CF) {
         goto $1;
     }
 }
@@ -3150,12 +3130,7 @@ pattern {
 pattern {
     asm jcxz $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 16;
-    v1.addr = $cpu.cx.addr;
-    commit v1;
-    if (v1.value == 0) {
+    if ($cpu.cx.addr== 0) {
         goto $1;
     }
 }
@@ -3163,12 +3138,7 @@ pattern {
 pattern {
     asm jecxz $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.addr = $cpu.ecx.addr;
-    commit v1;
-    if (v1.value == 0) {
+    if ($cpu.ecx.addr== 0) {
         goto $1;
     }
 }
@@ -3176,12 +3146,7 @@ pattern {
 pattern {
     asm je $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.ZF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.ZF) {
         goto $1;
     }
 }
@@ -3189,12 +3154,7 @@ pattern {
 pattern {
     asm jg $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.ZF && $flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.ZF && $flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3202,12 +3162,7 @@ pattern {
 pattern {
     asm jge $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3215,12 +3170,7 @@ pattern {
 pattern {
     asm jl $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3228,12 +3178,7 @@ pattern {
 pattern {
     asm jle $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.ZF && !$flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.ZF && !$flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3241,19 +3186,13 @@ pattern {
 pattern {
     asm jmp $1;
 } code {
-    $1.label = 1;
     goto $1;
 }
 
 pattern {
     asm jna $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.ZF || $flags.CF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.ZF || $flags.CF) {
         goto $1;
     }
 }
@@ -3261,12 +3200,7 @@ pattern {
 pattern {
     asm jnae $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.CF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.CF) {
         goto $1;
     }
 }
@@ -3274,12 +3208,7 @@ pattern {
 pattern {
     asm jnb $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.CF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.CF) {
         goto $1;
     }
 }
@@ -3287,12 +3216,7 @@ pattern {
 pattern {
     asm jnb $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.ZF && !$flags.CF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.ZF && !$flags.CF) {
         goto $1;
     }
 }
@@ -3300,12 +3224,7 @@ pattern {
 pattern {
     asm jnc $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.CF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.CF) {
         goto $1;
     }
 }
@@ -3313,12 +3232,7 @@ pattern {
 pattern {
     asm jne $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.ZF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.ZF) {
         goto $1;
     }
 }
@@ -3326,12 +3240,7 @@ pattern {
 pattern {
     asm jng $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.ZF || !$flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.ZF || !$flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3339,12 +3248,7 @@ pattern {
 pattern {
     asm jnge $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3352,12 +3256,7 @@ pattern {
 pattern {
     asm jnl $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3365,12 +3264,7 @@ pattern {
 pattern {
     asm jnle $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.ZF && $flags.SFeqOF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.ZF && $flags.SFeqOF) {
         goto $1;
     }
 }
@@ -3378,12 +3272,7 @@ pattern {
 pattern {
     asm jno $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.Of;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.Of) {
         goto $1;
     }
 }
@@ -3391,12 +3280,7 @@ pattern {
 pattern {
     asm jnp $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.PF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.PF) {
         goto $1;
     }
 }
@@ -3404,12 +3288,7 @@ pattern {
 pattern {
     asm jns $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.SF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.SF) {
         goto $1;
     }
 }
@@ -3417,12 +3296,7 @@ pattern {
 pattern {
     asm jnz $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.ZF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.ZF) {
         goto $1;
     }
 }
@@ -3430,12 +3304,7 @@ pattern {
 pattern {
     asm jo $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.OF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.OF) {
         goto $1;
     }
 }
@@ -3443,12 +3312,7 @@ pattern {
 pattern {
     asm jp $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.PF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.PF) {
         goto $1;
     }
 }
@@ -3456,12 +3320,7 @@ pattern {
 pattern {
     asm jpe $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.PF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.PF) {
         goto $1;
     }
 }
@@ -3469,12 +3328,7 @@ pattern {
 pattern {
     asm jpo $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = !$flags.PF;
-    commit v1;
-    if (v1.value) {
+    if (!$flags.PF) {
         goto $1;
     }
 }
@@ -3482,12 +3336,7 @@ pattern {
 pattern {
     asm js $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.SF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.SF) {
         goto $1;
     }
 }
@@ -3495,12 +3344,7 @@ pattern {
 pattern {
     asm jz $1;
 } code {
-    $1.label = 1;
-    new v1;
-    v1.bits = 32;
-    v1.value = $flags.ZF;
-    commit v1;
-    if (v1.value) {
+    if ($flags.ZF) {
         goto $1;
     }
 }
@@ -3910,7 +3754,6 @@ pattern {
 pattern {
     asm loop $1;
 } code {
-    $1.label = 1;
     new v1;
     v1.addr = $cpu.ecx.addr;
     v1.bits = 32;
@@ -3924,7 +3767,6 @@ pattern {
 pattern {
     asm loope $1;
 } code {
-    $1.label = 1;
     new v1;
     v1.addr = $cpu.ecx.addr;
     v1.bits = 32;
@@ -3937,7 +3779,6 @@ pattern {
 pattern {
     loopne $1;
 } code {
-    $1.label = 1;
     new v1;
     v1.addr = $cpu.ecx.addr;
     v1.bits = 32;
@@ -3950,7 +3791,6 @@ pattern {
 pattern {
     loopnz $1;
 } code {
-    $1.label = 1;
     new v1;
     v1.addr = $cpu.ecx.addr;
     v1.bits = 32;
@@ -3963,7 +3803,6 @@ pattern {
 pattern {
     loopz $1;
 } code {
-    $1.label = 1;
     new v1;
     v1.addr = $cpu.ecx.addr;
     v1.bits = 32;
