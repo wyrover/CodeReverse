@@ -782,6 +782,8 @@ void CR_OpCode32::ParseText(const char *text) {
         for (auto& entry : cr_rep_insns) {
             if (_stricmp(q, entry) == 0) {
                 Name() = q;
+                OpCodeType() = cr_OCT_STROP;
+
                 char *p = q + strlen(q) - 1;
 
                 CR_Operand opr;
@@ -869,10 +871,39 @@ void CR_OpCode32::ParseText(const char *text) {
 
     *p++ = '\0';
     Name() = q;
-    if (_stricmp(q, "push") == 0 || _stricmp(q, "pop") == 0 ||
-        _stricmp(q, "enter") == 0 || _stricmp(q, "leave") == 0)
-    {
-        OpCodeType() = cr_OCT_STACKOP;
+    for (;;) {
+        static const std::unordered_set<std::string> stackops = {
+            "push", "pop", "enter", "leave"
+        };
+        if (stackops.find(q) != stackops.end()) {
+            OpCodeType() = cr_OCT_STACKOP;
+            break;
+        }
+        static const std::unordered_set<std::string> shiftops = {
+            "sal", "sar", "shl", "shr", "shld", "shrd"
+        };
+        if (shiftops.find(q) != shiftops.end()) {
+            OpCodeType() = cr_OCT_SHIFT;
+            break;
+        }
+        static const std::unordered_set<std::string> rotateops = {
+            "rol", "ror", "rcl", "rcl"
+        };
+        if (rotateops.find(q) != rotateops.end()) {
+            OpCodeType() = cr_OCT_ROTATE;
+            break;
+        }
+        static const std::set<std::string> arithops = {
+            "adc", "add", "dec", "div", "idiv", "imul", "inc", "mul",
+            "neg", "sbb", "sub", "cmp", "and", "not", "or", "xor",
+            "cbw", "cwd", "cdq", "cwde", "aaa", "aad", "aam", "aas",
+            "daa", "das"
+        };
+        if (arithops.find(q) != arithops.end()) {
+            OpCodeType() = cr_OCT_ARITHOP;
+            break;
+        }
+        break;
     }
 
     Operands().clear();
@@ -936,8 +967,7 @@ void CR_OpCode32::DeductOperandSizes() {
                 Operand(1)->Size() = Operand(0)->Size();
             }
         }
-    } else if (OpCodeType() == cr_OCT_JMP ||
-               OpCodeType() == cr_OCT_JCC ||
+    } else if (OpCodeType() == cr_OCT_JMP || OpCodeType() == cr_OCT_JCC ||
                OpCodeType() == cr_OCT_CALL)
     {
         Operand(0)->Size() = 4;
@@ -1022,6 +1052,7 @@ void CR_OpCode64::ParseText(const char *text) {
         for (auto& entry : cr_rep_insns) {
             if (_stricmp(q, entry) == 0) {
                 Name() = q;
+                OpCodeType() = cr_OCT_STROP;
                 char *p = q + strlen(q) - 1;
 
                 CR_Operand opr;
@@ -1111,10 +1142,39 @@ void CR_OpCode64::ParseText(const char *text) {
 
     *p++ = '\0';
     Name() = q;
-    if (_stricmp(q, "push") == 0 || _stricmp(q, "pop") == 0 ||
-        _stricmp(q, "enter") == 0 || _stricmp(q, "leave") == 0)
-    {
-        OpCodeType() = cr_OCT_STACKOP;
+    for (;;) {
+        static const std::unordered_set<std::string> stackops = {
+            "push", "pop", "enter", "leave"
+        };
+        if (stackops.find(q) != stackops.end()) {
+            OpCodeType() = cr_OCT_STACKOP;
+            break;
+        }
+        static const std::unordered_set<std::string> shiftops = {
+            "sal", "sar", "shl", "shr", "shld", "shrd"
+        };
+        if (shiftops.find(q) != shiftops.end()) {
+            OpCodeType() = cr_OCT_SHIFT;
+            break;
+        }
+        static const std::unordered_set<std::string> rotateops = {
+            "rol", "ror", "rcl", "rcl"
+        };
+        if (rotateops.find(q) != rotateops.end()) {
+            OpCodeType() = cr_OCT_ROTATE;
+            break;
+        }
+        static const std::set<std::string> arithops = {
+            "adc", "add", "dec", "div", "idiv", "imul", "inc", "mul",
+            "neg", "sbb", "sub", "cmp", "and", "not", "or", "xor",
+            "cbw", "cwd", "cdq", "cwde", "aaa", "aad", "aam", "aas",
+            "daa", "das"
+        };
+        if (arithops.find(q) != arithops.end()) {
+            OpCodeType() = cr_OCT_ARITHOP;
+            break;
+        }
+        break;
     }
 
     Operands().clear();

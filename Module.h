@@ -157,12 +157,6 @@ public:
     BOOL DisAsm32(CR_DecompInfo32& info);
     BOOL DisAsm64(CR_DecompInfo64& info);
 
-    BOOL AnalyzeOperands32(CR_DecompInfo32& info, CR_Addr32 func);
-    BOOL AnalyzeOperands64(CR_DecompInfo64& info, CR_Addr64 func);
-
-    BOOL FixupAsm32(CR_DecompInfo32& info);
-    BOOL FixupAsm64(CR_DecompInfo64& info);
-
     BOOL Decompile32(CR_DecompInfo32& info);
     BOOL Decompile64(CR_DecompInfo64& info);
 
@@ -250,6 +244,8 @@ public:
 protected:
     shared_ptr<CR_Module>   m_module;
     name_to_storage         m_mNameToStorage;
+public:
+    CR_Addr32               m_ip;
 };
 
 class CR_X64Machine {
@@ -273,7 +269,14 @@ public:
 protected:
     shared_ptr<CR_Module>   m_module;
     name_to_storage         m_mNameToStorage;
+public:
+    CR_Addr64               m_ip;
 };
+
+////////////////////////////////////////////////////////////////////////////
+
+BOOL CrAnalyzeOperands32(CR_DecompInfo32& info, CR_X86Machine& machine);
+BOOL CrAnalyzeOperands64(CR_DecompInfo64& info, CR_X64Machine& machine);
 
 ////////////////////////////////////////////////////////////////////////////
 // Dumping.cpp

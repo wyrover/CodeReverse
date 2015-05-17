@@ -140,13 +140,17 @@ const char * CrFlagGetName(CR_FlagType type, int bits);
 // CR_OpCodeType - op.code type
 
 enum CR_OpCodeType {
-    cr_OCT_MISC,    // misc
     cr_OCT_JMP,     // jump
     cr_OCT_JCC,     // conditional jump
     cr_OCT_CALL,    // call
     cr_OCT_LOOP,    // loop
     cr_OCT_RETURN,  // ret
-    cr_OCT_STACKOP, // stack operation
+    cr_OCT_STACKOP, // stack op
+    cr_OCT_ARITHOP, // arithmetic op
+    cr_OCT_SHIFT,   // shift
+    cr_OCT_ROTATE,  // rotate
+    cr_OCT_STROP,   // string op
+    cr_OCT_MISC,    // misc
     cr_OCT_UNKNOWN  // unknown
 };
 

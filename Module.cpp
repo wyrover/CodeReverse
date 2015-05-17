@@ -933,12 +933,59 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-BOOL CR_Module::AnalyzeOperands32(CR_DecompInfo32& info, CR_Addr32 func) {
-    return TRUE;
+BOOL CrAnalyzeOperands32(CR_DecompInfo32& info, CR_X86Machine& machine) {
+    CR_NameScope& ns = info.NameScope();
+
+    // TODO:
+    /*
+    for (;;) {
+        auto oc = info.OpCodeFromAddr(machine.m_ip);
+        assert(oc);
+
+        switch (oc->OpCodeType()) {
+        case cr_OCT_JMP:
+            machine.m_ip = oc->Operand(0)->Value32();
+            continue;
+
+        case cr_OCT_JCC:
+            {
+                CR_X86Machine machine_branch(machine);
+                machine_branch.m_ip = oc->Operand(0)->Value32();
+                CrAnalyzeOperands32(info, machine);
+            }
+            break;
+
+        case cr_OCT_CALL:
+            {
+                ...
+            }
+            break;
+
+        case cr_OCT_LOOP:
+            break;
+
+        case cr_OCT_RETURN:
+            return TRUE;
+
+        case cr_OCT_STACKOP:
+            if (oc->Name() == "push") {
+            }
+            break;
+
+        default:
+            break;
+        }
+        machine.m_ip += CR_Addr32(oc->Codes().size());
+    }
+    */
+    return FALSE;
 }
 
-BOOL CR_Module::AnalyzeOperands64(CR_DecompInfo64& info, CR_Addr64 func) {
-    return TRUE;
+BOOL CrAnalyzeOperands64(CR_DecompInfo64& info, CR_X64Machine& machine) {
+    CR_NameScope& ns = info.NameScope();
+
+    // TODO:
+    return FALSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1174,14 +1221,30 @@ CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
 // decompiling
 
 BOOL CR_Module::Decompile32(CR_DecompInfo32& info) {
-    CR_NameScope& ns = info.NameScope();
-
-    //CR_X86Machine machine;
+    // TODO:
+    //CR_Addr32Set entrances = Entrances();
+    //size_t num_entrances = entrances.size();
+    //for (auto entrance : entrances) {
+    //    machine.m_eip = entrance;
+    //    machine.InitStack();
+    //    CrAnalyzeOperands32(info, machine);
+    //}
+    //
+    ////CR_X86Machine machine;
     return FALSE;
 }
 
 BOOL CR_Module::Decompile64(CR_DecompInfo64& info) {
-    //CR_X64Machine machine;
+    // TODO:
+    //CR_Addr64Set entrances = Entrances();
+    //size_t num_entrances = entrances.size();
+    //for (auto entrance : entrances) {
+    //    machine.m_eip = entrance;
+    //    machine.InitStack();
+    //    CrAnalyzeOperands64(info, machine);
+    //}
+    //
+    ////CR_X64Machine machine;
     return FALSE;
 }
 
