@@ -6,6 +6,7 @@ Release
 *.suo
 *.user
 ipch/
+test/
 Wonders98
 WondersMe
 Wonders2000
