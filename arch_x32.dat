@@ -1974,11 +1974,11 @@ pattern {
     v2.type = $type.ptr($type.x8);
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.type = $type.ref(v2.type);
     commit v4;
     $flags.ZF = v1.value == v2.value;
@@ -2008,11 +2008,11 @@ pattern {
     v2.type = $type.ptr($type.x8);
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.type = $type.ref(v2.type);
     commit v4;
     $flags.ZF = v1.value == v2.value;
@@ -2042,11 +2042,11 @@ pattern {
     v2.type = $type.ptr($type.x16);
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.type = $type.ref(v2.type);
     commit v4;
     $flags.ZF = v1.value == v2.value;
@@ -2076,11 +2076,11 @@ pattern {
     v2.type = $type.ptr($type.x16);
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.type = $type.ref(v2.type);
     commit v4;
     $flags.ZF = v1.value == v2.value;
@@ -2110,11 +2110,11 @@ pattern {
     v2.type = $type.ptr($type.x32);
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.type = $type.ref(v2.type);
     commit v4;
     $flags.ZF = v1.value == v2.value;
@@ -2144,11 +2144,11 @@ pattern {
     v2.type = $type.ptr($type.x32);
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.type = $type.ref(v2.type);
     commit v4;
     $flags.ZF = v1.value == v2.value;
@@ -2437,12 +2437,12 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.type = $type.ref(v1.type);
         v4.bits = 8;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.type = $type.ref(v2.type);
         v5.bits = 8;
         commit v5;
@@ -2487,12 +2487,12 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.type = $type.ref(v1.type);
         v4.bits = 8;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.type = $type.ref(v2.type);
         v5.bits = 8;
         commit v5;
@@ -2537,12 +2537,12 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.type = $type.ref(v1.type);
         v4.bits = 16;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.type = $type.ref(v2.type);
         v5.bits = 16;
         commit v5;
@@ -2587,12 +2587,12 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.type = $type.ref(v1.type);
         v4.bits = 16;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.type = $type.ref(v2.type);
         v5.bits = 16;
         commit v5;
@@ -2637,12 +2637,12 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.type = $type.ref(v1.type);
         v4.bits = 32;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.type = $type.ref(v2.type);
         v5.bits = 32;
         commit v5;
@@ -2687,12 +2687,12 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.type = $type.ref(v1.type);
         v4.bits = 32;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.type = $type.ref(v2.type);
         v5.bits = 32;
         commit v5;
@@ -3912,11 +3912,11 @@ pattern {
     v2.type = $type.ptr($type.x8);
     commit v2;
     new v3;
-    v3.addr = v1.value
+    v3.addr = v1.pvalue
     v3.bits = 8;
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.bits = 8;
     v4.value = v3.value;
     commit v4;
@@ -3939,11 +3939,11 @@ pattern {
     v2.type = $type.ptr($type.x8);
     commit v2;
     new v3;
-    v3.addr = v1.value
+    v3.addr = v1.pvalue
     v3.bits = 8;
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.bits = 8;
     v4.value = v3.value;
     commit v4;
@@ -3966,11 +3966,11 @@ pattern {
     v2.type = $type.ptr($type.x16);
     commit v2;
     new v3;
-    v3.addr = v1.value
+    v3.addr = v1.pvalue
     v3.bits = 16;
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.bits = 16;
     v4.value = v3.value;
     commit v4;
@@ -3993,11 +3993,11 @@ pattern {
     v2.type = $type.ptr($type.x16);
     commit v2;
     new v3;
-    v3.addr = v1.value
+    v3.addr = v1.pvalue
     v3.bits = 16;
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.bits = 16;
     v4.value = v3.value;
     commit v4;
@@ -4020,11 +4020,11 @@ pattern {
     v2.type = $type.ptr($type.x32);
     commit v2;
     new v3;
-    v3.addr = v1.value
+    v3.addr = v1.pvalue
     v3.bits = 32;
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.bits = 32;
     v4.value = v3.value;
     commit v4;
@@ -4047,11 +4047,11 @@ pattern {
     v2.type = $type.ptr($type.x32);
     commit v2;
     new v3;
-    v3.addr = v1.value
+    v3.addr = v1.pvalue
     v3.bits = 32;
     commit v3;
     new v4;
-    v4.addr = v2.value;
+    v4.addr = v2.pvalue;
     v4.bits = 32;
     v4.value = v3.value;
     commit v4;
@@ -4130,10 +4130,10 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.value = v4.value;
         commit v5;
         join v6 to v1;
@@ -4170,10 +4170,10 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.value = v4.value;
         commit v5;
         join v6 to v1;
@@ -4210,10 +4210,10 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.value = v4.value;
         commit v5;
         join v6 to v1;
@@ -4250,10 +4250,10 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         commit v4;
         new v5;
-        v5.addr = v2.value;
+        v5.addr = v2.pvalue;
         v5.value = v4.value;
         commit v5;
         join v6 to v1;
@@ -4425,7 +4425,7 @@ pattern {
     renew $cpu.esp as v1;
     commit v1;
     new v2;
-    v2.addr = v1.value;
+    v2.addr = v1.pvalue;
     v2.bits = 32;
     commit v2;
     renew $1 as v3;
@@ -4443,7 +4443,7 @@ pattern {
     renew $cpu.esp as v1;
     commit v1;
     new v2;
-    v2.addr = v1.value;
+    v2.addr = v1.pvalue;
     v2.bits = 16;
     commit v2;
     renew $1 as v3;
@@ -4545,7 +4545,7 @@ pattern {
     renew $cpu.esp as v2;
     commit v2;
     new v3;
-    v3.addr = v2.value;
+    v3.addr = v2.pvalue;
     v3.value = v1.value;
     commit v3;
     renew v2 as v4;
@@ -4561,7 +4561,7 @@ pattern {
     renew $cpu.esp as v2;
     commit v2;
     new v3;
-    v3.addr = v2.value;
+    v3.addr = v2.pvalue;
     v3.value = v1.value;
     commit v3;
     renew v2 as v4;
@@ -5465,13 +5465,13 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
     v4.value = v1.value + 1;
-    updated edi;
+    updated $cpu.edi;
 }
 
 pattern {
@@ -5484,13 +5484,13 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
     v4.value = v1.value - 1;
-    updated edi;
+    updated $cpu.edi;
 }
 
 pattern {
@@ -5503,13 +5503,13 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.value;
+    v3.addr = v1.pvalue;
     v3.type = $type.ref(v1.type);
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value + 2;
-    updated edi;
+    v4.pvalue = v1.pvalue + 2;
+    updated $cpu.edi;
 }
 
 pattern {
@@ -5527,8 +5527,8 @@ pattern {
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value - 2;
-    updated edi;
+    v4.pvalue = v1.pvalue - 2;
+    updated $cpu.edi;
 }
 
 pattern {
@@ -5546,8 +5546,8 @@ pattern {
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value + 4;
-    updated edi;
+    v4.pvalue = v1.pvalue + 4;
+    updated $cpu.edi;
 }
 
 pattern {
@@ -5565,8 +5565,8 @@ pattern {
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value - 4;
-    updated edi;
+    v4.pvalue = v1.pvalue - 4;
+    updated $cpu.edi;
 }
 
 pattern {
@@ -5625,7 +5625,7 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.bits = $type.ref(v1.type);
         v4.value = v2.value;
         commit v4;
@@ -5658,7 +5658,7 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.bits = $type.ref(v1.type);
         v4.value = v2.value;
         commit v4;
@@ -5691,7 +5691,7 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.bits = $type.ref(v1.type);
         v4.value = v2.value;
         commit v4;
@@ -5724,7 +5724,7 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.value;
+        v4.addr = v1.pvalue;
         v4.bits = $type.ref(v1.type);
         v4.value = v2.value;
         commit v4;
@@ -5834,7 +5834,7 @@ pattern {
     v2.type = $type.ptr($type.u8);
     commit v2;
     new v3;
-    v3.addr = v2.value + v1.value;
+    v3.addr = v2.pvalue + v1.value;
     v3.bits = 8;
     commit v3;
     renew v1 as v4;
