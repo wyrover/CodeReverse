@@ -33,7 +33,7 @@
 // $fn.fname:   a call of the function named fname
 ////////////////////////////////////////////////////////////////////////////
 
-define $cpu = {
+define access $cpu = {
     {"edx_eax", 64},
     {"dx_ax", 32},
     {"eax", 32},
@@ -72,7 +72,7 @@ define $cpu = {
     {"gs", 16},
 };
 
-define $flags = {
+define access $flags = {
     {"OF", 1},
     {"DF", 1},
     {"IF", 1},
@@ -84,7 +84,7 @@ define $flags = {
     {"CF", 1},
 };
 
-define $fpu = {
+define access $fpu = {
     {"st0", 80},
     {"st1", 80},
     {"st2", 80},
@@ -100,7 +100,7 @@ define $fpu = {
     {"operand", 64},
 };
 
-define $sse = {
+define access $sse = {
     {"mm0", 64},
     {"mm1", 64},
     {"mm2", 64},
@@ -121,10 +121,10 @@ define $sse = {
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// updated's
+// update's
 
 pattern {
-    updated $cpu.al;
+    update $cpu.al;
 } code {
     renew $cpu.al as v1;
     commit v1;
@@ -151,7 +151,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.bl;
+    update $cpu.bl;
 } code {
     renew $cpu.bl as v1;
     commit v1;
@@ -168,7 +168,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.cl;
+    update $cpu.cl;
 } code {
     renew $cpu.cl as v1;
     commit v1;
@@ -185,7 +185,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.dl;
+    update $cpu.dl;
 } code {
     renew $cpu.dl as v1;
     commit v1;
@@ -212,7 +212,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ah;
+    update $cpu.ah;
 } code {
     renew $cpu.al as v1;
     commit v1;
@@ -239,7 +239,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.bh;
+    update $cpu.bh;
 } code {
     renew $cpu.bl as v1;
     commit v1;
@@ -256,7 +256,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ch;
+    update $cpu.ch;
 } code {
     renew $cpu.cl as v1;
     commit v1;
@@ -273,7 +273,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.dh;
+    update $cpu.dh;
 } code {
     renew $cpu.dl as v1;
     commit v1;
@@ -300,7 +300,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ax;
+    update $cpu.ax;
 } code {
     renew $cpu.ax as v1;
     commit v1;
@@ -328,7 +328,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.bx;
+    update $cpu.bx;
 } code {
     renew $cpu.bx as v1;
     commit v1;
@@ -346,7 +346,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.cx;
+    update $cpu.cx;
 } code {
     renew $cpu.cx as v1;
     commit v1;
@@ -364,7 +364,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.dx;
+    update $cpu.dx;
 } code {
     renew $cpu.dx as v1;
     commit v1;
@@ -392,7 +392,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.sp;
+    update $cpu.sp;
 } code {
     renew $cpu.sp as v1;
     commit v1;
@@ -404,7 +404,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.bp;
+    update $cpu.bp;
 } code {
     renew $cpu.bp as v1;
     commit v1;
@@ -416,7 +416,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.si;
+    update $cpu.si;
 } code {
     renew $cpu.si as v1;
     commit v1;
@@ -428,7 +428,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.di;
+    update $cpu.di;
 } code {
     renew $cpu.di as v1;
     commit v1;
@@ -440,7 +440,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.eax;
+    update $cpu.eax;
 } code {
     renew $cpu.eax as v1;
     commit v1;
@@ -466,7 +466,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ebx;
+    update $cpu.ebx;
 } code {
     renew $cpu.ebx as v1;
     commit v1;
@@ -482,7 +482,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ecx;
+    update $cpu.ecx;
 } code {
     renew $cpu.ecx as v1;
     commit v1;
@@ -498,7 +498,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.edx;
+    update $cpu.edx;
 } code {
     renew $cpu.edx as v1;
     commit v1;
@@ -524,7 +524,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.esp;
+    update $cpu.esp;
 } code {
     renew $cpu.esp as v1;
     commit v1;
@@ -534,7 +534,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ebp;
+    update $cpu.ebp;
 } code {
     renew $cpu.ebp as v1;
     commit v1;
@@ -544,7 +544,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.esi;
+    update $cpu.esi;
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -554,7 +554,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.edi;
+    update $cpu.edi;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -564,7 +564,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.al, $cpu.ah;
+    update $cpu.al, $cpu.ah;
 } code {
     renew $cpu.al as v1;
     commit v1;
@@ -591,7 +591,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.bl, $cpu.bh;
+    update $cpu.bl, $cpu.bh;
 } code {
     renew $cpu.bl as v1;
     commit v1;
@@ -608,7 +608,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.cl, $cpu.ch;
+    update $cpu.cl, $cpu.ch;
 } code {
     renew $cpu.cl as v1;
     commit v1;
@@ -625,7 +625,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.dl, $cpu.dh;
+    update $cpu.dl, $cpu.dh;
 } code {
     renew $cpu.dl as v1;
     commit v1;
@@ -652,7 +652,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.ax, $cpu.dx;
+    update $cpu.ax, $cpu.dx;
 } code {
     renew $cpu.ax as v1;
     commit v1;
@@ -686,7 +686,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.dx_ax;
+    update $cpu.dx_ax;
 } code {
     renew $cpu.dx_ax as v1;
     commit v1;
@@ -724,7 +724,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.eax, $cpu.edx;
+    update $cpu.eax, $cpu.edx;
 } code {
     renew $cpu.eax as v1;
     commit v1;
@@ -757,7 +757,7 @@ pattern {
 }
 
 pattern {
-    updated $cpu.edx_eax;
+    update $cpu.edx_eax;
 } code {
     renew $cpu.edx_eax as v1;
     commit v1;
@@ -838,7 +838,7 @@ pattern {
     renew $2 as v2;
     v2.value = v1.value;
     commit v2;
-    updated $2;
+    update $2;
 }
 
 pattern {
@@ -857,8 +857,8 @@ pattern {
     renew $4 as v4;
     v4.value = v1.value;
     commit v4;
-    updated $3;
-    updated $4;
+    update $3;
+    update $4;
 }
 
 pattern {
@@ -884,9 +884,9 @@ pattern {
     renew $6 as v6;
     v6.value = v1.value;
     commit v6;
-    updated $4;
-    updated $5;
-    updated $6;
+    update $4;
+    update $5;
+    update $6;
 }
 
 pattern {
@@ -919,10 +919,10 @@ pattern {
     renew $8 as v8;
     v8.value = v1.value;
     commit v8;
-    updated $5;
-    updated $6;
-    updated $7;
-    updated $8;
+    update $5;
+    update $6;
+    update $7;
+    update $8;
 }
 
 pattern {
@@ -962,11 +962,11 @@ pattern {
     renew $10 as v10;
     v10.value = v1.value;
     commit v10;
-    updated $6;
-    updated $7;
-    updated $8;
-    updated $9;
-    updated $10;
+    update $6;
+    update $7;
+    update $8;
+    update $9;
+    update $10;
 }
 
 pattern {
@@ -989,7 +989,7 @@ pattern {
     v3.value = v1.value + v2.value;
     commit v3;
     assert($cpu.ecx.value == 0);
-    updated $cpu.ecx;
+    update $cpu.ecx;
 }
 
 pattern {
@@ -1002,7 +1002,7 @@ pattern {
     renew v1 as v2;
     v2.value = $fn.abs(v1.value);
     commit v2;
-    updated $cpu.eax;
+    update $cpu.eax;
 }
 
 pattern {
@@ -1038,7 +1038,7 @@ pattern {
     commit v1;
     assert(v1.uvalue == 0xFFFFFFFF);
     assert(v1.svalue == -1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1052,7 +1052,7 @@ pattern {
     commit v1;
     assert(v1.uvalue == 0xFFFF);
     assert(v1.svalue == -1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1066,7 +1066,7 @@ pattern {
     commit v1;
     assert(v1.uvalue == 0xFF);
     assert(v1.svalue == -1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1084,7 +1084,7 @@ pattern {
     $flags.PF = unknown;
     assert(v1.uvalue == 2);
     assert(v1.svalue == 2);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1101,7 +1101,7 @@ pattern {
     $flags.PF = unknown;
     assert(v1.uvalue == 1);
     assert(v1.svalue == 1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1121,7 +1121,7 @@ pattern {
     $flags.PF = unknown;
     assert(v1.uvalue == 0xFFFFFFFE);
     assert(v1.svalue == -2);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1140,7 +1140,7 @@ pattern {
     $flags.PF = unknown;
     assert(v1.uvalue == 0xFFFFFFFF);
     assert(v1.svalue == -1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1159,7 +1159,7 @@ pattern {
     $flags.PF = unknown;
     assert(v1.uvalue == 0xFFFF);
     assert(v1.svalue == -1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1178,7 +1178,7 @@ pattern {
     $flags.PF = unknown;
     assert(v1.uvalue == 0xFF);
     assert(v1.svalue == -1);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1196,7 +1196,7 @@ pattern {
     $flags.AF = unknown;
     assert(v1.uvalue == 0);
     assert(v1.svalue == 0);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1213,7 +1213,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1314,7 +1314,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1331,7 +1331,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1349,7 +1349,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1366,7 +1366,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1403,7 +1403,7 @@ pattern {
     $flags.SF = unknown;
     $flags.ZF = unknown;
     $flags.PF = unknown;
-    updated $cpu.al, $cpu.ah;
+    update $cpu.al, $cpu.ah;
 }
 
 pattern {
@@ -1426,7 +1426,7 @@ pattern {
     $flags.AF = unknown;
     $flags.PF = unknown;
     $flags.CF = unknown;
-    updated $cpu.al, $cpu.ah;
+    update $cpu.al, $cpu.ah;
 }
 
 pattern {
@@ -1454,7 +1454,7 @@ pattern {
     $flags.AF = unknown;
     $flags.PF = unknown;
     $flags.CF = unknown;
-    updated $cpu.al, $cpu.ah;
+    update $cpu.al, $cpu.ah;
 }
 
 pattern {
@@ -1488,7 +1488,7 @@ pattern {
     $flags.SF = unknown;
     $flags.ZF = unknown;
     $flags.PF = unknown;
-    updated $cpu.al, $cpu.ah;
+    update $cpu.al, $cpu.ah;
 }
 
 pattern {
@@ -1507,7 +1507,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1526,7 +1526,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1545,7 +1545,7 @@ pattern {
     $flags.OF = 0;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 // arpl($dest, $src);
@@ -1559,7 +1559,7 @@ pattern {
     renew v1 as v2;
     v2.value = $fn._bswap(v1.value);
     commit v2;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1577,7 +1577,7 @@ pattern {
     $flags.SF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1604,7 +1604,7 @@ pattern {
     $flags.SF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1625,7 +1625,7 @@ pattern {
     $flags.SF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1646,7 +1646,7 @@ pattern {
     $flags.SF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -1668,7 +1668,7 @@ pattern {
     renew $cpu.ax as v2;
     v2.svalue = v1.svalue;
     commit v2;
-    updated $cpu.ax;
+    update $cpu.ax;
 }
 
 pattern {
@@ -1679,7 +1679,7 @@ pattern {
     renew $cpu.eax as v2;
     v2.svalue = v1.svalue;
     commit v2;
-    updated $cpu.eax;
+    update $cpu.eax;
 }
 
 pattern {
@@ -1721,7 +1721,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1732,7 +1732,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1743,7 +1743,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1754,7 +1754,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1765,7 +1765,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1776,7 +1776,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1787,7 +1787,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1798,7 +1798,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1809,7 +1809,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1820,7 +1820,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1831,7 +1831,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1842,7 +1842,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1853,7 +1853,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1864,7 +1864,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1875,7 +1875,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1886,7 +1886,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1897,7 +1897,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1908,7 +1908,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1919,7 +1919,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1930,7 +1930,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1941,7 +1941,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1952,7 +1952,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1963,7 +1963,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1974,7 +1974,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1985,7 +1985,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -1996,7 +1996,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -2007,7 +2007,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -2018,7 +2018,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -2029,7 +2029,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -2040,7 +2040,7 @@ pattern {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
-        updated $1;
+        update $1;
     }
 }
 
@@ -2089,8 +2089,8 @@ pattern {
     renew v2 as v6;
     v6.value = v2.value + 1;
     commit v6;
-    updated $cpu.edi;
-    updated $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -2123,8 +2123,8 @@ pattern {
     renew v2 as v6;
     v6.value = v2.value - 1;
     commit v6;
-    updated $cpu.edi;
-    updated $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -2157,8 +2157,8 @@ pattern {
     renew v2 as v6;
     v6.value = v2.value + 2;
     commit v6;
-    updated $cpu.edi;
-    updated $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -2191,8 +2191,8 @@ pattern {
     renew v2 as v6;
     v6.value = v2.value - 2;
     commit v6;
-    updated $cpu.edi;
-    updated $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -2225,8 +2225,8 @@ pattern {
     renew v2 as v6;
     v6.value = v2.value + 4;
     commit v6;
-    updated $cpu.edi;
-    updated $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -2259,8 +2259,8 @@ pattern {
     renew v2 as v6;
     v6.value = v2.value - 4;
     commit v6;
-    updated $cpu.edi;
-    updated $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -3486,8 +3486,8 @@ pattern {
     v3.addr = $cpu.esi.addr;
     v3.type = $type.ptr($type.x8);
     v3.value = v1.value + 1;
-    updated al;
-    updated esi;
+    update al;
+    update esi;
 }
 
 pattern {
@@ -3507,8 +3507,8 @@ pattern {
     v3.addr = $cpu.esi.addr;
     v3.type = $type.ptr($type.x8);
     v3.value = v1.value - 1;
-    updated al;
-    updated esi;
+    update al;
+    update esi;
 }
 
 pattern {
@@ -3528,8 +3528,8 @@ pattern {
     v3.addr = $cpu.esi.addr;
     v3.type = $type.ptr($type.x16);
     v3.value = v1.value + 2;
-    updated ax;
-    updated esi;
+    update ax;
+    update esi;
 }
 
 pattern {
@@ -3549,8 +3549,8 @@ pattern {
     v3.addr = $cpu.esi.addr;
     v3.type = $type.ptr($type.x16);
     v3.value = v1.value - 2;
-    updated ax;
-    updated esi;
+    update ax;
+    update esi;
 }
 
 pattern {
@@ -3570,8 +3570,8 @@ pattern {
     v3.addr = $cpu.esi.addr;
     v3.type = $type.ptr($type.x32);
     v3.value = v1.value + 4;
-    updated eax;
-    updated esi;
+    update eax;
+    update esi;
 }
 
 pattern {
@@ -3591,8 +3591,8 @@ pattern {
     v3.addr = $cpu.esi.addr;
     v3.type = $type.ptr($type.x32);
     v3.value = v1.value - 4;
-    updated eax;
-    updated esi;
+    update eax;
+    update esi;
 }
 
 pattern {
@@ -3960,7 +3960,7 @@ pattern {
     v8.addr = $1.addr;
     v8.bits = 32;
     v8.uvalue = ((v6.uvalue << 16) | v7.uvalue);
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -4179,9 +4179,9 @@ pattern {
     renew v3 as v6;
     v6.value = 0;
     commit v6;
-    updated edi;
-    updated esi;
-    updated ecx;
+    update edi;
+    update esi;
+    update ecx;
 }
 
 pattern {
@@ -4205,9 +4205,9 @@ pattern {
     v6.value = 0;
     commit v6;
     assert($cpu.ecx.value == 0);
-    updated edi;
-    updated esi;
-    updated ecx;
+    update edi;
+    update esi;
+    update ecx;
 }
 
 pattern {
@@ -4245,9 +4245,9 @@ pattern {
         commit v8;
     }
     assert($cpu.ecx.value == 0);
-    updated edi;
-    updated esi;
-    updated ecx;
+    update edi;
+    update esi;
+    update ecx;
 }
 
 pattern {
@@ -4285,9 +4285,9 @@ pattern {
         commit v8;
     }
     assert($cpu.ecx.value == 0);
-    updated edi;
-    updated esi;
-    updated ecx;
+    update edi;
+    update esi;
+    update ecx;
 }
 
 pattern {
@@ -4325,9 +4325,9 @@ pattern {
         commit v8;
     }
     assert($cpu.ecx.value == 0);
-    updated edi;
-    updated esi;
-    updated ecx;
+    update edi;
+    update esi;
+    update ecx;
 }
 
 pattern {
@@ -4365,9 +4365,9 @@ pattern {
         commit v8;
     }
     assert($cpu.ecx.value == 0);
-    updated edi;
-    updated esi;
-    updated ecx;
+    update edi;
+    update esi;
+    update ecx;
 }
 
 pattern {
@@ -4586,7 +4586,7 @@ $skip1:
     goto $loop;
 $skip2:
     $1 = $count;
-    updated $1;
+    update $1;
 }
 
 pattern {
@@ -4606,7 +4606,7 @@ $skip1:
     goto $loop;
 $skip2:
     $1 = $count;
-    updated $1;
+    update $1;
 }
 
 // popf();
@@ -4810,7 +4810,7 @@ pattern {
     $flags.CF = unknown;
     renew v1 as v3;
     v3.value = v1.value + 1;
-    updated edi;
+    update edi;
 }
 
 pattern {
@@ -4829,7 +4829,7 @@ pattern {
     $flags.CF = unknown;
     renew v1 as v3;
     v3.value = v1.value - 1;
-    updated edi;
+    update edi;
 }
 
 pattern {
@@ -4848,7 +4848,7 @@ pattern {
     $flags.CF = unknown;
     renew v1 as v3;
     v3.value = v1.value + 2;
-    updated edi;
+    update edi;
 }
 
 pattern {
@@ -4867,7 +4867,7 @@ pattern {
     $flags.CF = unknown;
     renew v1 as v3;
     v3.value = v1.value - 2;
-    updated edi;
+    update edi;
 }
 
 pattern {
@@ -4886,7 +4886,7 @@ pattern {
     $flags.CF = unknown;
     renew v1 as v3;
     v3.value = v1.value + 4;
-    updated edi;
+    update edi;
 }
 
 pattern {
@@ -4905,7 +4905,7 @@ pattern {
     $flags.CF = unknown;
     renew v1 as v3;
     v3.value = v1.value - 4;
-    updated edi;
+    update edi;
 }
 
 pattern {
@@ -4936,7 +4936,7 @@ pattern {
     }
     renew v1 as v3;
     v3.value = v1.value - 1;
-    updated edi;
+    update edi;
     $flags.AF = unknown;
     $flags.PF = unknown;
     $flags.CF = unknown;
@@ -4956,7 +4956,7 @@ $loop:
     if (!ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -4981,7 +4981,7 @@ $loop:
     if (!ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5006,7 +5006,7 @@ $loop:
     if (!ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5031,7 +5031,7 @@ $loop:
     if (!ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5056,7 +5056,7 @@ $loop:
     if (!ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5085,7 +5085,7 @@ $loop:
     if (ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5110,7 +5110,7 @@ $loop:
     if (ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5135,7 +5135,7 @@ $loop:
     if (ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5160,7 +5160,7 @@ $loop:
     if (ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5185,7 +5185,7 @@ $loop:
     if (ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5210,7 +5210,7 @@ $loop:
     if (ZF) goto $skip;
     goto $loop;
 $skip:
-    updated edi;
+    update edi;
     dead AF;
     dead PF;
     dead CF;
@@ -5562,7 +5562,7 @@ pattern {
     commit v3;
     renew v1 as v4;
     v4.value = v1.value + 1;
-    updated $cpu.edi;
+    update $cpu.edi;
 }
 
 pattern {
@@ -5581,7 +5581,7 @@ pattern {
     commit v3;
     renew v1 as v4;
     v4.value = v1.value - 1;
-    updated $cpu.edi;
+    update $cpu.edi;
 }
 
 pattern {
@@ -5600,7 +5600,7 @@ pattern {
     commit v3;
     renew v1 as v4;
     v4.pvalue = v1.pvalue + 2;
-    updated $cpu.edi;
+    update $cpu.edi;
 }
 
 pattern {
@@ -5619,7 +5619,7 @@ pattern {
     commit v3;
     renew v1 as v4;
     v4.pvalue = v1.pvalue - 2;
-    updated $cpu.edi;
+    update $cpu.edi;
 }
 
 pattern {
@@ -5638,7 +5638,7 @@ pattern {
     commit v3;
     renew v1 as v4;
     v4.pvalue = v1.pvalue + 4;
-    updated $cpu.edi;
+    update $cpu.edi;
 }
 
 pattern {
@@ -5657,7 +5657,7 @@ pattern {
     commit v3;
     renew v1 as v4;
     v4.pvalue = v1.pvalue - 4;
-    updated $cpu.edi;
+    update $cpu.edi;
 }
 
 pattern {
@@ -5674,8 +5674,8 @@ pattern {
     renew v1 as v4;
     v4.pvalue = v1.pvalue + v3.uvalue;
     commit v4;
-    updated $cpu.edi;
-    updated $cpu.ecx;
+    update $cpu.edi;
+    update $cpu.ecx;
     assert($cpu.ecx.value == 0);
 }
 
@@ -5693,8 +5693,8 @@ pattern {
     renew v1 as v4;
     v4.pvalue = v1.pvalue - v3.uvalue;
     commit v4;
-    updated $cpu.edi;
-    updated $cpu.ecx;
+    update $cpu.edi;
+    update $cpu.ecx;
     assert($cpu.ecx.value == 0);
 }
 
@@ -5847,7 +5847,7 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
+    update $1;
 }
 
 // sysenter();
@@ -5898,8 +5898,8 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
-    updated $1;
-    updated $2;
+    update $1;
+    update $2;
 }
 
 pattern {
@@ -5931,7 +5931,7 @@ pattern {
     renew v1 as v4;
     v4.value = v3.value;
     commit v4;
-    updated $cpu.al;
+    update $cpu.al;
 }
 
 pattern {
@@ -5949,7 +5949,7 @@ pattern {
     $flags.CF = 0;
     $flags.PF = unknown;
     $flags.AF = unknown;
-    updated $1;
+    update $1;
 }
 
 // xrstor($mem);

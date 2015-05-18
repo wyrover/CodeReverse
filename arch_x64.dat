@@ -36,7 +36,7 @@
 // $fn.fname:   a call of the function named fname
 ////////////////////////////////////////////////////////////////////////////
 
-define $cpu = {
+define access $cpu = {
     {"rdx_rax", 128},
     {"edx_eax", 64},
     {"dx_ax", 32},
@@ -122,7 +122,7 @@ define $cpu = {
     {"gs", 16},
 };
 
-define $flags = {
+define access $flags = {
     {"OF", 1},
     {"DF", 1},
     {"IF", 1},
@@ -134,7 +134,7 @@ define $flags = {
     {"CF", 1},
 };
 
-define $fpu = {
+define access $fpu = {
     {"st0", 80},
     {"st1", 80},
     {"st2", 80},
@@ -150,7 +150,7 @@ define $fpu = {
     {"operand", 64},
 };
 
-define $sse = {
+define access $sse = {
     {"mm0", 64},
     {"mm1", 64},
     {"mm2", 64},
@@ -171,5 +171,351 @@ define $sse = {
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// updated's
+// update's
+
+pattern {
+    update $cpu.al;
+} code {
+    renew $cpu.al as v1;
+    commit v1;
+    renew $cpu.ah as v2;
+    commit v2;
+    renew $cpu.ax as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.ax;
+}
+
+pattern {
+    update $cpu.bl;
+} code {
+    renew $cpu.bl as v1;
+    commit v1;
+    renew $cpu.bh as v2;
+    commit v2;
+    renew $cpu.bx as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.bx;
+}
+
+pattern {
+    update $cpu.cl;
+} code {
+    renew $cpu.cl as v1;
+    commit v1;
+    renew $cpu.ch as v2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.cx;
+}
+
+pattern {
+    update $cpu.dl;
+} code {
+    renew $cpu.dl as v1;
+    commit v1;
+    renew $cpu.dh as v2;
+    commit v2;
+    renew $cpu.dx as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.dx;
+}
+
+pattern {
+    update $cpu.dil;
+} code {
+    renew $cpu.dil as v1;
+    commit v1;
+    renew $cpu.di as v2;
+    v2.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v2;
+    update_upward $cpu.di;
+}
+
+pattern {
+    update $cpu.sil;
+} code {
+    renew $cpu.sil as v1;
+    commit v1;
+    renew $cpu.si as v2;
+    v2.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v2;
+    update_upward $cpu.si;
+}
+
+pattern {
+    update $cpu.ah;
+} code {
+    renew $cpu.al as v1;
+    commit v1;
+    renew $cpu.ah as v2;
+    commit v2;
+    renew $cpu.ax as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.ax;
+}
+
+pattern {
+    update $cpu.bh;
+} code {
+    renew $cpu.bl as v1;
+    commit v1;
+    renew $cpu.bh as v2;
+    commit v2;
+    renew $cpu.bx as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.bx;
+}
+
+pattern {
+    update $cpu.ch;
+} code {
+    renew $cpu.cl as v1;
+    commit v1;
+    renew $cpu.ch as v2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.cx;
+}
+
+pattern {
+    update $cpu.dh;
+} code {
+    renew $cpu.dl as v1;
+    commit v1;
+    renew $cpu.dh as v2;
+    commit v2;
+    renew $cpu.dx as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    commit v3;
+    update_upward $cpu.dx;
+}
+
+pattern {
+    update_upward $cpu.ax;
+} code {
+    renew $cpu.ax as v1;
+    commit v1;
+    renew $cpu.dx as v2;
+    commit v2;
+    renew $cpu.dx_ax as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 16));
+    commit v3;
+    renew $cpu.eax as v4;
+    commit v4;
+    renew v4 as v5;
+    v5.uvalue = (v1.uvalue | (v4.uvalue & 0xFFFF0000));
+    commit v5;
+    update_upward $cpu.eax;
+}
+
+pattern {
+    update_upward $cpu.bx;
+} code {
+    renew $cpu.bx as v1;
+    commit v1;
+    renew $cpu.ebx as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 16));
+    commit v3;
+    update_upward $cpu.ebx;
+}
+
+pattern {
+    update_upward $cpu.cx;
+} code {
+    renew $cpu.cx as v1;
+    commit v1;
+    renew $cpu.ecx as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 16));
+    commit v3;
+    update_upward $cpu.ecx;
+}
+
+pattern {
+    update_upward $cpu.dx;
+} code {
+    renew $cpu.ax as v1;
+    commit v1;
+    renew $cpu.dx as v2;
+    commit v2;
+    renew $cpu.dx_ax as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 16));
+    commit v3;
+    renew $cpu.edx as v4;
+    commit v4;
+    renew v4 as v5;
+    v5.uvalue = (v1.uvalue | (v4.uvalue & 0xFFFF0000));
+    commit v5;
+    update_upward $cpu.edx;
+}
+
+pattern {
+    update_upward $cpu.di;
+} code {
+    renew $cpu.di as v1;
+    commit v1;
+    renew $cpu.edi as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 16));
+    commit v3;
+    update_upward $cpu.edi;
+}
+
+pattern {
+    update_upward $cpu.si;
+} code {
+    renew $cpu.si as v1;
+    commit v1;
+    renew $cpu.esi as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue << 16));
+    commit v3;
+    update_upward $cpu.esi;
+}
+
+pattern {
+    update_upward $cpu.eax;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew $cpu.rax as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
+    commit v3;
+    renew $cpu.edx_eax as v4;
+    commit v4;
+    renew v4 as v5;
+    v5.uvalue = (v1.uvalue | (v4.uvalue & 0xFFFFFFFF00000000));
+    commit v5;
+    update_upward $cpu.rax;
+}
+
+pattern {
+    update_upward $cpu.ebx;
+} code {
+    renew $cpu.ebx as v1;
+    commit v1;
+    renew $cpu.rbx as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
+    commit v3;
+    update_upward $cpu.rbx;
+}
+
+pattern {
+    update_upward $cpu.ecx;
+} code {
+    renew $cpu.ecx as v1;
+    commit v1;
+    renew $cpu.rcx as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
+    commit v3;
+    update_upward $cpu.rcx;
+}
+
+pattern {
+    update_upward $cpu.edx;
+} code {
+    renew $cpu.edx as v1;
+    commit v1;
+    renew $cpu.rdx as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
+    commit v3;
+    renew $cpu.edx_eax as v4;
+    commit v4;
+    renew v4 as v5;
+    v5.uvalue = ((cast(ULL, v1.uvalue) << 32) | (v4.uvalue & 0xFFFFFFFF));
+    commit v5;
+    update_upward $cpu.rdx;
+}
+
+pattern {
+    update_upward $cpu.edi;
+} code {
+    renew $cpu.edi as v1;
+    commit v1;
+    renew $cpu.rdi as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
+    commit v3;
+    update_upward $cpu.rdi;
+}
+
+pattern {
+    update_upward $cpu.esi;
+} code {
+    renew $cpu.esi as v1;
+    commit v1;
+    renew $cpu.rsi as v2;
+    commit v2;
+    renew v2 as v3;
+    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
+    commit v3;
+    update_upward $cpu.rsi;
+}
+
+pattern {
+    update_upward $cpu.rax;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew $cpu.rdx as v2;
+    commit v2;
+    renew $cpu.rdx_rax as v3;
+    v3.uvalue = (v1.uvalue | (cast(ULL, v2.uvalue) << 32));
+    commit v3;
+}
+
+pattern {
+    update_upward $cpu.rbx;
+} code {
+}
+
+pattern {
+    update_upward $cpu.rcx;
+} code {
+}
+
+pattern {
+    update_upward $cpu.rdx;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew $cpu.rdx as v2;
+    commit v2;
+    renew $cpu.rdx_rax as v3;
+    v3.uvalue = (v1.uvalue | (cast(ULL, v2.uvalue) << 32));
+    commit v3;
+}
+
+pattern {
+    update_upward $cpu.rdi;
+} code {
+}
+
+pattern {
+    update_upward $cpu.rsi;
+} code {
+}
 
