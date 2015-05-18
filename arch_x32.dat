@@ -5,10 +5,6 @@
 // This file is part of CodeReverse.
 // This file might be incomplete and/or incorrect.
 ////////////////////////////////////////////////////////////////////////////
-// [Core]
-// $cpu:   CPU
-// $flags: CPU flags
-//
 // [Attributes]
 // .addr:   address
 // .type:   type
@@ -31,10 +27,100 @@
 // .value:  value
 // .svalue: signed value
 // .uvalue: unsigned value
-// .pvalue: ptr value
+// .pvalue: pointer value
 //
 // [Functions]
 // $fn.fname:   a call of the function named fname
+////////////////////////////////////////////////////////////////////////////
+
+define $cpu = {
+    {"edx_eax", 64},
+    {"dx_ax", 32},
+    {"eax", 32},
+    {"ax", 16},
+    {"al", 8},
+    {"ah", 8},
+    {"edx", 32},
+    {"dx", 16},
+    {"dl", 8},
+    {"dh", 8},
+    {"ebx", 32},
+    {"bx", 16},
+    {"bl", 8},
+    {"bh", 8},
+    {"ecx", 32},
+    {"cx", 16},
+    {"cl", 8},
+    {"ch", 8},
+    {"edi", 32},
+    {"di", 16},
+    {"esi", 32},
+    {"si", 16},
+    {"ebp", 32},
+    {"bp", 16},
+    {"esp", 32},
+    {"sp", 16},
+    {"eip", 32},
+    {"ip", 16},
+    {"eflags", 32},
+    {"flags", 16},
+    {"cs", 16},
+    {"ds", 16},
+    {"ss", 16},
+    {"es", 16},
+    {"fs", 16},
+    {"gs", 16},
+};
+
+define $flags = {
+    {"AF", 1},
+    {"CF", 1},
+    {"DF", 1},
+    {"IF", 1},
+    {"OF", 1},
+    {"PF", 1},
+    {"SF", 1},
+    {"ZF", 1},
+};
+
+define $fpu = {
+    {"st0", 80},
+    {"st1", 80},
+    {"st2", 80},
+    {"st3", 80},
+    {"st4", 80},
+    {"st5", 80},
+    {"st6", 80},
+    {"st7", 80},
+    {"control", 16},
+    {"status", 16},
+    {"tag", 16},
+    {"instruction", 64},
+    {"operand", 64},
+};
+
+define $mmx = {
+    {"mm0", 64},
+    {"mm1", 64},
+    {"mm2", 64},
+    {"mm3", 64},
+    {"mm4", 64},
+    {"mm5", 64},
+    {"mm6", 64},
+    {"mm7", 64},
+};
+
+define $xmm = {
+    {"xmm0", 128},
+    {"xmm1", 128},
+    {"xmm2", 128},
+    {"xmm3", 128},
+    {"xmm4", 128},
+    {"xmm5", 128},
+    {"xmm6", 128},
+    {"xmm7", 128},
+};
+
 ////////////////////////////////////////////////////////////////////////////
 // updated's
 
@@ -1565,6 +1651,17 @@ pattern {
 }
 
 pattern {
+    asm call $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    new v2;
+    v2.addr = $cpu.eax.addr;
+    v2.value = v1.pvalue(...);
+    commit v2;
+}
+
+pattern {
     asm cbw;
 } code {
     renew $cpu.al as v1;
@@ -2413,9 +2510,9 @@ pattern {
     $flags.OF = unknown;
 }
 
-alias repz cmpsb = repe cmpsb;
-alias repz cmpsw = repe cmpsw;
-alias repz cmpsd = repe cmpsd;
+alias asm repz cmpsb = asm repe cmpsb;
+alias asm repz cmpsw = asm repe cmpsw;
+alias asm repz cmpsd = asm repe cmpsd;
 
 pattern {
     assert(!$flags.DF);
@@ -2717,9 +2814,9 @@ pattern {
     $flags.OF = unknown;
 }
 
-alias repnz cmpsb = repne cmpsb;
-alias repnz cmpsw = repne cmpsw;
-alias repnz cmpsd = repne cmpsd;
+alias asm repnz cmpsb = asm repne cmpsb;
+alias asm repnz cmpsw = asm repne cmpsw;
+alias asm repnz cmpsd = asm repne cmpsd;
 
 pattern {
     asm cmpxchg $1, $2;
@@ -4850,11 +4947,6 @@ pattern {
     repe scasb;
     assert DF;
 } code {
-    char $s1;
-    char $s2;
-    unsigned char $u;
-    assert edi as xsigned char *;
-    assert al as xsigned char;
 $loop:
     $s1 = al;
     $s2 = *edi;
@@ -4971,9 +5063,9 @@ $skip:
     dead CF;
 }
 
-alias repz scasb = repe scasb;
-alias repz scasw = repe scasw;
-alias repz scasd = repe scasd;
+alias asm repz scasb = asm repe scasb;
+alias asm repz scasw = asm repe scasw;
+alias asm repz scasd = asm repe scasd;
 
 pattern {
     repne scasb;
@@ -5125,9 +5217,9 @@ $skip:
     dead CF;
 }
 
-alias repnz scasb = repne scasb;
-alias repnz scasw = repne scasw;
-alias repnz scasd = repne scasd;
+alias asm repnz scasb = asm repne scasb;
+alias asm repnz scasw = asm repne scasw;
+alias asm repnz scasd = asm repne scasd;
 
 pattern {
     asm seta $1;
