@@ -1,0 +1,175 @@
+////////////////////////////////////////////////////////////////////////////
+// arch_x64.dat
+// Copyright (C) 2015 Katayama Hirofumi MZ.  All rights reserved.
+////////////////////////////////////////////////////////////////////////////
+// This file is part of CodeReverse.
+// This file might be incomplete and/or incorrect.
+////////////////////////////////////////////////////////////////////////////
+// [Attributes]
+// .addr:   address
+// .type:   type
+// .bits:   size in bits
+//
+// [Types]
+// $type.s8:    signed 8-bit type
+// $type.u8:    unsigned 8-bit type
+// $type.x8:    signed/unsigned 8-bit type
+// $type.s16:   signed 16-bit type
+// $type.u16:   unsigned 16-bit type
+// $type.x16:   signed/unsigned 16-bit type
+// $type.s32:   signed 32-bit type
+// $type.u32:   unsigned 32-bit type
+// $type.x32:   signed/unsigned 32-bit type
+// $type.s64:   signed 64-bit type
+// $type.u64:   unsigned 64-bit type
+// $type.x64:   signed/unsigned 64-bit type
+// $type.ptr(ty):   make a pointer type to the type ty
+// $type.ref(ty):   make a base type of the ptr type ty
+//
+// [Values]
+// .value:  value
+// .svalue: signed value
+// .uvalue: unsigned value
+// .pvalue: pointer value
+//
+// [Functions]
+// $fn.fname:   a call of the function named fname
+////////////////////////////////////////////////////////////////////////////
+
+define $cpu = {
+    {"rdx_rax", 128},
+    {"edx_eax", 64},
+    {"dx_ax", 32},
+    {"rax", 64},
+    {"eax", 32},
+    {"ax", 16},
+    {"al", 8},
+    {"ah", 8},
+    {"rdx", 64},
+    {"edx", 32},
+    {"dx", 16},
+    {"dl", 8},
+    {"dh", 8},
+    {"rbx", 64},
+    {"ebx", 32},
+    {"bx", 16},
+    {"bl", 8},
+    {"bh", 8},
+    {"rcx", 64},
+    {"ecx", 32},
+    {"cx", 16},
+    {"cl", 8},
+    {"ch", 8},
+    {"rdi", 64},
+    {"edi", 32},
+    {"di", 16},
+    {"dil", 8},
+    {"rsi", 64},
+    {"esi", 32},
+    {"si", 16},
+    {"sil", 8},
+    {"rbp", 64},
+    {"ebp", 32},
+    {"bp", 16},
+    {"bpl", 8},
+    {"rsp", 64},
+    {"esp", 32},
+    {"sp", 16},
+    {"spl", 8},
+    {"r8", 64},
+    {"r8d", 32},
+    {"r8w", 16},
+    {"r8l", 8},
+    {"r9", 64},
+    {"r9d", 32},
+    {"r9w", 16},
+    {"r9l", 8},
+    {"r10", 64},
+    {"r10d", 32},
+    {"r10w", 16},
+    {"r10l", 8},
+    {"r11", 64},
+    {"r11d", 32},
+    {"r11w", 16},
+    {"r11l", 8},
+    {"r12", 64},
+    {"r12d", 32},
+    {"r12w", 16},
+    {"r12l", 8},
+    {"r13", 64},
+    {"r13d", 32},
+    {"r13w", 16},
+    {"r13l", 8},
+    {"r14", 64},
+    {"r14d", 32},
+    {"r14w", 16},
+    {"r14l", 8},
+    {"r15", 64},
+    {"r15d", 32},
+    {"r15w", 16},
+    {"r15l", 8},
+    {"rip", 64},
+    {"eip", 32},
+    {"ip", 16},
+    {"rflags", 64},
+    {"eflags", 32},
+    {"flags", 16},
+    {"cs", 16},
+    {"ds", 16},
+    {"ss", 16},
+    {"es", 16},
+    {"fs", 16},
+    {"gs", 16},
+};
+
+define $flags = {
+    {"OF", 1},
+    {"DF", 1},
+    {"IF", 1},
+    {"TF", 1},
+    {"SF", 1},
+    {"ZF", 1},
+    {"AF", 1},
+    {"PF", 1},
+    {"CF", 1},
+};
+
+define $fpu = {
+    {"st0", 80},
+    {"st1", 80},
+    {"st2", 80},
+    {"st3", 80},
+    {"st4", 80},
+    {"st5", 80},
+    {"st6", 80},
+    {"st7", 80},
+    {"control", 16},
+    {"status", 16},
+    {"tag", 16},
+    {"instruction", 64},
+    {"operand", 64},
+};
+
+define $sse = {
+    {"mm0", 64},
+    {"mm1", 64},
+    {"mm2", 64},
+    {"mm3", 64},
+    {"mm4", 64},
+    {"mm5", 64},
+    {"mm6", 64},
+    {"mm7", 64},
+    {"xmm0", 128},
+    {"xmm1", 128},
+    {"xmm2", 128},
+    {"xmm3", 128},
+    {"xmm4", 128},
+    {"xmm5", 128},
+    {"xmm6", 128},
+    {"xmm7", 128},
+    {"mxcsr", 32},
+};
+
+////////////////////////////////////////////////////////////////////////////
+// updated's
+
