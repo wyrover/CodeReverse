@@ -191,25 +191,27 @@ pattern {
     //
     renew $cpu.dx as v4;
     commit v4;
-    renew $cpu.dx_ax as v5;
-    v5.uvalue = (v3.uvalue | (v4.uvalue << 16));
+    renew $cpu.ax as v5;
     commit v5;
-    //
-    renew $cpu.edx as v6;
+    reset $cpu.dx_ax as v6;
+    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
     commit v6;
-    renew $cpu.eax as v7;
-    commit v7;
-    renew $cpu.edx_eax as v8;
-    v8.uvalue = (v7.uvalue | (v6.uvalue << 32));
-    commit v8;
     //
-    renew $cpu.rdx as v9;
+    renew $cpu.edx as v7;
+    commit v7;
+    renew $cpu.eax as v8;
+    commit v8;
+    reset $cpu.edx_eax as v9;
+    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
     commit v9;
-    renew $cpu.rax as v10;
+    //
+    renew $cpu.rdx as v10;
     commit v10;
-    renew $cpu.rdx_rax as v11;
-    v11.uvalue = (v10.uvalue | (v9.uvalue << 64));
+    renew $cpu.rax as v11;
     commit v11;
+    reset $cpu.rdx_rax as v12;
+    v12.uvalue = (v11.uvalue | (v10.uvalue << 64));
+    commit v12;
 }
 
 pattern {
@@ -250,27 +252,29 @@ pattern {
     commit v3;
     update_upward $cpu.dx;
     //
-    renew $cpu.ax as v4;
+    renew $cpu.dx as v4;
     commit v4;
-    renew $cpu.dx_ax as v5;
-    v5.uvalue = (v4.uvalue | (v3.uvalue << 16));
+    renew $cpu.ax as v5;
     commit v5;
-    //
-    renew $cpu.edx as v6;
+    reset $cpu.dx_ax as v6;
+    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
     commit v6;
-    renew $cpu.eax as v7;
-    commit v7;
-    renew $cpu.edx_eax as v8;
-    v8.uvalue = (v7.uvalue | (v6.uvalue << 32));
-    commit v8;
     //
-    renew $cpu.rdx as v9;
+    renew $cpu.edx as v7;
+    commit v7;
+    renew $cpu.eax as v8;
+    commit v8;
+    reset $cpu.edx_eax as v9;
+    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
     commit v9;
-    renew $cpu.rax as v10;
+    //
+    renew $cpu.rdx as v10;
     commit v10;
-    renew $cpu.rdx_rax as v11;
-    v11.uvalue = (v10.uvalue | (v9.uvalue << 64));
+    renew $cpu.rax as v11;
     commit v11;
+    reset $cpu.rdx_rax as v12;
+    v12.uvalue = (v11.uvalue | (v10.uvalue << 64));
+    commit v12;
 }
 
 pattern {
@@ -443,25 +447,27 @@ pattern {
     //
     renew $cpu.dx as v4;
     commit v4;
-    renew $cpu.dx_ax as v5;
-    v5.uvalue = (v3.uvalue | (v4.uvalue << 16));
+    renew $cpu.ax as v5;
     commit v5;
-    //
-    renew $cpu.edx as v6;
+    reset $cpu.dx_ax as v6;
+    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
     commit v6;
-    renew $cpu.eax as v7;
-    commit v7;
-    renew $cpu.edx_eax as v8;
-    v8.uvalue = (v7.uvalue | (v8.uvalue << 32));
-    commit v8;
     //
-    renew $cpu.rdx as v9;
+    renew $cpu.edx as v7;
+    commit v7;
+    renew $cpu.eax as v8;
+    commit v8;
+    reset $cpu.edx_eax as v9;
+    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
     commit v9;
-    renew $cpu.rax as v10;
+    //
+    renew $cpu.rdx as v10;
     commit v10;
-    renew $cpu.rdx_rax as v11;
-    v11.uvalue = (v10.uvalue | (v9.uvalue << 64));
+    renew $cpu.rax as v11;
     commit v11;
+    reset $cpu.rdx_rax as v12;
+    v12.uvalue = (v11.uvalue | (v10.uvalue << 64));
+    commit v12;
 }
 
 pattern {
@@ -502,27 +508,29 @@ pattern {
     commit v3;
     update_upward $cpu.dx;
     //
-    renew $cpu.ax as v4;
+    renew $cpu.dx as v4;
     commit v4;
-    renew $cpu.dx_ax as v5;
-    v5.uvalue = (v4.uvalue | (v3.uvalue << 16));
+    renew $cpu.ax as v5;
     commit v5;
-    //
-    renew $cpu.edx as v6;
+    reset $cpu.dx_ax as v6;
+    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
     commit v6;
-    renew $cpu.eax as v7;
-    commit v7;
-    renew $cpu.edx_eax as v8;
-    v8.uvalue = (v7.uvalue | (v8.uvalue << 32));
-    commit v8;
     //
-    renew $cpu.rdx as v9;
+    renew $cpu.edx as v7;
+    commit v7;
+    renew $cpu.eax as v8;
+    commit v8;
+    reset $cpu.edx_eax as v9;
+    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
     commit v9;
-    renew $cpu.rax as v10;
+    //
+    renew $cpu.rdx as v10;
     commit v10;
-    renew $cpu.rdx_rax as v11;
-    v11.uvalue = (v10.uvalue | (v9.uvalue << 64));
+    renew $cpu.rax as v11;
     commit v11;
+    reset $cpu.rdx_rax as v12;
+    v12.uvalue = (v11.uvalue | (v10.uvalue << 64));
+    commit v12;
 }
 
 //
@@ -919,7 +927,7 @@ pattern {
 }
 
 //
-// updating words bothward
+// updating words
 //
 
 pattern {
@@ -1281,18 +1289,6 @@ pattern {
 }
 
 pattern {
-    update_upward $cpu.esp;
-} code {
-    renew $cpu.esp as v1;
-    commit v1;
-    renew $cpu.rsp as v2;
-    commit v2;
-    renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFFFFFF00000000));
-    commit v3;
-}
-
-pattern {
     update_upward $cpu.eip;
 } code {
     renew $cpu.eip as v1;
@@ -1329,30 +1325,6 @@ pattern {
     v2.uvalue = v1.uvalue;
     commit v2;
     update_downward $cpu.ax;
-    //
-    renew $cpu.dx as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
-    commit v3;
-    //
-    renew $cpu.edx as v4;
-    commit v4;
-    renew $cpu.eax as v5;
-    commit v5;
-    reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
-    commit v6;
-    //
-    renew $cpu.rdx as v7;
-    commit v7;
-    renew $cpu.rax as v8;
-    commit v8;
-    reset $cpu.rdx_rax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 64));
-    commit v9;
 }
 
 pattern {
@@ -1386,30 +1358,6 @@ pattern {
     v2.uvalue = v1.uvalue;
     commit v2;
     update_downward $cpu.dx;
-    //
-    renew $cpu.dx as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
-    commit v3;
-    //
-    renew $cpu.edx as v4;
-    commit v4;
-    renew $cpu.eax as v5;
-    commit v5;
-    reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
-    commit v6;
-    //
-    renew $cpu.rdx as v7;
-    commit v7;
-    renew $cpu.rax as v8;
-    commit v8;
-    reset $cpu.rdx_rax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 64));
-    commit v9;
 }
 
 pattern {
@@ -1741,13 +1689,6 @@ pattern {
 }
 
 pattern {
-    update $cpu.esp;
-} code {
-    update_downward $cpu.esp;
-    update_upward $cpu.esp;
-}
-
-pattern {
     update $cpu.eip;
 } code {
     update_downward $cpu.eip;
@@ -1775,29 +1716,29 @@ pattern {
     commit v2;
     update_downward $cpu.eax;
     //
-    renew $cpu.dx as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
+    renew $cpu.dx as v3;
     commit v3;
-    //
-    renew $cpu.edx as v4;
+    renew $cpu.ax as v4;
     commit v4;
-    renew $cpu.eax as v5;
+    reset $cpu.dx_ax as v5;
+    v5.uvalue = (v4.uvalue | (v3.uvalue << 16));
     commit v5;
-    reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
-    commit v6;
     //
-    renew $cpu.rdx as v7;
+    renew $cpu.edx as v6;
+    commit v6;
+    renew $cpu.eax as v7;
     commit v7;
-    renew $cpu.rax as v8;
+    reset $cpu.edx_eax as v8;
+    v8.uvalue = (v7.uvalue | (v6.uvalue << 32));
     commit v8;
-    reset $cpu.rdx_rax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 64));
+    //
+    renew $cpu.rdx as v9;
     commit v9;
+    renew $cpu.rax as v10;
+    commit v10;
+    reset $cpu.rdx_rax as v11;
+    v11.uvalue = (v10.uvalue | (v9.uvalue << 64));
+    commit v11;
 }
 
 pattern {
@@ -1832,29 +1773,29 @@ pattern {
     commit v2;
     update_downward $cpu.edx;
     //
-    renew $cpu.dx as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
+    renew $cpu.dx as v3;
     commit v3;
-    //
-    renew $cpu.edx as v4;
+    renew $cpu.ax as v4;
     commit v4;
-    renew $cpu.eax as v5;
+    reset $cpu.dx_ax as v5;
+    v5.uvalue = (v4.uvalue | (v3.uvalue << 16));
     commit v5;
-    reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
-    commit v6;
     //
-    renew $cpu.rdx as v7;
+    renew $cpu.edx as v6;
+    commit v6;
+    renew $cpu.eax as v7;
     commit v7;
-    renew $cpu.rax as v8;
+    reset $cpu.edx_eax as v8;
+    v8.uvalue = (v7.uvalue | (v6.uvalue << 32));
     commit v8;
-    reset $cpu.rdx_rax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 64));
+    //
+    renew $cpu.rdx as v9;
     commit v9;
+    renew $cpu.rax as v10;
+    commit v10;
+    reset $cpu.rdx_rax as v11;
+    v11.uvalue = (v10.uvalue | (v9.uvalue << 64));
+    commit v11;
 }
 
 pattern {
