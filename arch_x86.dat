@@ -1690,8 +1690,7 @@ pattern {
 } code {
     renew $1 as v1;
     commit v1;
-    new v2;
-    v2.addr = $cpu.eax.addr;
+    renew $cpu.eax as v2;
     v2.value = v1.pvalue(...);
     commit v2;
 }
@@ -2310,11 +2309,10 @@ pattern {
     v2.type = $type.ptr($type.x8);
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.uint;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (!v3.value) {
+        if (!v3.uvalue) {
             break;
         }
         join v4 to v1;
@@ -2326,13 +2324,13 @@ pattern {
             break;
         }
         renew v1 as v4;
-        v4.value = v1.value + 1;
+        v4.pvalue = v1.pvalue + 1;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value + 1;
+        v5.pvalue = v2.pvalue + 1;
         commit v5;
         renew v3 as v6;
-        v6.value = v5.value - 1;
+        v6.uvalue = v5.uvalue - 1;
         commit v6;
     }
     $flags.AF = unknown;
@@ -2351,11 +2349,10 @@ pattern {
     v2.type = $type.ptr($type.x8);
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.uint;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (!v3.value) {
+        if (!v3.uvalue) {
             break;
         }
         join v4 to v1;
@@ -2367,13 +2364,13 @@ pattern {
             break;
         }
         renew v1 as v4;
-        v4.value = v1.value - 1;
+        v4.pvalue = v1.pvalue - 1;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value - 1;
+        v5.pvalue = v2.pvalue - 1;
         commit v5;
         renew v3 as v6;
-        v6.value = v5.value - 1;
+        v6.uvalue = v5.uvalue - 1;
         commit v6;
     }
     $flags.AF = unknown;
@@ -2392,11 +2389,10 @@ pattern {
     v2.type = $type.ptr($type.x16);
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.uint;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (!v3.value) {
+        if (!v3.uvalue) {
             break;
         }
         join v4 to v1;
@@ -2408,13 +2404,13 @@ pattern {
             break;
         }
         renew v1 as v4;
-        v4.value = v1.value + 2;
+        v4.pvalue = v1.pvalue + 2;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value + 2;
+        v5.pvalue = v2.pvalue + 2;
         commit v5;
         renew v3 as v6;
-        v6.value = v5.value - 1;
+        v6.uvalue = v5.uvalue - 1;
         commit v6;
     }
     $flags.AF = unknown;
@@ -2433,11 +2429,10 @@ pattern {
     v2.type = $type.ptr($type.x16);
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.uint;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (!v3.value) {
+        if (!v3.uvalue) {
             break;
         }
         join v4 to v1;
@@ -2449,13 +2444,13 @@ pattern {
             break;
         }
         renew v1 as v4;
-        v4.value = v1.value - 2;
+        v4.pvalue = v1.pvalue - 2;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value - 2;
+        v5.pvalue = v2.pvalue - 2;
         commit v5;
         renew v3 as v6;
-        v6.value = v5.value - 1;
+        v6.uvalue = v5.uvalue - 1;
         commit v6;
     }
     $flags.AF = unknown;
@@ -2474,11 +2469,10 @@ pattern {
     v2.type = $type.ptr($type.x32);
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.uint;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (!v3.value) {
+        if (!v3.uvalue) {
             break;
         }
         join v4 to v1;
@@ -2490,13 +2484,13 @@ pattern {
             break;
         }
         renew v1 as v4;
-        v4.value = v1.value + 4;
+        v4.pvalue = v1.pvalue + 4;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value + 4;
+        v5.pvalue = v2.pvalue + 4;
         commit v5;
         renew v3 as v6;
-        v6.value = v5.value - 1;
+        v6.uvalue = v5.uvalue - 1;
         commit v6;
     }
     $flags.AF = unknown;
@@ -2515,11 +2509,10 @@ pattern {
     v2.type = $type.ptr($type.x32);
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.uint;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (!v3.value) {
+        if (!v3.uvalue) {
             break;
         }
         join v4 to v1;
@@ -2531,13 +2524,13 @@ pattern {
             break;
         }
         renew v1 as v4;
-        v4.value = v1.value - 4;
+        v4.pvalue = v1.pvalue - 4;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value - 4;
+        v5.pvalue = v2.pvalue - 4;
         commit v5;
         renew v3 as v6;
-        v6.value = v5.value - 1;
+        v6.uvalue = v5.uvalue - 1;
         commit v6;
     }
     $flags.AF = unknown;
@@ -2563,7 +2556,7 @@ pattern {
     commit v3;
     for (;;) {
         join v8 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         join v6 to v1;
@@ -2613,7 +2606,7 @@ pattern {
     commit v3;
     for (;;) {
         join v8 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         join v6 to v1;
@@ -2663,7 +2656,7 @@ pattern {
     commit v3;
     for (;;) {
         join v8 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         join v6 to v1;
@@ -2713,7 +2706,7 @@ pattern {
     commit v3;
     for (;;) {
         join v8 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         join v6 to v1;
@@ -2763,7 +2756,7 @@ pattern {
     commit v3;
     for (;;) {
         join v8 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         join v6 to v1;
@@ -2813,7 +2806,7 @@ pattern {
     commit v3;
     for (;;) {
         join v8 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         join v6 to v1;
@@ -3048,7 +3041,7 @@ pattern {
 
 // asm enter $1, $2;
 
-// hlt();
+// asm hlt;
 
 pattern {
     asm idiv $1;
@@ -3190,7 +3183,7 @@ pattern {
     $flags.PF = unknown;
 }
 
-// in($dest, $src);
+// asm in $dest, $src;
 
 pattern {
     asm inc $1;
@@ -3262,7 +3255,7 @@ pattern {
 pattern {
     asm jcxz $1;
 } code {
-    if ($cpu.cx.addr== 0) {
+    if ($cpu.cx.value == 0) {
         goto $1;
     }
 }
@@ -3270,7 +3263,7 @@ pattern {
 pattern {
     asm jecxz $1;
 } code {
-    if ($cpu.ecx.addr== 0) {
+    if ($cpu.ecx.value == 0) {
         goto $1;
     }
 }
