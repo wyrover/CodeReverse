@@ -3853,7 +3853,7 @@ pattern {
     renew $1 as v2;
     v2.value = v1.value;
     commit v2;
-    assert($1.value == $2.value);
+    assert(v1.value == v2.value);
 }
 
 pattern {
@@ -3926,7 +3926,7 @@ pattern {
     renew $1 as v2;
     v2.value = v1.value;
     commit v2;
-    assert($1.value == $2.value);
+	assert(v1.value == v2.value);
 }
 
 pattern {
@@ -4111,6 +4111,10 @@ pattern {
     renew v3 as v6;
     v6.value = 0;
     commit v6;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
+    assert($cpu.ecx.value == 0);
     update edi;
     update esi;
     update ecx;
@@ -4136,6 +4140,9 @@ pattern {
     renew v3 as v6;
     v6.value = 0;
     commit v6;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
     update edi;
     update esi;
@@ -4447,7 +4454,7 @@ pattern {
 // pause();
 
 pattern {
-    pop $1;
+    asm pop $1;
     assert($1.bits == 32);
 } code {
     renew $cpu.esp as v1;
@@ -4465,7 +4472,7 @@ pattern {
 }
 
 pattern {
-    pop $1;
+    asm pop $1;
     assert($1.bits == 16);
 } code {
     renew $cpu.esp as v1;
@@ -4505,40 +4512,16 @@ pattern {
     popcnt $1, $2;
     assert sizeof($1) == 4;
 } code {
-    unsigned long $i;
-    unsigned long $count;
-    $count = 0;
-    $i = 0;
-$loop:
-    if ($i >= 32) goto $skip2;
-    if (($2 & (1 << $i)) == 0) goto $skip1;
-    $count = $count + 1;
-$skip1:
-    $i = $i + 1;
-    goto $loop;
-$skip2:
-    $1 = $count;
-    update $1;
+	// FIXME
+	...
 }
 
 pattern {
     popcnt $1, $2;
     assert sizeof($1) == 2;
 } code {
-    unsigned short $i;
-    unsigned short $count;
-    $count = 0;
-    $i = 0;
-$loop:
-    if ($i >= 32) goto $skip2;
-    if (($2 & (1 << $i)) == 0) goto $skip1;
-    $count = $count + 1;
-$skip1:
-    $i = $i + 1;
-    goto $loop;
-$skip2:
-    $1 = $count;
-    update $1;
+	// FIXME
+	...
 }
 
 // popf();
@@ -4726,6 +4709,7 @@ pattern {
     $flags.AF = unknown;
     $flags.PF = unknown;
 }
+
 pattern {
     asm scasb;
     assert(!$flags.DF);
@@ -4741,7 +4725,7 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     renew v1 as v3;
-    v3.value = v1.value + 1;
+    v3.pvalue = v1.pvalue + 1;
     update edi;
 }
 
@@ -4760,7 +4744,7 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     renew v1 as v3;
-    v3.value = v1.value - 1;
+    v3.pvalue = v1.pvalue - 1;
     update edi;
 }
 
@@ -4842,156 +4826,44 @@ pattern {
 
 pattern {
     asm repe scasb;
+    assert(!$flags.DF);
+} code {
+	// FIXME
+}
+
+pattern {
+    asm repe scasb;
     assert($flags.DF);
 } code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.al as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v? to v3;
-        if (v3.value == 0) {
-            break;
-        }
-        join v1 to v1;
-        join v2 to v2;
-        $flags.OF = v1.svalue < v2.svalue;
-        $flags.ZF = v1.value == v2.value;
-        $flags.SF = v1.svalue < v2.svalue;
-        
-        
-        renew v3 as v4;
-        v4.value = v3.value - 1;
-        commit v4;
-    }
-    renew v1 as v3;
-    v3.value = v1.value - 1;
-    update edi;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+	// FIXME
 }
 
 pattern {
-    repe scasb;
-    assert DF;
+    asm repe scasw;
+    assert(!$flags.DF);
 } code {
-$loop:
-    $s1 = al;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = al == *edi;
-    SF = $s1 < $s2;
-    edi = edi - 1;
-    if (!ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
-    repe scasw;
-    assert !DF;
+    asm repe scasw;
+    assert($flags.DF);
 } code {
-    short $s1;
-    short $s2;
-    unsigned short $u;
-    assert edi as xsigned short *;
-    assert ax as xsigned short;
-$loop:
-    $s1 = ax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = ax == *edi;
-    SF = $s1 < $s2;
-    edi = edi + 2;
-    if (!ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
-    repe scasw;
-    assert DF;
+    asm repe scasd;
+    assert(!$flags.DF);
 } code {
-    short $s1;
-    short $s2;
-    unsigned short $u;
-    assert edi as xsigned short *;
-    assert ax as xsigned short;
-$loop:
-    $s1 = ax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = ax == *edi;
-    SF = $s1 < $s2;
-    edi = edi - 2;
-    if (!ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
-    repe scasd;
-    assert !DF;
+    asm repe scasd;
+    assert($flags.DF);
 } code {
-    long $s1;
-    long $s2;
-    unsigned long $u;
-    assert edi as xsigned long *;
-    assert eax as xsigned long;
-$loop:
-    $s1 = eax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = eax == *edi;
-    SF = $s1 < $s2;
-    edi = edi + 4;
-    if (!ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
-}
-
-pattern {
-    repe scasd;
-    assert DF;
-} code {
-    long $s1;
-    long $s2;
-    unsigned long $u;
-    assert edi as xsigned long *;
-    assert eax as xsigned long;
-$loop:
-    $s1 = eax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = eax == *edi;
-    SF = $s1 < $s2;
-    edi = edi - 4;
-    if (!ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 alias asm repz scasb = asm repe scasb;
@@ -5000,152 +4872,44 @@ alias asm repz scasd = asm repe scasd;
 
 pattern {
     repne scasb;
-    assert !DF;
+	assert(!$flags.DF);
 } code {
-    char $s1;
-    char $s2;
-    unsigned char $u;
-    assert edi as xsigned char *;
-    assert al as xsigned char;
-$loop:
-    $s1 = al;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = al == *edi;
-    SF = $s1 < $s2;
-    edi = edi + 1;
-    if (ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
     repne scasb;
-    assert DF;
+	assert($flags.DF);
 } code {
-    char $s1;
-    char $s2;
-    unsigned char $u;
-    assert edi as xsigned char *;
-    assert al as xsigned char;
-$loop:
-    $s1 = al;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = al == *edi;
-    SF = $s1 < $s2;
-    edi = edi - 1;
-    if (ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
     repne scasw;
-    assert !DF;
+	assert(!$flags.DF);
 } code {
-    short $s1;
-    short $s2;
-    unsigned short $u;
-    assert edi as xsigned short *;
-    assert ax as xsigned short;
-$loop:
-    $s1 = ax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = ax == *edi;
-    SF = $s1 < $s2;
-    edi = edi + 2;
-    if (ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
     repne scasw;
-    assert DF;
+	assert($flags.DF);
 } code {
-    short $s1;
-    short $s2;
-    unsigned short $u;
-    assert edi as xsigned short *;
-    assert ax as xsigned short;
-$loop:
-    $s1 = ax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = ax == *edi;
-    SF = $s1 < $s2;
-    edi = edi - 2;
-    if (ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
     repne scasd;
-    assert !DF;
+	assert(!$flags.DF);
 } code {
-    long $s1;
-    long $s2;
-    unsigned long $u;
-    assert edi as xsigned long *;
-    assert eax as xsigned long;
-$loop:
-    $s1 = eax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = eax == *edi;
-    SF = $s1 < $s2;
-    edi = edi + 4;
-    if (ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 pattern {
     repne scasd;
-    assert DF;
+	assert($flags.DF);
 } code {
-    long $s1;
-    long $s2;
-    unsigned long $u;
-    assert edi as xsigned long *;
-    assert eax as xsigned long;
-$loop:
-    $s1 = eax;
-    $s2 = *edi;
-    OF = $s < 0 && $s2 > 0;
-    ZF = eax == *edi;
-    SF = $s1 < $s2;
-    edi = edi - 4;
-    if (ZF) goto $skip;
-    goto $loop;
-$skip:
-    update edi;
-    dead AF;
-    dead PF;
-    dead CF;
+	// FIXME
 }
 
 alias asm repnz scasb = asm repne scasb;
@@ -5463,24 +5227,24 @@ pattern {
 pattern {
     stc;
 } code {
-    CF = 1;
+    $flags.CF = 1;
 }
 
 pattern {
     std;
 } code {
-    DF = 1;
+    $flags.DF = 1;
 }
 
 pattern {
     sti;
 } code {
-    IF = 1;
+    $flags.IF = 1;
 }
 
 pattern {
-    assert(!$flags.DF);
     asm stosb;
+    assert(!$flags.DF);
 } code {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x8);
@@ -5498,8 +5262,8 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
     asm stosb;
+    assert($flags.DF);
 } code {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x8);
@@ -5561,7 +5325,7 @@ pattern {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x32);
     commit v1;
-    renew $cpu.ax as v2;
+    renew $cpu.eax as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
@@ -5580,7 +5344,7 @@ pattern {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x32);
     commit v1;
-    renew $cpu.ax as v2;
+    renew $cpu.eax as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
@@ -5631,8 +5395,8 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
     asm rep stosw;
+    assert(!$flags.DF);
 } code {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x16);
@@ -5664,8 +5428,8 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
     asm rep stosd;
+    assert($flags.DF);
 } code {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x16);
@@ -5673,11 +5437,10 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.u32;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         new v4;
@@ -5697,8 +5460,8 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
     asm rep stosd;
+    assert(!$flags.DF);
 } code {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x32);
@@ -5706,11 +5469,10 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.u32;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         new v4;
@@ -5730,8 +5492,8 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
     asm rep stosd;
+    assert($flags.DF);
 } code {
     renew $cpu.edi as v1;
     v1.type = $type.ptr($type.x32);
