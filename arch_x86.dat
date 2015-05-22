@@ -1104,7 +1104,7 @@ pattern {
 pattern {
     asm xor $1, $1;
     asm not $1;
-    assert($1.bit == 32);
+    assert($1.bits == 32);
 } code {
     renew $1 as v1;
     v1.svalue = -1;
@@ -1118,7 +1118,7 @@ pattern {
 pattern {
     asm xor $1, $1;
     asm not $1;
-    assert($1.bit == 16);
+    assert($1.bits == 16);
 } code {
     renew $1 as v1;
     v1.svalue = -1;
@@ -1132,7 +1132,7 @@ pattern {
 pattern {
     asm xor $1, $1;
     asm not $1;
-    assert($1.bit == 8);
+    assert($1.bits == 8);
 } code {
     renew $1 as v1;
     v1.svalue = -1;
@@ -4399,7 +4399,6 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF == 0);
     asm scasb;
 } code {
     renew $cpu.edi as v1;
@@ -4416,38 +4415,19 @@ pattern {
     $flags.AF = unknown;
     $flags.PF = unknown;
     $flags.CF = unknown;
-    renew v1 as v4;
-    v4.pvalue = v1.pvalue + 1;
-    commit v4;
+    if ($flags.DF == 0) {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue + 1;
+        commit v4;
+    } else {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue - 1;
+        commit v4;
+    }
     update $cpu.edi;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    asm scasb;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.al as v2;
-    commit v2;
-    new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 8;
-    commit v3;
-    $flags.OF = v2.svalue < v3.svalue;
-    $flags.ZF = v2.value == v3.value;
-    $flags.SF = v2.svalue < v3.svalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    renew v1 as v4;
-    v4.pvalue = v1.pvalue - 1;
-    commit v4;
-    update $cpu.edi;
-}
-
-pattern {
-    assert($flags.DF == 0);
     asm scasw;
 } code {
     renew $cpu.edi as v1;
@@ -4464,38 +4444,19 @@ pattern {
     $flags.AF = unknown;
     $flags.PF = unknown;
     $flags.CF = unknown;
-    renew v1 as v4;
-    v4.pvalue = v1.pvalue + 2;
-    commit v4;
+    if ($flags.DF == 0) {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue + 2;
+        commit v4;
+    } else {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue - 2;
+        commit v4;
+    }
     update $cpu.edi;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    asm scasw;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 16;
-    commit v3;
-    $flags.OF = v2.svalue < v3.svalue;
-    $flags.ZF = v2.value == v3.value;
-    $flags.SF = v2.svalue < v3.svalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    renew v1 as v4;
-    v4.pvalue = v1.pvalue - 2;
-    commit v4;
-    update $cpu.edi;
-}
-
-pattern {
-    assert($flags.DF == 0);
     asm scasd;
 } code {
     renew $cpu.edi as v1;
@@ -4512,38 +4473,19 @@ pattern {
     $flags.AF = unknown;
     $flags.PF = unknown;
     $flags.CF = unknown;
-    renew v1 as v4;
-    v4.pvalue = v1.pvalue + 4;
-    commit v4;
+    if ($flags.DF == 0) {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue + 4;
+        commit v4;
+    } else {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue - 4;
+        commit v4;
+    }
     update $cpu.edi;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    asm scasd;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.eax as v2;
-    commit v2;
-    new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 32;
-    commit v3;
-    $flags.OF = v2.svalue < v3.svalue;
-    $flags.ZF = v2.value == v3.value;
-    $flags.SF = v2.svalue < v3.svalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    renew v1 as v4;
-    v4.pvalue = v1.pvalue - 4;
-    commit v4;
-    update $cpu.edi;
-}
-
-pattern {
-    assert($flags.DF == 0);
     asm repe scasb;
 } code {
     renew $cpu.edi as v1;
@@ -4568,9 +4510,15 @@ pattern {
         if ($flags.ZF == 0) {
             break;
         }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue + 1;
-        commit v5;
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 1;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 1;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
@@ -4579,57 +4527,11 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
     $cpu.ecx.value = unknown;
+    update $cpu.ecx;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    asm repe scasb;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.al as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (v3.uvalue == 0) {
-            break;
-        }
-        join v5 to v1;
-        new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 8;
-        commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
-            break;
-        }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue - 1;
-        commit v5;
-        renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
-        commit v6;
-    }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
-    $cpu.ecx.value = unknown;
-}
-
-pattern {
-    assert($flags.DF == 0);
     asm repe scasw;
 } code {
     renew $cpu.edi as v1;
@@ -4654,9 +4556,15 @@ pattern {
         if ($flags.ZF == 0) {
             break;
         }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue + 2;
-        commit v5;
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 2;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 2;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
@@ -4665,57 +4573,11 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
     $cpu.ecx.value = unknown;
+    update $cpu.ecx;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    asm repe scasw;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (v3.uvalue == 0) {
-            break;
-        }
-        join v5 to v1;
-        new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
-        commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
-            break;
-        }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue - 2;
-        commit v5;
-        renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
-        commit v6;
-    }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
-    $cpu.ecx.value = unknown;
-}
-
-pattern {
-    assert($flags.DF == 0);
     asm repe scasd;
 } code {
     renew $cpu.edi as v1;
@@ -4740,9 +4602,15 @@ pattern {
         if ($flags.ZF == 0) {
             break;
         }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue + 4;
-        commit v5;
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 4;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 4;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
@@ -4751,53 +4619,8 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
     $cpu.ecx.value = unknown;
-}
-
-pattern {
-    assert($flags.DF == 1);
-    asm repe scasd;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.eax as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (v3.uvalue == 0) {
-            break;
-        }
-        join v5 to v1;
-        new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
-        commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
-            break;
-        }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue - 4;
-        commit v5;
-        renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
-        commit v6;
-    }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
-    $cpu.ecx.value = unknown;
+    update $cpu.ecx;
 }
 
 alias asm repz scasb = asm repe scasb;
@@ -4805,8 +4628,7 @@ alias asm repz scasw = asm repe scasw;
 alias asm repz scasd = asm repe scasd;
 
 pattern {
-    assert($flags.DF == 0);
-    repne scasb;
+    asm repne scasb;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4827,12 +4649,18 @@ pattern {
         $flags.OF = v2.svalue < v3.svalue;
         $flags.ZF = v2.value == v3.value;
         $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
+        if ($flags.ZF == 1) {
             break;
         }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue + 1;
-        commit v5;
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 1;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 1;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
@@ -4841,58 +4669,12 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
     $cpu.ecx.value = unknown;
+    update $cpu.ecx;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    repne scasb;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.al as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (v3.uvalue == 0) {
-            break;
-        }
-        join v5 to v1;
-        new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 8;
-        commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
-            break;
-        }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue - 1;
-        commit v5;
-        renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
-        commit v6;
-    }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
-    $cpu.ecx.value = unknown;
-}
-
-pattern {
-    assert($flags.DF == 0);
-    repne scasw;
+    asm repne scasw;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4913,12 +4695,18 @@ pattern {
         $flags.OF = v2.svalue < v3.svalue;
         $flags.ZF = v2.value == v3.value;
         $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
+        if ($flags.ZF == 1) {
             break;
         }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue + 2;
-        commit v5;
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 2;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 2;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
@@ -4927,58 +4715,12 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
     $cpu.ecx.value = unknown;
+    update $cpu.ecx;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    repne scasw;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (v3.uvalue == 0) {
-            break;
-        }
-        join v5 to v1;
-        new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
-        commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
-            break;
-        }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue - 2;
-        commit v5;
-        renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
-        commit v6;
-    }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
-    $cpu.ecx.value = unknown;
-}
-
-pattern {
-    assert($flags.DF == 0);
-    repne scasd;
+    asm repne scasd;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4999,12 +4741,18 @@ pattern {
         $flags.OF = v2.svalue < v3.svalue;
         $flags.ZF = v2.value == v3.value;
         $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
+        if ($flags.ZF == 1) {
             break;
         }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue + 4;
-        commit v5;
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 4;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 4;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
@@ -5013,53 +4761,8 @@ pattern {
     $flags.PF = unknown;
     $flags.CF = unknown;
     update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
     $cpu.ecx.value = unknown;
-}
-
-pattern {
-    assert($flags.DF == 1);
-    repne scasd;
-} code {
-    renew $cpu.edi as v1;
-    commit v1;
-    renew $cpu.eax as v2;
-    commit v2;
-    renew $cpu.ecx as v3;
-    commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (v3.uvalue == 0) {
-            break;
-        }
-        join v5 to v1;
-        new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
-        commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
-        if ($flags.ZF == 0) {
-            break;
-        }
-        renew v1 as v5;
-        v5.pvalue = v1.pvalue - 4;
-        commit v5;
-        renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
-        commit v6;
-    }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
-    update $cpu.edi;
-    $cpu.cl.value = unknown;
-    $cpu.ch.value = unknown;
-    $cpu.cx.value = unknown;
-    $cpu.ecx.value = unknown;
+    update $cpu.ecx;
 }
 
 alias asm repnz scasb = asm repne scasb;
