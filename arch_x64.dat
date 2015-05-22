@@ -2145,7 +2145,6 @@ pattern {
     new v2;
     v2.addr = $1.addr;
     v2.bits = 64;
-    v2.type = $type.u64;
     v2.uvalue = $fn.strlen(v1.pvalue);
     commit v2;
     renew v1 as v3;
@@ -4443,9 +4442,7 @@ pattern {
 pattern {
     asm lea $1, $2;
 } code {
-    new v1;
-    v1.addr = $1.addr;
-    v1.type = $type.ptr($2.type);
+    renew $1 as v1;
     v1.value = $2.addr;
     commit v1;
 }
@@ -7020,10 +7017,9 @@ pattern {
     renew $cpu.al as v1;
     commit v1;
     renew $cpu.rbx as v2;
-    v2.type = $type.ptr($type.u8);
     commit v2;
     new v3;
-    v3.addr = v2.pvalue + v1.value;
+    v3.addr = v2.pvalue + v1.uvalue;
     v3.bits = 8;
     commit v3;
     renew v1 as v4;

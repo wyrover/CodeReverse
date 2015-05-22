@@ -1055,11 +1055,10 @@ pattern {
     new v2;
     v2.addr = $1.addr;
     v2.bits = 32;
-    v2.type = $type.u32;
     v2.uvalue = $fn.strlen(v1.pvalue);
     commit v2;
     renew v1 as v3;
-    v3.pvalue = v1.pvalue + v2.value;
+    v3.pvalue = v1.pvalue + v2.uvalue;
     commit v3;
     renew $cpu.ecx as v4;
     v4.value = 0;
@@ -3167,7 +3166,6 @@ pattern {
 } code {
     new v1;
     v1.addr = $1.addr;
-    v1.type = $type.ptr($2.type);
     v1.value = $2.addr;
     commit v1;
 }
@@ -5374,14 +5372,13 @@ pattern {
     renew $cpu.al as v1;
     commit v1;
     renew $cpu.ebx as v2;
-    v2.type = $type.ptr($type.u8);
     commit v2;
     new v3;
-    v3.addr = v2.pvalue + v1.value;
+    v3.addr = v2.pvalue + v1.uvalue;
     v3.bits = 8;
     commit v3;
     renew v1 as v4;
-    v4.value = v3.value;
+    v4.uvalue = v3.uvalue;
     commit v4;
     update $cpu.al;
 }
