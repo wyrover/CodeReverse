@@ -28,6 +28,7 @@
 // .svalue: signed value
 // .uvalue: unsigned value
 // .pvalue: pointer value
+// .avalue: label value
 //
 // [Functions]
 // $fn.fname:   a call of the function named fname
@@ -1690,9 +1691,7 @@ pattern {
 } code {
     renew $1 as v1;
     commit v1;
-    renew $cpu.eax as v2;
-    v2.value = v1.pvalue(...);
-    commit v2;
+    call v1.cvalue;
 }
 
 pattern {
@@ -4087,18 +4086,31 @@ pattern {
 
 pattern {
     popcnt $1, $2;
-    assert sizeof($1) == 4;
 } code {
-    // FIXME
-    ...
-}
-
-pattern {
-    popcnt $1, $2;
-    assert sizeof($1) == 2;
-} code {
-    // FIXME
-    ...
+    renew $2 as v1;
+    commit v1;
+    new i1;
+    i1.uvalue = 0;
+    commit i1;
+    new cnt1;
+    cnt1.uvalue = 0;
+    commit cnt1;
+    for (;;) {
+        if (v1.uvalue & (1 << i1.uvalue)) {
+            renew cnt1 as cnt2;
+            cnt2.uvalue = cnt1.uvalue + 1;
+            commit cnt2;
+        }
+        renew i1 as i2;
+        i2.uvalue = i1.uvalue + 1;
+        commit i2;
+        if (i2.uvalue >= $1.bits) {
+            break;
+        }
+    }
+    renew $1 as v2;
+    v2.uvalue = cnt1.uvalue;
+    commit v2;
 }
 
 // popf();
