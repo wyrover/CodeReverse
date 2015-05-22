@@ -3121,24 +3121,24 @@ pattern {
     assert($flags.DF == 0);
     asm cmpsb;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x8);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x8);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 8;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 8;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3155,24 +3155,24 @@ pattern {
     assert($flags.DF == 1);
     asm cmpsb;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x8);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x8);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 8;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 8;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3189,24 +3189,24 @@ pattern {
     assert($flags.DF == 0);
     asm cmpsw;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x16);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x16);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 16;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 16;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3223,24 +3223,24 @@ pattern {
     assert($flags.DF == 1);
     asm cmpsw;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x16);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x16);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 16;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 16;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3257,24 +3257,24 @@ pattern {
     assert($flags.DF == 0);
     asm cmpsd;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x32);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x32);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 32;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 32;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3291,24 +3291,24 @@ pattern {
     assert($flags.DF == 1);
     asm cmpsd;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x32);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x32);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 32;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 32;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3325,24 +3325,24 @@ pattern {
     assert($flags.DF == 0);
     asm cmpsq;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x64);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x64);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 64;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 64;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -3359,24 +3359,24 @@ pattern {
     assert($flags.DF == 1);
     asm cmpsq;
 } code {
-    renew $cpu.rdi as v1;
+    renew $cpu.rsi as v1;
     v1.type = $type.ptr($type.x64);
     commit v1;
-    renew $cpu.rsi as v2;
+    renew $cpu.rdi as v2;
     v2.type = $type.ptr($type.x64);
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 64;
     commit v3;
     new v4;
     v4.addr = v2.pvalue;
-    v4.type = $type.ref(v2.type);
+    v3.bits = 64;
     commit v4;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
+    $flags.ZF = v3.value == v4.value;
+    $flags.SF = v3.svalue < v4.svalue;
     $flags.OF = unknown;
+    $flags.CF = v3.uvalue < v4.uvalue;
     $flags.AF = unknown;
     $flags.PF = unknown;
     renew v1 as v5;
@@ -4591,7 +4591,7 @@ pattern {
     asm ja $1;
 } code {
     if (!($flags.ZF || $flags.CF)) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4599,7 +4599,7 @@ pattern {
     asm jae $1;
 } code {
     if (!$flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4607,7 +4607,7 @@ pattern {
     asm jb $1;
 } code {
     if ($flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4615,7 +4615,7 @@ pattern {
     asm jbe $1;
 } code {
     if ($flags.ZF || $flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4623,7 +4623,7 @@ pattern {
     asm jc $1;
 } code {
     if ($flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4631,7 +4631,7 @@ pattern {
     asm jcxz $1;
 } code {
     if ($cpu.cx.value == 0) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4639,7 +4639,7 @@ pattern {
     asm jecxz $1;
 } code {
     if ($cpu.ecx.value == 0) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4647,7 +4647,7 @@ pattern {
     asm jrcxz $1;
 } code {
     if ($cpu.rcx.value == 0) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4655,7 +4655,7 @@ pattern {
     asm je $1;
 } code {
     if ($flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4663,7 +4663,7 @@ pattern {
     asm jg $1;
 } code {
     if (!$flags.ZF && $flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4671,7 +4671,7 @@ pattern {
     asm jge $1;
 } code {
     if ($flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4679,7 +4679,7 @@ pattern {
     asm jl $1;
 } code {
     if (!$flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4687,21 +4687,21 @@ pattern {
     asm jle $1;
 } code {
     if ($flags.ZF && !$flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
 pattern {
     asm jmp $1;
 } code {
-    goto $1;
+    goto $1.avalue;
 }
 
 pattern {
     asm jna $1;
 } code {
     if ($flags.ZF || $flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4709,7 +4709,7 @@ pattern {
     asm jnae $1;
 } code {
     if ($flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4717,7 +4717,7 @@ pattern {
     asm jnb $1;
 } code {
     if (!$flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4725,7 +4725,7 @@ pattern {
     asm jnb $1;
 } code {
     if (!$flags.ZF && !$flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4733,7 +4733,7 @@ pattern {
     asm jnc $1;
 } code {
     if (!$flags.CF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4741,7 +4741,7 @@ pattern {
     asm jne $1;
 } code {
     if (!$flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4749,7 +4749,7 @@ pattern {
     asm jng $1;
 } code {
     if ($flags.ZF || !$flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4757,7 +4757,7 @@ pattern {
     asm jnge $1;
 } code {
     if (!$flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4765,7 +4765,7 @@ pattern {
     asm jnl $1;
 } code {
     if ($flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4773,7 +4773,7 @@ pattern {
     asm jnle $1;
 } code {
     if (!$flags.ZF && $flags.SFeqOF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4781,7 +4781,7 @@ pattern {
     asm jno $1;
 } code {
     if (!$flags.Of) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4789,7 +4789,7 @@ pattern {
     asm jnp $1;
 } code {
     if (!$flags.PF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4797,7 +4797,7 @@ pattern {
     asm jns $1;
 } code {
     if (!$flags.SF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4805,7 +4805,7 @@ pattern {
     asm jnz $1;
 } code {
     if (!$flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4813,7 +4813,7 @@ pattern {
     asm jo $1;
 } code {
     if ($flags.OF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4821,7 +4821,7 @@ pattern {
     asm jp $1;
 } code {
     if ($flags.PF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4829,7 +4829,7 @@ pattern {
     asm jpe $1;
 } code {
     if ($flags.PF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4837,7 +4837,7 @@ pattern {
     asm jpo $1;
 } code {
     if (!$flags.PF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4845,7 +4845,7 @@ pattern {
     asm js $1;
 } code {
     if ($flags.SF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -4853,7 +4853,7 @@ pattern {
     asm jz $1;
 } code {
     if ($flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -5279,7 +5279,7 @@ pattern {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue) {
-        goto $1;
+        goto $1.avalue;
     }
     assert($cpu.cl.uvalue == 0);
     assert($cpu.ch.uvalue == 0);
@@ -5294,7 +5294,7 @@ pattern {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || $flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -5304,7 +5304,7 @@ pattern {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || !$flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -5314,7 +5314,7 @@ pattern {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || !$flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
@@ -5324,7 +5324,7 @@ pattern {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || $flags.ZF) {
-        goto $1;
+        goto $1.avalue;
     }
 }
 
