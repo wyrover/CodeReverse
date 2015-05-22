@@ -2095,7 +2095,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm cmpsb;
 } code {
     renew $cpu.edi as v1;
@@ -2129,7 +2129,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm cmpsb;
 } code {
     renew $cpu.edi as v1;
@@ -2163,7 +2163,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm cmpsw;
 } code {
     renew $cpu.edi as v1;
@@ -2197,7 +2197,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm cmpsw;
 } code {
     renew $cpu.edi as v1;
@@ -2231,7 +2231,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm cmpsd;
 } code {
     renew $cpu.edi as v1;
@@ -2265,7 +2265,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm cmpsd;
 } code {
     renew $cpu.edi as v1;
@@ -2299,7 +2299,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm repe cmpsb;
 } code {
     renew $cpu.edi as v1;
@@ -2339,7 +2339,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm repe cmpsb;
 } code {
     renew $cpu.edi as v1;
@@ -2379,7 +2379,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm repe cmpsw;
 } code {
     renew $cpu.edi as v1;
@@ -2419,7 +2419,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm repe cmpsw;
 } code {
     renew $cpu.edi as v1;
@@ -2459,7 +2459,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     repe cmpsd;
 } code {
     renew $cpu.edi as v1;
@@ -2499,7 +2499,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm repe cmpsd;
 } code {
     renew $cpu.edi as v1;
@@ -2543,7 +2543,7 @@ alias asm repz cmpsw = asm repe cmpsw;
 alias asm repz cmpsd = asm repe cmpsd;
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm repne cmpsb;
 } code {
     renew $cpu.edi as v1;
@@ -2593,7 +2593,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm repne cmpsb;
 } code {
     renew $cpu.edi as v1;
@@ -2643,7 +2643,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm repne cmpsw;
 } code {
     renew $cpu.edi as v1;
@@ -2693,7 +2693,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm repne cmpsw;
 } code {
     renew $cpu.edi as v1;
@@ -2743,7 +2743,7 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm repne cmpsd;
 } code {
     renew $cpu.edi as v1;
@@ -2793,7 +2793,7 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm repne cmpsd;
 } code {
     renew $cpu.edi as v1;
@@ -3500,7 +3500,7 @@ pattern {
 
 pattern {
     asm lodsb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3516,7 +3516,7 @@ pattern {
 
 pattern {
     asm lodsb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3532,7 +3532,7 @@ pattern {
 
 pattern {
     asm lodsw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -3548,7 +3548,7 @@ pattern {
 
 pattern {
     asm lodsw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -3564,7 +3564,7 @@ pattern {
 
 pattern {
     asm lodsd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -3580,7 +3580,7 @@ pattern {
 
 pattern {
     asm lodsd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -3596,7 +3596,7 @@ pattern {
 
 pattern {
     asm rep lodsb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3628,7 +3628,7 @@ pattern {
 
 pattern {
     asm rep lodsb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3660,7 +3660,7 @@ pattern {
 
 pattern {
     asm rep lodsw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -3692,7 +3692,7 @@ pattern {
 
 pattern {
     asm rep lodsw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -3724,7 +3724,7 @@ pattern {
 
 pattern {
     asm rep lodsd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -3756,7 +3756,7 @@ pattern {
 
 pattern {
     asm rep lodsd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -3931,7 +3931,7 @@ pattern {
 
 pattern {
     asm movsb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3958,7 +3958,7 @@ pattern {
 
 pattern {
     asm movsb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3985,7 +3985,7 @@ pattern {
 
 pattern {
     asm movsw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -4012,7 +4012,7 @@ pattern {
 
 pattern {
     asm movsw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -4039,7 +4039,7 @@ pattern {
 
 pattern {
     asm movsd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -4066,7 +4066,7 @@ pattern {
 
 pattern {
     asm movsd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -4093,7 +4093,7 @@ pattern {
 
 pattern {
     asm rep movsb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4121,7 +4121,7 @@ pattern {
 
 pattern {
     asm rep movsb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -4149,7 +4149,7 @@ pattern {
 
 pattern {
     asm rep movsw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -4191,7 +4191,7 @@ pattern {
 
 pattern {
     asm rep movsw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -4233,7 +4233,7 @@ pattern {
 
 pattern {
     asm rep movsd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -4275,7 +4275,7 @@ pattern {
 
 pattern {
     asm rep movsd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -4718,7 +4718,7 @@ pattern {
 
 pattern {
     asm scasb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4742,7 +4742,7 @@ pattern {
 
 pattern {
     asm scasb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4766,7 +4766,7 @@ pattern {
 
 pattern {
     asm scasw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4790,7 +4790,7 @@ pattern {
 
 pattern {
     asm scasw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4814,7 +4814,7 @@ pattern {
 
 pattern {
     asm scasd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4838,7 +4838,7 @@ pattern {
 
 pattern {
     asm scasd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4862,7 +4862,7 @@ pattern {
 
 pattern {
     asm repe scasb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4905,7 +4905,7 @@ pattern {
 
 pattern {
     asm repe scasb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4948,7 +4948,7 @@ pattern {
 
 pattern {
     asm repe scasw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4991,7 +4991,7 @@ pattern {
 
 pattern {
     asm repe scasw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5034,7 +5034,7 @@ pattern {
 
 pattern {
     asm repe scasd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5077,7 +5077,7 @@ pattern {
 
 pattern {
     asm repe scasd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5124,7 +5124,7 @@ alias asm repz scasd = asm repe scasd;
 
 pattern {
     repne scasb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5167,7 +5167,7 @@ pattern {
 
 pattern {
     repne scasb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5210,7 +5210,7 @@ pattern {
 
 pattern {
     repne scasw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5253,7 +5253,7 @@ pattern {
 
 pattern {
     repne scasw;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5296,7 +5296,7 @@ pattern {
 
 pattern {
     repne scasd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5339,7 +5339,7 @@ pattern {
 
 pattern {
     repne scasd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5712,54 +5712,51 @@ pattern {
 
 pattern {
     asm stosb;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x8);
     commit v1;
     renew $cpu.al as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 8;
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value + 1;
+    v4.pvalue = v1.pvalue + 1;
     update $cpu.edi;
 }
 
 pattern {
     asm stosb;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x8);
     commit v1;
     renew $cpu.al as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 8;
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value - 1;
+    v4.pvalue = v1.pvalue - 1;
     update $cpu.edi;
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm stosw;
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x16);
     commit v1;
     renew $cpu.ax as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 16;
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
@@ -5768,17 +5765,16 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm stosw;
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x16);
     commit v1;
     renew $cpu.ax as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 16;
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
@@ -5787,17 +5783,16 @@ pattern {
 }
 
 pattern {
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
     asm stosd;
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x32);
     commit v1;
     renew $cpu.eax as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 32;
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
@@ -5806,17 +5801,16 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm stosd;
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x32);
     commit v1;
     renew $cpu.eax as v2;
     commit v2;
     new v3;
     v3.addr = v1.pvalue;
-    v3.type = $type.ref(v1.type);
+    v3.bits = 32;
     v3.value = v2.value;
     commit v3;
     renew v1 as v4;
@@ -5839,12 +5833,14 @@ pattern {
     v4.pvalue = v1.pvalue + v3.uvalue;
     commit v4;
     update $cpu.edi;
-    update $cpu.ecx;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
 }
 
 pattern {
-    assert($flags.DF);
+    assert($flags.DF == 1);
     asm rep stosb;
 } code {
     renew $cpu.edi as v1;
@@ -5858,30 +5854,30 @@ pattern {
     v4.pvalue = v1.pvalue - v3.uvalue;
     commit v4;
     update $cpu.edi;
-    update $cpu.ecx;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
 }
 
 pattern {
     asm rep stosw;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x16);
     commit v1;
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.u32;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         new v4;
         v4.addr = v1.pvalue;
-        v4.bits = $type.ref(v1.type);
+        v4.bits = 16;
         v4.value = v2.value;
         commit v4;
         join v5 to v1;
@@ -5892,15 +5888,17 @@ pattern {
         v6.uvalue = v3.uvalue - 1;
         commit v6;
     }
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
 }
 
 pattern {
     asm rep stosd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x16);
     commit v1;
     renew $cpu.ax as v2;
     commit v2;
@@ -5913,7 +5911,7 @@ pattern {
         }
         new v4;
         v4.addr = v1.pvalue;
-        v4.bits = $type.ref(v1.type);
+        v4.bits = 16;
         v4.value = v2.value;
         commit v4;
         join v5 to v1;
@@ -5924,17 +5922,19 @@ pattern {
         v6.uvalue = v3.uvalue - 1;
         commit v6;
     }
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
 }
 
 pattern {
     asm rep stosd;
-    assert(!$flags.DF);
+    assert($flags.DF == 0);
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x32);
     commit v1;
-    renew $cpu.ax as v2;
+    renew $cpu.eax as v2;
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -5945,7 +5945,7 @@ pattern {
         }
         new v4;
         v4.addr = v1.pvalue;
-        v4.bits = $type.ref(v1.type);
+        v4.bits = 32;
         v4.value = v2.value;
         commit v4;
         join v5 to v1;
@@ -5956,29 +5956,30 @@ pattern {
         v6.uvalue = v3.uvalue - 1;
         commit v6;
     }
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
 }
 
 pattern {
     asm rep stosd;
-    assert($flags.DF);
+    assert($flags.DF == 1);
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.x32);
     commit v1;
-    renew $cpu.ax as v2;
+    renew $cpu.eax as v2;
     commit v2;
     renew $cpu.ecx as v3;
-    v3.type = $type.u32;
     commit v3;
     for (;;) {
         join v6 to v3;
-        if (v3.value == 0) {
+        if (v3.uvalue == 0) {
             break;
         }
         new v4;
         v4.addr = v1.pvalue;
-        v4.bits = $type.ref(v1.type);
+        v4.bits = 32;
         v4.value = v2.value;
         commit v4;
         join v5 to v1;
@@ -5989,6 +5990,9 @@ pattern {
         v6.uvalue = v3.uvalue - 1;
         commit v6;
     }
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
 }
 
