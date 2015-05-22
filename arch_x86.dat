@@ -4111,13 +4111,12 @@ pattern {
     renew v3 as v6;
     v6.value = 0;
     commit v6;
+    update $cpu.edi;
+    update $cpu.esi;
     assert($cpu.cl.value == 0);
     assert($cpu.ch.value == 0);
     assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
-    update edi;
-    update esi;
-    update ecx;
 }
 
 pattern {
@@ -4140,13 +4139,12 @@ pattern {
     renew v3 as v6;
     v6.value = 0;
     commit v6;
+    update $cpu.edi;
+    update $cpu.esi;
     assert($cpu.cl.value == 0);
     assert($cpu.ch.value == 0);
     assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
-    update edi;
-    update esi;
-    update ecx;
 }
 
 pattern {
@@ -4183,10 +4181,12 @@ pattern {
         v8.value = v3.value - 1;
         commit v8;
     }
+    update $cpu.edi;
+    update $cpu.esi;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
-    update edi;
-    update esi;
-    update ecx;
 }
 
 pattern {
@@ -4223,10 +4223,12 @@ pattern {
         v8.value = v3.value - 1;
         commit v8;
     }
+    update $cpu.edi;
+    update $cpu.esi;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
-    update edi;
-    update esi;
-    update ecx;
 }
 
 pattern {
@@ -4263,10 +4265,12 @@ pattern {
         v8.value = v3.value - 1;
         commit v8;
     }
+    update $cpu.edi;
+    update $cpu.esi;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
-    update edi;
-    update esi;
-    update ecx;
 }
 
 pattern {
@@ -4303,10 +4307,12 @@ pattern {
         v8.value = v3.value - 1;
         commit v8;
     }
+    update $cpu.edi;
+    update $cpu.esi;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     assert($cpu.ecx.value == 0);
-    update edi;
-    update esi;
-    update ecx;
 }
 
 pattern {
