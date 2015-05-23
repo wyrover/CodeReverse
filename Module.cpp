@@ -1118,6 +1118,8 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
 
     auto cf = info.CodeFuncFromAddr(entrance);
     assert(cf);
+    cf->Leaders() = leaders;
+
     const size_t size = vecLeaders.size() - 1;
     for (size_t i = 0; i < size; ++i) {
         CR_BasicBlock32 block;
@@ -1212,6 +1214,8 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
 
     auto cf = info.CodeFuncFromAddr(entrance);
     assert(cf);
+    cf->Leaders() = leaders;
+
     const size_t size = vecLeaders.size() - 1;
     for (size_t i = 0; i < size; ++i) {
         CR_BasicBlock64 block;

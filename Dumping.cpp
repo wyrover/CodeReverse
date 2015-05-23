@@ -1074,6 +1074,15 @@ BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr3
         if (func != 0 && !oc->FuncAddrs().count(func))
             continue;
 
+        #ifdef _DEBUG
+            auto cf = info.CodeFuncFromAddr(func);
+            if (cf) {
+                if (cf->Leaders().count(oc->Addr())) {
+                    fprintf(fp, "-------------\n");
+                }
+            }
+        #endif
+
         fprintf(fp, "L%08lX: ", oc->Addr());
 
         CrDumpCodes(fp, oc->Codes(), 32);
@@ -1182,6 +1191,15 @@ BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr6
 
         if (func != 0 && !oc->FuncAddrs().count(func))
             continue;
+
+        #ifdef _DEBUG
+            auto cf = info.CodeFuncFromAddr(func);
+            if (cf) {
+                if (cf->Leaders().count(oc->Addr())) {
+                    fprintf(fp, "-------------\n");
+                }
+            }
+        #endif
 
         fprintf(fp, "L%08lX%08lX: ", HILONG(oc->Addr()), LOLONG(oc->Addr()));
 

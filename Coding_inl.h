@@ -379,6 +379,10 @@ inline CR_Addr32Set& CR_CodeFunc32::Callers() {
     return m_callers;
 }
 
+inline CR_Addr32Set& CR_CodeFunc32::Leaders() {
+    return m_leaders;
+}
+
 inline std::vector<CR_BasicBlock32>& CR_CodeFunc32::BasicBlocks() {
     return m_basic_blocks;
 }
@@ -416,6 +420,10 @@ inline const CR_Addr32Set& CR_CodeFunc32::Callees() const {
 
 inline const CR_Addr32Set& CR_CodeFunc32::Callers() const {
     return m_callers;
+}
+
+inline const CR_Addr32Set& CR_CodeFunc32::Leaders() const {
+    return m_leaders;
 }
 
 inline
@@ -458,6 +466,10 @@ inline CR_Addr64Set& CR_CodeFunc64::Callers() {
     return m_callers;
 }
 
+inline CR_Addr64Set& CR_CodeFunc64::Leaders() {
+    return m_leaders;
+}
+
 inline std::vector<CR_BasicBlock64>& CR_CodeFunc64::BasicBlocks() {
     return m_basic_blocks;
 }
@@ -497,6 +509,10 @@ inline const CR_Addr64Set& CR_CodeFunc64::Callers() const {
     return m_callers;
 }
 
+inline const CR_Addr64Set& CR_CodeFunc64::Leaders() const {
+    return m_leaders;
+}
+
 inline
 const std::vector<CR_BasicBlock64>& CR_CodeFunc64::BasicBlocks() const {
     return m_basic_blocks;
@@ -529,6 +545,7 @@ inline void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
     Jumpers() = cf.Jumpers();
     Callees() = cf.Callees();
     Callers() = cf.Callers();
+    Leaders() = cf.Leaders();
     BasicBlocks() = cf.BasicBlocks();
 }
 
@@ -541,6 +558,7 @@ inline void CR_CodeFunc32::clear() {
     Jumpers().clear();
     Callees().clear();
     Callers().clear();
+    Leaders().clear();
     BasicBlocks().clear();
 }
 
@@ -571,6 +589,7 @@ inline void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
     Jumpers() = cf.Jumpers();
     Callees() = cf.Callees();
     Callers() = cf.Callers();
+    Leaders() = cf.Leaders();
     BasicBlocks() = cf.BasicBlocks();
 }
 
@@ -583,6 +602,7 @@ inline void CR_CodeFunc64::clear() {
     Jumpers().clear();
     Callees().clear();
     Callers().clear();
+    Leaders().clear();
     BasicBlocks().clear();
 }
 
