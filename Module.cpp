@@ -1144,17 +1144,16 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
                 if (oper->GetOperandType() == cr_DF_IMM) {
                     block.m_jump_to = oper->Value32();  // jump to
                 }
-            } else if (type != cr_OCT_RETURN) {
-                next_addr =
-                    addr + static_cast<CR_Addr32>(op_code->Codes().size());
-                if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
-                    // conditional jump or loop
-                    auto oper = op_code->Operand(0);
-                    if (oper->GetOperandType() == cr_DF_IMM) {
-                        block.m_jump_to = oper->Value32();  // jump to
-                    }
-                    block.m_cond_code = op_code->CondCode();
+                next_addr = cr_invalid_addr32;
+            } else if (type == cr_OCT_RETURN) {
+                next_addr = cr_invalid_addr32;
+            } else if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
+                // conditional jump or loop
+                auto oper = op_code->Operand(0);
+                if (oper->GetOperandType() == cr_DF_IMM) {
+                    block.m_jump_to = oper->Value32();  // jump to
                 }
+                block.m_cond_code = op_code->CondCode();
             }
             // add op.code
             block.m_op_codes.emplace_back(*op_code);
@@ -1241,7 +1240,7 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
         // prepare a basic block
         CR_BasicBlock64 block;
         block.m_addr = addr1;
-        CR_Addr64 next_addr = cr_invalid_addr64;
+        CR_Addr64 next_addr = addr2;
         for (auto addr = addr1; addr < addr2; ) {
             // op.code from addr
             auto op_code = info.OpCodeFromAddr(addr);
@@ -1255,17 +1254,16 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
                 if (oper->GetOperandType() == cr_DF_IMM) {
                     block.m_jump_to = oper->Value64();  // jump to
                 }
-            } else if (type != cr_OCT_RETURN) {
-                next_addr =
-                    addr + static_cast<CR_Addr64>(op_code->Codes().size());
-                if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
-                    // conditional jump or loop
-                    auto oper = op_code->Operand(0);
-                    if (oper->GetOperandType() == cr_DF_IMM) {
-                        block.m_jump_to = oper->Value64();  // jump to
-                    }
-                    block.m_cond_code = op_code->CondCode();
+                next_addr = cr_invalid_addr64;
+            } else if (type == cr_OCT_RETURN) {
+                next_addr = cr_invalid_addr64;
+            } else if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
+                // conditional jump or loop
+                auto oper = op_code->Operand(0);
+                if (oper->GetOperandType() == cr_DF_IMM) {
+                    block.m_jump_to = oper->Value64();  // jump to
                 }
+                block.m_cond_code = op_code->CondCode();
             }
             // add op.code
             block.m_op_codes.emplace_back(*op_code);
