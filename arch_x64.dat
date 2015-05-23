@@ -2917,7 +2917,7 @@ pattern {
 pattern {
     asm cmovnbe $1, $2;
 } code {
-	if ($flags.CF == 0 && $flags.ZF == 0) {
+    if ($flags.CF == 0 && $flags.ZF == 0) {
         renew $1 as v1;
         v1.value = $2.value;
         commit v1;
@@ -4253,7 +4253,7 @@ pattern {
 pattern {
     asm jl $1;
 } code {
-	if ($flags.SFeqOF == 0) {
+    if ($flags.SFeqOF == 0) {
         goto $1.avalue;
     }
 }

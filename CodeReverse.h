@@ -28,6 +28,9 @@
 typedef unsigned long       CR_Addr32;
 typedef unsigned long long  CR_Addr64;
 
+#define cr_invalid_addr32   static_cast<CR_Addr32>(-1)
+#define cr_invalid_addr64   static_cast<CR_Addr64>(-1)
+
 ////////////////////////////////////////////////////////////////////////////
 // stack size
 

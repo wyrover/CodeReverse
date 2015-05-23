@@ -932,63 +932,6 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
 } // CR_Module::DisAsm64
 
 ////////////////////////////////////////////////////////////////////////////
-
-BOOL CrAnalyzeOperands32(CR_DecompInfo32& info, CR_X86Machine& machine) {
-    CR_NameScope& ns = info.NameScope();
-
-    // TODO:
-    /*
-    for (;;) {
-        auto oc = info.OpCodeFromAddr(machine.m_ip);
-        assert(oc);
-
-        switch (oc->OpCodeType()) {
-        case cr_OCT_JMP:
-            machine.m_ip = oc->Operand(0)->Value32();
-            continue;
-
-        case cr_OCT_JCC:
-            {
-                CR_X86Machine machine_branch(machine);
-                machine_branch.m_ip = oc->Operand(0)->Value32();
-                CrAnalyzeOperands32(info, machine);
-            }
-            break;
-
-        case cr_OCT_CALL:
-            {
-                ...
-            }
-            break;
-
-        case cr_OCT_LOOP:
-            break;
-
-        case cr_OCT_RETURN:
-            return TRUE;
-
-        case cr_OCT_STACKOP:
-            if (oc->Name() == "push") {
-            }
-            break;
-
-        default:
-            break;
-        }
-        machine.m_ip += CR_Addr32(oc->Codes().size());
-    }
-    */
-    return FALSE;
-}
-
-BOOL CrAnalyzeOperands64(CR_DecompInfo64& info, CR_X64Machine& machine) {
-    CR_NameScope& ns = info.NameScope();
-
-    // TODO:
-    return FALSE;
-}
-
-////////////////////////////////////////////////////////////////////////////
 // resource
 
 extern "C"
@@ -1112,139 +1055,212 @@ void CR_Module::DumpResource(std::FILE *fp) {
 } // CR_Module::DumpResource
 
 ////////////////////////////////////////////////////////////////////////////
+// create flow graph
 
-CR_Strings CR_X86Machine::StorageNames() const {
-    CR_Strings ret;
-    for (auto& pair : MapNameToStorage()) {
-        ret.push_back(pair.first);
-    }
-    return ret;
-}
+void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
+    CR_Addr32Set leaders, checked, to_be_checked;
 
-CR_Strings CR_X64Machine::StorageNames() const {
-    CR_Strings ret;
-    for (auto& pair : MapNameToStorage()) {
-        ret.push_back(pair.first);
-    }
-    return ret;
-}
+    leaders.insert(entrance);
+    to_be_checked.insert(entrance);
 
-/*virtual*/ void
-CR_X86Machine::ReadStorage(const std::string& expr_addr, size_t siz) {
-}
+    while (checked.size() < to_be_checked.size()) {
+        CR_Addr32Set old_to_be_checked = to_be_checked;
+        for (auto addr : old_to_be_checked) {
+            for (;;) {
+                // already checked?
+                if (checked.count(addr)) {
+                    break;
+                }
+                // check the address
+                checked.insert(addr);
 
-/*virtual*/ void
-CR_X86Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
-}
+                // get op.code from address
+                auto op_code = info.OpCodeFromAddr(addr);
+                if (op_code == NULL) {
+                    break;
+                }
 
-/*virtual*/ void
-CR_X64Machine::ReadStorage(const std::string& expr_addr, size_t siz) {
-}
+                auto next_addr =
+                    static_cast<CR_Addr32>(addr + op_code->Codes().size());
 
-/*virtual*/ void
-CR_X64Machine::WriteStorage(const std::string& expr_addr, size_t siz) {
-}
-
-/*virtual*/ BOOL CR_X86Machine::Init(shared_ptr<CR_Module>& mod) {
-    assert(mod);
-    m_module = mod;
-    MapNameToStorage().clear();
-    MapNameToStorage().emplace("core", CR_CoreStorage32());
-    MapNameToStorage().emplace("stack", CR_StackStorage());
-    DWORD num_sect = mod->NumberOfSections();
-    for (DWORD i = 0; i < num_sect; ++i) {
-        auto pSection = mod->SectionHeader(i);
-        assert(pSection);
-        if (pSection->Characteristics & IMAGE_SCN_MEM_EXECUTE) {
-            // it's code
-            continue;
-        }
-        std::string name = "data" + std::to_string(i);
-        if (pSection->Characteristics & IMAGE_SCN_MEM_WRITE) {
-            DWORD RVA = pSection->RVA;
-            CR_Addr32 addr = mod->VA32FromRVA(RVA);
-            CR_DataStorage
-                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(RVA));
-            storage.m_base_expr_addr = std::to_string(addr);
-            MapNameToStorage().emplace(name, storage);
-        } else {
-            DWORD RVA = pSection->RVA;
-            CR_Addr32 addr = mod->VA32FromRVA(RVA);
-            CR_ReadOnlyDataStorage
-                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(RVA));
-            storage.m_base_expr_addr = std::to_string(addr);
-            MapNameToStorage().emplace(name, storage);
+                auto type = op_code->OpCodeType();
+                if (type == cr_OCT_JMP) {
+                    // jump
+                    leaders.insert(next_addr);
+                    auto oper = op_code->Operand(0);
+                    if (oper->GetOperandType() == cr_DF_IMM) {
+                        to_be_checked.insert(oper->Value32());
+                        leaders.insert(oper->Value32());
+                    }
+                    break;
+                } else if (type == cr_OCT_JCC) {
+                    // conditional jump
+                    leaders.insert(next_addr);
+                    auto oper = op_code->Operand(0);
+                    if (oper->GetOperandType() == cr_DF_IMM) {
+                        to_be_checked.insert(oper->Value32());
+                        leaders.insert(oper->Value32());
+                    }
+                } else if (type == cr_OCT_RETURN) {
+                    // return
+                    leaders.insert(next_addr);
+                    break;
+                }
+                addr = next_addr;
+            }
         }
     }
-    return TRUE;
+    checked.clear();
+    to_be_checked.clear();
+
+    std::vector<CR_Addr32> vecLeaders(leaders.begin(), leaders.end());
+    std::sort(vecLeaders.begin(), vecLeaders.end());
+
+    auto cf = info.CodeFuncFromAddr(entrance);
+    assert(cf);
+    const size_t size = vecLeaders.size() - 1;
+    for (size_t i = 0; i < size; ++i) {
+        CR_BasicBlock32 block;
+        auto addr1 = vecLeaders[i];
+        auto addr2 = vecLeaders[i + 1];
+        block.m_addr = addr1;
+        for (auto addr = addr1; addr < addr2; ) {
+            auto op_code = info.OpCodeFromAddr(addr);
+            if (op_code == NULL) {
+                break;
+            }
+            auto type = op_code->OpCodeType();
+            if (type == cr_OCT_JMP) {
+                // jump
+                auto oper = op_code->Operand(0);
+                if (oper->GetOperandType() == cr_DF_IMM) {
+                    block.m_jump_to = oper->Value32();  // jump to
+                }
+            } else if (type == cr_OCT_JCC) {
+                // conditional jump
+                auto oper = op_code->Operand(0);
+                if (oper->GetOperandType() == cr_DF_IMM) {
+                    block.m_jump_to = oper->Value32();  // jump to
+                }
+                block.m_cond_code = op_code->CondCode();
+            }
+            block.m_op_codes.emplace_back(*op_code);
+            addr += static_cast<CR_Addr32>(op_code->Codes().size());
+        }
+        cf->BasicBlocks().emplace_back(block);
+    }
 }
 
-/*virtual*/ BOOL CR_X64Machine::Init(shared_ptr<CR_Module>& mod) {
-    assert(mod);
-    m_module = mod;
-    MapNameToStorage().clear();
-    MapNameToStorage().emplace("core", CR_CoreStorage32());
-    MapNameToStorage().emplace("stack", CR_StackStorage());
-    DWORD num_sect = mod->NumberOfSections();
-    for (DWORD i = 0; i < num_sect; ++i) {
-        auto pSection = mod->SectionHeader(i);
-        assert(pSection);
-        if (pSection->Characteristics & IMAGE_SCN_MEM_EXECUTE) {
-            // it's code
-            continue;
-        }
-        std::string name = "data" + std::to_string(i);
-        if (pSection->Characteristics & IMAGE_SCN_MEM_WRITE) {
-            DWORD RVA = pSection->RVA;
-            CR_Addr64 addr = mod->VA64FromRVA(RVA);
-            CR_DataStorage
-                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(RVA));
-            storage.m_base_expr_addr = std::to_string(addr);
-            MapNameToStorage().emplace(name, storage);
-        } else {
-            DWORD RVA = pSection->RVA;
-            CR_Addr64 addr = mod->VA64FromRVA(RVA);
-            CR_ReadOnlyDataStorage
-                storage(pSection->Misc.VirtualSize, pSection->SizeOfRawData,
-                        mod->GetData(RVA));
-            storage.m_base_expr_addr = std::to_string(addr);
-            MapNameToStorage().emplace(name, storage);
+void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
+    CR_Addr64Set leaders, checked, to_be_checked;
+
+    leaders.insert(entrance);
+    to_be_checked.insert(entrance);
+
+    while (checked.size() < to_be_checked.size()) {
+        CR_Addr64Set old_to_be_checked = to_be_checked;
+        for (auto addr : old_to_be_checked) {
+            for (;;) {
+                // already checked?
+                if (checked.count(addr)) {
+                    break;
+                }
+                // check the address
+                checked.insert(addr);
+
+                // get op.code from address
+                auto op_code = info.OpCodeFromAddr(addr);
+                if (op_code == NULL) {
+                    break;
+                }
+
+                auto next_addr =
+                    static_cast<CR_Addr64>(addr + op_code->Codes().size());
+
+                auto type = op_code->OpCodeType();
+                if (type == cr_OCT_JMP) {
+                    // jump
+                    leaders.insert(next_addr);
+                    auto oper = op_code->Operand(0);
+                    if (oper->GetOperandType() == cr_DF_IMM) {
+                        to_be_checked.insert(oper->Value64());
+                        leaders.insert(oper->Value64());
+                    }
+                    break;
+                } else if (type == cr_OCT_JCC) {
+                    // conditional jump
+                    leaders.insert(next_addr);
+                    auto oper = op_code->Operand(0);
+                    if (oper->GetOperandType() == cr_DF_IMM) {
+                        to_be_checked.insert(oper->Value64());
+                        leaders.insert(oper->Value64());
+                    }
+                } else if (type == cr_OCT_RETURN) {
+                    // return
+                    leaders.insert(next_addr);
+                    break;
+                }
+                addr = next_addr;
+            }
         }
     }
-    return TRUE;
+    checked.clear();
+    to_be_checked.clear();
+
+    std::vector<CR_Addr64> vecLeaders(leaders.begin(), leaders.end());
+    std::sort(vecLeaders.begin(), vecLeaders.end());
+
+    auto cf = info.CodeFuncFromAddr(entrance);
+    assert(cf);
+    const size_t size = vecLeaders.size() - 1;
+    for (size_t i = 0; i < size; ++i) {
+        CR_BasicBlock64 block;
+        auto addr1 = vecLeaders[i];
+        auto addr2 = vecLeaders[i + 1];
+        block.m_addr = addr1;
+        for (auto addr = addr1; addr < addr2; ) {
+            auto op_code = info.OpCodeFromAddr(addr);
+            if (op_code == NULL) {
+                break;
+            }
+            auto type = op_code->OpCodeType();
+            if (type == cr_OCT_JMP) {
+                // jump
+                auto oper = op_code->Operand(0);
+                if (oper->GetOperandType() == cr_DF_IMM) {
+                    block.m_jump_to = oper->Value64();
+                }
+            } else if (type == cr_OCT_JCC) {
+                // conditional jump
+                auto oper = op_code->Operand(0);
+                if (oper->GetOperandType() == cr_DF_IMM) {
+                    block.m_jump_to = oper->Value64();
+                }
+                block.m_cond_code = op_code->CondCode();
+            }
+            block.m_op_codes.emplace_back(*op_code);
+            addr += static_cast<CR_Addr64>(op_code->Codes().size());
+        }
+        cf->BasicBlocks().emplace_back(block);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // decompiling
 
 BOOL CR_Module::Decompile32(CR_DecompInfo32& info) {
-    // TODO:
-    //CR_Addr32Set entrances = Entrances();
-    //size_t num_entrances = entrances.size();
-    //for (auto entrance : entrances) {
-    //    machine.m_eip = entrance;
-    //    machine.InitStack();
-    //    CrAnalyzeOperands32(info, machine);
-    //}
-    //
-    ////CR_X86Machine machine;
+    CR_Addr32Set entrances = info.Entrances();
+    for (auto entrance : entrances) {
+        CrCreateFlowGraph32(info, entrance);
+    }
     return FALSE;
 }
 
 BOOL CR_Module::Decompile64(CR_DecompInfo64& info) {
-    // TODO:
-    //CR_Addr64Set entrances = Entrances();
-    //size_t num_entrances = entrances.size();
-    //for (auto entrance : entrances) {
-    //    machine.m_eip = entrance;
-    //    machine.InitStack();
-    //    CrAnalyzeOperands64(info, machine);
-    //}
-    //
-    ////CR_X64Machine machine;
+    CR_Addr64Set entrances = info.Entrances();
+    for (auto entrance : entrances) {
+        CrCreateFlowGraph64(info, entrance);
+    }
     return FALSE;
 }
 

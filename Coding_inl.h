@@ -379,6 +379,10 @@ inline CR_Addr32Set& CR_CodeFunc32::Callers() {
     return m_callers;
 }
 
+inline std::vector<CR_BasicBlock32>& CR_CodeFunc32::BasicBlocks() {
+    return m_basic_blocks;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc32 const accessors
 
@@ -412,6 +416,11 @@ inline const CR_Addr32Set& CR_CodeFunc32::Callees() const {
 
 inline const CR_Addr32Set& CR_CodeFunc32::Callers() const {
     return m_callers;
+}
+
+inline
+const std::vector<CR_BasicBlock32>& CR_CodeFunc32::BasicBlocks() const {
+    return m_basic_blocks;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -449,6 +458,10 @@ inline CR_Addr64Set& CR_CodeFunc64::Callers() {
     return m_callers;
 }
 
+inline std::vector<CR_BasicBlock64>& CR_CodeFunc64::BasicBlocks() {
+    return m_basic_blocks;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc64 const accessors
 
@@ -484,6 +497,11 @@ inline const CR_Addr64Set& CR_CodeFunc64::Callers() const {
     return m_callers;
 }
 
+inline
+const std::vector<CR_BasicBlock64>& CR_CodeFunc64::BasicBlocks() const {
+    return m_basic_blocks;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc32
 
@@ -507,6 +525,11 @@ inline void CR_CodeFunc32::Copy(const CR_CodeFunc32& cf) {
     Name() = cf.Name();
     FuncFlags() = cf.FuncFlags();
     StackArgSizeRange() = cf.StackArgSizeRange();
+    Jumpees() = cf.Jumpees();
+    Jumpers() = cf.Jumpers();
+    Callees() = cf.Callees();
+    Callers() = cf.Callers();
+    BasicBlocks() = cf.BasicBlocks();
 }
 
 inline void CR_CodeFunc32::clear() {
@@ -514,6 +537,11 @@ inline void CR_CodeFunc32::clear() {
     Name().clear();
     FuncFlags() = 0;
     StackArgSizeRange().clear();
+    Jumpees().clear();
+    Jumpers().clear();
+    Callees().clear();
+    Callers().clear();
+    BasicBlocks().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -539,6 +567,11 @@ inline void CR_CodeFunc64::Copy(const CR_CodeFunc64& cf) {
     Name() = cf.Name();
     FuncFlags() = cf.FuncFlags();
     StackArgSizeRange() = cf.StackArgSizeRange();
+    Jumpees() = cf.Jumpees();
+    Jumpers() = cf.Jumpers();
+    Callees() = cf.Callees();
+    Callers() = cf.Callers();
+    BasicBlocks() = cf.BasicBlocks();
 }
 
 inline void CR_CodeFunc64::clear() {
@@ -546,6 +579,11 @@ inline void CR_CodeFunc64::clear() {
     Name().clear();
     FuncFlags() = cr_FF_64BITFUNC;
     StackArgSizeRange().clear();
+    Jumpees().clear();
+    Jumpers().clear();
+    Callees().clear();
+    Callers().clear();
+    BasicBlocks().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -788,24 +826,6 @@ inline void CR_DecompInfo64::clear() {
     Entrances().clear();
     MapAddrToCodeFunc().clear();
     NameScope().clear();
-}
-
-////////////////////////////////////////////////////////////////////////////
-// CR_Storage
-
-inline size_t CR_Storage::size() const {
-    assert(m_data_bytes.size() == m_data_flags.size());
-    return m_data_bytes.size();
-}
-
-inline bool CR_Storage::empty() const {
-    assert(m_data_bytes.size() == m_data_flags.size());
-    return m_data_bytes.size() == 0;
-}
-
-inline void CR_Storage::resize(size_t size) {
-    m_data_bytes.resize(size, 0);
-    m_data_flags.resize(size, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////

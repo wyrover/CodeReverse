@@ -559,15 +559,15 @@ std::string CrIndent(const std::string& str) {
     katahiromz::replace_string(text, "\n", "\n\t");
     if (text.rfind("\n\t") == text.size() - 2) {
         text.resize(text.size() - 1);
-	}
+    }
     return "\t" + text;
 }
 
 std::string CrTabToSpace(const std::string& str, size_t tabstop/* = 4*/) {
-	std::string tab(tabstop, ' ');
-	std::string text(str);
-	katahiromz::replace_string(text, std::string("\t"), tab);
-	return text;
+    std::string tab(tabstop, ' ');
+    std::string text(str);
+    katahiromz::replace_string(text, std::string("\t"), tab);
+    return text;
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -12,9 +12,9 @@
 const char * const cr_logo =
     "///////////////////////////////////////////////\n"
 #ifdef _WIN64
-    "// CodeReverse 0.2.2 (64-bit)                //\n"
+    "// CodeReverse 0.2.3 (64-bit)                //\n"
 #else   // ndef _WIN64
-    "// CodeReverse 0.2.2 (32-bit)                //\n"
+    "// CodeReverse 0.2.3 (32-bit)                //\n"
 #endif  // ndef _WIN64
     "// https://github.com/katahiromz/CodeReverse //\n"
     "// katayama.hirofumi.mz@gmail.com            //\n"
@@ -333,6 +333,7 @@ int main(int argc, char **argv) {
     if (modes[MODE_64BIT]) {
         CR_DecompInfo64 info;
 
+#if 0
         fprintf(stderr, "Loading type info...\n");
         if (!info.NameScope().LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: It requires Wonders API.\n");
@@ -340,6 +341,7 @@ int main(int argc, char **argv) {
         } else {
             fprintf(stderr, "Loaded.\n");
         }
+#endif
 
         fprintf(stderr, "Disassembling...\n");
         module->DisAsm64(info);
@@ -363,6 +365,7 @@ int main(int argc, char **argv) {
     } else {
         CR_DecompInfo32 info;
 
+#if 0
         fprintf(stderr, "Loading type info...\n");
         if (!info.NameScope().LoadFromFiles(prefix, suffix)) {
             fprintf(stderr, "WARNING: It requires Wonders API.\n");
@@ -370,6 +373,7 @@ int main(int argc, char **argv) {
         } else {
             fprintf(stderr, "Loaded.\n");
         }
+#endif
 
         fprintf(stderr, "Disassembling...\n");
         module->DisAsm32(info);

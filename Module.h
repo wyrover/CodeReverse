@@ -221,62 +221,9 @@ protected:
 }; // class CR_Module
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_X86Machine, CR_X64Machine --- virtual machines
 
-class CR_X86Machine {
-public:
-    typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
-public:
-    CR_X86Machine() { }
-
-    virtual BOOL Init(shared_ptr<CR_Module>& mod);
-    virtual void ReadStorage(const std::string& expr_addr, size_t siz);
-    virtual void WriteStorage(const std::string& expr_addr, size_t siz);
-
-          name_to_storage& MapNameToStorage();
-    const name_to_storage& MapNameToStorage() const;
-
-          CR_Storage *StorageFromName(const std::string& name);
-    const CR_Storage *StorageFromName(const std::string& name) const;
-
-    CR_Strings StorageNames() const;
-
-protected:
-    shared_ptr<CR_Module>   m_module;
-    name_to_storage         m_mNameToStorage;
-public:
-    CR_Addr32               m_ip;
-};
-
-class CR_X64Machine {
-public:
-    typedef std::unordered_map<std::string,CR_Storage> name_to_storage;
-public:
-    CR_X64Machine() { }
-
-    virtual BOOL Init(shared_ptr<CR_Module>& mod);
-    virtual void ReadStorage(const std::string& expr_addr, size_t siz);
-    virtual void WriteStorage(const std::string& expr_addr, size_t siz);
-
-          name_to_storage& MapNameToStorage();
-    const name_to_storage& MapNameToStorage() const;
-
-          CR_Storage *StorageFromName(const std::string& name);
-    const CR_Storage *StorageFromName(const std::string& name) const;
-
-    CR_Strings StorageNames() const;
-
-protected:
-    shared_ptr<CR_Module>   m_module;
-    name_to_storage         m_mNameToStorage;
-public:
-    CR_Addr64               m_ip;
-};
-
-////////////////////////////////////////////////////////////////////////////
-
-BOOL CrAnalyzeOperands32(CR_DecompInfo32& info, CR_X86Machine& machine);
-BOOL CrAnalyzeOperands64(CR_DecompInfo64& info, CR_X64Machine& machine);
+void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance);
+void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance);
 
 ////////////////////////////////////////////////////////////////////////////
 // Dumping.cpp

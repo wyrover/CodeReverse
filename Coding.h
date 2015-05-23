@@ -16,27 +16,6 @@ std::string CrValue32(unsigned long value, BOOL is_signed);
 std::string CrValue64(unsigned long long value, BOOL is_signed);
 
 ////////////////////////////////////////////////////////////////////////////
-// getting assembly instruction input/output information
-
-struct CR_X86_ASM_IO {
-    const char *name;
-    int num_args;
-    const char *in;
-    const char *out;
-    int osize;
-};
-
-BOOL CrGetAsmIO16(
-    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
-    std::set<std::string>& out, int osize);
-BOOL CrGetAsmIO32(
-    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
-    std::set<std::string>& out, int osize);
-BOOL CrGetAsmIO64(
-    const CR_X86_ASM_IO *key, std::set<std::string>& in, 
-    std::set<std::string>& out, int osize);
-
-////////////////////////////////////////////////////////////////////////////
 // CR_CondCode - condition code
 
 enum CR_CondCode {
@@ -363,6 +342,31 @@ struct CR_DataMemberEntry {
 typedef CR_VecSet<CR_DataMemberEntry> CR_DataMemberEntries;
 
 ////////////////////////////////////////////////////////////////////////////
+// basic blocks
+
+struct CR_BasicBlock32 {
+    CR_Addr32                           m_addr;
+    CR_Addr32                           m_jump_to;
+    CR_CondCode                         m_cond_code;
+    std::vector<CR_OpCode32>            m_op_codes;
+    CR_BasicBlock32() :
+        m_addr(cr_invalid_addr32),
+        m_jump_to(cr_invalid_addr32),
+        m_cond_code(C_NONE) { }
+};
+
+struct CR_BasicBlock64 {
+    CR_Addr64                           m_addr;
+    CR_Addr64                           m_jump_to;
+    CR_CondCode                         m_cond_code;
+    std::vector<CR_OpCode64>            m_op_codes;
+    CR_BasicBlock64() :
+        m_addr(cr_invalid_addr64),
+        m_jump_to(cr_invalid_addr64),
+        m_cond_code(C_NONE) { }
+};
+
+////////////////////////////////////////////////////////////////////////////
 // CR_CodeFunc32 - code function for 32-bit
 
 class CR_CodeFunc32 {
@@ -373,6 +377,8 @@ public:
     virtual ~CR_CodeFunc32();
     void Copy(const CR_CodeFunc32& cf);
     void clear();
+          CR_BasicBlock32 *BasicBlockFromAddr(CR_Addr32 addr);
+    const CR_BasicBlock32 *BasicBlockFromAddr(CR_Addr32 addr) const;
 public:
     // accessors
     CR_Addr32&                          Addr();
@@ -383,6 +389,7 @@ public:
     CR_Addr32Set&                       Jumpers();
     CR_Addr32Set&                       Callees();
     CR_Addr32Set&                       Callers();
+    std::vector<CR_BasicBlock32>&       BasicBlocks();
     // const accessors
     const CR_Addr32&                    Addr() const;
     const std::string&                  Name() const;
@@ -392,6 +399,7 @@ public:
     const CR_Addr32Set&                 Jumpers() const;
     const CR_Addr32Set&                 Callees() const;
     const CR_Addr32Set&                 Callers() const;
+    const std::vector<CR_BasicBlock32>& BasicBlocks() const;
 protected:
     CR_Addr32                           m_addr;
     std::string                         m_name;
@@ -401,6 +409,7 @@ protected:
     CR_Addr32Set                        m_jumpers;
     CR_Addr32Set                        m_callees;
     CR_Addr32Set                        m_callers;
+    std::vector<CR_BasicBlock32>        m_basic_blocks;
 }; // class CR_CodeFunc32
 
 typedef shared_ptr<CR_CodeFunc32> CR_ShdCodeFunc32;
@@ -416,6 +425,8 @@ public:
     virtual ~CR_CodeFunc64();
     void Copy(const CR_CodeFunc64& cf);
     void clear();
+    CR_BasicBlock64 *BasicBlockFromAddr(CR_Addr64 addr);
+    const CR_BasicBlock64 *BasicBlockFromAddr(CR_Addr64 addr) const;
 public:
     // accessors
     CR_Addr64&                          Addr();
@@ -426,6 +437,7 @@ public:
     CR_Addr64Set&                       Jumpers();
     CR_Addr64Set&                       Callees();
     CR_Addr64Set&                       Callers();
+    std::vector<CR_BasicBlock64>&       BasicBlocks();
     // const accessors
     const CR_Addr64&                    Addr() const;
     const std::string&                  Name() const;
@@ -435,6 +447,7 @@ public:
     const CR_Addr64Set&                 Jumpers() const;
     const CR_Addr64Set&                 Callees() const;
     const CR_Addr64Set&                 Callers() const;
+    const std::vector<CR_BasicBlock64>& BasicBlocks() const;
 protected:
     CR_Addr64                           m_addr;
     std::string                         m_name;
@@ -444,6 +457,7 @@ protected:
     CR_Addr64Set                        m_jumpers;
     CR_Addr64Set                        m_callees;
     CR_Addr64Set                        m_callers;
+    std::vector<CR_BasicBlock64>        m_basic_blocks;
 }; // class CR_CodeFunc64
 
 typedef shared_ptr<CR_CodeFunc64> CR_ShdCodeFunc64;
@@ -880,135 +894,6 @@ typedef struct CR_X64_CORE {
     CR_SSE     sse;
 } CR_X64_CORE;
 #include <poppack.h>
-
-////////////////////////////////////////////////////////////////////////////
-// CR_Storage
-
-struct CR_Storage {
-    typedef unsigned long StorageFlags;
-    static const StorageFlags
-        CORE        = (1 << 0),
-        STACK       = (1 << 1),
-        HEAP        = (1 << 2),
-        CODE        = (1 << 3),
-        DATA        = (1 << 4),
-        READONLY    = (1 << 5);
-    StorageFlags                    m_storage_flags;
-
-    CR_Storage(StorageFlags storage_flags = 0, size_t siz = 0) :
-        m_storage_flags(storage_flags) { resize(siz); }
-
-    size_t size() const;
-    bool empty() const;
-    void resize(size_t size);
-
-    void InputAccess(size_t index, size_t siz);
-    void OutputAccess(size_t index, size_t siz);
-
-    std::string                     m_base_expr_addr;
-    std::vector<BYTE>               m_data_bytes;
-    std::vector<CR_DataFlags>       m_data_flags;
-
-    std::vector<CR_AccessMember>    m_accesses;
-};
-
-////////////////////////////////////////////////////////////////////////////
-// storages
-
-struct CR_StackStorage : CR_Storage {
-    CR_StackStorage(size_t siz = static_cast<size_t>(cr_stack_size)) :
-        CR_Storage(CR_Storage::STACK, siz) { }
-};
-
-struct CR_HeapStorage : CR_Storage {
-    CR_HeapStorage(size_t siz) : CR_Storage(CR_Storage::HEAP, siz) { }
-};
-
-struct CR_DataStorage : CR_Storage {
-    CR_DataStorage(size_t storage_siz, size_t data_size = 0, void *ptr = NULL) :
-        CR_Storage(CR_Storage::DATA, storage_siz)
-    {
-        assert(data_size <= storage_siz);
-        memcpy(m_data_bytes.data(), ptr, data_size);
-    }
-};
-
-struct CR_ReadOnlyDataStorage : CR_Storage {
-    CR_ReadOnlyDataStorage(
-        size_t storage_siz, size_t data_size = 0, void *ptr = NULL);
-};
-
-struct CR_CpuStorage32 : CR_Storage {
-    CR_CpuStorage32() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_X86_CPU))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_CpuStorage64 : CR_Storage {
-    CR_CpuStorage64() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_X64_CPU))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_X87FpuStorage : CR_Storage {
-    CR_X87FpuStorage() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_X87_FPU))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_MmxStorage : CR_Storage {
-    CR_MmxStorage() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_MMX))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_XmmStorage : CR_Storage {
-    CR_XmmStorage() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_XMM))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_SseStorage : CR_Storage {
-    CR_SseStorage() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_SSE))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_CoreStorage32 : CR_Storage {
-    CR_CoreStorage32() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_X86_CORE))
-    {
-        Init();
-    }
-    void Init();
-};
-
-struct CR_CoreStorage64 : CR_Storage {
-    CR_CoreStorage64() :
-        CR_Storage(CR_Storage::CORE, sizeof(CR_X64_CORE))
-    {
-        Init();
-    }
-    void Init();
-};
 
 ////////////////////////////////////////////////////////////////////////////
 
