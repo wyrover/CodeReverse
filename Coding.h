@@ -346,22 +346,28 @@ typedef CR_VecSet<CR_DataMemberEntry> CR_DataMemberEntries;
 
 struct CR_BasicBlock32 {
     CR_Addr32                           m_addr;
+    CR_Addr32                           m_next_addr;
     CR_Addr32                           m_jump_to;
     CR_CondCode                         m_cond_code;
     std::vector<CR_OpCode32>            m_op_codes;
+
     CR_BasicBlock32() :
         m_addr(cr_invalid_addr32),
+        m_next_addr(cr_invalid_addr32),
         m_jump_to(cr_invalid_addr32),
         m_cond_code(C_NONE) { }
 };
 
 struct CR_BasicBlock64 {
     CR_Addr64                           m_addr;
+    CR_Addr64                           m_next_addr;
     CR_Addr64                           m_jump_to;
     CR_CondCode                         m_cond_code;
     std::vector<CR_OpCode64>            m_op_codes;
+
     CR_BasicBlock64() :
         m_addr(cr_invalid_addr64),
+        m_next_addr(cr_invalid_addr64),
         m_jump_to(cr_invalid_addr64),
         m_cond_code(C_NONE) { }
 };

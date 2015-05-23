@@ -1093,8 +1093,8 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
                         leaders.insert(oper->Value32());
                     }
                     break;
-                } else if (type == cr_OCT_JCC) {
-                    // conditional jump
+                } else if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
+                    // conditional jump or loop
                     leaders.insert(next_addr);
                     auto oper = op_code->Operand(0);
                     if (oper->GetOperandType() == cr_DF_IMM) {
@@ -1110,23 +1110,29 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
             }
         }
     }
+    // no use
     checked.clear();
     to_be_checked.clear();
 
+    // sort
     std::vector<CR_Addr32> vecLeaders(leaders.begin(), leaders.end());
     std::sort(vecLeaders.begin(), vecLeaders.end());
 
+    // store leaders
     auto cf = info.CodeFuncFromAddr(entrance);
     assert(cf);
     cf->Leaders() = leaders;
 
     const size_t size = vecLeaders.size() - 1;
     for (size_t i = 0; i < size; ++i) {
+        // for every pair of two adjacent leaders
+        auto addr1 = vecLeaders[i], addr2 = vecLeaders[i + 1];
+        // prepare a basic block
         CR_BasicBlock32 block;
-        auto addr1 = vecLeaders[i];
-        auto addr2 = vecLeaders[i + 1];
         block.m_addr = addr1;
+        CR_Addr32 next_addr = cr_invalid_addr32;
         for (auto addr = addr1; addr < addr2; ) {
+            // op.code from addr
             auto op_code = info.OpCodeFromAddr(addr);
             if (op_code == NULL) {
                 break;
@@ -1138,17 +1144,26 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
                 if (oper->GetOperandType() == cr_DF_IMM) {
                     block.m_jump_to = oper->Value32();  // jump to
                 }
-            } else if (type == cr_OCT_JCC) {
-                // conditional jump
-                auto oper = op_code->Operand(0);
-                if (oper->GetOperandType() == cr_DF_IMM) {
-                    block.m_jump_to = oper->Value32();  // jump to
+            } else if (type != cr_OCT_RETURN) {
+                next_addr =
+                    addr + static_cast<CR_Addr32>(op_code->Codes().size());
+                if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
+                    // conditional jump or loop
+                    auto oper = op_code->Operand(0);
+                    if (oper->GetOperandType() == cr_DF_IMM) {
+                        block.m_jump_to = oper->Value32();  // jump to
+                    }
+                    block.m_cond_code = op_code->CondCode();
                 }
-                block.m_cond_code = op_code->CondCode();
             }
+            // add op.code
             block.m_op_codes.emplace_back(*op_code);
+            // go to next addr
             addr += static_cast<CR_Addr32>(op_code->Codes().size());
         }
+        // set next addr
+        block.m_next_addr = next_addr;
+        // add block
         cf->BasicBlocks().emplace_back(block);
     }
 }
@@ -1189,8 +1204,8 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
                         leaders.insert(oper->Value64());
                     }
                     break;
-                } else if (type == cr_OCT_JCC) {
-                    // conditional jump
+                } else if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
+                    // conditional jump or loop
                     leaders.insert(next_addr);
                     auto oper = op_code->Operand(0);
                     if (oper->GetOperandType() == cr_DF_IMM) {
@@ -1206,23 +1221,29 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
             }
         }
     }
+    // no use
     checked.clear();
     to_be_checked.clear();
 
+    // sort
     std::vector<CR_Addr64> vecLeaders(leaders.begin(), leaders.end());
     std::sort(vecLeaders.begin(), vecLeaders.end());
 
+    // store leaders
     auto cf = info.CodeFuncFromAddr(entrance);
     assert(cf);
     cf->Leaders() = leaders;
 
     const size_t size = vecLeaders.size() - 1;
     for (size_t i = 0; i < size; ++i) {
+        // for every pair of two adjacent leaders
+        auto addr1 = vecLeaders[i], addr2 = vecLeaders[i + 1];
+        // prepare a basic block
         CR_BasicBlock64 block;
-        auto addr1 = vecLeaders[i];
-        auto addr2 = vecLeaders[i + 1];
         block.m_addr = addr1;
+        CR_Addr64 next_addr = cr_invalid_addr64;
         for (auto addr = addr1; addr < addr2; ) {
+            // op.code from addr
             auto op_code = info.OpCodeFromAddr(addr);
             if (op_code == NULL) {
                 break;
@@ -1232,19 +1253,28 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
                 // jump
                 auto oper = op_code->Operand(0);
                 if (oper->GetOperandType() == cr_DF_IMM) {
-                    block.m_jump_to = oper->Value64();
+                    block.m_jump_to = oper->Value64();  // jump to
                 }
-            } else if (type == cr_OCT_JCC) {
-                // conditional jump
-                auto oper = op_code->Operand(0);
-                if (oper->GetOperandType() == cr_DF_IMM) {
-                    block.m_jump_to = oper->Value64();
+            } else if (type != cr_OCT_RETURN) {
+                next_addr =
+                    addr + static_cast<CR_Addr64>(op_code->Codes().size());
+                if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
+                    // conditional jump or loop
+                    auto oper = op_code->Operand(0);
+                    if (oper->GetOperandType() == cr_DF_IMM) {
+                        block.m_jump_to = oper->Value64();  // jump to
+                    }
+                    block.m_cond_code = op_code->CondCode();
                 }
-                block.m_cond_code = op_code->CondCode();
             }
+            // add op.code
             block.m_op_codes.emplace_back(*op_code);
+            // go to next addr
             addr += static_cast<CR_Addr64>(op_code->Codes().size());
         }
+        // set next addr
+        block.m_next_addr = next_addr;
+        // add block
         cf->BasicBlocks().emplace_back(block);
     }
 }
