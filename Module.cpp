@@ -1126,6 +1126,11 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
                     block.m_jump_to = oper->Value32();  // jump to
                 }
                 block.m_cond_code = op_code->CondCode();
+                next_addr =
+                    static_cast<CR_Addr32>(addr + op_code->Codes().size());
+            } else {
+                next_addr =
+                    static_cast<CR_Addr32>(addr + op_code->Codes().size());
             }
             // add op.code
             block.m_op_codes.emplace_back(*op_code);
@@ -1206,6 +1211,11 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
                     block.m_jump_to = oper->Value64();  // jump to
                 }
                 block.m_cond_code = op_code->CondCode();
+                next_addr =
+                    static_cast<CR_Addr64>(addr + op_code->Codes().size());
+            } else {
+                next_addr =
+                    static_cast<CR_Addr64>(addr + op_code->Codes().size());
             }
             // add op.code
             block.m_op_codes.emplace_back(*op_code);
