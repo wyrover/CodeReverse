@@ -619,7 +619,7 @@ BOOL CR_Module::DisAsmAddr32(
                     cf->FuncFlags() |= cr_FF_RETURNONLY | cr_FF_CDECL;
                 }
             }
-            cf->Rets().insert(va);
+            cf->Exits().insert(va);
             bBreak = TRUE;
             break;
 
@@ -795,7 +795,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                     cf->FuncFlags() |= cr_FF_RETURNONLY;
                 }
             }
-            cf->Rets().insert(va);
+            cf->Exits().insert(va);
             bBreak = TRUE;
             break;
 
@@ -1070,9 +1070,9 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
     auto& jumpees = cf->Jumpees();
     leaders.insert(jumpees.begin(), jumpees.end());
 
-    // insert rets' next
-    auto& rets = cf->Rets();
-    for (auto addr : rets) {
+    // insert exits' next
+    auto& exits = cf->Exits();
+    for (auto addr : exits) {
         auto op_code = info.OpCodeFromAddr(addr);
         auto size = op_code->Codes().size();
         auto next_addr = static_cast<CR_Addr32>(addr + size);
@@ -1155,9 +1155,9 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
     auto& jumpees = cf->Jumpees();
     leaders.insert(jumpees.begin(), jumpees.end());
 
-    // insert rets' next
-    auto& rets = cf->Rets();
-    for (auto addr : rets) {
+    // insert exits' next
+    auto& exits = cf->Exits();
+    for (auto addr : exits) {
         auto op_code = info.OpCodeFromAddr(addr);
         auto size = op_code->Codes().size();
         auto next_addr = static_cast<CR_Addr64>(addr + size);

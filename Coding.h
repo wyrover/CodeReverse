@@ -396,7 +396,7 @@ public:
     CR_Addr32Set&                       Callees();
     CR_Addr32Set&                       Callers();
     CR_Addr32Set&                       Leaders();
-    CR_Addr32Set&                       Rets();
+    CR_Addr32Set&                       Exits();
     std::vector<CR_BasicBlock32>&       BasicBlocks();
     // const accessors
     const CR_Addr32&                    Addr() const;
@@ -408,7 +408,7 @@ public:
     const CR_Addr32Set&                 Callees() const;
     const CR_Addr32Set&                 Callers() const;
     const CR_Addr32Set&                 Leaders() const;
-    const CR_Addr32Set&                 Rets() const;
+    const CR_Addr32Set&                 Exits() const;
     const std::vector<CR_BasicBlock32>& BasicBlocks() const;
 protected:
     CR_Addr32                           m_addr;
@@ -420,7 +420,7 @@ protected:
     CR_Addr32Set                        m_callees;
     CR_Addr32Set                        m_callers;
     CR_Addr32Set                        m_leaders;
-    CR_Addr32Set                        m_rets;
+    CR_Addr32Set                        m_exits;
     std::vector<CR_BasicBlock32>        m_basic_blocks;
 }; // class CR_CodeFunc32
 
@@ -450,7 +450,7 @@ public:
     CR_Addr64Set&                       Callees();
     CR_Addr64Set&                       Callers();
     CR_Addr64Set&                       Leaders();
-    CR_Addr64Set&                       Rets();
+    CR_Addr64Set&                       Exits();
     std::vector<CR_BasicBlock64>&       BasicBlocks();
     // const accessors
     const CR_Addr64&                    Addr() const;
@@ -462,7 +462,7 @@ public:
     const CR_Addr64Set&                 Callees() const;
     const CR_Addr64Set&                 Callers() const;
     const CR_Addr64Set&                 Leaders() const;
-    const CR_Addr64Set&                 Rets() const;
+    const CR_Addr64Set&                 Exits() const;
     const std::vector<CR_BasicBlock64>& BasicBlocks() const;
 protected:
     CR_Addr64                           m_addr;
@@ -474,7 +474,7 @@ protected:
     CR_Addr64Set                        m_callees;
     CR_Addr64Set                        m_callers;
     CR_Addr64Set                        m_leaders;
-    CR_Addr64Set                        m_rets;
+    CR_Addr64Set                        m_exits;
     std::vector<CR_BasicBlock64>        m_basic_blocks;
 }; // class CR_CodeFunc64
 
