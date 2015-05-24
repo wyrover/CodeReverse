@@ -1066,6 +1066,7 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
 } // CR_Module::DumpDisAsm32
 
 BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr32 func) {
+    auto cf = info.CodeFuncFromAddr(func);
     auto end = info.MapAddrToOpCode().end();
     for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode32 *oc = it->second.get();
@@ -1074,16 +1075,11 @@ BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr3
         if (func != 0 && !oc->FuncAddrs().count(func))
             continue;
 
-        #ifdef _DEBUG
-            auto cf = info.CodeFuncFromAddr(func);
-            if (cf) {
-                if (cf->Leaders().count(oc->Addr())) {
-                    fprintf(fp, "-------------\n");
-                }
-            }
-        #endif
-
-        fprintf(fp, "L%08lX: ", oc->Addr());
+        if (cf && cf->Leaders().count(it->first)) {
+            fprintf(fp, "L%08lX: ", it->first);
+        } else {
+            fprintf(fp, "           ");
+        }
 
         CrDumpCodes(fp, oc->Codes(), 32);
 
@@ -1184,6 +1180,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
 } // CR_Module::DumpDisAsm64
 
 BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr64 func) {
+    auto cf = info.CodeFuncFromAddr(func);
     auto end = info.MapAddrToOpCode().end();
     for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode64 *oc = it->second.get();
@@ -1192,16 +1189,11 @@ BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr6
         if (func != 0 && !oc->FuncAddrs().count(func))
             continue;
 
-        #ifdef _DEBUG
-            auto cf = info.CodeFuncFromAddr(func);
-            if (cf) {
-                if (cf->Leaders().count(oc->Addr())) {
-                    fprintf(fp, "-------------\n");
-                }
-            }
-        #endif
-
-        fprintf(fp, "L%08lX%08lX: ", HILONG(oc->Addr()), LOLONG(oc->Addr()));
+        if (cf && cf->Leaders().count(it->first)) {
+            fprintf(fp, "L%08lX%08lX: ", HILONG(it->first), LOLONG(it->first));
+        } else {
+            fprintf(fp, "                   ");
+        }
 
         CrDumpCodes(fp, oc->Codes(), 64);
 

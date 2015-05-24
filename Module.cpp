@@ -619,6 +619,7 @@ BOOL CR_Module::DisAsmAddr32(
                     cf->FuncFlags() |= cr_FF_RETURNONLY | cr_FF_CDECL;
                 }
             }
+            cf->Rets().insert(va);
             bBreak = TRUE;
             break;
 
@@ -794,6 +795,7 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
                     cf->FuncFlags() |= cr_FF_RETURNONLY;
                 }
             }
+            cf->Rets().insert(va);
             bBreak = TRUE;
             break;
 
@@ -1058,70 +1060,40 @@ void CR_Module::DumpResource(std::FILE *fp) {
 // create flow graph
 
 void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
-    CR_Addr32Set leaders, checked, to_be_checked;
+    auto cf = info.CodeFuncFromAddr(entrance);
+    assert(cf);
 
+    CR_Addr32Set leaders;
     leaders.insert(entrance);
-    to_be_checked.insert(entrance);
 
-    while (checked.size() < to_be_checked.size()) {
-        CR_Addr32Set old_to_be_checked = to_be_checked;
-        for (auto addr : old_to_be_checked) {
-            for (;;) {
-                // already checked?
-                if (checked.count(addr)) {
-                    break;
-                }
-                // check the address
-                checked.insert(addr);
+    // insert jumpees
+    auto& jumpees = cf->Jumpees();
+    leaders.insert(jumpees.begin(), jumpees.end());
 
-                // get op.code from address
-                auto op_code = info.OpCodeFromAddr(addr);
-                if (op_code == NULL) {
-                    break;
-                }
-
-                auto next_addr =
-                    static_cast<CR_Addr32>(addr + op_code->Codes().size());
-
-                auto type = op_code->OpCodeType();
-                if (type == cr_OCT_JMP) {
-                    // jump
-                    leaders.insert(next_addr);
-                    auto oper = op_code->Operand(0);
-                    if (oper->GetOperandType() == cr_DF_IMM) {
-                        to_be_checked.insert(oper->Value32());
-                        leaders.insert(oper->Value32());
-                    }
-                    break;
-                } else if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
-                    // conditional jump or loop
-                    leaders.insert(next_addr);
-                    auto oper = op_code->Operand(0);
-                    if (oper->GetOperandType() == cr_DF_IMM) {
-                        to_be_checked.insert(oper->Value32());
-                        leaders.insert(oper->Value32());
-                    }
-                } else if (type == cr_OCT_RETURN) {
-                    // return
-                    leaders.insert(next_addr);
-                    break;
-                }
-                addr = next_addr;
-            }
-        }
+    // insert rets' next
+    auto& rets = cf->Rets();
+    for (auto addr : rets) {
+        auto op_code = info.OpCodeFromAddr(addr);
+        auto size = op_code->Codes().size();
+        auto next_addr = static_cast<CR_Addr32>(addr + size);
+        leaders.insert(next_addr);
     }
-    // no use
-    checked.clear();
-    to_be_checked.clear();
+
+    // insert jumpers next
+    auto& jumpers = cf->Jumpers();
+    for (auto addr : jumpers) {
+        auto op_code = info.OpCodeFromAddr(addr);
+        auto size = op_code->Codes().size();
+        auto next_addr = static_cast<CR_Addr32>(addr + size);
+        leaders.insert(next_addr);
+    }
 
     // sort
     std::vector<CR_Addr32> vecLeaders(leaders.begin(), leaders.end());
     std::sort(vecLeaders.begin(), vecLeaders.end());
 
     // store leaders
-    auto cf = info.CodeFuncFromAddr(entrance);
-    assert(cf);
-    cf->Leaders() = leaders;
+    cf->Leaders() = std::move(leaders);
 
     const size_t size = vecLeaders.size() - 1;
     for (size_t i = 0; i < size; ++i) {
@@ -1168,70 +1140,40 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
 }
 
 void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
-    CR_Addr64Set leaders, checked, to_be_checked;
+    auto cf = info.CodeFuncFromAddr(entrance);
+    assert(cf);
 
+    CR_Addr64Set leaders;
     leaders.insert(entrance);
-    to_be_checked.insert(entrance);
 
-    while (checked.size() < to_be_checked.size()) {
-        CR_Addr64Set old_to_be_checked = to_be_checked;
-        for (auto addr : old_to_be_checked) {
-            for (;;) {
-                // already checked?
-                if (checked.count(addr)) {
-                    break;
-                }
-                // check the address
-                checked.insert(addr);
+    // insert jumpees
+    auto& jumpees = cf->Jumpees();
+    leaders.insert(jumpees.begin(), jumpees.end());
 
-                // get op.code from address
-                auto op_code = info.OpCodeFromAddr(addr);
-                if (op_code == NULL) {
-                    break;
-                }
-
-                auto next_addr =
-                    static_cast<CR_Addr64>(addr + op_code->Codes().size());
-
-                auto type = op_code->OpCodeType();
-                if (type == cr_OCT_JMP) {
-                    // jump
-                    leaders.insert(next_addr);
-                    auto oper = op_code->Operand(0);
-                    if (oper->GetOperandType() == cr_DF_IMM) {
-                        to_be_checked.insert(oper->Value64());
-                        leaders.insert(oper->Value64());
-                    }
-                    break;
-                } else if (type == cr_OCT_JCC || type == cr_OCT_LOOP) {
-                    // conditional jump or loop
-                    leaders.insert(next_addr);
-                    auto oper = op_code->Operand(0);
-                    if (oper->GetOperandType() == cr_DF_IMM) {
-                        to_be_checked.insert(oper->Value64());
-                        leaders.insert(oper->Value64());
-                    }
-                } else if (type == cr_OCT_RETURN) {
-                    // return
-                    leaders.insert(next_addr);
-                    break;
-                }
-                addr = next_addr;
-            }
-        }
+    // insert rets' next
+    auto& rets = cf->Rets();
+    for (auto addr : rets) {
+        auto op_code = info.OpCodeFromAddr(addr);
+        auto size = op_code->Codes().size();
+        auto next_addr = static_cast<CR_Addr64>(addr + size);
+        leaders.insert(next_addr);
     }
-    // no use
-    checked.clear();
-    to_be_checked.clear();
+
+    // insert jumpers' next
+    auto& jumpers = cf->Jumpers();
+    for (auto addr : jumpers) {
+        auto op_code = info.OpCodeFromAddr(addr);
+        auto size = op_code->Codes().size();
+        auto next_addr = static_cast<CR_Addr64>(addr + size);
+        leaders.insert(next_addr);
+    }
 
     // sort
     std::vector<CR_Addr64> vecLeaders(leaders.begin(), leaders.end());
     std::sort(vecLeaders.begin(), vecLeaders.end());
 
     // store leaders
-    auto cf = info.CodeFuncFromAddr(entrance);
-    assert(cf);
-    cf->Leaders() = leaders;
+    cf->Leaders() = std::move(leaders);
 
     const size_t size = vecLeaders.size() - 1;
     for (size_t i = 0; i < size; ++i) {
@@ -1240,7 +1182,7 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
         // prepare a basic block
         CR_BasicBlock64 block;
         block.m_addr = addr1;
-        CR_Addr64 next_addr = addr2;
+        CR_Addr64 next_addr = cr_invalid_addr64;
         for (auto addr = addr1; addr < addr2; ) {
             // op.code from addr
             auto op_code = info.OpCodeFromAddr(addr);

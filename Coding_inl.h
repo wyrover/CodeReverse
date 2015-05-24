@@ -383,6 +383,10 @@ inline CR_Addr32Set& CR_CodeFunc32::Leaders() {
     return m_leaders;
 }
 
+inline CR_Addr32Set& CR_CodeFunc32::Rets() {
+    return m_rets;
+}
+
 inline std::vector<CR_BasicBlock32>& CR_CodeFunc32::BasicBlocks() {
     return m_basic_blocks;
 }
@@ -424,6 +428,10 @@ inline const CR_Addr32Set& CR_CodeFunc32::Callers() const {
 
 inline const CR_Addr32Set& CR_CodeFunc32::Leaders() const {
     return m_leaders;
+}
+
+inline const CR_Addr32Set& CR_CodeFunc32::Rets() const {
+    return m_rets;
 }
 
 inline
@@ -470,6 +478,10 @@ inline CR_Addr64Set& CR_CodeFunc64::Leaders() {
     return m_leaders;
 }
 
+inline CR_Addr64Set& CR_CodeFunc64::Rets() {
+    return m_rets;
+}
+
 inline std::vector<CR_BasicBlock64>& CR_CodeFunc64::BasicBlocks() {
     return m_basic_blocks;
 }
@@ -511,6 +523,10 @@ inline const CR_Addr64Set& CR_CodeFunc64::Callers() const {
 
 inline const CR_Addr64Set& CR_CodeFunc64::Leaders() const {
     return m_leaders;
+}
+
+inline const CR_Addr64Set& CR_CodeFunc64::Rets() const {
+    return m_rets;
 }
 
 inline

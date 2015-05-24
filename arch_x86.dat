@@ -1044,8 +1044,8 @@ pattern {
 
 pattern {
     assert($cpu.eax.value == 0);
-    assert($cpu.ecx.value == 0xFFFFFFFF);
-    asm repne scasb;
+    assert($cpu.ecx.uvalue == 0xFFFFFFFF);
+    asm repne_scasb;
     asm not ecx;
     asm lea $1, [ecx-1];
 } code {
@@ -1067,6 +1067,57 @@ pattern {
 }
 
 pattern {
+    asm lea $1, [eax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add eax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub eax, $1;
+    asm sar eax, 1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue = $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value = 0;
+    commit v3;
+    update $cpu.cx;
+    renew $1 as v4;
+    v4.value = unknown;
+    commit v4;
+    update $1;
+}
+
+pattern {
+    asm lea $1, [eax+0x2];
+    jmp $label.1;
+$label.1:
+    asm mov cx, [eax];
+    asm add eax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub eax, $1;
+    asm sar eax, 1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue = $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value = 0;
+    commit v3;
+    update $cpu.cx;
+    renew $1 as v4;
+    v4.value = unknown;
+    commit v4;
+    update $1;
+}
+
+pattern {
     asm cdq;
     asm xor eax, edx;
     asm sub eax, edx;
@@ -1084,21 +1135,33 @@ pattern {
     asm mov ebp, esp;
     asm sub esp, $1;
 } code {
-    asm enter $1, 0;
+    enter $1, 0;
 }
 
 pattern {
     asm push ebp;
     asm mov ebp, esp;
 } code {
-    asm enter 0, 0;
+    enter 0, 0;
 }
 
 pattern {
     asm mov esp, ebp;
     asm pop ebp;
 } code {
+    leave;
+}
+
+} code {
+    asm enter $1, $2;
+}  else {
+    enter $1, $2;
+}
+
+} code {
     asm leave;
+}  else {
+    leave;
 }
 
 pattern {
@@ -1402,6 +1465,160 @@ pattern {
     $flags.OF = unknown;
     $flags.AF = unknown;
     $flags.PF = unknown;
+    update $1;
+}
+
+pattern {
+    asm cdq;
+    asm xor eax, edx;
+    asm sub eax, edx;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.svalue = $fn.abs(v1.svalue);
+    commit v2;
+    $cpu.dl.value = unknown;
+    $cpu.dh.value = unknown;
+    $cpu.dx.value = unknown;
+    $cpu.edx.value = unknown;
+}
+
+pattern {
+    asm lea $1, [$1];
+} code {
+}
+
+pattern {
+    asm lea $1, [$1+$2];
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value = v1.value + $2;
+    commit v2;
+    update $1;
+}
+
+pattern {
+    asm lea $1, [$1-$2];
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value = v1.value - $2;
+    commit v2;
+    update $1;
+}
+
+pattern {
+    asm sub $1, eax;
+    asm lea $1, [$1];
+$label.1:
+    asm movzx ecx, [eax];
+    asm lea eax, [eax+0x2];
+    asm mov [$1+eax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew $1 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue = 0;
+    commit v3;
+    $1.value = unknown;
+    update $1;
+}
+
+pattern {
+    asm sub $1, eax;
+$label.1:
+    asm movzx ecx, [eax];
+    asm add eax, 0x2;
+    asm mov [$1+eax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew $1 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue = 0;
+    commit v3;
+    $1.value = unknown;
+    update $1;
+}
+
+pattern {
+    asm sub $1, eax;
+    asm lea $1, [$1];
+$label.1:
+    asm movzx ecx, [eax];
+    asm add eax, 0x2;
+    asm mov [$1+eax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew $1 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue = 0;
+    commit v3;
+    $1.value = unknown;
+    update $1;
+}
+
+pattern {
+    asm sub $1, eax;
+$label.1:
+    asm movzx ecx, [eax];
+    asm lea eax, [eax+0x2];
+    asm mov [$1+eax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew $1 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue = 0;
+    commit v3;
+    $1.value = unknown;
+    update $1;
+}
+
+pattern {
+    asm lea $1, [eax+0x2];
+$label.1:
+    asm mov cx,[eax];
+    asm add eax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub eax, $1;
+    asm sar eax, 1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue = $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $1 as v3;
+    v3.value = unknown;
+    commit v3;
+    update $cpu.eax;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
     update $1;
 }
 
@@ -2219,7 +2436,7 @@ pattern {
 }
 
 pattern {
-    asm repe cmpsb;
+    asm repe_cmpsb;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -2269,7 +2486,7 @@ pattern {
 }
 
 pattern {
-    asm repe cmpsw;
+    asm repe_cmpsw;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -2319,7 +2536,7 @@ pattern {
 }
 
 pattern {
-    asm repe cmpsd;
+    asm repe_cmpsd;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -2368,12 +2585,12 @@ pattern {
     $flags.OF = unknown;
 }
 
-alias asm repz cmpsb = asm repe cmpsb;
-alias asm repz cmpsw = asm repe cmpsw;
-alias asm repz cmpsd = asm repe cmpsd;
+alias asm repz_cmpsb = asm repe_cmpsb;
+alias asm repz_cmpsw = asm repe_cmpsw;
+alias asm repz_cmpsd = asm repe_cmpsd;
 
 pattern {
-    asm repne cmpsb;
+    asm repne_cmpsb;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -2423,7 +2640,7 @@ pattern {
 }
 
 pattern {
-    asm repne cmpsw;
+    asm repne_cmpsw;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -2473,7 +2690,7 @@ pattern {
 }
 
 pattern {
-    asm repne cmpsd;
+    asm repne_cmpsd;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -2522,9 +2739,9 @@ pattern {
     $flags.OF = unknown;
 }
 
-alias asm repnz cmpsb = asm repne cmpsb;
-alias asm repnz cmpsw = asm repne cmpsw;
-alias asm repnz cmpsd = asm repne cmpsd;
+alias asm repnz_cmpsb = asm repne_cmpsb;
+alias asm repnz_cmpsw = asm repne_cmpsw;
+alias asm repnz_cmpsd = asm repne_cmpsd;
 
 pattern {
     asm cmpxchg $1, $2;
@@ -3244,7 +3461,7 @@ pattern {
 }
 
 pattern {
-    asm rep lodsb;
+    asm rep_lodsb;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x8);
@@ -3281,7 +3498,7 @@ pattern {
 }
 
 pattern {
-    asm rep lodsw;
+    asm rep_lodsw;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x16);
@@ -3318,7 +3535,7 @@ pattern {
 }
 
 pattern {
-    asm rep lodsd;
+    asm rep_lodsd;
 } code {
     renew $cpu.esi as v1;
     v1.type = $type.ptr($type.x32);
@@ -3661,7 +3878,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 0);
-    asm rep movsb;
+    asm rep_movsb;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -3669,27 +3886,24 @@ pattern {
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
-    $fn.memcpy(v2.value, v1.value, v3.uvalue);
+    $fn.memcpy(v2.pvalue, v1.pvalue, v3.uvalue);
     renew v1 as v4;
-    v4.value = v1.value + v3.value;
+    v4.pvalue = v1.pvalue + v3.uvalue;
     commit v4;
     renew v2 as v5;
-    v5.value = v2.value + v3.value;
+    v5.pvalue = v2.pvalue + v3.uvalue;
     commit v5;
     renew v3 as v6;
-    v6.value = 0;
+    v6.uvalue = 0;
     commit v6;
     update $cpu.edi;
     update $cpu.esi;
-    renew v3 as v7;
-    v7.value = 0;
-    commit v7;
     update $cpu.ecx;
 }
 
 pattern {
     assert($flags.DF == 1);
-    asm rep movsb;
+    asm rep_movsb;
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -3699,109 +3913,72 @@ pattern {
     commit v3;
     $fn.memcpy(v2.value - v3.uvalue, v1.value - v3.uvalue, v3.uvalue);
     renew v1 as v4;
-    v4.value = v1.value - v3.value;
+    v4.pvalue = v1.pvalue - v3.uvalue;
     commit v4;
     renew v2 as v5;
-    v5.value = v2.value - v3.value;
+    v5.pvalue = v2.pvalue - v3.uvalue;
     commit v5;
     renew v3 as v6;
-    v6.value = 0;
+    v6.uvalue = 0;
     commit v6;
     update $cpu.edi;
     update $cpu.esi;
-    renew v3 as v7;
-    v7.value = 0;
-    commit v7;
     update $cpu.ecx;
 }
 
 pattern {
     assert($flags.DF == 0);
-    asm rep movsw;
+    asm rep_movsw;
 } code {
-    renew $cpu.esi as v1;
+    renew $cpu.edi as v1;
     commit v1;
     renew $cpu.edi as v2;
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (!v3.value) {
-            break;
-        }
-        new v4;
-        v4.addr = v1.pvalue;
-        commit v4;
-        new v5;
-        v5.addr = v2.pvalue;
-        v5.value = v4.value;
-        commit v5;
-        join v6 to v1;
-        join v7 to v2;
-        renew v1 as v6;
-        v6.value = v1.value + 2;
-        commit v6;
-        renew v2 as v7;
-        v7.value = v2.value + 2;
-        commit v7;
-        renew v3 as v8;
-        v8.value = v3.value - 1;
-        commit v8;
-    }
+    $fn.wmemcpy(v2.pvalue, v1.pvalue, v3.uvalue / 2);
+    renew v1 as v4;
+    v4.pvalue = v1.pvalue + v3.uvalue;
+    commit v4;
+    renew v2 as v5;
+    v5.pvalue = v2.pvalue + v3.uvalue;
+    commit v5;
+    renew v3 as v6;
+    v6.uvalue = 0;
+    commit v6;
     update $cpu.edi;
     update $cpu.esi;
-    renew $cpu.ecx as v9;
-    v9.value = 0;
-    commit v9;
     update $cpu.ecx;
 }
 
 pattern {
     assert($flags.DF == 1);
-    asm rep movsw;
+    asm rep_movsw;
 } code {
-    renew $cpu.esi as v1;
+    renew $cpu.edi as v1;
     commit v1;
     renew $cpu.edi as v2;
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
-    for (;;) {
-        join v6 to v3;
-        if (!v3.value) {
-            break;
-        }
-        new v4;
-        v4.addr = v1.pvalue;
-        commit v4;
-        new v5;
-        v5.addr = v2.pvalue;
-        v5.value = v4.value;
-        commit v5;
-        join v6 to v1;
-        join v7 to v2;
-        renew v1 as v6;
-        v6.value = v1.value - 2;
-        commit v6;
-        renew v2 as v7;
-        v7.value = v2.value - 2;
-        commit v7;
-        renew v3 as v8;
-        v8.value = v3.value - 1;
-        commit v8;
-    }
+    $fn.wmemcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue / 2);
+    renew v1 as v4;
+    v4.pvalue = v1.pvalue - v3.uvalue;
+    commit v4;
+    renew v2 as v5;
+    v5.pvalue = v2.pvalue - v3.uvalue;
+    commit v5;
+    renew v3 as v6;
+    v6.uvalue = 0;
+    commit v6;
     update $cpu.edi;
     update $cpu.esi;
-    renew $cpu.ecx as v9;
-    v9.value = 0;
-    commit v9;
     update $cpu.ecx;
 }
 
 pattern {
     assert($flags.DF == 0);
-    asm rep movsd;
+    asm rep_movsd;
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -3843,7 +4020,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 1);
-    asm rep movsd;
+    asm rep_movsd;
 } code {
     renew $cpu.esi as v1;
     commit v1;
@@ -4022,9 +4199,9 @@ pattern {
 // outsb();
 // outsw();
 // outsd();
-// rep outsb();
-// rep outsw();
-// rep outsd();
+// rep_outsb();
+// rep_outsw();
+// rep_outsd();
 // pause();
 
 pattern {
@@ -4385,7 +4562,7 @@ pattern {
 }
 
 pattern {
-    asm repe scasb;
+    asm repe_scasb;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4431,7 +4608,7 @@ pattern {
 }
 
 pattern {
-    asm repe scasw;
+    asm repe_scasw;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4477,7 +4654,7 @@ pattern {
 }
 
 pattern {
-    asm repe scasd;
+    asm repe_scasd;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4522,12 +4699,12 @@ pattern {
     update $cpu.ecx;
 }
 
-alias asm repz scasb = asm repe scasb;
-alias asm repz scasw = asm repe scasw;
-alias asm repz scasd = asm repe scasd;
+alias asm repz_scasb = asm repe_scasb;
+alias asm repz_scasw = asm repe_scasw;
+alias asm repz_scasd = asm repe_scasd;
 
 pattern {
-    asm repne scasb;
+    asm repne_scasb;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4573,7 +4750,7 @@ pattern {
 }
 
 pattern {
-    asm repne scasw;
+    asm repne_scasw;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4619,7 +4796,7 @@ pattern {
 }
 
 pattern {
-    asm repne scasd;
+    asm repne_scasd;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -4664,9 +4841,9 @@ pattern {
     update $cpu.ecx;
 }
 
-alias asm repnz scasb = asm repne scasb;
-alias asm repnz scasw = asm repne scasw;
-alias asm repnz scasd = asm repne scasd;
+alias asm repnz_scasb = asm repne_scasb;
+alias asm repnz_scasw = asm repne_scasw;
+alias asm repnz_scasd = asm repne_scasd;
 
 pattern {
     asm seta $1;
@@ -5104,7 +5281,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 0);
-    asm rep stosb;
+    asm rep_stosb;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5125,7 +5302,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 1);
-    asm rep stosb;
+    asm rep_stosb;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5146,7 +5323,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 0);
-    asm rep stosw;
+    asm rep_stosw;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5180,7 +5357,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 1);
-    asm rep stosd;
+    asm rep_stosd;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5214,7 +5391,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 0);
-    asm rep stosd;
+    asm rep_stosd;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5248,7 +5425,7 @@ pattern {
 
 pattern {
     assert($flags.DF == 1);
-    asm rep stosd;
+    asm rep_stosd;
 } code {
     renew $cpu.edi as v1;
     commit v1;
@@ -5283,7 +5460,7 @@ pattern {
 // str($rm16);
 
 pattern {
-    sub $1, $2;
+    asm sub $1, $2;
 } code {
     renew $1 as v1;
     commit v1;
