@@ -143,6 +143,8 @@ static const CR_DataFlags
     cr_DF_MEMIMM        = 0x03,         // memory access by immediate
     cr_DF_MEMINDEX      = 0x04,         // memory access by index
     cr_DF_IMM           = 0x05,         // immediate
+    cr_DF_IEXPR         = 0x06,         // intermediate expression
+    cr_DF_CEXPR          = 0x06,        // C expression
     cr_DF_TYPEMASK      = 0x07,         // the mask bits of type
     cr_DF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
     cr_DF_ISINTEGER     = (1 << 4),     // is an integer?
@@ -330,7 +332,7 @@ protected:
 typedef shared_ptr<CR_OpCode64> CR_ShdOpCode64;
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_ICodeType, CR_ICode32, CR_ICode64
+// CR_ICode32, CR_ICode64 --- intermediate codes
 
 enum CR_ICodeType {
     cr_ICT_NONE,
