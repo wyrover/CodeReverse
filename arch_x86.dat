@@ -3747,8 +3747,8 @@ pattern {
         v6.value = v2.value - 1;
         commit v6;
     }
-	update $cpu.edi;
-	update $cpu.esi;
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -3769,23 +3769,23 @@ pattern {
     v4.bits = 16;
     v4.value = v3.value;
     commit v4;
-	if ($flags.DF == 0) {
-	    renew v1 as v5;
-	    v5.value = v1.value + 2;
-	    commit v5;
-	    renew v1 as v6;
-	    v6.value = v2.value + 2;
-	    commit v6;
-	} else {
-	    renew v1 as v5;
-	    v5.value = v1.value - 2;
-	    commit v5;
-	    renew v1 as v6;
-	    v6.value = v2.value - 2;
-	    commit v6;
-	}
-	update $cpu.edi;
-	update $cpu.esi;
+    if ($flags.DF == 0) {
+        renew v1 as v5;
+        v5.value = v1.value + 2;
+        commit v5;
+        renew v1 as v6;
+        v6.value = v2.value + 2;
+        commit v6;
+    } else {
+        renew v1 as v5;
+        v5.value = v1.value - 2;
+        commit v5;
+        renew v1 as v6;
+        v6.value = v2.value - 2;
+        commit v6;
+    }
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -3806,23 +3806,23 @@ pattern {
     v4.bits = 32;
     v4.value = v3.value;
     commit v4;
-	if ($flags.DF == 0) {
-	    renew v1 as v5;
-	    v5.value = v1.value + 4;
-	    commit v5;
-	    renew v1 as v6;
-	    v6.value = v2.value + 4;
-	    commit v6;
-	} else {
-	    renew v1 as v5;
-	    v5.value = v1.value - 4;
-	    commit v5;
-	    renew v1 as v6;
-	    v6.value = v2.value - 4;
-	    commit v6;
-	}
-	update $cpu.edi;
-	update $cpu.esi;
+    if ($flags.DF == 0) {
+        renew v1 as v5;
+        v5.value = v1.value + 4;
+        commit v5;
+        renew v1 as v6;
+        v6.value = v2.value + 4;
+        commit v6;
+    } else {
+        renew v1 as v5;
+        v5.value = v1.value - 4;
+        commit v5;
+        renew v1 as v6;
+        v6.value = v2.value - 4;
+        commit v6;
+    }
+    update $cpu.edi;
+    update $cpu.esi;
 }
 
 pattern {
@@ -3948,21 +3948,21 @@ pattern {
         commit v5;
         join v6 to v1;
         join v7 to v2;
-    	if ($flags.DF == 0) {
-	        renew v1 as v6;
-	        v6.value = v1.value + 4;
-	        commit v6;
-	        renew v2 as v7;
-	        v7.value = v2.value + 4;
-	        commit v7;
-    	} else {
-	        renew v1 as v6;
-	        v6.value = v1.value - 4;
-	        commit v6;
-	        renew v2 as v7;
-	        v7.value = v2.value - 4;
-	        commit v7;
-    	}
+        if ($flags.DF == 0) {
+            renew v1 as v6;
+            v6.value = v1.value + 4;
+            commit v6;
+            renew v2 as v7;
+            v7.value = v2.value + 4;
+            commit v7;
+        } else {
+            renew v1 as v6;
+            v6.value = v1.value - 4;
+            commit v6;
+            renew v2 as v7;
+            v7.value = v2.value - 4;
+            commit v7;
+        }
         renew v3 as v8;
         v8.value = v3.value - 1;
         commit v8;
@@ -5083,15 +5083,15 @@ pattern {
     v3.bits = 8;
     v3.value = v2.value;
     commit v3;
-	if ($flags.DF == 0) {
-	    renew v1 as v4;
-	    v4.pvalue = v1.pvalue + 1;
-		commit v4;
-	} else {
-	    renew v1 as v4;
-	    v4.pvalue = v1.pvalue - 1;
-		commit v4;
-	}
+    if ($flags.DF == 0) {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue + 1;
+        commit v4;
+    } else {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue - 1;
+        commit v4;
+    }
     update $cpu.edi;
 }
 
@@ -5107,15 +5107,15 @@ pattern {
     v3.bits = 16;
     v3.value = v2.value;
     commit v3;
-	if ($flags.DF == 0) {
-	    renew v1 as v4;
-	    v4.pvalue = v1.pvalue + 2;
-		commit v4;
-	} else {
-	    renew v1 as v4;
-	    v4.pvalue = v1.pvalue - 2;
-		commit v4;
-	}
+    if ($flags.DF == 0) {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue + 2;
+        commit v4;
+    } else {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue - 2;
+        commit v4;
+    }
     update $cpu.edi;
 }
 
@@ -5131,15 +5131,15 @@ pattern {
     v3.bits = 32;
     v3.value = v2.value;
     commit v3;
-	if ($flags.DF == 0) {
-	    renew v1 as v4;
-	    v4.pvalue = v1.pvalue + 4;
-		commit v4;
-	} else {
-	    renew v1 as v4;
-	    v4.pvalue = v1.pvalue - 4;
-		commit v4;
-	}
+    if ($flags.DF == 0) {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue + 4;
+        commit v4;
+    } else {
+        renew v1 as v4;
+        v4.pvalue = v1.pvalue - 4;
+        commit v4;
+    }
     update $cpu.edi;
 }
 
@@ -5205,15 +5205,15 @@ pattern {
         v4.value = v2.value;
         commit v4;
         join v5 to v1;
-    	if ($flags.DF == 0) {
-	        renew v1 as v5;
-	        v5.pvalue = v1.pvalue + 2;
-	        commit v5;
-    	} else {
-	        renew v1 as v5;
-	        v5.pvalue = v1.pvalue - 2;
-	        commit v5;
-    	}
+        if ($flags.DF == 0) {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue + 2;
+            commit v5;
+        } else {
+            renew v1 as v5;
+            v5.pvalue = v1.pvalue - 2;
+            commit v5;
+        }
         renew v3 as v6;
         v6.uvalue = v3.uvalue - 1;
         commit v6;
