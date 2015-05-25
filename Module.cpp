@@ -860,37 +860,36 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
     }
 
     // disasm entrances
-    {
-        std::size_t size;
-        CR_Addr32Set addrs;
-        do {
-            addrs = info.Entrances();
-            size = addrs.size();
-
-            for (auto addr : addrs) {
-                auto stage = info.GetFuncStage(addr);
-                if (stage > 0) {
-                    continue;
-                }
-
-                DisAsmAddr32(info, addr, addr);
-
-                auto cf = info.CodeFuncFromAddr(addr);
-                assert(cf);
-
-                CR_Addr32Set jumpees;
-                do {
-                    jumpees = cf->Jumpees();
-                    for (auto addr2 : jumpees) {
-                        DisAsmAddr32(info, addr, addr2);
-                    }
-                    // cf->Jumpees() may grow in DisAsmAddr32
-                } while (jumpees.size() < cf->Jumpees().size());
+    bool needs_retry;
+    do {
+        // NOTE: info.Entrances() may grow in DisAsmAddr32
+        needs_retry = false;
+        CR_Addr32Set addrs = info.Entrances();
+        for (auto addr : addrs) {
+            // check func stage
+            auto stage = info.GetFuncStage(addr);
+            if (stage > 0) {
+                continue;
             }
 
-            // info.Entrances() may grow in DisAsmAddr32
-        } while (size < info.Entrances().size());
-    }
+            needs_retry = true;
+            DisAsmAddr32(info, addr, addr);
+
+            // get code func
+            auto cf = info.CodeFuncFromAddr(addr);
+            assert(cf);
+
+            // recurse all jumpees
+            // NOTE: cf->Jumpees() may grow in DisAsmAddr32
+            CR_Addr32Set jumpees;
+            do {
+                jumpees = cf->Jumpees();
+                for (auto jumpee : jumpees) {
+                    DisAsmAddr32(info, addr, jumpee);
+                }
+            } while (jumpees.size() < cf->Jumpees().size());
+        }
+    } while (needs_retry);
 
     return TRUE;
 } // CR_Module::DisAsm32
@@ -940,37 +939,36 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
     }
 
     // disasm entrances
-    {
-        std::size_t size;
-        CR_Addr64Set addrs;
-        do {
-            addrs = info.Entrances();
-            size = addrs.size();
-
-            for (auto addr : addrs) {
-                auto stage = info.GetFuncStage(addr);
-                if (stage > 0) {
-                    continue;
-                }
-
-                DisAsmAddr64(info, addr, addr);
-
-                auto cf = info.CodeFuncFromAddr(addr);
-                assert(cf);
-
-                CR_Addr64Set jumpees;
-                do {
-                    jumpees = cf->Jumpees();
-                    for (auto addr2 : jumpees) {
-                        DisAsmAddr64(info, addr, addr2);
-                    }
-                    // cf->Jumpees() may grow in DisAsmAddr64
-                } while (jumpees.size() < cf->Jumpees().size());
+    bool needs_retry;
+    do {
+        // NOTE: info.Entrances() may grow in DisAsmAddr64
+        needs_retry = false;
+        CR_Addr64Set addrs = info.Entrances();
+        for (auto addr : addrs) {
+            // check func stage
+            auto stage = info.GetFuncStage(addr);
+            if (stage > 0) {
+                continue;
             }
 
-            // info.Entrances() may grow in DisAsmAddr64
-        } while (size < info.Entrances().size());
-    }
+            needs_retry = true;
+            DisAsmAddr64(info, addr, addr);
+
+            // get code func
+            auto cf = info.CodeFuncFromAddr(addr);
+            assert(cf);
+
+            // recurse all jumpees
+            // NOTE: cf->Jumpees() may grow in DisAsmAddr64
+            CR_Addr64Set jumpees;
+            do {
+                jumpees = cf->Jumpees();
+                for (auto jumpee : jumpees) {
+                    DisAsmAddr64(info, addr, jumpee);
+                }
+            } while (jumpees.size() < cf->Jumpees().size());
+        }
+    } while (needs_retry);
 
     return TRUE;
 } // CR_Module::DisAsm64
