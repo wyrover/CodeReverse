@@ -359,6 +359,7 @@ protected:
     CR_ICodeType            m_ic_type;
     CR_OpCode32             m_oc;
     std::string             m_name;
+    std::string             m_attr;
     std::vector<CR_Operand> m_operands;
 };
 
@@ -375,6 +376,7 @@ protected:
     CR_ICodeType            m_ic_type;
     CR_OpCode64             m_oc;
     std::string             m_name;
+    std::string             m_attr;
     std::vector<CR_Operand> m_operands;
 };
 
