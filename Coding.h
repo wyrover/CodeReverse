@@ -330,6 +330,53 @@ protected:
 typedef shared_ptr<CR_OpCode64> CR_ShdOpCode64;
 
 ////////////////////////////////////////////////////////////////////////////
+// CR_ICodeType, CR_ICode32, CR_ICode64
+
+enum CR_ICodeType {
+    cr_ICT_NONE,
+    cr_ICT_ASM,
+    cr_ICT_NEW,
+    cr_ICT_RENEW,
+    cr_ICT_COMMIT,
+    cr_ICT_ACTION,
+    cr_ICT_CONTROL,
+    cr_ICT_ATTR,
+    cr_ICT_ASSERT
+};
+
+struct CR_ICode32 {
+    CR_ICode32();
+    CR_ICode32(const CR_ICode32& ic);
+    CR_ICode32& operator=(const CR_ICode32& ic);
+    CR_ICode32(const CR_OpCode32& oc);
+    CR_ICode32& operator=(const CR_OpCode32& oc);
+    virtual ~CR_ICode32();
+    bool is_asm() const;
+    void clear();
+protected:
+    CR_ICodeType            m_ic_type;
+    CR_OpCode32             m_oc;
+    std::string             m_name;
+    std::vector<CR_Operand> m_operands;
+};
+
+struct CR_ICode64 {
+    CR_ICode64();
+    CR_ICode64(const CR_ICode64& ic);
+    CR_ICode64& operator=(const CR_ICode64& ic);
+    CR_ICode64(const CR_OpCode64& oc);
+    CR_ICode64& operator=(const CR_OpCode64& oc);
+    virtual ~CR_ICode64();
+    bool is_asm() const;
+    void clear();
+protected:
+    CR_ICodeType            m_ic_type;
+    CR_OpCode64             m_oc;
+    std::string             m_name;
+    std::vector<CR_Operand> m_operands;
+};
+
+////////////////////////////////////////////////////////////////////////////
 // CR_DataMemberEntry, CR_DataMemberEntries
 
 struct CR_DataMemberEntry {
@@ -349,7 +396,7 @@ struct CR_BasicBlock32 {
     CR_Addr32                           m_next_addr;
     CR_Addr32                           m_jump_to;
     CR_CondCode                         m_cond_code;
-    std::vector<CR_OpCode32>            m_op_codes;
+    std::vector<CR_ICode32>             m_icodes;
 
     CR_BasicBlock32() :
         m_addr(cr_invalid_addr32),
@@ -363,7 +410,7 @@ struct CR_BasicBlock64 {
     CR_Addr64                           m_next_addr;
     CR_Addr64                           m_jump_to;
     CR_CondCode                         m_cond_code;
-    std::vector<CR_OpCode64>            m_op_codes;
+    std::vector<CR_ICode64>             m_icodes;
 
     CR_BasicBlock64() :
         m_addr(cr_invalid_addr64),

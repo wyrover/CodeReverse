@@ -5658,19 +5658,18 @@ pattern {
 
 pattern {
     pop $1;
-    assert($1.bits == 32);
 } code {
     renew $cpu.rsp as v1;
     commit v1;
     new v2;
     v2.addr = v1.pvalue;
-    v2.bits = 32;
+    v2.bits = 64;
     commit v2;
     renew $1 as v3;
-    v3.value = v2;
+    v3.value = v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value + 4;
+    v4.value = v1.value + 8;
     commit v4;
 }
 
@@ -5748,6 +5747,24 @@ pattern {
 
 pattern {
     push $1;
+    assert($1.bits < 64);
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew $cpu.rsp as v2;
+    commit v2;
+    new v3;
+    v3.addr = v2.pvalue;
+    v3.bits = 64;
+    v3.svalue = v1.svalue;
+    commit v3;
+    renew v2 as v4;
+    v4.value = v2.value - 8;
+    commit v4;
+}
+
+pattern {
+    push $1;
     assert($1.bits == 64);
 } code {
     renew $1 as v1;
@@ -5756,26 +5773,12 @@ pattern {
     commit v2;
     new v3;
     v3.addr = v2.pvalue;
+    v3.bits = 64;
     v3.value = v1.value;
     commit v3;
     renew v2 as v4;
     v4.value = v2.value - 8;
-}
-
-pattern {
-    push $1;
-    assert($1.bits == 32);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.rsp as v2;
-    commit v2;
-    new v3;
-    v3.addr = v2.pvalue;
-    v3.value = v1.value;
-    commit v3;
-    renew v2 as v4;
-    v4.value = v2.value - 4;
+    commit v4;
 }
 
 // pushf();

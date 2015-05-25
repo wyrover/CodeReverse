@@ -1133,7 +1133,7 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
                     static_cast<CR_Addr32>(addr + op_code->Codes().size());
             }
             // add op.code
-            block.m_op_codes.emplace_back(*op_code);
+            block.m_icodes.emplace_back(*op_code);
             // go to next addr
             addr += static_cast<CR_Addr32>(op_code->Codes().size());
         }
@@ -1218,7 +1218,7 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
                     static_cast<CR_Addr64>(addr + op_code->Codes().size());
             }
             // add op.code
-            block.m_op_codes.emplace_back(*op_code);
+            block.m_icodes.emplace_back(*op_code);
             // go to next addr
             addr += static_cast<CR_Addr64>(op_code->Codes().size());
         }
