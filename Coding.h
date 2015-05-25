@@ -144,7 +144,7 @@ static const CR_DataFlags
     cr_DF_MEMINDEX      = 0x04,         // memory access by index
     cr_DF_IMM           = 0x05,         // immediate
     cr_DF_IEXPR         = 0x06,         // intermediate expression
-    cr_DF_CEXPR          = 0x06,        // C expression
+    cr_DF_CEXPR         = 0x07,         // C expression
     cr_DF_TYPEMASK      = 0x07,         // the mask bits of type
     cr_DF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
     cr_DF_ISINTEGER     = (1 << 4),     // is an integer?
