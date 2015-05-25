@@ -545,6 +545,7 @@ public:
     CR_DecompInfo32& operator=(const CR_DecompInfo32& info);
     virtual ~CR_DecompInfo32();
     void clear();
+    int GetFuncStage(CR_Addr32 func) const;
 
 public:
     // accessors
@@ -590,6 +591,7 @@ public:
     CR_DecompInfo64& operator=(const CR_DecompInfo64& info);
     virtual ~CR_DecompInfo64();
     void clear();
+    int GetFuncStage(CR_Addr64 func) const;
 
 public:
     // accessors

@@ -1327,3 +1327,39 @@ CR_CodeFunc64::BasicBlockFromAddr(CR_Addr64 addr) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////
+
+int CR_DecompInfo32::GetFuncStage(CR_Addr32 func) const {
+    auto it = MapAddrToCodeFunc().find(func);
+    if (it == MapAddrToCodeFunc().end()) {
+        return 0;
+    }
+    if (OpCodeFromAddr(func) == NULL) {
+        return 0;
+    }
+    auto cf = it->second;
+    assert(cf);
+    auto block = cf->BasicBlockFromAddr(func);
+    if (block == NULL) {
+        return 1;
+    }
+    return 2;
+}
+
+int CR_DecompInfo64::GetFuncStage(CR_Addr64 func) const {
+    auto it = MapAddrToCodeFunc().find(func);
+    if (it == MapAddrToCodeFunc().end()) {
+        return 0;
+    }
+    if (OpCodeFromAddr(func) == NULL) {
+        return 0;
+    }
+    auto cf = it->second;
+    assert(cf);
+    auto block = cf->BasicBlockFromAddr(func);
+    if (block == NULL) {
+        return 1;
+    }
+    return 2;
+}
+
+////////////////////////////////////////////////////////////////////////////

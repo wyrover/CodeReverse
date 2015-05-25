@@ -868,6 +868,11 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
             size = addrs.size();
 
             for (auto addr : addrs) {
+                auto stage = info.GetFuncStage(addr);
+                if (stage > 0) {
+                    continue;
+                }
+
                 DisAsmAddr32(info, addr, addr);
 
                 auto cf = info.CodeFuncFromAddr(addr);
@@ -943,6 +948,11 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
             size = addrs.size();
 
             for (auto addr : addrs) {
+                auto stage = info.GetFuncStage(addr);
+                if (stage > 0) {
+                    continue;
+                }
+
                 DisAsmAddr64(info, addr, addr);
 
                 auto cf = info.CodeFuncFromAddr(addr);
