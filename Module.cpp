@@ -814,14 +814,17 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
     return TRUE;
 } // CR_Module::DisAsmAddr64
 
-BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
+BOOL CR_Module::PrepareForDisAsm32(CR_DecompInfo32& info) {
     if (!IsModuleLoaded() || !Is32Bit())
         return FALSE;
 
+    if (info.Entrances().size()) {
+        return TRUE;
+    }
+
     // register entrances
-    CR_Addr32 va;
     auto RVA = RVAOfEntryPoint();
-    va = VA32FromRVA(RVA);
+    CR_Addr32 va = VA32FromRVA(RVA);
     info.Entrances().emplace(va);
     {
         auto codefunc = make_shared<CR_CodeFunc32>();
@@ -837,10 +840,23 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
     // exporting functions are entrances
     for (auto& e_symbol : ExportSymbols()) {
         va = VA32FromRVA(e_symbol.dwRVA);
+        if (!AddressInCode32(va)) {
+            continue;
+        }
 
         info.Entrances().emplace(va);
         MapRVAToFuncName().emplace(e_symbol.dwRVA, e_symbol.pszName);
         MapFuncNameToRVA().emplace(e_symbol.pszName, e_symbol.dwRVA);
+    }
+    return TRUE;
+}
+
+BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
+    if (!IsModuleLoaded() || !Is32Bit())
+        return FALSE;
+
+    if (info.Entrances().empty()) {
+        PrepareForDisAsm32(info);
     }
 
     // disasm entrances
@@ -854,7 +870,7 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
             for (auto addr : addrs) {
                 DisAsmAddr32(info, addr, addr);
 
-                CR_CodeFunc32 *cf = info.CodeFuncFromAddr(addr);
+                auto cf = info.CodeFuncFromAddr(addr);
                 assert(cf);
 
                 CR_Addr32Set jumpees;
@@ -874,14 +890,17 @@ BOOL CR_Module::DisAsm32(CR_DecompInfo32& info) {
     return TRUE;
 } // CR_Module::DisAsm32
 
-BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
+BOOL CR_Module::PrepareForDisAsm64(CR_DecompInfo64& info) {
     if (!IsModuleLoaded() || !Is64Bit())
         return FALSE;
 
+    if (info.Entrances().size()) {
+        return TRUE;
+    }
+
     // register entrances
-    CR_Addr64 va;
     auto RVA = RVAOfEntryPoint();
-    va = VA64FromRVA(RVA);
+    CR_Addr64 va = VA64FromRVA(RVA);
     info.Entrances().emplace(va);
     {
         auto codefunc = make_shared<CR_CodeFunc64>();
@@ -896,10 +915,23 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
     // exporting functions are entrances
     for (auto& e_symbol : ExportSymbols()) {
         va = VA64FromRVA(e_symbol.dwRVA);
+        if (!AddressInCode64(va)) {
+            continue;
+        }
 
         info.Entrances().emplace(va);
         MapRVAToFuncName().emplace(e_symbol.dwRVA, e_symbol.pszName);
         MapFuncNameToRVA().emplace(e_symbol.pszName, e_symbol.dwRVA);
+    }
+    return TRUE;
+}
+
+BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
+    if (!IsModuleLoaded() || !Is64Bit())
+        return FALSE;
+
+    if (info.Entrances().empty()) {
+        PrepareForDisAsm64(info);
     }
 
     // disasm entrances
@@ -913,7 +945,7 @@ BOOL CR_Module::DisAsm64(CR_DecompInfo64& info) {
             for (auto addr : addrs) {
                 DisAsmAddr64(info, addr, addr);
 
-                CR_CodeFunc64 *cf = info.CodeFuncFromAddr(addr);
+                auto cf = info.CodeFuncFromAddr(addr);
                 assert(cf);
 
                 CR_Addr64Set jumpees;

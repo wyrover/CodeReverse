@@ -21,7 +21,7 @@
 // $type.u32:   unsigned 32-bit type
 // $type.x32:   signed/unsigned 32-bit type
 // $type.ptr(ty):   make a pointer type to the type ty
-// $type.ref(ty):   make a base type of the ptr type ty
+// $type.ref(ty):   make a base type of the pointer type ty
 //
 // [Values]
 // .value:  value
@@ -34,7 +34,7 @@
 // $fn.fname:   a call of the function named fname
 ////////////////////////////////////////////////////////////////////////////
 
-define $cpu = {
+define $cpu := {
     {"edx_eax", 64},
     {"dx_ax", 32},
     {"eax", 32},
@@ -73,7 +73,7 @@ define $cpu = {
     {"gs", 16},
 };
 
-define $flags = {
+define $flags := {
     {"OF", 1},
     {"DF", 1},
     {"IF", 1},
@@ -85,7 +85,7 @@ define $flags = {
     {"CF", 1},
 };
 
-define $fpu = {
+define $fpu := {
     {"st0", 80},
     {"st1", 80},
     {"st2", 80},
@@ -101,7 +101,7 @@ define $fpu = {
     {"operand", 64},
 };
 
-define $sse = {
+define $sse := {
     {"mm0", 64},
     {"mm1", 64},
     {"mm2", 64},
@@ -136,7 +136,7 @@ pattern {
     renew $cpu.ah as v2;
     commit v2;
     renew $cpu.ax as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFF00));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFF00));
     commit v3;
     update_upward $cpu.ax;
     // dx:ax
@@ -145,7 +145,7 @@ pattern {
     renew $cpu.ax as v5;
     commit v5;
     reset $cpu.dx_ax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 16));
     commit v6;
     // edx:eax
     renew $cpu.edx as v7;
@@ -153,7 +153,7 @@ pattern {
     renew $cpu.eax as v8;
     commit v8;
     reset $cpu.edx_eax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
+    v9.uvalue := (v8.uvalue | (v7.uvalue << 32));
     commit v9;
 }
 
@@ -165,7 +165,7 @@ pattern {
     renew $cpu.bh as v2;
     commit v2;
     renew $cpu.bx as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFF00));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFF00));
     commit v3;
     update_upward $cpu.bx;
 }
@@ -178,7 +178,7 @@ pattern {
     renew $cpu.ch as v2;
     commit v2;
     renew $cpu.cx as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFF00));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFF00));
     commit v3;
     update_upward $cpu.cx;
 }
@@ -191,7 +191,7 @@ pattern {
     renew $cpu.dh as v2;
     commit v2;
     renew $cpu.dx as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFF00));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFF00));
     commit v3;
     update_upward $cpu.dx;
     // dx:ax
@@ -200,7 +200,7 @@ pattern {
     renew $cpu.ax as v5;
     commit v5;
     reset $cpu.dx_ax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 16));
     commit v6;
     // edx:eax
     renew $cpu.edx as v7;
@@ -208,7 +208,7 @@ pattern {
     renew $cpu.eax as v8;
     commit v8;
     reset $cpu.edx_eax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
+    v9.uvalue := (v8.uvalue | (v7.uvalue << 32));
     commit v9;
 }
 
@@ -224,7 +224,7 @@ pattern {
     renew $cpu.ah as v2;
     commit v2;
     renew $cpu.ax as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    v3.uvalue := (v1.uvalue | (v2.uvalue << 8));
     commit v3;
     update_upward $cpu.ax;
     //
@@ -233,7 +233,7 @@ pattern {
     renew $cpu.ax as v5;
     commit v5;
     reset $cpu.dx_ax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 16));
     commit v6;
     //
     renew $cpu.edx as v7;
@@ -241,7 +241,7 @@ pattern {
     renew $cpu.eax as v8;
     commit v8;
     reset $cpu.edx_eax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
+    v9.uvalue := (v8.uvalue | (v7.uvalue << 32));
     commit v9;
 }
 
@@ -253,7 +253,7 @@ pattern {
     renew $cpu.bh as v2;
     commit v2;
     renew $cpu.bx as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    v3.uvalue := (v1.uvalue | (v2.uvalue << 8));
     commit v3;
     update_upward $cpu.bx;
 }
@@ -266,7 +266,7 @@ pattern {
     renew $cpu.ch as v2;
     commit v2;
     renew $cpu.cx as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    v3.uvalue := (v1.uvalue | (v2.uvalue << 8));
     commit v3;
     update_upward $cpu.cx;
 }
@@ -279,7 +279,7 @@ pattern {
     renew $cpu.dh as v2;
     commit v2;
     renew $cpu.dx as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue << 8));
+    v3.uvalue := (v1.uvalue | (v2.uvalue << 8));
     commit v3;
     update_upward $cpu.dx;
     // dx:ax
@@ -288,7 +288,7 @@ pattern {
     renew $cpu.ax as v5;
     commit v5;
     reset $cpu.dx_ax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 16));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 16));
     commit v6;
     // edx:eax
     renew $cpu.edx as v7;
@@ -296,7 +296,7 @@ pattern {
     renew $cpu.eax as v8;
     commit v8;
     reset $cpu.edx_eax as v9;
-    v9.uvalue = (v8.uvalue | (v7.uvalue << 32));
+    v9.uvalue := (v8.uvalue | (v7.uvalue << 32));
     commit v9;
 }
 
@@ -312,7 +312,7 @@ pattern {
     renew $cpu.eax as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -324,7 +324,7 @@ pattern {
     renew $cpu.ebx as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -336,7 +336,7 @@ pattern {
     renew $cpu.ecx as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -348,12 +348,12 @@ pattern {
     renew $cpu.dx as v2;
     commit v2;
     renew $cpu.dx_ax as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
     renew $cpu.edx as v4;
     commit v4;
     renew v4 as v5;
-    v5.uvalue = (v1.uvalue | (v4.uvalue & 0xFFFF0000));
+    v5.uvalue := (v1.uvalue | (v4.uvalue & 0xFFFF0000));
     commit v5;
 }
 
@@ -365,7 +365,7 @@ pattern {
     renew $cpu.edi as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -377,7 +377,7 @@ pattern {
     renew $cpu.esi as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -389,7 +389,7 @@ pattern {
     renew $cpu.ebp as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -401,7 +401,7 @@ pattern {
     renew $cpu.esp as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | (v2.uvalue & 0xFFFF0000));
+    v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
 }
 
@@ -415,10 +415,10 @@ pattern {
     renew $cpu.ax as v1;
     commit v1;
     renew $cpu.al as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     renew $cpu.ah as v3;
-    v3.uvalue = (v1.uvalue >> 8) & 0xFF;
+    v3.uvalue := (v1.uvalue >> 8) & 0xFF;
     commit v3;
 }
 
@@ -428,10 +428,10 @@ pattern {
     renew $cpu.bx as v1;
     commit v1;
     renew $cpu.bl as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     renew $cpu.bh as v3;
-    v3.uvalue = (v1.uvalue >> 8) & 0xFF;
+    v3.uvalue := (v1.uvalue >> 8) & 0xFF;
     commit v3;
 }
 
@@ -441,10 +441,10 @@ pattern {
     renew $cpu.cx as v1;
     commit v1;
     renew $cpu.cl as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     renew $cpu.ch as v3;
-    v3.uvalue = (v1.uvalue >> 8) & 0xFF;
+    v3.uvalue := (v1.uvalue >> 8) & 0xFF;
     commit v3;
 }
 
@@ -454,10 +454,10 @@ pattern {
     renew $cpu.dx as v1;
     commit v1;
     renew $cpu.dl as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     renew $cpu.dh as v3;
-    v3.uvalue = (v1.uvalue >> 8) & 0xFF;
+    v3.uvalue := (v1.uvalue >> 8) & 0xFF;
     commit v3;
 }
 
@@ -476,7 +476,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
+    v3.uvalue := (v2.uvalue | (v1.uvalue << 16));
     commit v3;
     // edx:eax
     renew $cpu.edx as v4;
@@ -484,7 +484,7 @@ pattern {
     renew $cpu.eax as v5;
     commit v5;
     reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 32));
     commit v6;
 }
 
@@ -513,7 +513,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
+    v3.uvalue := (v2.uvalue | (v1.uvalue << 16));
     commit v3;
     // edx:eax
     renew $cpu.edx as v4;
@@ -521,7 +521,7 @@ pattern {
     renew $cpu.eax as v5;
     commit v5;
     reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 32));
     commit v6;
 }
 
@@ -559,7 +559,7 @@ pattern {
     renew $cpu.eax as v1;
     commit v1;
     renew $cpu.ax as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.ax;
 }
@@ -570,7 +570,7 @@ pattern {
     renew $cpu.ebx as v1;
     commit v1;
     renew $cpu.bx as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.bx;
 }
@@ -581,7 +581,7 @@ pattern {
     renew $cpu.ecx as v1;
     commit v1;
     renew $cpu.cx as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.cx;
 }
@@ -592,7 +592,7 @@ pattern {
     renew $cpu.edx as v1;
     commit v1;
     renew $cpu.dx as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.dx;
 }
@@ -603,7 +603,7 @@ pattern {
     renew $cpu.edi as v1;
     commit v1;
     renew $cpu.di as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.di;
 }
@@ -614,7 +614,7 @@ pattern {
     renew $cpu.esi as v1;
     commit v1;
     renew $cpu.si as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.si;
 }
@@ -625,7 +625,7 @@ pattern {
     renew $cpu.ebp as v1;
     commit v1;
     renew $cpu.bp as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.bp;
 }
@@ -636,7 +636,7 @@ pattern {
     renew $cpu.esp as v1;
     commit v1;
     renew $cpu.sp as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.sp;
 }
@@ -647,7 +647,7 @@ pattern {
     renew $cpu.r8d as v1;
     commit v1;
     renew $cpu.r8w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r8w;
 }
@@ -658,7 +658,7 @@ pattern {
     renew $cpu.r9d as v1;
     commit v1;
     renew $cpu.r9w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r9w;
 }
@@ -669,7 +669,7 @@ pattern {
     renew $cpu.r10d as v1;
     commit v1;
     renew $cpu.r10w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r10w;
 }
@@ -680,7 +680,7 @@ pattern {
     renew $cpu.r11d as v1;
     commit v1;
     renew $cpu.r11w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r11w;
 }
@@ -691,7 +691,7 @@ pattern {
     renew $cpu.r12d as v1;
     commit v1;
     renew $cpu.r12w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r12w;
 }
@@ -702,7 +702,7 @@ pattern {
     renew $cpu.r13d as v1;
     commit v1;
     renew $cpu.r13w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r13w;
 }
@@ -713,7 +713,7 @@ pattern {
     renew $cpu.r14d as v1;
     commit v1;
     renew $cpu.r14w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r14w;
 }
@@ -724,7 +724,7 @@ pattern {
     renew $cpu.r15d as v1;
     commit v1;
     renew $cpu.r15w as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.r15w;
 }
@@ -735,7 +735,7 @@ pattern {
     renew $cpu.esp as v1;
     commit v1;
     renew $cpu.sp as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.sp;
 }
@@ -746,7 +746,7 @@ pattern {
     renew $cpu.eip as v1;
     commit v1;
     renew $cpu.ip as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     update_downward $cpu.ip;
 }
@@ -757,7 +757,7 @@ pattern {
     renew $cpu.eflags as v1;
     commit v1;
     renew $cpu.flags as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
 }
 
@@ -775,7 +775,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
+    v3.uvalue := (v2.uvalue | (v1.uvalue << 16));
     commit v3;
     // edx:eax
     renew $cpu.edx as v4;
@@ -783,7 +783,7 @@ pattern {
     renew $cpu.eax as v5;
     commit v5;
     reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 32));
     commit v6;
 }
 
@@ -809,7 +809,7 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     reset $cpu.dx_ax as v3;
-    v3.uvalue = (v2.uvalue | (v1.uvalue << 16));
+    v3.uvalue := (v2.uvalue | (v1.uvalue << 16));
     commit v3;
     // edx:eax
     renew $cpu.edx as v4;
@@ -817,7 +817,7 @@ pattern {
     renew $cpu.eax as v5;
     commit v5;
     reset $cpu.edx_eax as v6;
-    v6.uvalue = (v5.uvalue | (v4.uvalue << 32));
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 32));
     commit v6;
 }
 
@@ -909,7 +909,7 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew $2 as v2;
-    v2.value = v1.value;
+    v2.value := v1.value;
     commit v2;
     update $2;
 }
@@ -925,10 +925,10 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew $3 as v3;
-    v3.value = v2.value;
+    v3.value := v2.value;
     commit v3;
     renew $4 as v4;
-    v4.value = v1.value;
+    v4.value := v1.value;
     commit v4;
     update $3;
     update $4;
@@ -949,13 +949,13 @@ pattern {
     renew $3 as v3;
     commit v3;
     renew $4 as v4;
-    v4.value = v3.value;
+    v4.value := v3.value;
     commit v4;
     renew $5 as v5;
-    v5.value = v2.value;
+    v5.value := v2.value;
     commit v5;
     renew $6 as v6;
-    v6.value = v1.value;
+    v6.value := v1.value;
     commit v6;
     update $4;
     update $5;
@@ -981,16 +981,16 @@ pattern {
     renew $4 as v4;
     commit v4;
     renew $5 as v5;
-    v5.value = v4.value;
+    v5.value := v4.value;
     commit v5;
     renew $6 as v6;
-    v6.value = v3.value;
+    v6.value := v3.value;
     commit v6;
     renew $7 as v7;
-    v7.value = v2.value;
+    v7.value := v2.value;
     commit v7;
     renew $8 as v8;
-    v8.value = v1.value;
+    v8.value := v1.value;
     commit v8;
     update $5;
     update $6;
@@ -1021,19 +1021,19 @@ pattern {
     renew $5 as v5;
     commit v5;
     renew $6 as v6;
-    v6.value = v5.value;
+    v6.value := v5.value;
     commit v6;
     renew $7 as v7;
-    v7.value = v4.value;
+    v7.value := v4.value;
     commit v7;
     renew $8 as v8;
-    v8.value = v3.value;
+    v8.value := v3.value;
     commit v8;
     renew $9 as v9;
-    v9.value = v2.value;
+    v9.value := v2.value;
     commit v9;
     renew $10 as v10;
-    v10.value = v1.value;
+    v10.value := v1.value;
     commit v10;
     update $6;
     update $7;
@@ -1043,25 +1043,25 @@ pattern {
 }
 
 pattern {
-    assert($cpu.eax.value == 0);
+    assert($cpu.al.value == 0);
     assert($cpu.ecx.uvalue == 0xFFFFFFFF);
     asm repne_scasb;
     asm not ecx;
     asm lea $1, [ecx-1];
 } code {
     renew $cpu.edi as v1;
-    v1.type = $type.ptr($type.s8);
+    v1.type := $type.ptr($type.s8);
     commit v1;
     new v2;
-    v2.addr = $1.addr;
-    v2.bits = 32;
-    v2.uvalue = $fn.strlen(v1.pvalue);
+    v2.addr := $1.addr;
+    v2.bits := 32;
+    v2.uvalue := $fn.strlen(v1.pvalue);
     commit v2;
     renew v1 as v3;
-    v3.pvalue = v1.pvalue + v2.uvalue;
+    v3.pvalue := v1.pvalue + v2.uvalue;
     commit v3;
     renew $cpu.ecx as v4;
-    v4.value = 0;
+    v4.value := 0;
     commit v4;
     update $cpu.ecx;
 }
@@ -1079,14 +1079,14 @@ $label.1:
     renew $cpu.eax as v1;
     commit v1;
     renew v1 as v2;
-    v2.uvalue = $fn.wcslen(v1.pvalue);
+    v2.uvalue := $fn.wcslen(v1.pvalue);
     commit v2;
     renew $cpu.cx as v3;
-    v3.value = 0;
+    v3.value := 0;
     commit v3;
     update $cpu.cx;
     renew $1 as v4;
-    v4.value = unknown;
+    v4.value := unknown;
     commit v4;
     update $1;
 }
@@ -1105,14 +1105,14 @@ $label.1:
     renew $cpu.eax as v1;
     commit v1;
     renew v1 as v2;
-    v2.uvalue = $fn.wcslen(v1.pvalue);
+    v2.uvalue := $fn.wcslen(v1.pvalue);
     commit v2;
     renew $cpu.cx as v3;
-    v3.value = 0;
+    v3.value := 0;
     commit v3;
     update $cpu.cx;
     renew $1 as v4;
-    v4.value = unknown;
+    v4.value := unknown;
     commit v4;
     update $1;
 }
@@ -1125,7 +1125,7 @@ pattern {
     renew $cpu.eax as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = $fn.abs(v1.value);
+    v2.value := $fn.abs(v1.value);
     commit v2;
     update $cpu.eax;
 }
@@ -1170,8 +1170,8 @@ pattern {
     assert($1.bits == 32);
 } code {
     renew $1 as v1;
-    v1.svalue = -1;
-    v1.uvalue = 0xFFFFFFFF;
+    v1.svalue := -1;
+    v1.uvalue := 0xFFFFFFFF;
     commit v1;
     assert(v1.uvalue == 0xFFFFFFFF);
     assert(v1.svalue == -1);
@@ -1184,8 +1184,8 @@ pattern {
     assert($1.bits == 16);
 } code {
     renew $1 as v1;
-    v1.svalue = -1;
-    v1.uvalue = 0xFFFF;
+    v1.svalue := -1;
+    v1.uvalue := 0xFFFF;
     commit v1;
     assert(v1.uvalue == 0xFFFF);
     assert(v1.svalue == -1);
@@ -1198,8 +1198,8 @@ pattern {
     assert($1.bits == 8);
 } code {
     renew $1 as v1;
-    v1.svalue = -1;
-    v1.uvalue = 0xFF;
+    v1.svalue := -1;
+    v1.uvalue := 0xFF;
     commit v1;
     assert(v1.uvalue == 0xFF);
     assert(v1.svalue == -1);
@@ -1211,13 +1211,13 @@ pattern {
     asm inc $1;
 } code {
     renew $1 as v1;
-    v1.value = 1;
+    v1.value := 1;
     commit v1;
-    $flags.OF = 0;
-    $flags.SF = 0;
-    $flags.ZF = 0;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := 0;
+    $flags.SF := 0;
+    $flags.ZF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     assert(v1.uvalue == 1);
     assert(v1.svalue == 1);
     update $1;
@@ -1229,14 +1229,14 @@ pattern {
     assert($1.bits == 32);
 } code {
     renew $1 as v1;
-    v1.uvalue = 0xFFFFFFFF;
-    v1.svalue = -1;
+    v1.uvalue := 0xFFFFFFFF;
+    v1.svalue := -1;
     commit v1;
-    $flags.OF = 0;
-    $flags.SF = 1;
-    $flags.ZF = 0;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := 0;
+    $flags.SF := 1;
+    $flags.ZF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     assert(v1.uvalue == 0xFFFFFFFF);
     assert(v1.svalue == -1);
     update $1;
@@ -1248,14 +1248,14 @@ pattern {
     assert($1.bits == 16);
 } code {
     renew $1 as v1;
-    v1.uvalue = 0xFFFF;
-    v1.svalue = -1;
+    v1.uvalue := 0xFFFF;
+    v1.svalue := -1;
     commit v1;
-    $flags.OF = 0;
-    $flags.SF = 1;
-    $flags.ZF = 0;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := 0;
+    $flags.SF := 1;
+    $flags.ZF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     assert(v1.uvalue == 0xFFFF);
     assert(v1.svalue == -1);
     update $1;
@@ -1267,14 +1267,14 @@ pattern {
     assert($1.bits == 8);
 } code {
     renew $1 as v1;
-    v1.uvalue = 0xFF;
-    v1.svalue = -1;
+    v1.uvalue := 0xFF;
+    v1.svalue := -1;
     commit v1;
-    $flags.OF = 0;
-    $flags.SF = 1;
-    $flags.ZF = 0;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := 0;
+    $flags.SF := 1;
+    $flags.ZF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     assert(v1.uvalue == 0xFF);
     assert(v1.svalue == -1);
     update $1;
@@ -1284,15 +1284,15 @@ pattern {
     asm xor $1, $1;
 } code {
     renew $1 as v1;
-    v1.value = 0;
+    v1.value := 0;
     commit v1;
     assert($1.value == 0);
-    $flags.SF = 0;
-    $flags.ZF = 1;
-    $flags.OF = 0;
-    $flags.CF = 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.SF := 0;
+    $flags.ZF := 1;
+    $flags.OF := 0;
+    $flags.CF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
     assert(v1.uvalue == 0);
     assert(v1.svalue == 0);
     update $1;
@@ -1304,14 +1304,14 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value * 2;
+    v2.value := v1.value * 2;
     commit v2;
-    $flags.ZF = v2.value == 0;
-    $flags.SF = v2.svalue < 0;
-    $flags.CF = v2.uvalue < v1.uvalue;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v2.value == 0;
+    $flags.SF := v2.svalue < 0;
+    $flags.CF := v2.uvalue < v1.uvalue;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1320,12 +1320,12 @@ pattern {
 } code {
     renew $1 as v1;
     commit v1;
-    $flags.ZF = v1.value == 0;
-    $flags.SF = v1.svalue < 0;
-    $flags.CF = 0;
-    $flags.OF = 0;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v1.value == 0;
+    $flags.SF := v1.svalue < 0;
+    $flags.CF := 0;
+    $flags.OF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -1343,12 +1343,12 @@ pattern {
 } code {
     renew $1 as v1;
     commit v1;
-    $flags.SF = 0;
-    $flags.ZF = v1.value == 0;
-    $flags.OF = 0;
-    $flags.CF = 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.SF := 0;
+    $flags.ZF := v1.value == 0;
+    $flags.OF := 0;
+    $flags.CF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 pattern {
@@ -1356,12 +1356,12 @@ pattern {
 } code {
     renew $1 as v1;
     commit v1;
-    $flags.ZF = v1.value == 0;
-    $flags.SF = v1.svalue < 0;
-    $flags.CF = 0;
-    $flags.OF = 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.ZF := v1.value == 0;
+    $flags.SF := v1.svalue < 0;
+    $flags.CF := 0;
+    $flags.OF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 pattern {
@@ -1406,13 +1406,13 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value - 3;
+    v2.value := v1.value - 3;
     commit v2;
-    $flags.SF = v2.svalue < 0;
-    $flags.ZF = v2.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1423,13 +1423,13 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value - 2;
+    v2.value := v1.value - 2;
     commit v2;
-    $flags.SF = v2.svalue < 0;
-    $flags.ZF = v2.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1441,13 +1441,13 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value + 3;
+    v2.value := v1.value + 3;
     commit v2;
-    $flags.SF = v2.svalue < 0;
-    $flags.ZF = v2.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1458,13 +1458,13 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value + 2;
+    v2.value := v1.value + 2;
     commit v2;
-    $flags.SF = v2.svalue < 0;
-    $flags.ZF = v2.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1476,12 +1476,12 @@ pattern {
     renew $cpu.eax as v1;
     commit v1;
     renew v1 as v2;
-    v2.svalue = $fn.abs(v1.svalue);
+    v2.svalue := $fn.abs(v1.svalue);
     commit v2;
-    $cpu.dl.value = unknown;
-    $cpu.dh.value = unknown;
-    $cpu.dx.value = unknown;
-    $cpu.edx.value = unknown;
+    $cpu.dl.value := unknown;
+    $cpu.dh.value := unknown;
+    $cpu.dx.value := unknown;
+    $cpu.edx.value := unknown;
 }
 
 pattern {
@@ -1495,7 +1495,7 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value + $2;
+    v2.value := v1.value + $2;
     commit v2;
     update $1;
 }
@@ -1506,7 +1506,7 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value - $2;
+    v2.value := v1.value - $2;
     commit v2;
     update $1;
 }
@@ -1527,9 +1527,9 @@ $label.1:
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
-    v3.uvalue = 0;
+    v3.uvalue := 0;
     commit v3;
-    $1.value = unknown;
+    $1.value := unknown;
     update $1;
 }
 
@@ -1548,9 +1548,9 @@ $label.1:
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
-    v3.uvalue = 0;
+    v3.uvalue := 0;
     commit v3;
-    $1.value = unknown;
+    $1.value := unknown;
     update $1;
 }
 
@@ -1570,9 +1570,9 @@ $label.1:
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
-    v3.uvalue = 0;
+    v3.uvalue := 0;
     commit v3;
-    $1.value = unknown;
+    $1.value := unknown;
     update $1;
 }
 
@@ -1591,9 +1591,9 @@ $label.1:
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
-    v3.uvalue = 0;
+    v3.uvalue := 0;
     commit v3;
-    $1.value = unknown;
+    $1.value := unknown;
     update $1;
 }
 
@@ -1610,10 +1610,10 @@ $label.1:
     renew $cpu.eax as v1;
     commit v1;
     renew v1 as v2;
-    v2.uvalue = $fn.wcslen(v1.pvalue);
+    v2.uvalue := $fn.wcslen(v1.pvalue);
     commit v2;
     renew $1 as v3;
-    v3.value = unknown;
+    v3.value := unknown;
     commit v3;
     update $cpu.eax;
     assert($cpu.cl.value == 0);
@@ -1633,29 +1633,29 @@ pattern {
     renew $cpu.ah as v2;
     commit v2;
     new v3;
-    v3.bits = 32;
-    v3.value = (v1.value & 0x0F) >= 10 || $flags.AF == 1;
+    v3.bits := 32;
+    v3.value := (v1.value & 0x0F) >= 10 || $flags.AF == 1;
     commit v3;
     if (v3.value) {
         renew v1 as v4;
-        v4.value = (v1.value + 6) & 0x0F;
+        v4.value := (v1.value + 6) & 0x0F;
         commit v4;
         renew v2 as v5;
-        v5.value = v2.value + 1;
+        v5.value := v2.value + 1;
         commit v5;
-        $flags.AF = 1;
-        $flags.CF = 1;
+        $flags.AF := 1;
+        $flags.CF := 1;
     } else {
         renew v1 as v6;
-        v6.value = (v1.value & 0x0F);
+        v6.value := (v1.value & 0x0F);
         commit v6;
-        $flags.AF = 0;
-        $flags.CF = 0;
+        $flags.AF := 0;
+        $flags.CF := 0;
     }
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.PF := unknown;
     update $cpu.al, $cpu.ah;
 }
 
@@ -1667,18 +1667,18 @@ pattern {
     renew $cpu.ah as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = v1.value + v2.value * 10;
+    v3.value := v1.value + v2.value * 10;
     commit v3;
     renew v2 as v4;
-    v4.value = 0;
+    v4.value := 0;
     commit v4;
     assert($cpu.ah.value == 0);
-    $flags.ZF = v3.value == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.ZF := v3.value == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.al, $cpu.ah;
 }
 
@@ -1696,17 +1696,17 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = v1.value / $1.value;
+    v3.value := v1.value / $1.value;
     commit v3;
     renew v2 as v4;
-    v4.value = v1.value % $1.value;
+    v4.value := v1.value % $1.value;
     commit v4;
-    $flags.ZF = v4.value == 0;
-    $flags.SF = v4.svalue < 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.ZF := v4.value == 0;
+    $flags.SF := v4.svalue < 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.al, $cpu.ah;
 }
 
@@ -1718,29 +1718,29 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     new v3;
-    v3.bits = 32;
-    v3.value = (v2.value & 0F) >= 10 || $flags.AF == 1;
+    v3.bits := 32;
+    v3.value := (v2.value & 0F) >= 10 || $flags.AF == 1;
     commit v3;
     if (v3.value) {
         renew v2 as v4;
-        v4.value = ((v2.value - 6) & 0x0F);
+        v4.value := ((v2.value - 6) & 0x0F);
         commit v4;
         renew v1 as v5;
-        v5.value = v1.value - 1;
+        v5.value := v1.value - 1;
         commit v5;
-        $flags.AF = 1;
-        $flags.CF = 1;
+        $flags.AF := 1;
+        $flags.CF := 1;
     } else {
         renew v2 as v6;
-        v6.value = (v1.value & 0x0F);
+        v6.value := (v1.value & 0x0F);
         commit v6;
-        $flags.AF = 0;
-        $flags.CF = 0;
+        $flags.AF := 0;
+        $flags.CF := 0;
     }
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.PF := unknown;
     update $cpu.al, $cpu.ah;
 }
 
@@ -1752,14 +1752,14 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = v1.value + v2.value + $flags.CF;
+    v3.value := v1.value + v2.value + $flags.CF;
     commit v3;
-    $flags.ZF = v3.value == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.CF = v3.uvalue < v1.uvalue;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v3.value == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.CF := v3.uvalue < v1.uvalue;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1771,14 +1771,14 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = v1.value + v2.value;
+    v3.value := v1.value + v2.value;
     commit v3;
-    $flags.ZF = v3.value == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.CF = v3.uvalue < v1.uvalue;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v3.value == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.CF := v3.uvalue < v1.uvalue;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1790,14 +1790,14 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = (v1.value & v2.value);
+    v3.value := (v1.value & v2.value);
     commit v3;
-    $flags.ZF = v3.value == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.CF = 0;
-    $flags.OF = 0;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v3.value == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.CF := 0;
+    $flags.OF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1810,7 +1810,7 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = $fn._bswap(v1.value);
+    v2.value := $fn._bswap(v1.value);
     commit v2;
     update $1;
 }
@@ -1823,13 +1823,13 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = (v1.value & (1 << v2.value));
+    v3.value := (v1.value & (1 << v2.value));
     commit v3;
-    $flags.CF = v3.value != 0;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := v3.value != 0;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1841,22 +1841,22 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = (v1.value & (1 << v2.value));
+    v3.value := (v1.value & (1 << v2.value));
     commit v3;
-    $flags.CF = v3.value != 0;
+    $flags.CF := v3.value != 0;
     if (v3.value) {
         renew v1 as v2;
-        v2.value = v1.value & ~(1 << $2.value);
+        v2.value := v1.value & ~(1 << $2.value);
         commit v2;
     } else {
         renew v1 as v3;
-        v3.value = v1.value | (1 << $2.value);
+        v3.value := v1.value | (1 << $2.value);
         commit v3;
     }
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1868,16 +1868,16 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = (v1.value & (1 << v2.value));
+    v3.value := (v1.value & (1 << v2.value));
     commit v3;
-    $flags.CF = v3.value != 0;
+    $flags.CF := v3.value != 0;
     new v3 as v4;
-    v4.value = (v1.value & ~(1 << $2.value));
+    v4.value := (v1.value & ~(1 << $2.value));
     commit v2;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1889,16 +1889,16 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = (v1.value & (1 << v2.value));
+    v3.value := (v1.value & (1 << v2.value));
     commit v3;
-    $flags.CF = v3.value != 0;
+    $flags.CF := v3.value != 0;
     new v3 as v4;
-    v4.value = (v1.value | (1 << v2.value));
+    v4.value := (v1.value | (1 << v2.value));
     commit v4;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -1916,7 +1916,7 @@ pattern {
     renew $cpu.al as v1;
     commit v1;
     renew $cpu.ax as v2;
-    v2.svalue = v1.svalue;
+    v2.svalue := v1.svalue;
     commit v2;
     update $cpu.ax;
 }
@@ -1927,7 +1927,7 @@ pattern {
     renew $cpu.ax as v1;
     commit v1;
     renew $cpu.eax as v2;
-    v2.svalue = v1.svalue;
+    v2.svalue := v1.svalue;
     commit v2;
     update $cpu.eax;
 }
@@ -1935,13 +1935,13 @@ pattern {
 pattern {
     asm clc
 } code {
-    $flags.CF = 0;
+    $flags.CF := 0;
 }
 
 pattern {
     asm cld;
 } code {
-    $flags.DF = 0;
+    $flags.DF := 0;
 }
 
 // clflush($m8);
@@ -1949,7 +1949,7 @@ pattern {
 pattern {
     asm cli;
 } code {
-    $flags.IF = 0;
+    $flags.IF := 0;
 }
 
 // clts();
@@ -1958,9 +1958,9 @@ pattern {
     asm cmc;
 } code {
     if ($flags.CF == 1) {
-        $flags.CF = 0;
+        $flags.CF := 0;
     } else {
-        $flags.CF = 1;
+        $flags.CF := 1;
     }
 }
 
@@ -1969,7 +1969,7 @@ pattern {
 } code {
     if ($flags.CF == 0 && $flags.ZF == 0)) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -1980,7 +1980,7 @@ pattern {
 } code {
     if ($flags.CF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -1991,7 +1991,7 @@ pattern {
 } code {
     if ($flags.CF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2002,7 +2002,7 @@ pattern {
 } code {
     if ($flags.CF == 1 || flags.ZF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2013,7 +2013,7 @@ pattern {
 } code {
     if ($flags.CF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2024,7 +2024,7 @@ pattern {
 } code {
     if ($flags.ZF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2035,7 +2035,7 @@ pattern {
 } code {
     if ($flags.ZF == 0 && $flags.SFeqOF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2046,7 +2046,7 @@ pattern {
 } code {
     if ($flags.SFeqOF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2057,7 +2057,7 @@ pattern {
 } code {
     if ($flags.SFeqOF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2068,7 +2068,7 @@ pattern {
 } code {
     if ($flags.ZF == 1 || $flags.SFeqOF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2079,7 +2079,7 @@ pattern {
 } code {
     if ($flags.CF == 1 || $flags.ZF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2090,7 +2090,7 @@ pattern {
 } code {
     if ($flags.CF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2101,7 +2101,7 @@ pattern {
 } code {
     if ($flags.CF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2112,7 +2112,7 @@ pattern {
 } code {
     if ($flags.CF == 0 && $flags.ZF == 0)) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2123,7 +2123,7 @@ pattern {
 } code {
     if ($flags.CF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2134,7 +2134,7 @@ pattern {
 } code {
     if ($flags.ZF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2145,7 +2145,7 @@ pattern {
 } code {
     if ($flags.ZF == 1 || $flags.SFeqOF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2156,7 +2156,7 @@ pattern {
 } code {
     if ($flags.SFeqOF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2167,7 +2167,7 @@ pattern {
 } code {
     if ($flags.SFeqOF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2178,7 +2178,7 @@ pattern {
 } code {
     if ($flags.ZF == 0 && $flags.SFeqOF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2189,7 +2189,7 @@ pattern {
 } code {
     if ($flags.OF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2200,7 +2200,7 @@ pattern {
 } code {
     if ($flags.PF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2211,7 +2211,7 @@ pattern {
 } code {
     if ($flags.SF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2222,7 +2222,7 @@ pattern {
 } code {
     if ($flags.ZF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2233,7 +2233,7 @@ pattern {
 } code {
     if ($flags.OF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2244,7 +2244,7 @@ pattern {
 } code {
     if ($flags.PF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2255,7 +2255,7 @@ pattern {
 } code {
     if ($flags.PF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2266,7 +2266,7 @@ pattern {
 } code {
     if ($flags.PF == 0) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2277,7 +2277,7 @@ pattern {
 } code {
     if ($flags.SF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2288,7 +2288,7 @@ pattern {
 } code {
     if ($flags.ZF == 1) {
         renew $1 as v1;
-        v1.value = $2.value;
+        v1.value := $2.value;
         commit v1;
         update $1;
     }
@@ -2301,50 +2301,50 @@ pattern {
     commit v1;
     renew $2 as v2;
     commit v2;
-    $flags.ZF = v1.value == v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.OF = unknown;
-    $flags.CF = v1.uvalue < v2.uvalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v1.value == v2.value;
+    $flags.SF := v1.svalue < v2.svalue;
+    $flags.OF := unknown;
+    $flags.CF := v1.uvalue < v2.uvalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
     asm cmpsb;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x8);
+    v1.type := $type.ptr($type.x8);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x8);
+    v2.type := $type.ptr($type.x8);
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 8;
+    v3.addr := v1.pvalue;
+    v3.bits := 8;
     commit v3;
     new v4;
-    v4.addr = v2.pvalue;
-    v3.bits = 8;
+    v4.addr := v2.pvalue;
+    v3.bits := 8;
     commit v4;
-    $flags.ZF = v3.value == v4.value;
-    $flags.SF = v3.svalue < v4.svalue;
-    $flags.OF = unknown;
-    $flags.CF = v3.uvalue < v4.uvalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v3.value == v4.value;
+    $flags.SF := v3.svalue < v4.svalue;
+    $flags.OF := unknown;
+    $flags.CF := v3.uvalue < v4.uvalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     if ($flags.DF == 0) {
         renew v1 as v5;
-        v5.pvalue = v1.pvalue + 1;
+        v5.pvalue := v1.pvalue + 1;
         commit v5;
         renew v2 as v6;
-        v6.pvalue = v2.pvalue + 1;
+        v6.pvalue := v2.pvalue + 1;
         commit v6;
     } else {
         renew v1 as v5;
-        v5.pvalue = v1.pvalue - 1;
+        v5.pvalue := v1.pvalue - 1;
         commit v5;
         renew v2 as v6;
-        v6.pvalue = v2.pvalue - 1;
+        v6.pvalue := v2.pvalue - 1;
         commit v6;
     }
     update $cpu.edi;
@@ -2355,38 +2355,38 @@ pattern {
     asm cmpsw;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x16);
+    v1.type := $type.ptr($type.x16);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x16);
+    v2.type := $type.ptr($type.x16);
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 16;
+    v3.addr := v1.pvalue;
+    v3.bits := 16;
     commit v3;
     new v4;
-    v4.addr = v2.pvalue;
-    v3.bits = 16;
+    v4.addr := v2.pvalue;
+    v3.bits := 16;
     commit v4;
-    $flags.ZF = v3.value == v4.value;
-    $flags.SF = v3.svalue < v4.svalue;
-    $flags.OF = unknown;
-    $flags.CF = v3.uvalue < v4.uvalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v3.value == v4.value;
+    $flags.SF := v3.svalue < v4.svalue;
+    $flags.OF := unknown;
+    $flags.CF := v3.uvalue < v4.uvalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     if ($flags.DF == 0) {
         renew v1 as v5;
-        v5.pvalue = v1.pvalue + 2;
+        v5.pvalue := v1.pvalue + 2;
         commit v5;
         renew v2 as v6;
-        v6.pvalue = v2.pvalue + 2;
+        v6.pvalue := v2.pvalue + 2;
         commit v6;
     } else {
         renew v1 as v5;
-        v5.pvalue = v1.pvalue - 2;
+        v5.pvalue := v1.pvalue - 2;
         commit v5;
         renew v2 as v6;
-        v6.pvalue = v2.pvalue - 2;
+        v6.pvalue := v2.pvalue - 2;
         commit v6;
     }
     update $cpu.edi;
@@ -2397,38 +2397,38 @@ pattern {
     asm cmpsd;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x32);
+    v1.type := $type.ptr($type.x32);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x32);
+    v2.type := $type.ptr($type.x32);
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 32;
+    v3.addr := v1.pvalue;
+    v3.bits := 32;
     commit v3;
     new v4;
-    v4.addr = v2.pvalue;
-    v3.bits = 32;
+    v4.addr := v2.pvalue;
+    v3.bits := 32;
     commit v4;
-    $flags.ZF = v3.value == v4.value;
-    $flags.SF = v3.svalue < v4.svalue;
-    $flags.OF = unknown;
-    $flags.CF = v3.uvalue < v4.uvalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.ZF := v3.value == v4.value;
+    $flags.SF := v3.svalue < v4.svalue;
+    $flags.OF := unknown;
+    $flags.CF := v3.uvalue < v4.uvalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     if ($flags.DF == 0) {
         renew v1 as v5;
-        v5.pvalue = v1.pvalue + 4;
+        v5.pvalue := v1.pvalue + 4;
         commit v5;
         renew v2 as v6;
-        v6.pvalue = v2.pvalue + 4;
+        v6.pvalue := v2.pvalue + 4;
         commit v6;
     } else {
         renew v1 as v5;
-        v5.pvalue = v1.pvalue - 4;
+        v5.pvalue := v1.pvalue - 4;
         commit v5;
         renew v2 as v6;
-        v6.pvalue = v2.pvalue - 4;
+        v6.pvalue := v2.pvalue - 4;
         commit v6;
     }
     update $cpu.edi;
@@ -2439,10 +2439,10 @@ pattern {
     asm repe_cmpsb;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x8);
+    v1.type := $type.ptr($type.x8);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x8);
+    v2.type := $type.ptr($type.x8);
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -2454,45 +2454,45 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 8;
+        v4.addr := v1.pvalue;
+        v4.bits := 8;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.bits = 8;
+        v5.addr := v2.pvalue;
+        v5.bits := 8;
         commit v5;
-        $flags.SF = v4.svalue < v5.svalue;
-        $flags.CF = v4.uvalue < v5.uvalue;
-        $flags.ZF = v4.value == v5.value;
+        $flags.SF := v4.svalue < v5.svalue;
+        $flags.CF := v4.uvalue < v5.uvalue;
+        $flags.ZF := v4.value == v5.value;
         if ($flags.ZF == 0) {
             break;
         }
         if ($flags.DF == 0) {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue + 1;
+            v6.pvalue := v2.pvalue + 1;
             commit v6;
         } else {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue - 1;
+            v6.pvalue := v2.pvalue - 1;
             commit v6;
         }
         renew v3 as v7;
-        v7.uvalue = v3.uvalue - 1;
+        v7.uvalue := v3.uvalue - 1;
         commit v7;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.OF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.OF := unknown;
 }
 
 pattern {
     asm repe_cmpsw;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x16);
+    v1.type := $type.ptr($type.x16);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x16);
+    v2.type := $type.ptr($type.x16);
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -2504,45 +2504,45 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
+        v4.addr := v1.pvalue;
+        v4.bits := 16;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.bits = 16;
+        v5.addr := v2.pvalue;
+        v5.bits := 16;
         commit v5;
-        $flags.SF = v4.svalue < v5.svalue;
-        $flags.CF = v4.uvalue < v5.uvalue;
-        $flags.ZF = v4.value == v5.value;
+        $flags.SF := v4.svalue < v5.svalue;
+        $flags.CF := v4.uvalue < v5.uvalue;
+        $flags.ZF := v4.value == v5.value;
         if ($flags.ZF == 0) {
             break;
         }
         if ($flags.DF == 0) {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue + 2;
+            v6.pvalue := v2.pvalue + 2;
             commit v6;
         } else {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue - 2;
+            v6.pvalue := v2.pvalue - 2;
             commit v6;
         }
         renew v3 as v7;
-        v7.uvalue = v3.uvalue - 1;
+        v7.uvalue := v3.uvalue - 1;
         commit v7;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.OF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.OF := unknown;
 }
 
 pattern {
     asm repe_cmpsd;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x32);
+    v1.type := $type.ptr($type.x32);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x32);
+    v2.type := $type.ptr($type.x32);
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -2554,49 +2554,49 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
+        v4.addr := v1.pvalue;
+        v4.bits := 32;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.bits = 32;
+        v5.addr := v2.pvalue;
+        v5.bits := 32;
         commit v5;
-        $flags.SF = v4.svalue < v5.svalue;
-        $flags.CF = v4.uvalue < v5.uvalue;
-        $flags.ZF = v4.value == v5.value;
+        $flags.SF := v4.svalue < v5.svalue;
+        $flags.CF := v4.uvalue < v5.uvalue;
+        $flags.ZF := v4.value == v5.value;
         if ($flags.ZF == 0) {
             break;
         }
         if ($flags.DF == 0) {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue + 4;
+            v6.pvalue := v2.pvalue + 4;
             commit v6;
         } else {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue - 4;
+            v6.pvalue := v2.pvalue - 4;
             commit v6;
         }
         renew v3 as v7;
-        v7.uvalue = v3.uvalue - 1;
+        v7.uvalue := v3.uvalue - 1;
         commit v7;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.OF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.OF := unknown;
 }
 
-alias asm repz_cmpsb = asm repe_cmpsb;
-alias asm repz_cmpsw = asm repe_cmpsw;
-alias asm repz_cmpsd = asm repe_cmpsd;
+alias asm repz_cmpsb := asm repe_cmpsb;
+alias asm repz_cmpsw := asm repe_cmpsw;
+alias asm repz_cmpsd := asm repe_cmpsd;
 
 pattern {
     asm repne_cmpsb;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x8);
+    v1.type := $type.ptr($type.x8);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x8);
+    v2.type := $type.ptr($type.x8);
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -2608,45 +2608,45 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 8;
+        v4.addr := v1.pvalue;
+        v4.bits := 8;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.bits = 8;
+        v5.addr := v2.pvalue;
+        v5.bits := 8;
         commit v5;
-        $flags.SF = v4.svalue < v5.svalue;
-        $flags.CF = v4.uvalue < v5.uvalue;
-        $flags.ZF = v4.value == v5.value;
+        $flags.SF := v4.svalue < v5.svalue;
+        $flags.CF := v4.uvalue < v5.uvalue;
+        $flags.ZF := v4.value == v5.value;
         if ($flags.ZF == 1) {
             break;
         }
         if ($flags.DF == 0) {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue + 1;
+            v6.pvalue := v2.pvalue + 1;
             commit v6;
         } else {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue - 1;
+            v6.pvalue := v2.pvalue - 1;
             commit v6;
         }
         renew v3 as v7;
-        v7.uvalue = v3.uvalue - 1;
+        v7.uvalue := v3.uvalue - 1;
         commit v7;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.OF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.OF := unknown;
 }
 
 pattern {
     asm repne_cmpsw;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x16);
+    v1.type := $type.ptr($type.x16);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x16);
+    v2.type := $type.ptr($type.x16);
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -2658,45 +2658,45 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
+        v4.addr := v1.pvalue;
+        v4.bits := 16;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.bits = 16;
+        v5.addr := v2.pvalue;
+        v5.bits := 16;
         commit v5;
-        $flags.SF = v4.svalue < v5.svalue;
-        $flags.CF = v4.uvalue < v5.uvalue;
-        $flags.ZF = v4.value == v5.value;
+        $flags.SF := v4.svalue < v5.svalue;
+        $flags.CF := v4.uvalue < v5.uvalue;
+        $flags.ZF := v4.value == v5.value;
         if ($flags.ZF == 1) {
             break;
         }
         if ($flags.DF == 0) {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue + 2;
+            v6.pvalue := v2.pvalue + 2;
             commit v6;
         } else {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue - 2;
+            v6.pvalue := v2.pvalue - 2;
             commit v6;
         }
         renew v3 as v7;
-        v7.uvalue = v3.uvalue - 1;
+        v7.uvalue := v3.uvalue - 1;
         commit v7;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.OF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.OF := unknown;
 }
 
 pattern {
     asm repne_cmpsd;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x32);
+    v1.type := $type.ptr($type.x32);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x32);
+    v2.type := $type.ptr($type.x32);
     commit v2;
     renew $cpu.ecx as v3;
     commit v3;
@@ -2708,40 +2708,40 @@ pattern {
         join v6 to v1;
         join v7 to v2;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
+        v4.addr := v1.pvalue;
+        v4.bits := 32;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.bits = 32;
+        v5.addr := v2.pvalue;
+        v5.bits := 32;
         commit v5;
-        $flags.SF = v4.svalue < v5.svalue;
-        $flags.CF = v4.uvalue < v5.uvalue;
-        $flags.ZF = v4.value == v5.value;
+        $flags.SF := v4.svalue < v5.svalue;
+        $flags.CF := v4.uvalue < v5.uvalue;
+        $flags.ZF := v4.value == v5.value;
         if ($flags.ZF == 1) {
             break;
         }
         if ($flags.DF == 0) {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue + 4;
+            v6.pvalue := v2.pvalue + 4;
             commit v6;
         } else {
             renew v2 as v6;
-            v6.pvalue = v2.pvalue - 4;
+            v6.pvalue := v2.pvalue - 4;
             commit v6;
         }
         renew v3 as v7;
-        v7.uvalue = v3.uvalue - 1;
+        v7.uvalue := v3.uvalue - 1;
         commit v7;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.OF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.OF := unknown;
 }
 
-alias asm repnz_cmpsb = asm repne_cmpsb;
-alias asm repnz_cmpsw = asm repne_cmpsw;
-alias asm repnz_cmpsd = asm repne_cmpsd;
+alias asm repnz_cmpsb := asm repne_cmpsb;
+alias asm repnz_cmpsw := asm repne_cmpsw;
+alias asm repnz_cmpsd := asm repne_cmpsd;
 
 pattern {
     asm cmpxchg $1, $2;
@@ -2751,24 +2751,24 @@ pattern {
     commit v1;
     renew $1 as v2;
     commit v2;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.SF := v1.svalue < v2.svalue;
+    $flags.CF := v1.uvalue < v2.uvalue;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
     if (v1.value == v2.value) {
         renew $2 as v3;
         commit v3;
         renew $1 as v4;
-        v4.value = v3.value;
+        v4.value := v3.value;
         commit v4;
-        $flags.ZF = 1;
+        $flags.ZF := 1;
     } else {
         renew $1 as v5;
         commit v5;
         renew $cpu.eax as v6;
-        v6.value = v5.value;
+        v6.value := v5.value;
         commit v6;
-        $flags.ZF = 0;
+        $flags.ZF := 0;
     }
 }
 
@@ -2780,24 +2780,24 @@ pattern {
     commit v1;
     renew $1 as v2;
     commit v2;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.SF := v1.svalue < v2.svalue;
+    $flags.CF := v1.uvalue < v2.uvalue;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
     if (v1.value == v2.value) {
         renew $2 as v3;
         commit v3;
         renew $1 as v4;
-        v4.value = v3.value;
+        v4.value := v3.value;
         commit v4;
-        $flags.ZF = 1;
+        $flags.ZF := 1;
     } else {
         renew $1 as v5;
         commit v5;
         renew $cpu.ax as v6;
-        v6.value = v5.value;
+        v6.value := v5.value;
         commit v6;
-        $flags.ZF = 0;
+        $flags.ZF := 0;
     }
 }
 
@@ -2809,24 +2809,24 @@ pattern {
     commit v1;
     renew $1 as v2;
     commit v2;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.SF := v1.svalue < v2.svalue;
+    $flags.CF := v1.uvalue < v2.uvalue;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
     if (v1.value == v2.value) {
         renew $2 as v3;
         commit v3;
         renew $1 as v4;
-        v4.value = v3.value;
+        v4.value := v3.value;
         commit v4;
-        $flags.ZF = 1;
+        $flags.ZF := 1;
     } else {
         renew $1 as v5;
         commit v5;
         renew $cpu.al as v6;
-        v6.value = v5.value;
+        v6.value := v5.value;
         commit v6;
-        $flags.ZF = 0;
+        $flags.ZF := 0;
     }
 }
 
@@ -2841,7 +2841,7 @@ pattern {
     renew $cpu.ax as v1;
     commit v1;
     renew $cpu.dx_ax as v2;
-    v2.svalue = v1.svalue;
+    v2.svalue := v1.svalue;
     commit v2;
 }
 
@@ -2851,7 +2851,7 @@ pattern {
     renew $cpu.eax as v1;
     commit v1;
     renew $cpu.edx_eax as v2;
-    v2.svalue = v1.svalue;
+    v2.svalue := v1.svalue;
     commit v2;
 }
 
@@ -2861,13 +2861,13 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value - 1;
+    v2.value := v1.value - 1;
     commit v2;
-    $flags.SF = v2.svalue < 0;
-    $flags.ZF = v2.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -2879,17 +2879,17 @@ pattern {
     renew $cpu.edx_eax as v2;
     commit v2;
     renew $cpu.edx as v3;
-    v3.uvalue = v2.uvalue % v1.uvalue;
+    v3.uvalue := v2.uvalue % v1.uvalue;
     commit v3;
     renew $cpu.eax as v4;
-    v4.uvalue = v2.uvalue / v1.uvalue;
+    v4.uvalue := v2.uvalue / v1.uvalue;
     commit v4;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -2901,17 +2901,17 @@ pattern {
     renew $cpu.dx_ax as v2;
     commit v2;
     renew $cpu.dx as v3;
-    v3.uvalue = v2.uvalue % v1.uvalue;
+    v3.uvalue := v2.uvalue % v1.uvalue;
     commit v3;
     renew $cpu.ax as v4;
-    v4.uvalue = v2.uvalue / v1.uvalue;
+    v4.uvalue := v2.uvalue / v1.uvalue;
     commit v4;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -2923,17 +2923,17 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.ah as v3;
-    v3.uvalue = v2.uvalue % v1.uvalue;
+    v3.uvalue := v2.uvalue % v1.uvalue;
     commit v3;
     renew $cpu.al as v4;
-    v4.uvalue = v2.uvalue / v1.uvalue;
+    v4.uvalue := v2.uvalue / v1.uvalue;
     commit v4;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 // asm enter $1, $2;
@@ -2949,17 +2949,17 @@ pattern {
     renew $cpu.edx_eax as v2;
     commit v2;
     renew $cpu.edx as v3;
-    v3.svalue = v2.svalue % v1.svalue;
+    v3.svalue := v2.svalue % v1.svalue;
     commit v3;
     renew $cpu.eax as v4;
-    v4.svalue = v2.svalue / v1.svalue;
+    v4.svalue := v2.svalue / v1.svalue;
     commit v4;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -2971,17 +2971,17 @@ pattern {
     renew $cpu.dx_ax as v2;
     commit v2;
     renew $cpu.dx as v3;
-    v3.svalue = v2.svalue % v1.svalue;
+    v3.svalue := v2.svalue % v1.svalue;
     commit v3;
     renew $cpu.ax as v4;
-    v4.svalue = v2.svalue / v1.svalue;
+    v4.svalue := v2.svalue / v1.svalue;
     commit v4;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -2993,17 +2993,17 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.ah as v3;
-    v3.svalue = v2.svalue % v1.svalue;
+    v3.svalue := v2.svalue % v1.svalue;
     commit v3;
     renew $cpu.al as v4;
-    v4.svalue = v2.svalue / v1.svalue;
+    v4.svalue := v2.svalue / v1.svalue;
     commit v4;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -3015,14 +3015,14 @@ pattern {
     renew $cpu.eax as v2;
     commit v2;
     renew $cpu.eax_eax as v3;
-    v3.svalue = v2.svalue * v1.svalue;
+    v3.svalue := v2.svalue * v1.svalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -3034,14 +3034,14 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.ax_ax as v3;
-    v3.svalue = v2.svalue * v1.svalue;
+    v3.svalue := v2.svalue * v1.svalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -3052,14 +3052,14 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.svalue = v1.svalue * v2.svalue;
+    v3.svalue := v1.svalue * v2.svalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -3070,14 +3070,14 @@ pattern {
     renew $3 as v2;
     commit v2;
     renew $1 as v3;
-    v3.svalue = v1.svalue * v2.svalue;
+    v3.svalue := v1.svalue * v2.svalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 // asm in $dest, $src;
@@ -3088,13 +3088,13 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value = v1.value + 1;
+    v2.value := v1.value + 1;
     commit v2;
-    $flags.SF = v2.svalue < 0;
-    $flags.ZF = v2.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 // insb();
@@ -3382,8 +3382,8 @@ pattern {
     asm lea $1, $2;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.value = $2.addr;
+    v1.addr := $1.addr;
+    v1.value := $2.addr;
     commit v1;
 }
 
@@ -3398,18 +3398,18 @@ pattern {
     asm lodsb;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x8);
+    v1.type := $type.ptr($type.x8);
     commit v1;
     renew $cpu.al as v2;
-    v2.value = *v1.pvalue;
+    v2.value := *v1.pvalue;
     commit v2;
     if ($flags.DF == 0) {
         renew v1 as v3;
-        v3.pvalue = v1.pvalue + 1;
+        v3.pvalue := v1.pvalue + 1;
         commit v3;
     } else {
         renew v1 as v3;
-        v3.pvalue = v1.pvalue - 1;
+        v3.pvalue := v1.pvalue - 1;
         commit v3;
     }
     update $cpu.al;
@@ -3420,18 +3420,18 @@ pattern {
     asm lodsw;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x16);
+    v1.type := $type.ptr($type.x16);
     commit v1;
     renew $cpu.ax as v2;
-    v2.value = *v1.pvalue;
+    v2.value := *v1.pvalue;
     commit v2;
     if ($flags.DF == 0) {
         renew v1 as v3;
-        v3.pvalue = v1.pvalue + 2;
+        v3.pvalue := v1.pvalue + 2;
         commit v3;
     } else {
         renew v1 as v3;
-        v3.pvalue = v1.pvalue - 2;
+        v3.pvalue := v1.pvalue - 2;
         commit v3;
     }
     update $cpu.ax;
@@ -3442,18 +3442,18 @@ pattern {
     asm lodsd;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x32);
+    v1.type := $type.ptr($type.x32);
     commit v1;
     renew $cpu.eax as v2;
-    v2.value = *v1.pvalue;
+    v2.value := *v1.pvalue;
     commit v2;
     if ($flags.DF == 0) {
         renew v1 as v3;
-        v3.pvalue = v1.pvalue + 4;
+        v3.pvalue := v1.pvalue + 4;
         commit v3;
     } else {
         renew v1 as v3;
-        v3.pvalue = v1.pvalue - 4;
+        v3.pvalue := v1.pvalue - 4;
         commit v3;
     }
     update $cpu.ax;
@@ -3464,7 +3464,7 @@ pattern {
     asm rep_lodsb;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x8);
+    v1.type := $type.ptr($type.x8);
     commit v1;
     renew $cpu.rcx as v2;
     commit v2;
@@ -3474,26 +3474,26 @@ pattern {
             break;
         }
         renew $cpu.al as v3;
-        v3.value = *v1.pvalue;
+        v3.value := *v1.pvalue;
         commit v3;
         join v4 to v1;
         if ($flags.DF == 0) {
             renew v1 as v4;
-            v4.pvalue = v4.pvalue + 1;
+            v4.pvalue := v4.pvalue + 1;
             commit v4;
         } else {
             renew v1 as v4;
-            v4.pvalue = v4.pvalue - 1;
+            v4.pvalue := v4.pvalue - 1;
             commit v4;
         }
         renew v2 as v5;
-        v5.uvalue = v2.uvalue - 1;
+        v5.uvalue := v2.uvalue - 1;
         commit v5;
     }
     update $cpu.al;
     update $cpu.esi;
     renew v2 as v6;
-    v6.value = 0;
+    v6.value := 0;
     commit v6;
 }
 
@@ -3501,7 +3501,7 @@ pattern {
     asm rep_lodsw;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x16);
+    v1.type := $type.ptr($type.x16);
     commit v1;
     renew $cpu.rcx as v2;
     commit v2;
@@ -3511,26 +3511,26 @@ pattern {
             break;
         }
         renew $cpu.ax as v3;
-        v3.value = *v1.pvalue;
+        v3.value := *v1.pvalue;
         commit v3;
         join v4 to v1;
         if ($flags.DF == 0) {
             renew v1 as v4;
-            v4.pvalue = v4.pvalue + 2;
+            v4.pvalue := v4.pvalue + 2;
             commit v4;
         } else {
             renew v1 as v4;
-            v4.pvalue = v4.pvalue - 2;
+            v4.pvalue := v4.pvalue - 2;
             commit v4;
         }
         renew v2 as v5;
-        v5.uvalue = v2.uvalue - 1;
+        v5.uvalue := v2.uvalue - 1;
         commit v5;
     }
     update $cpu.ax;
     update $cpu.esi;
     renew v2 as v6;
-    v6.value = 0;
+    v6.value := 0;
     commit v6;
 }
 
@@ -3538,7 +3538,7 @@ pattern {
     asm rep_lodsd;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x32);
+    v1.type := $type.ptr($type.x32);
     commit v1;
     renew $cpu.rcx as v2;
     commit v2;
@@ -3548,26 +3548,26 @@ pattern {
             break;
         }
         renew $cpu.eax as v3;
-        v3.value = *v1.pvalue;
+        v3.value := *v1.pvalue;
         commit v3;
         join v4 to v1;
         if ($flags.DF == 0) {
             renew v1 as v4;
-            v4.pvalue = v4.pvalue + 4;
+            v4.pvalue := v4.pvalue + 4;
             commit v4;
         } else {
             renew v1 as v4;
-            v4.pvalue = v4.pvalue - 4;
+            v4.pvalue := v4.pvalue - 4;
             commit v4;
         }
         renew v2 as v5;
-        v5.uvalue = v2.uvalue - 1;
+        v5.uvalue := v2.uvalue - 1;
         commit v5;
     }
     update $cpu.eax;
     update $cpu.esi;
     renew v2 as v6;
-    v6.value = 0;
+    v6.value := 0;
     commit v6;
 }
 
@@ -3636,7 +3636,7 @@ pattern {
     renew $2 as v1;
     commit v1;
     renew $1 as v2;
-    v2.value = v1.value;
+    v2.value := v1.value;
     commit v2;
     assert(v1.value == v2.value);
 }
@@ -3646,37 +3646,37 @@ pattern {
     assert($1.bits == 32);
 } code {
     new v1;
-    v1.addr = $2.addr;
-    v1.bits = 32;
+    v1.addr := $2.addr;
+    v1.bits := 32;
     commit v1;
     new v2;
-    v2.bits = 8;
-    v2.uvalue = (v1 & 0xFF);
+    v2.bits := 8;
+    v2.uvalue := (v1 & 0xFF);
     commit v2;
     new v3;
-    v3.bits = 8;
-    v3.uvalue = ((v1 >> 8) & 0xFF);
+    v3.bits := 8;
+    v3.uvalue := ((v1 >> 8) & 0xFF);
     commit v3;
     new v4;
-    v4.bits = 8;
-    v4.uvalue = ((v1 >> 16) & 0xFF);
+    v4.bits := 8;
+    v4.uvalue := ((v1 >> 16) & 0xFF);
     commit v4;
     new v5;
-    v5.bits = 8;
-    v5.uvalue = ((v1 >> 24) & 0xFF);
+    v5.bits := 8;
+    v5.uvalue := ((v1 >> 24) & 0xFF);
     commit v5;
     new v6;
-    v6.bits = 16;
-    v6.uvalue = ((v2.uvalue << 8) | v3.uvalue)
+    v6.bits := 16;
+    v6.uvalue := ((v2.uvalue << 8) | v3.uvalue)
     commit v6;
     new v7;
-    v7.bits = 16;
-    v7.uvalue = ((v4.uvalue << 8) | v5.uvalue)
+    v7.bits := 16;
+    v7.uvalue := ((v4.uvalue << 8) | v5.uvalue)
     commit v7;
     new v8;
-    v8.addr = $1.addr;
-    v8.bits = 32;
-    v8.uvalue = ((v6.uvalue << 16) | v7.uvalue);
+    v8.addr := $1.addr;
+    v8.bits := 32;
+    v8.uvalue := ((v6.uvalue << 16) | v7.uvalue);
     update $1;
 }
 
@@ -3685,21 +3685,21 @@ pattern {
     assert($1.bits == 16);
 } code {
     new v1;
-    v1.addr = $2.addr;
-    v1.bits = 16;
+    v1.addr := $2.addr;
+    v1.bits := 16;
     commit v1;
     new v2;
-    v2.bits = 8;
-    v2.uvalue = (v1 & 0xFF);
+    v2.bits := 8;
+    v2.uvalue := (v1 & 0xFF);
     commit v2;
     new v3;
-    v3.bits = 8;
-    v3.uvalue = ((v1 >> 8) & 0xFF);
+    v3.bits := 8;
+    v3.uvalue := ((v1 >> 8) & 0xFF);
     commit v3;
     new v4;
-    v4.addr = $1;
-    v4.bits = 16;
-    v4.uvalue = (v3.uvalue | (v2.uvalue << 8));
+    v4.addr := $1;
+    v4.bits := 16;
+    v4.uvalue := (v3.uvalue | (v2.uvalue << 8));
     commit v4;
 }
 
@@ -3709,7 +3709,7 @@ pattern {
     renew $2 as v1;
     commit v1;
     renew $1 as v2;
-    v2.value = v1.value;
+    v2.value := v1.value;
     commit v2;
     assert(v1.value == v2.value);
 }
@@ -3718,33 +3718,33 @@ pattern {
     asm movsb;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x8);
+    v1.type := $type.ptr($type.x8);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x8);
+    v2.type := $type.ptr($type.x8);
     commit v2;
     new v3;
-    v3.addr = v1.pvalue
-    v3.bits = 8;
+    v3.addr := v1.pvalue
+    v3.bits := 8;
     commit v3;
     new v4;
-    v4.addr = v2.pvalue;
-    v4.bits = 8;
-    v4.value = v3.value;
+    v4.addr := v2.pvalue;
+    v4.bits := 8;
+    v4.value := v3.value;
     commit v4;
     if ($flags.DF == 0) {
         renew v1 as v5;
-        v5.value = v1.value + 1;
+        v5.value := v1.value + 1;
         commit v5;
         renew v1 as v6;
-        v6.value = v2.value + 1;
+        v6.value := v2.value + 1;
         commit v6;
     } else {
         renew v1 as v5;
-        v5.value = v1.value - 1;
+        v5.value := v1.value - 1;
         commit v5;
         renew v1 as v6;
-        v6.value = v2.value - 1;
+        v6.value := v2.value - 1;
         commit v6;
     }
     update $cpu.edi;
@@ -3755,33 +3755,33 @@ pattern {
     asm movsw;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x16);
+    v1.type := $type.ptr($type.x16);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x16);
+    v2.type := $type.ptr($type.x16);
     commit v2;
     new v3;
-    v3.addr = v1.pvalue
-    v3.bits = 16;
+    v3.addr := v1.pvalue
+    v3.bits := 16;
     commit v3;
     new v4;
-    v4.addr = v2.pvalue;
-    v4.bits = 16;
-    v4.value = v3.value;
+    v4.addr := v2.pvalue;
+    v4.bits := 16;
+    v4.value := v3.value;
     commit v4;
     if ($flags.DF == 0) {
         renew v1 as v5;
-        v5.value = v1.value + 2;
+        v5.value := v1.value + 2;
         commit v5;
         renew v1 as v6;
-        v6.value = v2.value + 2;
+        v6.value := v2.value + 2;
         commit v6;
     } else {
         renew v1 as v5;
-        v5.value = v1.value - 2;
+        v5.value := v1.value - 2;
         commit v5;
         renew v1 as v6;
-        v6.value = v2.value - 2;
+        v6.value := v2.value - 2;
         commit v6;
     }
     update $cpu.edi;
@@ -3792,33 +3792,33 @@ pattern {
     asm movsd;
 } code {
     renew $cpu.esi as v1;
-    v1.type = $type.ptr($type.x32);
+    v1.type := $type.ptr($type.x32);
     commit v1;
     renew $cpu.edi as v2;
-    v2.type = $type.ptr($type.x32);
+    v2.type := $type.ptr($type.x32);
     commit v2;
     new v3;
-    v3.addr = v1.pvalue
-    v3.bits = 32;
+    v3.addr := v1.pvalue
+    v3.bits := 32;
     commit v3;
     new v4;
-    v4.addr = v2.pvalue;
-    v4.bits = 32;
-    v4.value = v3.value;
+    v4.addr := v2.pvalue;
+    v4.bits := 32;
+    v4.value := v3.value;
     commit v4;
     if ($flags.DF == 0) {
         renew v1 as v5;
-        v5.value = v1.value + 4;
+        v5.value := v1.value + 4;
         commit v5;
         renew v1 as v6;
-        v6.value = v2.value + 4;
+        v6.value := v2.value + 4;
         commit v6;
     } else {
         renew v1 as v5;
-        v5.value = v1.value - 4;
+        v5.value := v1.value - 4;
         commit v5;
         renew v1 as v6;
-        v6.value = v2.value - 4;
+        v6.value := v2.value - 4;
         commit v6;
     }
     update $cpu.edi;
@@ -3837,13 +3837,13 @@ pattern {
     commit v3;
     $fn.memcpy(v2.pvalue, v1.pvalue, v3.uvalue);
     renew v1 as v4;
-    v4.pvalue = v1.pvalue + v3.uvalue;
+    v4.pvalue := v1.pvalue + v3.uvalue;
     commit v4;
     renew v2 as v5;
-    v5.pvalue = v2.pvalue + v3.uvalue;
+    v5.pvalue := v2.pvalue + v3.uvalue;
     commit v5;
     renew v3 as v6;
-    v6.uvalue = 0;
+    v6.uvalue := 0;
     commit v6;
     update $cpu.edi;
     update $cpu.esi;
@@ -3862,13 +3862,13 @@ pattern {
     commit v3;
     $fn.memcpy(v2.value - v3.uvalue, v1.value - v3.uvalue, v3.uvalue);
     renew v1 as v4;
-    v4.pvalue = v1.pvalue - v3.uvalue;
+    v4.pvalue := v1.pvalue - v3.uvalue;
     commit v4;
     renew v2 as v5;
-    v5.pvalue = v2.pvalue - v3.uvalue;
+    v5.pvalue := v2.pvalue - v3.uvalue;
     commit v5;
     renew v3 as v6;
-    v6.uvalue = 0;
+    v6.uvalue := 0;
     commit v6;
     update $cpu.edi;
     update $cpu.esi;
@@ -3887,13 +3887,13 @@ pattern {
     commit v3;
     $fn.wmemcpy(v2.pvalue, v1.pvalue, v3.uvalue / 2);
     renew v1 as v4;
-    v4.pvalue = v1.pvalue + v3.uvalue;
+    v4.pvalue := v1.pvalue + v3.uvalue;
     commit v4;
     renew v2 as v5;
-    v5.pvalue = v2.pvalue + v3.uvalue;
+    v5.pvalue := v2.pvalue + v3.uvalue;
     commit v5;
     renew v3 as v6;
-    v6.uvalue = 0;
+    v6.uvalue := 0;
     commit v6;
     update $cpu.edi;
     update $cpu.esi;
@@ -3912,13 +3912,13 @@ pattern {
     commit v3;
     $fn.wmemcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue / 2);
     renew v1 as v4;
-    v4.pvalue = v1.pvalue - v3.uvalue;
+    v4.pvalue := v1.pvalue - v3.uvalue;
     commit v4;
     renew v2 as v5;
-    v5.pvalue = v2.pvalue - v3.uvalue;
+    v5.pvalue := v2.pvalue - v3.uvalue;
     commit v5;
     renew v3 as v6;
-    v6.uvalue = 0;
+    v6.uvalue := 0;
     commit v6;
     update $cpu.edi;
     update $cpu.esi;
@@ -3940,37 +3940,37 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.pvalue;
+        v4.addr := v1.pvalue;
         commit v4;
         new v5;
-        v5.addr = v2.pvalue;
-        v5.value = v4.value;
+        v5.addr := v2.pvalue;
+        v5.value := v4.value;
         commit v5;
         join v6 to v1;
         join v7 to v2;
         if ($flags.DF == 0) {
             renew v1 as v6;
-            v6.value = v1.value + 4;
+            v6.value := v1.value + 4;
             commit v6;
             renew v2 as v7;
-            v7.value = v2.value + 4;
+            v7.value := v2.value + 4;
             commit v7;
         } else {
             renew v1 as v6;
-            v6.value = v1.value - 4;
+            v6.value := v1.value - 4;
             commit v6;
             renew v2 as v7;
-            v7.value = v2.value - 4;
+            v7.value := v2.value - 4;
             commit v7;
         }
         renew v3 as v8;
-        v8.value = v3.value - 1;
+        v8.value := v3.value - 1;
         commit v8;
     }
     update $cpu.edi;
     update $cpu.esi;
     renew $cpu.ecx as v9;
-    v9.value = 0;
+    v9.value := 0;
     commit v9;
     update $cpu.ecx;
 }
@@ -3981,7 +3981,7 @@ pattern {
     renew $2 as v1;
     commit v1;
     renew $1 as v2;
-    v2.svalue = v1.svalue;
+    v2.svalue := v1.svalue;
     commit v2;
     assert(v1.svalue == v2.svalue);
 }
@@ -3992,7 +3992,7 @@ pattern {
     renew $2 as v1;
     commit v1;
     renew $1 as v2;
-    v2.uvalue = v1.uvalue;
+    v2.uvalue := v1.uvalue;
     commit v2;
     assert(v1.uvalue == v2.uvalue);
 }
@@ -4006,14 +4006,14 @@ pattern {
     renew $cpu.eax as v2;
     commit v2;
     renew $cpu.edx_eax as v3;
-    v3.uvalue = v1.uvalue * v2.uvalue;
+    v3.uvalue := v1.uvalue * v2.uvalue;
     commit v3;
-    $flags.OF = unknown;
-    $flags.CF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.CF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -4025,14 +4025,14 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     renew $cpu.dx_ax as v3;
-    v3.uvalue = v1.uvalue * v2.uvalue;
+    v3.uvalue := v1.uvalue * v2.uvalue;
     commit v3;
-    $flags.OF = unknown;
-    $flags.CF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.CF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -4044,14 +4044,14 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     renew $cpu.ax as v3;
-    v3.uvalue = v1.uvalue * v2.uvalue;
+    v3.uvalue := v1.uvalue * v2.uvalue;
     commit v3;
-    $flags.OF = unknown;
-    $flags.CF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := unknown;
+    $flags.CF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 // mwait();
@@ -4062,14 +4062,14 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.svalue = -v1.svalue;
+    v2.svalue := -v1.svalue;
     commit v2;
-    $flags.CF = v1.uvalue != 0;
-    $flags.OF = unknown;
-    $flags.SF = unknown;
-    $flags.ZF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := v1.uvalue != 0;
+    $flags.OF := unknown;
+    $flags.SF := unknown;
+    $flags.ZF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -4088,7 +4088,7 @@ pattern {
     renew $1 as v1;
     commit v1;
     renew v1 as v2;
-    v2.uvalue = ~v1.uvalue;
+    v2.uvalue := ~v1.uvalue;
     commit v2;
 }
 
@@ -4100,14 +4100,14 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = (v1.uvalue | v2.uvalue);
+    v3.uvalue := (v1.uvalue | v2.uvalue);
     commit v3;
-    $flags.SF = v3.svalue < 0;
-    $flags.ZF = v3.value == 0;
-    $flags.OF = 0;
-    $flags.CF = 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.SF := v3.svalue < 0;
+    $flags.ZF := v3.value == 0;
+    $flags.OF := 0;
+    $flags.CF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 // out($dest, $src);
@@ -4125,14 +4125,14 @@ pattern {
     renew $cpu.esp as v1;
     commit v1;
     new v2;
-    v2.addr = v1.pvalue;
-    v2.bits = 32;
+    v2.addr := v1.pvalue;
+    v2.bits := 32;
     commit v2;
     renew $1 as v3;
-    v3.value = v2.value;
+    v3.value := v2.value;
     commit v3;
     renew v1 as v4;
-    v4.value = v1.value + 4;
+    v4.value := v1.value + 4;
     commit v4;
 }
 
@@ -4161,26 +4161,26 @@ pattern {
     renew $2 as v1;
     commit v1;
     new i1;
-    i1.uvalue = 0;
+    i1.uvalue := 0;
     commit i1;
     new cnt1;
-    cnt1.uvalue = 0;
+    cnt1.uvalue := 0;
     commit cnt1;
     for (;;) {
         if (v1.uvalue & (1 << i1.uvalue)) {
             renew cnt1 as cnt2;
-            cnt2.uvalue = cnt1.uvalue + 1;
+            cnt2.uvalue := cnt1.uvalue + 1;
             commit cnt2;
         }
         renew i1 as i2;
-        i2.uvalue = i1.uvalue + 1;
+        i2.uvalue := i1.uvalue + 1;
         commit i2;
         if (i2.uvalue >= $1.bits) {
             break;
         }
     }
     renew $1 as v2;
-    v2.uvalue = cnt1.uvalue;
+    v2.uvalue := cnt1.uvalue;
     commit v2;
 }
 
@@ -4195,7 +4195,7 @@ pattern {
     asm pushad;
 } code {
     new v1;
-    v1.value = $cpu.esp;
+    v1.value := $cpu.esp;
     commit v1;
     push $cpu.eax;
     push $cpu.ecx;
@@ -4216,12 +4216,12 @@ pattern {
     renew $cpu.esp as v2;
     commit v2;
     new v3;
-    v3.addr = v2.pvalue;
-    v3.bits = 32;
-    v3.svalue = v1.svalue;
+    v3.addr := v2.pvalue;
+    v3.bits := 32;
+    v3.svalue := v1.svalue;
     commit v3;
     renew v2 as v4;
-    v4.pvalue = v2.pvalue - 4;
+    v4.pvalue := v2.pvalue - 4;
     commit v4;
 }
 
@@ -4234,12 +4234,12 @@ pattern {
     renew $cpu.esp as v2;
     commit v2;
     new v3;
-    v3.addr = v2.pvalue;
-    v3.bits = 32;
-    v3.value = v1.value;
+    v3.addr := v2.pvalue;
+    v3.bits := 32;
+    v3.value := v1.value;
     commit v3;
     renew v2 as v4;
-    v4.pvalue = v2.pvalue - 4;
+    v4.pvalue := v2.pvalue - 4;
     commit v4;
 }
 
@@ -4256,7 +4256,7 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = $fn._rotl(v2.uvalue, v1.uvalue);
+    v3.uvalue := $fn._rotl(v2.uvalue, v1.uvalue);
     commit v3;
 }
 
@@ -4268,7 +4268,7 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = $fn._rotr(v2.uvalue, v1.uvalue);
+    v3.uvalue := $fn._rotr(v2.uvalue, v1.uvalue);
     commit v3;
 }
 
@@ -4289,14 +4289,14 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.svalue = v2.svalue << v1.uvalue;
+    v3.svalue := v2.svalue << v1.uvalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.ZF = v3.svalue == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.ZF := v3.svalue == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 pattern {
@@ -4307,14 +4307,14 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.svalue = v2.svalue >> v1.uvalue;
+    v3.svalue := v2.svalue >> v1.uvalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.ZF = v3.svalue == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.ZF := v3.svalue == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 pattern {
@@ -4325,14 +4325,14 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = v2.uvalue << v1.uvalue;
+    v3.uvalue := v2.uvalue << v1.uvalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.ZF = v3.uvalue == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.ZF := v3.uvalue == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 pattern {
@@ -4343,14 +4343,14 @@ pattern {
     renew $1 as v2;
     commit v2;
     renew v2 as v3;
-    v3.uvalue = v2.uvalue >> v1.uvalue;
+    v3.uvalue := v2.uvalue >> v1.uvalue;
     commit v3;
-    $flags.CF = unknown;
-    $flags.OF = unknown;
-    $flags.ZF = v3.uvalue == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.ZF := v3.uvalue == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 pattern {
@@ -4362,16 +4362,16 @@ pattern {
     commit v2;
     renew v2 as v3;
     if ($flags.CF == 1) {
-        v3.svalue = v2.svalue - v1.svalue - 1;
+        v3.svalue := v2.svalue - v1.svalue - 1;
     } else {
-        v3.svalue = v2.svalue - v1.svalue;
+        v3.svalue := v2.svalue - v1.svalue;
     }
-    $flags.OF = v3.svalue > v1.svalue;
-    $flags.ZF = v3.svalue == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.CF = v2.uvalue < v1.uvalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.OF := v3.svalue > v1.svalue;
+    $flags.ZF := v3.svalue == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.CF := v2.uvalue < v1.uvalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
 }
 
 pattern {
@@ -4382,22 +4382,22 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 8;
+    v3.addr := v1.pvalue;
+    v3.bits := 8;
     commit v3;
-    $flags.OF = v2.svalue < v3.svalue;
-    $flags.ZF = v2.value == v3.value;
-    $flags.SF = v2.svalue < v3.svalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.OF := v2.svalue < v3.svalue;
+    $flags.ZF := v2.value == v3.value;
+    $flags.SF := v2.svalue < v3.svalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     if ($flags.DF == 0) {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue + 1;
+        v4.pvalue := v1.pvalue + 1;
         commit v4;
     } else {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue - 1;
+        v4.pvalue := v1.pvalue - 1;
         commit v4;
     }
     update $cpu.edi;
@@ -4411,22 +4411,22 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 16;
+    v3.addr := v1.pvalue;
+    v3.bits := 16;
     commit v3;
-    $flags.OF = v2.svalue < v3.svalue;
-    $flags.ZF = v2.value == v3.value;
-    $flags.SF = v2.svalue < v3.svalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.OF := v2.svalue < v3.svalue;
+    $flags.ZF := v2.value == v3.value;
+    $flags.SF := v2.svalue < v3.svalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     if ($flags.DF == 0) {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue + 2;
+        v4.pvalue := v1.pvalue + 2;
         commit v4;
     } else {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue - 2;
+        v4.pvalue := v1.pvalue - 2;
         commit v4;
     }
     update $cpu.edi;
@@ -4440,22 +4440,22 @@ pattern {
     renew $cpu.eax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 32;
+    v3.addr := v1.pvalue;
+    v3.bits := 32;
     commit v3;
-    $flags.OF = v2.svalue < v3.svalue;
-    $flags.ZF = v2.value == v3.value;
-    $flags.SF = v2.svalue < v3.svalue;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.OF := v2.svalue < v3.svalue;
+    $flags.ZF := v2.value == v3.value;
+    $flags.SF := v2.svalue < v3.svalue;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     if ($flags.DF == 0) {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue + 4;
+        v4.pvalue := v1.pvalue + 4;
         commit v4;
     } else {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue - 4;
+        v4.pvalue := v1.pvalue - 4;
         commit v4;
     }
     update $cpu.edi;
@@ -4477,33 +4477,33 @@ pattern {
         }
         join v5 to v1;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 8;
+        v4.addr := v1.pvalue;
+        v4.bits := 8;
         commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
+        $flags.OF := v2.svalue < v3.svalue;
+        $flags.ZF := v2.value == v3.value;
+        $flags.SF := v2.svalue < v3.svalue;
         if ($flags.ZF == 0) {
             break;
         }
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 1;
+            v5.pvalue := v1.pvalue + 1;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 1;
+            v5.pvalue := v1.pvalue - 1;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.edi;
-    $cpu.ecx.value = unknown;
+    $cpu.ecx.value := unknown;
     update $cpu.ecx;
 }
 
@@ -4523,33 +4523,33 @@ pattern {
         }
         join v5 to v1;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
+        v4.addr := v1.pvalue;
+        v4.bits := 16;
         commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
+        $flags.OF := v2.svalue < v3.svalue;
+        $flags.ZF := v2.value == v3.value;
+        $flags.SF := v2.svalue < v3.svalue;
         if ($flags.ZF == 0) {
             break;
         }
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 2;
+            v5.pvalue := v1.pvalue + 2;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 2;
+            v5.pvalue := v1.pvalue - 2;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.edi;
-    $cpu.ecx.value = unknown;
+    $cpu.ecx.value := unknown;
     update $cpu.ecx;
 }
 
@@ -4569,39 +4569,39 @@ pattern {
         }
         join v5 to v1;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
+        v4.addr := v1.pvalue;
+        v4.bits := 32;
         commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
+        $flags.OF := v2.svalue < v3.svalue;
+        $flags.ZF := v2.value == v3.value;
+        $flags.SF := v2.svalue < v3.svalue;
         if ($flags.ZF == 0) {
             break;
         }
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 4;
+            v5.pvalue := v1.pvalue + 4;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 4;
+            v5.pvalue := v1.pvalue - 4;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.edi;
-    $cpu.ecx.value = unknown;
+    $cpu.ecx.value := unknown;
     update $cpu.ecx;
 }
 
-alias asm repz_scasb = asm repe_scasb;
-alias asm repz_scasw = asm repe_scasw;
-alias asm repz_scasd = asm repe_scasd;
+alias asm repz_scasb := asm repe_scasb;
+alias asm repz_scasw := asm repe_scasw;
+alias asm repz_scasd := asm repe_scasd;
 
 pattern {
     asm repne_scasb;
@@ -4619,33 +4619,33 @@ pattern {
         }
         join v5 to v1;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 8;
+        v4.addr := v1.pvalue;
+        v4.bits := 8;
         commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
+        $flags.OF := v2.svalue < v3.svalue;
+        $flags.ZF := v2.value == v3.value;
+        $flags.SF := v2.svalue < v3.svalue;
         if ($flags.ZF == 1) {
             break;
         }
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 1;
+            v5.pvalue := v1.pvalue + 1;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 1;
+            v5.pvalue := v1.pvalue - 1;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.edi;
-    $cpu.ecx.value = unknown;
+    $cpu.ecx.value := unknown;
     update $cpu.ecx;
 }
 
@@ -4665,33 +4665,33 @@ pattern {
         }
         join v5 to v1;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
+        v4.addr := v1.pvalue;
+        v4.bits := 16;
         commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
+        $flags.OF := v2.svalue < v3.svalue;
+        $flags.ZF := v2.value == v3.value;
+        $flags.SF := v2.svalue < v3.svalue;
         if ($flags.ZF == 1) {
             break;
         }
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 2;
+            v5.pvalue := v1.pvalue + 2;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 2;
+            v5.pvalue := v1.pvalue - 2;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.edi;
-    $cpu.ecx.value = unknown;
+    $cpu.ecx.value := unknown;
     update $cpu.ecx;
 }
 
@@ -4711,47 +4711,47 @@ pattern {
         }
         join v5 to v1;
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
+        v4.addr := v1.pvalue;
+        v4.bits := 32;
         commit v4;
-        $flags.OF = v2.svalue < v3.svalue;
-        $flags.ZF = v2.value == v3.value;
-        $flags.SF = v2.svalue < v3.svalue;
+        $flags.OF := v2.svalue < v3.svalue;
+        $flags.ZF := v2.value == v3.value;
+        $flags.SF := v2.svalue < v3.svalue;
         if ($flags.ZF == 1) {
             break;
         }
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 4;
+            v5.pvalue := v1.pvalue + 4;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 4;
+            v5.pvalue := v1.pvalue - 4;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
-    $flags.AF = unknown;
-    $flags.PF = unknown;
-    $flags.CF = unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    $flags.CF := unknown;
     update $cpu.edi;
-    $cpu.ecx.value = unknown;
+    $cpu.ecx.value := unknown;
     update $cpu.ecx;
 }
 
-alias asm repnz_scasb = asm repne_scasb;
-alias asm repnz_scasw = asm repne_scasw;
-alias asm repnz_scasd = asm repne_scasd;
+alias asm repnz_scasb := asm repne_scasb;
+alias asm repnz_scasw := asm repne_scasw;
+alias asm repnz_scasd := asm repne_scasd;
 
 pattern {
     asm seta $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF == 0 && $flags.CF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF == 0 && $flags.CF == 0;
     commit v1;
 }
 
@@ -4759,9 +4759,9 @@ pattern {
     asm setae $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.CF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.CF == 0;
     commit v1;
 }
 
@@ -4769,9 +4769,9 @@ pattern {
     asm setb $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.CF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.CF;
     commit v1;
 }
 
@@ -4779,9 +4779,9 @@ pattern {
     asm setbe $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF || $flags.CF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF || $flags.CF;
     commit v1;
 }
 
@@ -4789,9 +4789,9 @@ pattern {
     asm setc $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.CF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.CF;
     commit v1;
 }
 
@@ -4799,9 +4799,9 @@ pattern {
     asm sete $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF;
     commit v1;
 }
 
@@ -4809,9 +4809,9 @@ pattern {
     asm setg $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF == 0 && $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF == 0 && $flags.SFeqOF;
     commit v1;
 }
 
@@ -4819,9 +4819,9 @@ pattern {
     asm setge $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.SFeqOF;
     commit v1;
 }
 
@@ -4829,9 +4829,9 @@ pattern {
     asm setl $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.SFeqOF;
     commit v1;
 }
 
@@ -4839,9 +4839,9 @@ pattern {
     asm setle $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF && $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF && $flags.SFeqOF;
     commit v1;
 }
 
@@ -4849,9 +4849,9 @@ pattern {
     asm setna $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF && $flags.CF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF && $flags.CF;
     commit v1;
 }
 
@@ -4859,9 +4859,9 @@ pattern {
     asm setnae $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.CF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.CF;
     commit v1;
 }
 
@@ -4869,9 +4869,9 @@ pattern {
     asm setnb $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.CF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.CF == 0;
     commit v1;
 }
 
@@ -4879,9 +4879,9 @@ pattern {
     asm setnbe $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF == 0 && $flags.CF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF == 0 && $flags.CF == 0;
     commit v1;
 }
 
@@ -4889,9 +4889,9 @@ pattern {
     asm setnc $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.CF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.CF == 0;
     commit v1;
 }
 
@@ -4899,9 +4899,9 @@ pattern {
     asm setne $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF == 0;
     commit v1;
 }
 
@@ -4909,9 +4909,9 @@ pattern {
     asm setng $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF || $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF || $flags.SFeqOF;
     commit v1;
 }
 
@@ -4919,9 +4919,9 @@ pattern {
     asm setnge $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.SFeqOF;
     commit v1;
 }
 
@@ -4929,9 +4929,9 @@ pattern {
     asm setnl $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.SFeqOF;
     commit v1;
 }
 
@@ -4939,9 +4939,9 @@ pattern {
     asm setnle $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF == 0 && $flags.SFeqOF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF == 0 && $flags.SFeqOF;
     commit v1;
 }
 
@@ -4949,9 +4949,9 @@ pattern {
     asm setno $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.OF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.OF == 0;
     commit v1;
 }
 
@@ -4959,9 +4959,9 @@ pattern {
     asm setnp $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.PF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.PF == 0;
     commit v1;
 }
 
@@ -4969,9 +4969,9 @@ pattern {
     asm setns $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.SF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.SF == 0;
     commit v1;
 }
 
@@ -4979,9 +4979,9 @@ pattern {
     asm setnz $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF == 0;
     commit v1;
 }
 
@@ -4989,9 +4989,9 @@ pattern {
     asm seto $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.OF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.OF;
     commit v1;
 }
 
@@ -4999,9 +4999,9 @@ pattern {
     asm setp $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.PF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.PF;
     commit v1;
 }
 
@@ -5009,9 +5009,9 @@ pattern {
     asm setpe $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.PF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.PF;
     commit v1;
 }
 
@@ -5019,9 +5019,9 @@ pattern {
     asm setpo $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.PF == 0;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.PF == 0;
     commit v1;
 }
 
@@ -5029,9 +5029,9 @@ pattern {
     asm sets $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.SF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.SF;
     commit v1;
 }
 
@@ -5039,9 +5039,9 @@ pattern {
     asm setz $1;
 } code {
     new v1;
-    v1.addr = $1.addr;
-    v1.bits = 8;
-    v1.value = $flags.ZF;
+    v1.addr := $1.addr;
+    v1.bits := 8;
+    v1.value := $flags.ZF;
     commit v1;
 }
 
@@ -5056,19 +5056,19 @@ pattern {
 pattern {
     stc;
 } code {
-    $flags.CF = 1;
+    $flags.CF := 1;
 }
 
 pattern {
     std;
 } code {
-    $flags.DF = 1;
+    $flags.DF := 1;
 }
 
 pattern {
     sti;
 } code {
-    $flags.IF = 1;
+    $flags.IF := 1;
 }
 
 pattern {
@@ -5079,17 +5079,17 @@ pattern {
     renew $cpu.al as v2;
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 8;
-    v3.value = v2.value;
+    v3.addr := v1.pvalue;
+    v3.bits := 8;
+    v3.value := v2.value;
     commit v3;
     if ($flags.DF == 0) {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue + 1;
+        v4.pvalue := v1.pvalue + 1;
         commit v4;
     } else {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue - 1;
+        v4.pvalue := v1.pvalue - 1;
         commit v4;
     }
     update $cpu.edi;
@@ -5103,17 +5103,17 @@ pattern {
     renew $cpu.ax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 16;
-    v3.value = v2.value;
+    v3.addr := v1.pvalue;
+    v3.bits := 16;
+    v3.value := v2.value;
     commit v3;
     if ($flags.DF == 0) {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue + 2;
+        v4.pvalue := v1.pvalue + 2;
         commit v4;
     } else {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue - 2;
+        v4.pvalue := v1.pvalue - 2;
         commit v4;
     }
     update $cpu.edi;
@@ -5127,17 +5127,17 @@ pattern {
     renew $cpu.eax as v2;
     commit v2;
     new v3;
-    v3.addr = v1.pvalue;
-    v3.bits = 32;
-    v3.value = v2.value;
+    v3.addr := v1.pvalue;
+    v3.bits := 32;
+    v3.value := v2.value;
     commit v3;
     if ($flags.DF == 0) {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue + 4;
+        v4.pvalue := v1.pvalue + 4;
         commit v4;
     } else {
         renew v1 as v4;
-        v4.pvalue = v1.pvalue - 4;
+        v4.pvalue := v1.pvalue - 4;
         commit v4;
     }
     update $cpu.edi;
@@ -5155,11 +5155,11 @@ pattern {
     commit v3;
     $fn.memset(v1.pvalue, v2.value, v3.uvalue);
     renew v1 as v4;
-    v4.pvalue = v1.pvalue + v3.uvalue;
+    v4.pvalue := v1.pvalue + v3.uvalue;
     commit v4;
     update $cpu.edi;
     renew v3 as v5;
-    v5.value = 0;
+    v5.value := 0;
     commit v5;
     update $cpu.ecx;
 }
@@ -5176,11 +5176,11 @@ pattern {
     commit v3;
     $fn.memset(v1.pvalue - v3.uvalue, v2.value, v3.uvalue);
     renew v1 as v4;
-    v4.pvalue = v1.pvalue - v3.uvalue;
+    v4.pvalue := v1.pvalue - v3.uvalue;
     commit v4;
     update $cpu.edi;
     renew v3 as v5;
-    v5.value = 0;
+    v5.value := 0;
     commit v5;
     update $cpu.ecx;
 }
@@ -5200,26 +5200,26 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 16;
-        v4.value = v2.value;
+        v4.addr := v1.pvalue;
+        v4.bits := 16;
+        v4.value := v2.value;
         commit v4;
         join v5 to v1;
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 2;
+            v5.pvalue := v1.pvalue + 2;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 2;
+            v5.pvalue := v1.pvalue - 2;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
     renew v3 as v7;
-    v7.value = 0;
+    v7.value := 0;
     commit v7;
     update $cpu.ecx;
 }
@@ -5239,26 +5239,26 @@ pattern {
             break;
         }
         new v4;
-        v4.addr = v1.pvalue;
-        v4.bits = 32;
-        v4.value = v2.value;
+        v4.addr := v1.pvalue;
+        v4.bits := 32;
+        v4.value := v2.value;
         commit v4;
         join v5 to v1;
         if ($flags.DF == 0) {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue + 4;
+            v5.pvalue := v1.pvalue + 4;
             commit v5;
         } else {
             renew v1 as v5;
-            v5.pvalue = v1.pvalue - 4;
+            v5.pvalue := v1.pvalue - 4;
             commit v5;
         }
         renew v3 as v6;
-        v6.uvalue = v3.uvalue - 1;
+        v6.uvalue := v3.uvalue - 1;
         commit v6;
     }
     renew v3 as v7;
-    v7.value = 0;
+    v7.value := 0;
     commit v7;
     update $cpu.ecx;
 }
@@ -5273,13 +5273,13 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = v1.value - v2.value;
-    $flags.SF = v1.svalue < v2.svalue;
-    $flags.CF = v1.uvalue < v2.uvalue;
-    $flags.ZF = v1.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    v3.value := v1.value - v2.value;
+    $flags.SF := v1.svalue < v2.svalue;
+    $flags.CF := v1.uvalue < v2.uvalue;
+    $flags.ZF := v1.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
 }
 
@@ -5294,14 +5294,14 @@ pattern {
     renew $2 as v2;
     commit v2;
     new v1 as v3;
-    v3.value = (v1.value & v2.value);
+    v3.value := (v1.value & v2.value);
     commit v3;
-    $flags.ZF = v3.value == 0;
-    $flags.SF = v3.svalue < 0;
-    $flags.CF = 0;
-    $flags.OF = 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    $flags.ZF := v3.value == 0;
+    $flags.SF := v3.svalue < 0;
+    $flags.CF := 0;
+    $flags.OF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
 }
 
 // ud2();
@@ -5320,17 +5320,17 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = v1.value + v2.value;
+    v3.value := v1.value + v2.value;
     commit v3;
     renew v2 as v4;
-    v4.value = v1.value;
+    v4.value := v1.value;
     commit v4;
-    $flags.CF = v3.uvalue < v1.uvalue;
-    $flags.SF = v4.svalue < 0;
-    $flags.ZF = v4.value == 0;
-    $flags.OF = unknown;
-    $flags.AF = unknown;
-    $flags.PF = unknown;
+    $flags.CF := v3.uvalue < v1.uvalue;
+    $flags.SF := v4.svalue < 0;
+    $flags.ZF := v4.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
     update $1;
     update $2;
 }
@@ -5357,11 +5357,11 @@ pattern {
     renew $cpu.ebx as v2;
     commit v2;
     new v3;
-    v3.addr = v2.pvalue + v1.uvalue;
-    v3.bits = 8;
+    v3.addr := v2.pvalue + v1.uvalue;
+    v3.bits := 8;
     commit v3;
     renew v1 as v4;
-    v4.uvalue = v3.uvalue;
+    v4.uvalue := v3.uvalue;
     commit v4;
     update $cpu.al;
 }
@@ -5374,13 +5374,13 @@ pattern {
     renew $2 as v2;
     commit v2;
     renew v1 as v3;
-    v3.value = (v1.value ^ v2.value);
-    $flags.SF = v3.svalue < 0;
-    $flags.ZF = v3.value == 0;
-    $flags.OF = 0;
-    $flags.CF = 0;
-    $flags.PF = unknown;
-    $flags.AF = unknown;
+    v3.value := (v1.value ^ v2.value);
+    $flags.SF := v3.svalue < 0;
+    $flags.ZF := v3.value == 0;
+    $flags.OF := 0;
+    $flags.CF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
     update $1;
 }
 

@@ -152,6 +152,9 @@ public:
     const char *FuncNameFromVA64(CR_Addr64 addr) const;
 
 public:
+    BOOL PrepareForDisAsm32(CR_DecompInfo32& info);
+    BOOL PrepareForDisAsm64(CR_DecompInfo64& info);
+    
     BOOL DisAsmAddr32(CR_DecompInfo32& info, CR_Addr32 func, CR_Addr32 va);
     BOOL DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va);
     BOOL DisAsm32(CR_DecompInfo32& info);
