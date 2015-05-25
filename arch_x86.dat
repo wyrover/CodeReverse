@@ -34,7 +34,7 @@
 // $fn.fname:   a call of the function named fname
 ////////////////////////////////////////////////////////////////////////////
 
-define access $cpu = {
+define $cpu = {
     {"edx_eax", 64},
     {"dx_ax", 32},
     {"eax", 32},
@@ -73,7 +73,7 @@ define access $cpu = {
     {"gs", 16},
 };
 
-define access $flags = {
+define $flags = {
     {"OF", 1},
     {"DF", 1},
     {"IF", 1},
@@ -85,7 +85,7 @@ define access $flags = {
     {"CF", 1},
 };
 
-define access $fpu = {
+define $fpu = {
     {"st0", 80},
     {"st1", 80},
     {"st2", 80},
@@ -101,7 +101,7 @@ define access $fpu = {
     {"operand", 64},
 };
 
-define access $sse = {
+define $sse = {
     {"mm0", 64},
     {"mm1", 64},
     {"mm2", 64},

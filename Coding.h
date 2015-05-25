@@ -335,15 +335,16 @@ typedef shared_ptr<CR_OpCode64> CR_ShdOpCode64;
 // CR_ICode32, CR_ICode64 --- intermediate codes
 
 enum CR_ICodeType {
-    cr_ICT_NONE,
-    cr_ICT_ASM,
-    cr_ICT_NEW,
-    cr_ICT_RENEW,
-    cr_ICT_COMMIT,
-    cr_ICT_ACTION,
-    cr_ICT_CONTROL,
-    cr_ICT_ATTR,
-    cr_ICT_ASSERT
+    cr_ICT_NONE,    // (none)
+    cr_ICT_ASM,     // assembly
+    cr_ICT_NEW,     // new ...
+    cr_ICT_RENEW,   // renew ... as ...
+    cr_ICT_COMMIT,  // commit ...
+    cr_ICT_JOIN,    // join ... to ...
+    cr_ICT_ACTION,  // (action) (param1),(param2),...
+    cr_ICT_CONTROL, // if, else, return, ...
+    cr_ICT_ATTR,    // name.attribute = ...
+    cr_ICT_ASSERT   // assert(...)
 };
 
 struct CR_ICode32 {
@@ -360,7 +361,7 @@ protected:
     CR_OpCode32             m_oc;
     std::string             m_name;
     std::string             m_attr;
-    std::vector<CR_Operand> m_operands;
+    std::vector<CR_Operand> m_params;
 };
 
 struct CR_ICode64 {
@@ -377,7 +378,7 @@ protected:
     CR_OpCode64             m_oc;
     std::string             m_name;
     std::string             m_attr;
-    std::vector<CR_Operand> m_operands;
+    std::vector<CR_Operand> m_params;
 };
 
 ////////////////////////////////////////////////////////////////////////////

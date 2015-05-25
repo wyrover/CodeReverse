@@ -871,14 +871,14 @@ inline CR_ICode32::CR_ICode32() : m_ic_type(cr_ICT_NONE) { }
 
 inline CR_ICode32::CR_ICode32(const CR_ICode32& ic) :
     m_ic_type(ic.m_ic_type), m_oc(ic.m_oc), m_name(ic.m_name),
-    m_attr(ic.m_attr), m_operands(ic.m_operands) { }
+    m_attr(ic.m_attr), m_params(ic.m_params) { }
 
 inline CR_ICode32& CR_ICode32::operator=(const CR_ICode32& ic) {
     m_ic_type = ic.m_ic_type;
     m_oc = ic.m_oc;
     m_name = ic.m_name;
     m_attr = ic.m_attr;
-    m_operands = ic.m_operands;
+    m_params = ic.m_params;
     return *this;
 }
 
@@ -898,7 +898,7 @@ inline void CR_ICode32::clear() {
     m_oc.clear();
     m_name.clear();
     m_attr.clear();
-    m_operands.clear();
+    m_params.clear();
 }
 
 inline bool CR_ICode32::is_asm() const {
@@ -912,14 +912,14 @@ inline CR_ICode64::CR_ICode64() : m_ic_type(cr_ICT_NONE) { }
 
 inline CR_ICode64::CR_ICode64(const CR_ICode64& ic) :
     m_ic_type(ic.m_ic_type), m_oc(ic.m_oc), m_name(ic.m_name),
-    m_attr(ic.m_attr), m_operands(ic.m_operands) { }
+    m_attr(ic.m_attr), m_params(ic.m_params) { }
 
 inline CR_ICode64& CR_ICode64::operator=(const CR_ICode64& ic) {
     m_ic_type = ic.m_ic_type;
     m_oc = ic.m_oc;
     m_name = ic.m_name;
     m_attr = ic.m_attr;
-    m_operands = ic.m_operands;
+    m_params = ic.m_params;
     return *this;
 }
 
@@ -939,7 +939,7 @@ inline void CR_ICode64::clear() {
     m_oc.clear();
     m_name.clear();
     m_attr.clear();
-    m_operands.clear();
+    m_params.clear();
 }
 
 inline bool CR_ICode64::is_asm() const {
