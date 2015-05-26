@@ -180,77 +180,94 @@ level(0) pattern {
 }
 
 level(0) pattern {
-    asm nop $1;
+    asm nop $0;
 } code {
 }
 
 level(0) pattern {
+    asm push $0;
+    asm pop $0;
+} code {
+}
+
+level(0) pattern {
+    asm push $0;
     asm push $1;
     asm pop $1;
+    asm pop $0;
 } code {
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm push $2;
     asm pop $2;
     asm pop $1;
+    asm pop $0;
 } code {
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm push $2;
     asm push $3;
     asm pop $3;
     asm pop $2;
     asm pop $1;
+    asm pop $0;
 } code {
 }
 
 level(0) pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm push $4;
-    asm pop $4;
-    asm pop $3;
-    asm pop $2;
+    asm push $0;
     asm pop $1;
 } code {
+    asm mov $1, $0;
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm pop $2;
+    asm pop $3;
 } code {
     asm mov $2, $1;
+    asm mov $3, $0;
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm push $2;
     asm pop $3;
     asm pop $4;
+    asm pop $5;
 } code {
     asm mov $3, $2;
     asm mov $4, $1;
+    asm mov $5, $0;
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm push $2;
     asm push $3;
     asm pop $4;
     asm pop $5;
     asm pop $6;
+    asm pop $7;
 } code {
     asm mov $4, $3;
     asm mov $5, $2;
     asm mov $6, $1;
+    asm mov $7, $0;
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm push $2;
     asm push $3;
@@ -259,14 +276,17 @@ level(0) pattern {
     asm pop $6;
     asm pop $7;
     asm pop $8;
+    asm pop $9;
 } code {
     asm mov $5, $4;
     asm mov $6, $3;
     asm mov $7, $2;
     asm mov $8, $1;
+    asm mov $9, $0;
 }
 
 level(0) pattern {
+    asm push $0;
     asm push $1;
     asm push $2;
     asm push $3;
@@ -277,34 +297,14 @@ level(0) pattern {
     asm pop $8;
     asm pop $9;
     asm pop $10;
+    asm pop $11;
 } code {
     asm mov $6, $5;
     asm mov $7, $4;
     asm mov $8, $3;
     asm mov $9, $2;
     asm mov $10, $1;
-}
-
-level(0) pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm push $4;
-    asm push $5;
-    asm push $6;
-    asm pop $7;
-    asm pop $8;
-    asm pop $9;
-    asm pop $10;
-    asm pop $11;
-    asm pop $12;
-} code {
-    asm mov $7, $6;
-    asm mov $8, $5;
-    asm mov $9, $4;
-    asm mov $10, $3;
-    asm mov $11, $2;
-    asm mov $12, $1;
+    asm mov $11, $0;
 }
 
 level(0) pattern {
@@ -344,9 +344,9 @@ level(0) pattern {
 level(0) pattern {
     asm push rbp;
     asm mov rbp, rsp;
-    asm sub rsp, $1;
+    asm sub rsp, $0;
 } code {
-    enter $1, 0;
+    enter $0, 0;
 }
 
 level(0) pattern {
@@ -364,9 +364,9 @@ level(0) pattern {
 }
 
 level(0) pattern {
-    asm enter $1, $2;
+    asm enter $0, $1;
 } code {
-    enter $1, $2;
+    enter $0, $1;
 }
 
 level(0) pattern {
@@ -376,29 +376,29 @@ level(0) pattern {
 }
 
 level(0) pattern {
-    asm xor $1, $1;
-    asm not $1;
+    asm xor $0, $0;
+    asm not $0;
 } code {
-    static if ($1.bits == 64) {
-        renew $1 as v1;
+    static if ($0.bits == 64) {
+        renew $0 as v1;
         v1.svalue := -1, v1.uvalue := 0xFFFFFFFFFFFFFFFF;
         commit v1;
         assert(v1.uvalue == 0xFFFFFFFFFFFFFFFF);
         assert(v1.svalue == -1);
-    } else static if ($1.bits == 32) {
-        renew $1 as v2;
+    } else static if ($0.bits == 32) {
+        renew $0 as v2;
         v2.svalue := -1, v2.uvalue := 0xFFFFFFFF;
         commit v2;
         assert(v2.uvalue == 0xFFFFFFFF);
         assert(v2.svalue == -1);
-    } else static if ($1.bits == 16) {
-        renew $1 as v3;
+    } else static if ($0.bits == 16) {
+        renew $0 as v3;
         v3.svalue := -1, v3.uvalue := 0xFFFF;
         commit v3;
         assert(v3.uvalue == 0xFFFF);
         assert(v3.svalue == -1);
-    } else static if ($1.bits == 8) {
-        renew $1 as v4;
+    } else static if ($0.bits == 8) {
+        renew $0 as v4;
         v4.svalue := -1, v4.uvalue := 0xFF;
         commit v4;
         assert(v4.uvalue == 0xFF);
@@ -406,14 +406,14 @@ level(0) pattern {
     } else {
         assert(0);
     }
-    update $1;
+    update $0;
 }
 
 level(0) pattern {
-    asm xor $1, $1;
-    asm inc $1;
+    asm xor $0, $0;
+    asm inc $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     v1.value := 1;
     commit v1;
     $flags.OF := 0;
@@ -423,33 +423,33 @@ level(0) pattern {
     $flags.PF := unknown;
     assert(v1.uvalue == 1);
     assert(v1.svalue == 1);
-    update $1;
+    update $0;
 }
 
 level(0) pattern {
-    asm xor $1, $1;
-    asm dec $1;
+    asm xor $0, $0;
+    asm dec $0;
 } code {
-    static if ($1.bits == 64) {
-        renew $1 as v1;
+    static if ($0.bits == 64) {
+        renew $0 as v1;
         v1.uvalue := 0xFFFFFFFFFFFFFFFF, v1.svalue := -1;
         commit v1;
         assert(v1.uvalue == 0xFFFFFFFFFFFFFFFF);
         assert(v1.svalue == -1);
-    } else static if ($1.bits == 32) {
-        renew $1 as v2;
+    } else static if ($0.bits == 32) {
+        renew $0 as v2;
         v2.uvalue := 0xFFFFFFFF, v2.svalue := -1;
         commit v2;
         assert(v2.uvalue == 0xFFFFFFFF);
         assert(v2.svalue == -1);
-    } else static if ($1.bits == 16) {
-        renew $1 as v3;
+    } else static if ($0.bits == 16) {
+        renew $0 as v3;
         v3.uvalue := 0xFFFF, v3.svalue := -1;
         commit v3;
         assert(v3.uvalue == 0xFFFF);
         assert(v3.svalue == -1);
-    } else static if ($1.bits == 8) {
-        renew $1 as v4;
+    } else static if ($0.bits == 8) {
+        renew $0 as v4;
         v4.uvalue := 0xFF, v4.svalue := -1;
         commit v4;
         assert(v4.uvalue == 0xFF);
@@ -462,164 +462,164 @@ level(0) pattern {
     $flags.ZF := 0;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 level(0) pattern {
-    asm mov $1, $1;
+    asm mov $0, $0;
 } code {
 }
 
 level(0) pattern {
-    asm movnti $1, $1;
+    asm movnti $0, $0;
 } code {
 }
 
 level(0) pattern {
-    asm movnti $1, $2;
+    asm movnti $0, $1;
 } code {
-    asm mov $1, $2;
+    asm mov $0, $1;
 }
 
 level(0) pattern {
-    asm lea $1, [$1];
+    asm lea $0, [$0];
 } code {
 }
 
 level(0) pattern {
-    asm shl $1, 1;
-    asm shl $1, 1;
-    asm shl $1, 1;
-    asm shl $1, 1;
-    asm shl $1, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
 } code {
-    asm shl $1, 5;
+    asm shl $0, 5;
 }
 
 level(0) pattern {
-    asm shl $1, 1;
-    asm shl $1, 1;
-    asm shl $1, 1;
-    asm shl $1, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
 } code {
-    asm shl $1, 4;
+    asm shl $0, 4;
 }
 
 level(0) pattern {
-    asm shl $1, 1;
-    asm shl $1, 1;
-    asm shl $1, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
 } code {
-    asm shl $1, 3;
+    asm shl $0, 3;
 }
 
 level(0) pattern {
-    asm shl $1, 1;
-    asm shl $1, 1;
+    asm shl $0, 1;
+    asm shl $0, 1;
 } code {
-    asm shl $1, 2;
+    asm shl $0, 2;
 }
 
 level(0) pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
 } code {
-    asm shr $1, 5;
+    asm shr $0, 5;
 }
 
 level(0) pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
 } code {
-    asm shr $1, 4;
+    asm shr $0, 4;
 }
 
 level(0) pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
 } code {
-    asm shr $1, 3;
+    asm shr $0, 3;
 }
 
 level(0) pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
+    asm shr $0, 1;
+    asm shr $0, 1;
 } code {
-    asm shr $1, 2;
+    asm shr $0, 2;
 }
 
 level(0) pattern {
-    asm sal $1, 1;
-    asm sal $1, 1;
-    asm sal $1, 1;
-    asm sal $1, 1;
-    asm sal $1, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
 } code {
-    asm sal $1, 5;
+    asm sal $0, 5;
 }
 
 level(0) pattern {
-    asm sal $1, 1;
-    asm sal $1, 1;
-    asm sal $1, 1;
-    asm sal $1, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
 } code {
-    asm sal $1, 4;
+    asm sal $0, 4;
 }
 
 level(0) pattern {
-    asm sal $1, 1;
-    asm sal $1, 1;
-    asm sal $1, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
 } code {
-    asm sal $1, 3;
+    asm sal $0, 3;
 }
 
 level(0) pattern {
-    asm sal $1, 1;
-    asm sal $1, 1;
+    asm sal $0, 1;
+    asm sal $0, 1;
 } code {
-    asm sal $1, 2;
+    asm sal $0, 2;
 }
 
 level(0) pattern {
-    asm sar $1, 1;
-    asm sar $1, 1;
-    asm sar $1, 1;
-    asm sar $1, 1;
-    asm sar $1, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
 } code {
-    asm sar $1, 5;
+    asm sar $0, 5;
 }
 
 level(0) pattern {
-    asm sar $1, 1;
-    asm sar $1, 1;
-    asm sar $1, 1;
-    asm sar $1, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
 } code {
-    asm sar $1, 4;
+    asm sar $0, 4;
 }
 
 level(0) pattern {
-    asm sar $1, 1;
-    asm sar $1, 1;
-    asm sar $1, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
 } code {
-    asm sar $1, 3;
+    asm sar $0, 3;
 }
 
 level(0) pattern {
-    asm sar $1, 1;
-    asm sar $1, 1;
+    asm sar $0, 1;
+    asm sar $0, 1;
 } code {
-    asm sar $1, 2;
+    asm sar $0, 2;
 }
 
 level(0) pattern {
@@ -633,9 +633,9 @@ $label.1:
 // level 1
 
 level(1) pattern {
-    asm xor $1, $1;
+    asm xor $0, $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     v1.value := 0;
     commit v1;
     $flags.SF := 0;
@@ -645,13 +645,13 @@ level(1) pattern {
     $flags.PF := unknown;
     $flags.AF := unknown;
     assert(v1.value == 0);
-    update $1;
+    update $0;
 }
 
 level(1) pattern {
-    asm add $1, $1;
+    asm add $0, $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value * 2;
@@ -662,13 +662,13 @@ level(1) pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 level(1) pattern {
-    asm and $1, $1;
+    asm and $0, $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     $flags.ZF := v1.value == 0;
     $flags.SF := v1.svalue < 0;
@@ -679,9 +679,9 @@ level(1) pattern {
 }
 
 level(1) pattern {
-    asm or $1, $1;
+    asm or $0, $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     $flags.SF := 0;
     $flags.ZF := v1.value == 0;
@@ -692,9 +692,9 @@ level(1) pattern {
 }
 
 level(1) pattern {
-    asm test $1, $1;
+    asm test $0, $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     $flags.ZF := v1.value == 0;
     $flags.SF := v1.svalue < 0;
@@ -705,11 +705,11 @@ level(1) pattern {
 }
 
 level(1) pattern {
-    asm dec $1;
-    asm dec $1;
-    asm dec $1;
+    asm dec $0;
+    asm dec $0;
+    asm dec $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value - 3;
@@ -719,14 +719,14 @@ level(1) pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 level(1) pattern {
-    asm dec $1;
-    asm dec $1;
+    asm dec $0;
+    asm dec $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value - 2;
@@ -736,15 +736,15 @@ level(1) pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 level(1) pattern {
-    asm inc $1;
-    asm inc $1;
-    asm inc $1;
+    asm inc $0;
+    asm inc $0;
+    asm inc $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value + 3;
@@ -754,14 +754,14 @@ level(1) pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 level(1) pattern {
-    asm inc $1;
-    asm inc $1;
+    asm inc $0;
+    asm inc $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value + 2;
@@ -771,7 +771,7 @@ level(1) pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 ...
@@ -2564,7 +2564,7 @@ pattern {
 pattern {
     asm repne_scasb;
     asm not rcx;
-    asm lea $1, [rcx-1];
+    asm lea $0, [rcx-1];
 } code {
     if ($cpu.al.value == 0 && 
         ($cpu.rcx.svalue == -1 || $cpu.rcx.uvalue == 0xFFFFFFFFFFFFFFFF))
@@ -2572,7 +2572,7 @@ pattern {
         renew $cpu.rdi as v1;
         v1.type := $type.ptr($type.s8);
         commit v1;
-        renew $1 as v2;
+        renew $0 as v2;
         v2.uvalue := $fn.strlen(v1.pvalue);
         commit v2;
         renew v1 as v3;
@@ -2590,22 +2590,22 @@ pattern {
         commit v6;
         renew $cpu.rcx as v7;
         commit v7;
-        renew $1 as v8;
+        renew $0 as v8;
         v8.value := v7.value - 1;
         commit v8;
     }
     update $cpu.rcx;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm lea $1, [rax+0x2];
+    asm lea $0, [rax+0x2];
 $label.1:
     asm mov cx, [eax];
     asm add rax, 2;
     asm test cx, cx;
     asm jnz $label.1;
-    asm sub rax, $1;
+    asm sub rax, $0;
     asm sar rax, 1;
 } code {
     renew $cpu.rax as v1;
@@ -2617,21 +2617,21 @@ $label.1:
     v3.value := 0;
     commit v3;
     update $cpu.cx;
-    renew $1 as v4;
+    renew $0 as v4;
     v4.value := unknown;
     commit v4;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm lea $1, [rax+0x2];
+    asm lea $0, [rax+0x2];
     jmp $label.1;
 $label.1:
     asm mov cx, [eax];
     asm add rax, 2;
     asm test cx, cx;
     asm jnz $label.1;
-    asm sub rax, $1;
+    asm sub rax, $0;
     asm sar rax, 1;
 } code {
     renew $cpu.rax as v1;
@@ -2643,105 +2643,105 @@ $label.1:
     v3.value := 0;
     commit v3;
     update $cpu.cx;
-    renew $1 as v4;
+    renew $0 as v4;
     v4.value := unknown;
     commit v4;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm lea $1, [$1+$2];
+    asm lea $0, [$0+$1];
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value := v1.value + $2;
+    v2.value := v1.value + $1;
     commit v2;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm lea $1, [$1-$2];
+    asm lea $0, [$0-$1];
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
-    v2.value := v1.value - $2;
+    v2.value := v1.value - $1;
     commit v2;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm sub $1, rax;
+    asm sub $0, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm lea rax, [rax+0x2];
-    asm mov [$1+rax-0x2], cx;
+    asm mov [$0+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    $1.value := unknown;
-    update $1;
+    $0.value := unknown;
+    update $0;
 }
 
 pattern {
-    asm sub $1, rax;
+    asm sub $0, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm add rax, 0x2;
-    asm mov [$1+rax-0x2], cx;
+    asm mov [$0+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    $1.value := unknown;
-    update $1;
+    $0.value := unknown;
+    update $0;
 }
 
 pattern {
-    asm sub $1, rax;
+    asm sub $0, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm add rax, 0x2;
-    asm mov [$1+rax-0x2], cx;
+    asm mov [$0+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    $1.value := unknown;
-    update $1;
+    $0.value := unknown;
+    update $0;
 }
 
 pattern {
-    asm lea $1, [rax+0x2];
+    asm lea $0, [rax+0x2];
 $label.1:
     asm mov cx,[rax];
     asm add rax, 2;
     asm test cx, cx;
     asm jnz $label.1;
-    asm sub rax, $1;
+    asm sub rax, $0;
     asm sar rax, 1;
 } code {
     renew $cpu.rax as v1;
@@ -2749,25 +2749,25 @@ $label.1:
     renew v1 as v2;
     v2.uvalue := $fn.wcslen(v1.pvalue);
     commit v2;
-    renew $1 as v3;
+    renew $0 as v3;
     v3.value := unknown;
     commit v3;
     update $cpu.rax;
     assert($cpu.cl.value == 0);
     assert($cpu.ch.value == 0);
     assert($cpu.cx.value == 0);
-    update $1;
+    update $0;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // instructions
 
 pattern {
-    asm adc $1, $2;
+    asm adc $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := v1.value + v2.value + $flags.CF;
@@ -2778,15 +2778,15 @@ pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    add $1, $2;
+    add $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := v1.value + v2.value;
@@ -2797,15 +2797,15 @@ pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm and $1, $2;
+    asm and $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := (v1.value & v2.value);
@@ -2816,26 +2816,26 @@ pattern {
     $flags.OF := 0;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm bswap $1;
+    asm bswap $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := $fn._bswap(v1.value);
     commit v2;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm bt $1, $2;
+    asm bt $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := (v1.value & (1 << v2.value));
@@ -2845,15 +2845,15 @@ pattern {
     $flags.SF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm btc $1, $2;
+    asm btc $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := (v1.value & (1 << v2.value));
@@ -2861,47 +2861,47 @@ pattern {
     $flags.CF := v3.value != 0;
     if (v3.value) {
         renew v1 as v2;
-        v2.value := v1.value & ~(1 << $2.value);
+        v2.value := v1.value & ~(1 << $1.value);
         commit v2;
     } else {
         renew v1 as v3;
-        v3.value := v1.value | (1 << $2.value);
+        v3.value := v1.value | (1 << $1.value);
         commit v3;
     }
     $flags.OF := unknown;
     $flags.SF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm btr $1, $2;
+    asm btr $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := (v1.value & (1 << v2.value));
     commit v3;
     $flags.CF := v3.value != 0;
     new v3 as v4;
-    v4.value := (v1.value & ~(1 << $2.value));
+    v4.value := (v1.value & ~(1 << $1.value));
     commit v2;
     $flags.OF := unknown;
     $flags.SF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm bts $1, $2;
+    asm bts $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := (v1.value & (1 << v2.value));
@@ -2914,13 +2914,13 @@ pattern {
     $flags.SF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm call $1;
+    asm call $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     call v1.cvalue;
 }
@@ -2991,341 +2991,341 @@ pattern {
 }
 
 pattern {
-    asm cmova $1, $2;
+    asm cmova $0, $1;
 } code {
     if ($flags.CF == 0 && $flags.ZF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovae $1, $2;
+    asm cmovae $0, $1;
 } code {
     if ($flags.CF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovb $1, $2;
+    asm cmovb $0, $1;
 } code {
     if ($flags.CF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovbe $1, $2;
+    asm cmovbe $0, $1;
 } code {
     if ($flags.CF == 1 || flags.ZF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovc $1, $2;
+    asm cmovc $0, $1;
 } code {
     if ($flags.CF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmove $1, $2;
+    asm cmove $0, $1;
 } code {
     if ($flags.ZF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovg $1, $2;
+    asm cmovg $0, $1;
 } code {
     if ($flags.ZF == 0 == 1 && $flags.SFeqOF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovge $1, $2;
+    asm cmovge $0, $1;
 } code {
     if ($flags.SFeqOF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovl $1, $2;
+    asm cmovl $0, $1;
 } code {
     if ($flags.SFeqOF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovle $1, $2;
+    asm cmovle $0, $1;
 } code {
     if ($flags.ZF == 1 || $flags.SFeqOF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovna $1, $2;
+    asm cmovna $0, $1;
 } code {
     if ($flags.CF == 1 || $flags.ZF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnae $1, $2;
+    asm cmovnae $0, $1;
 } code {
     if ($flags.CF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    cmovnb $1, $2;
+    cmovnb $0, $1;
 } code {
     if ($flags.CF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnbe $1, $2;
+    asm cmovnbe $0, $1;
 } code {
     if ($flags.CF == 0 && $flags.ZF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnc $1, $2;
+    asm cmovnc $0, $1;
 } code {
     if ($flags.CF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovne $1, $2;
+    asm cmovne $0, $1;
 } code {
     if ($flags.ZF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovng $1, $2;
+    asm cmovng $0, $1;
 } code {
     if ($flags.ZF == 1 || $flags.SFeqOF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnge $1, $2;
+    asm cmovnge $0, $1;
 } code {
     if ($flags.SFeqOF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnl $1, $2;
+    asm cmovnl $0, $1;
 } code {
     if ($flags.SFeqOF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnle $1, $2;
+    asm cmovnle $0, $1;
 } code {
     if ($flags.ZF == 0 && $flags.SFeqOF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovno $1, $2;
+    asm cmovno $0, $1;
 } code {
     if ($flags.OF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnp $1, $2;
+    asm cmovnp $0, $1;
 } code {
     if ($flags.PF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovns $1, $2;
+    asm cmovns $0, $1;
 } code {
     if ($flags.SF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovnz $1, $2;
+    asm cmovnz $0, $1;
 } code {
     if ($flags.ZF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovo $1, $2;
+    asm cmovo $0, $1;
 } code {
     if ($flags.OF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovp $1, $2;
+    asm cmovp $0, $1;
 } code {
     if ($flags.PF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovpe $1, $2;
+    asm cmovpe $0, $1;
 } code {
     if ($flags.PF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovpo $1, $2;
+    asm cmovpo $0, $1;
 } code {
     if ($flags.PF == 0) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovs $1, $2;
+    asm cmovs $0, $1;
 } code {
     if ($flags.SF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmovz $1, $2;
+    asm cmovz $0, $1;
 } code {
     if ($flags.ZF == 1) {
-        renew $1 as v1;
-        v1.value := $2.value;
+        renew $0 as v1;
+        v1.value := $1.value;
         commit v1;
-        update $1;
+        update $0;
     }
 }
 
 pattern {
-    asm cmp $1, $2;
+    asm cmp $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     $flags.ZF := v1.value == v2.value;
     $flags.SF := v1.svalue < v2.svalue;
@@ -3914,98 +3914,98 @@ alias asm repnz_cmpsd := asm repne_cmpsd;
 alias asm repnz_cmpsq := asm repne_cmpsq;
 
 pattern {
-    asm cmpxchg $1, $2;
+    asm cmpxchg $0, $1;
 } code {
-    static if ($1.bits == 64) {
+    static if ($0.bits == 64) {
         renew $cpu.rax as v1;
         commit v1;
-        renew $1 as v2;
+        renew $0 as v2;
         commit v2;
         $flags.SF := v1.svalue < v2.svalue;
         $flags.CF := v1.uvalue < v2.uvalue;
         $flags.PF := unknown;
         $flags.AF := unknown;
         if (v1.value == v2.value) {
-            renew $2 as v3;
+            renew $1 as v3;
             commit v3;
-            renew $1 as v4;
+            renew $0 as v4;
             v4.value := v3.value;
             commit v4;
             $flags.ZF := 1;
         } else {
-            renew $1 as v5;
+            renew $0 as v5;
             commit v5;
             renew v1 as v6;
             v6.value := v5.value;
             commit v6;
             $flags.ZF := 0;
         }
-    } else static if ($1.bits == 32) {
+    } else static if ($0.bits == 32) {
         renew $cpu.eax as v7;
         commit v7;
-        renew $1 as v8;
+        renew $0 as v8;
         commit v8;
         $flags.SF := v7.svalue < v8.svalue;
         $flags.CF := v7.uvalue < v8.uvalue;
         $flags.PF := unknown;
         $flags.AF := unknown;
         if (v7.value == v8.value) {
-            renew $2 as v9;
+            renew $1 as v9;
             commit v9;
-            renew $1 as v10;
+            renew $0 as v10;
             v10.value := v9.value;
             commit v10;
             $flags.ZF := 1;
         } else {
-            renew $1 as v11;
+            renew $0 as v11;
             commit v11;
             renew v7 as v12;
             v12.value := v11.value;
             commit v12;
             $flags.ZF := 0;
         }
-    } else static if ($1.bits == 16) {
+    } else static if ($0.bits == 16) {
         renew $cpu.ax as v13;
         commit v13;
-        renew $1 as v14;
+        renew $0 as v14;
         commit v14;
         $flags.SF := v13.svalue < v14.svalue;
         $flags.CF := v13.uvalue < v14.uvalue;
         $flags.PF := unknown;
         $flags.AF := unknown;
         if (v13.value == v14.value) {
-            renew $2 as v15;
+            renew $1 as v15;
             commit v15;
-            renew $1 as v16;
+            renew $0 as v16;
             v16.value := v15.value;
             commit v16;
             $flags.ZF := 1;
         } else {
-            renew $1 as v17;
+            renew $0 as v17;
             commit v17;
             renew v13 as v18;
             v18.value := v17.value;
             commit v18;
             $flags.ZF := 0;
         }
-    } else static if ($1.bits == 8) {
+    } else static if ($0.bits == 8) {
         renew $cpu.al as v19;
         commit v19;
-        renew $1 as v20;
+        renew $0 as v20;
         commit v20;
         $flags.SF := v19.svalue < v20.svalue;
         $flags.CF := v19.uvalue < v20.uvalue;
         $flags.PF := unknown;
         $flags.AF := unknown;
         if (v19.value == v20.value) {
-            renew $2 as v21;
+            renew $1 as v21;
             commit v21;
-            renew $1 as v22;
+            renew $0 as v22;
             v22.value := v21.value;
             commit v22;
             $flags.ZF := 1;
         } else {
-            renew $1 as v23;
+            renew $0 as v23;
             commit v23;
             renew v19 as v24;
             v24.value := v23.value;
@@ -4053,9 +4053,9 @@ pattern {
 }
 
 pattern {
-    asm dec $1;
+    asm dec $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value - 1;
@@ -4068,11 +4068,11 @@ pattern {
 }
 
 pattern {
-    asm div $1;
+    asm div $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    static if ($1.bits == 64) {
+    static if ($0.bits == 64) {
         renew $cpu.rdx_rax as v2;
         commit v2;
         renew $cpu.rdx as v3;
@@ -4082,7 +4082,7 @@ pattern {
         v4.uvalue := v2.uvalue / v1.uvalue;
         commit v4;
         update $cpu.rdx, $cpu.rax;
-    } else static if ($1.bits == 32) {
+    } else static if ($0.bits == 32) {
         renew $cpu.edx_eax as v5;
         commit v5;
         renew $cpu.edx as v6;
@@ -4092,7 +4092,7 @@ pattern {
         v7.uvalue := v5.uvalue / v1.uvalue;
         commit v7;
         update $cpu.edx, $cpu.eax;
-    } else static if ($1.bits == 16) {
+    } else static if ($0.bits == 16) {
         renew $cpu.dx_ax as v8;
         commit v8;
         renew $cpu.dx as v9;
@@ -4102,7 +4102,7 @@ pattern {
         v10.uvalue := v8.uvalue / v1.uvalue;
         commit v10;
         update $cpu.dx, $cpu.ax;
-    } else static if ($1.bits == 8) {
+    } else static if ($0.bits == 8) {
         renew $cpu.ax as v11;
         commit v11;
         renew $cpu.ah as v12;
@@ -4123,16 +4123,16 @@ pattern {
     $flags.PF := unknown;
 }
 
-// asm enter $1, $2;
+// asm enter $0, $1;
 
 // asm hlt();
 
 pattern {
-    asm idiv $1;
+    asm idiv $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    static if ($1.bits == 64) {
+    static if ($0.bits == 64) {
         renew $cpu.rdx_rax as v2;
         commit v2;
         renew $cpu.rdx as v3;
@@ -4142,7 +4142,7 @@ pattern {
         v4.svalue := v2.svalue / v1.svalue;
         commit v4;
         update $cpu.rdx, $cpu.rax;
-    } else static if ($1.bits == 32) {
+    } else static if ($0.bits == 32) {
         renew $cpu.edx_eax as v5;
         commit v5;
         renew $cpu.edx as v6;
@@ -4152,7 +4152,7 @@ pattern {
         v7.svalue := v5.svalue / v1.svalue;
         commit v7;
         update $cpu.edx, $cpu.eax;
-    } else static if ($1.bits == 16) {
+    } else static if ($0.bits == 16) {
         renew $cpu.dx_ax as v8;
         commit v8;
         renew $cpu.dx as v9;
@@ -4162,7 +4162,7 @@ pattern {
         v10.svalue := v8.svalue / v1.svalue;
         commit v10;
         update $cpu.dx, $cpu.ax;
-    } else static if ($1.bits == 8) {
+    } else static if ($0.bits == 8) {
         renew $cpu.ax as v11;
         commit v11;
         renew $cpu.ah as v12;
@@ -4184,23 +4184,23 @@ pattern {
 }
 
 pattern {
-    asm imul $1;
+    asm imul $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    static if ($1.bits == 64) {
+    static if ($0.bits == 64) {
         renew $cpu.rax as v2;
         commit v2;
         renew $cpu.rax_rax as v3;
         v3.svalue := v2.svalue * v1.svalue;
         commit v3;
-    } else static if ($1.bits == 32) {
+    } else static if ($0.bits == 32) {
         renew $cpu.eax as v4;
         commit v4;
         renew $cpu.eax_eax as v5;
         v5.svalue := v4.svalue * v1.svalue;
         commit v5;
-    } else static if ($1.bits == 16) {
+    } else static if ($0.bits == 16) {
         renew $cpu.ax as v6;
         commit v6;
         renew $cpu.ax_ax as v7;
@@ -4218,11 +4218,11 @@ pattern {
 }
 
 pattern {
-    asm imul $1, $2;
+    asm imul $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.svalue := v1.svalue * v2.svalue;
@@ -4236,13 +4236,13 @@ pattern {
 }
 
 pattern {
-    asm imul $1, $2, $3;
+    asm imul $0, $1, $2;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $3 as v2;
+    renew $2 as v2;
     commit v2;
-    renew $1 as v3;
+    renew $0 as v3;
     v3.svalue := v1.svalue * v2.svalue;
     commit v3;
     $flags.CF := unknown;
@@ -4256,9 +4256,9 @@ pattern {
 // asm in $dest, $src;
 
 pattern {
-    asm inc $1;
+    asm inc $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.value := v1.value + 1;
@@ -4283,272 +4283,272 @@ pattern {
 // iretd();
 
 pattern {
-    asm ja $1;
+    asm ja $0;
 } code {
     if ($flags.ZF == 1 && $flags.CF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jae $1;
+    asm jae $0;
 } code {
     if ($flags.CF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jb $1;
+    asm jb $0;
 } code {
     if ($flags.CF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jbe $1;
+    asm jbe $0;
 } code {
     if ($flags.ZF == 1 || $flags.CF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jc $1;
+    asm jc $0;
 } code {
     if ($flags.CF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jcxz $1;
+    asm jcxz $0;
 } code {
     if ($cpu.cx.value == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jecxz $1;
+    asm jecxz $0;
 } code {
     if ($cpu.ecx.value == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jrcxz $1;
+    asm jrcxz $0;
 } code {
     if ($cpu.rcx.value == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm je $1;
+    asm je $0;
 } code {
     if ($flags.ZF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jg $1;
+    asm jg $0;
 } code {
     if ($flags.ZF == 0 && $flags.SFeqOF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jge $1;
+    asm jge $0;
 } code {
     if ($flags.SFeqOF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jl $1;
+    asm jl $0;
 } code {
     if ($flags.SFeqOF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jle $1;
+    asm jle $0;
 } code {
     if ($flags.ZF == 1 && $flags.SFeqOF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jmp $1;
+    asm jmp $0;
 } code {
-    goto $1.avalue;
+    goto $0.avalue;
 }
 
 pattern {
-    asm jna $1;
+    asm jna $0;
 } code {
     if ($flags.ZF == 1 || $flags.CF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnae $1;
+    asm jnae $0;
 } code {
     if ($flags.CF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnb $1;
+    asm jnb $0;
 } code {
     if ($flags.CF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnb $1;
+    asm jnb $0;
 } code {
     if ($flags.ZF == 0 && $flags.CF == 0 == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnc $1;
+    asm jnc $0;
 } code {
     if ($flags.CF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jne $1;
+    asm jne $0;
 } code {
     if ($flags.ZF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jng $1;
+    asm jng $0;
 } code {
     if ($flags.ZF == 1 || $flags.SFeqOF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnge $1;
+    asm jnge $0;
 } code {
     if ($flags.SFeqOF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnl $1;
+    asm jnl $0;
 } code {
     if ($flags.SFeqOF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnle $1;
+    asm jnle $0;
 } code {
     if ($flags.ZF == 0 && $flags.SFeqOF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jno $1;
+    asm jno $0;
 } code {
     if ($flags.OF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnp $1;
+    asm jnp $0;
 } code {
     if ($flags.PF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jns $1;
+    asm jns $0;
 } code {
     if ($flags.SF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jnz $1;
+    asm jnz $0;
 } code {
     if ($flags.ZF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jo $1;
+    asm jo $0;
 } code {
     if ($flags.OF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jp $1;
+    asm jp $0;
 } code {
     if ($flags.PF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jpe $1;
+    asm jpe $0;
 } code {
     if ($flags.PF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jpo $1;
+    asm jpo $0;
 } code {
     if ($flags.PF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm js $1;
+    asm js $0;
 } code {
     if ($flags.SF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm jz $1;
+    asm jz $0;
 } code {
     if ($flags.ZF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
@@ -4560,10 +4560,10 @@ pattern {
 // lgs(void *$dest, void *$src);
 
 pattern {
-    asm lea $1, $2;
+    asm lea $0, $1;
 } code {
-    renew $1 as v1;
-    v1.value := $2.addr;
+    renew $0 as v1;
+    v1.value := $1.addr;
     commit v1;
 }
 
@@ -4811,12 +4811,12 @@ pattern {
 }
 
 pattern {
-    asm loop $1;
+    asm loop $0;
 } code {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
     assert($cpu.cl.uvalue == 0);
     assert($cpu.ch.uvalue == 0);
@@ -4826,42 +4826,42 @@ pattern {
 }
 
 pattern {
-    asm loope $1;
+    asm loope $0;
 } code {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || $flags.ZF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm loopne $1;
+    asm loopne $0;
 } code {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || $flags.ZF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    asm loopnz $1;
+    asm loopnz $0;
 } code {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || $flags.ZF == 0) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
 pattern {
-    loopz $1;
+    loopz $0;
 } code {
     renew $cpu.rcx as v1;
     commit v1;
     if (v1.uvalue || $flags.ZF == 1) {
-        goto $1.avalue;
+        goto $0.avalue;
     }
 }
 
@@ -4871,29 +4871,29 @@ pattern {
 // monitor();
 
 pattern {
-    mov $1, $2;
+    mov $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     v2.value := v1.value;
     commit v2;
     assert(v1.value == v2.value);
 }
 
 pattern {
-    asm movbe $1, $2;
-    assert($1.bits == 64);
+    asm movbe $0, $1;
+    assert($0.bits == 64);
 } code {
     ...
 }
 
 pattern {
-    asm movbe $1, $2;
-    assert($1.bits == 32);
+    asm movbe $0, $1;
+    assert($0.bits == 32);
 } code {
     new v1;
-    v1.addr := $2.addr;
+    v1.addr := $1.addr;
     v1.bits := 32;
     commit v1;
     new v2;
@@ -4921,18 +4921,18 @@ pattern {
     v7.uvalue := ((v4.uvalue << 8) | v5.uvalue)
     commit v7;
     new v8;
-    v8.addr := $1.addr;
+    v8.addr := $0.addr;
     v8.bits := 32;
     v8.uvalue := ((v6.uvalue << 16) | v7.uvalue);
-    update $1;
+    update $0;
 }
 
 pattern {
-    asm movbe $1, $2;
-    assert($1.bits == 16);
+    asm movbe $0, $1;
+    assert($0.bits == 16);
 } code {
     new v1;
-    v1.addr := $2.addr;
+    v1.addr := $1.addr;
     v1.bits := 16;
     commit v1;
     new v2;
@@ -4944,7 +4944,7 @@ pattern {
     v3.uvalue := ((v1 >> 8) & 0xFF);
     commit v3;
     new v4;
-    v4.addr := $1;
+    v4.addr := $0;
     v4.bits := 16;
     v4.uvalue := (v3.uvalue | (v2.uvalue << 8));
     commit v4;
@@ -5213,56 +5213,56 @@ pattern {
 }
 
 pattern {
-    movsx $1, $2;
+    movsx $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     v2.svalue := v1.svalue;
     commit v2;
     assert(v1.svalue == v2.svalue);
 }
 
 pattern {
-    asm movzx $1, $2;
+    asm movzx $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     v2.uvalue := v1.uvalue;
     commit v2;
     assert(v1.uvalue == v2.uvalue);
 }
 
 pattern {
-    asm mul $1;
+    asm mul $0;
 } code {
-    static if ($1.bits == 64) {
-        renew $1 as v1;
+    static if ($0.bits == 64) {
+        renew $0 as v1;
         commit v1;
         renew $cpu.rax as v2;
         commit v2;
         renew $cpu.rdx_rax as v3;
         v3.uvalue := v1.uvalue * v2.uvalue;
         commit v3;
-    } else static if ($1.bits == 32) {
-        renew $1 as v4;
+    } else static if ($0.bits == 32) {
+        renew $0 as v4;
         commit v4;
         renew $cpu.eax as v5;
         commit v5;
         renew $cpu.edx_eax as v6;
         v6.uvalue := v4.uvalue * v5.uvalue;
         commit v6;
-    } else static if ($1.bits == 16) {
-        renew $1 as v7;
+    } else static if ($0.bits == 16) {
+        renew $0 as v7;
         commit v7;
         renew $cpu.ax as v8;
         commit v8;
         renew $cpu.dx_ax as v9;
         v9.uvalue := v7.uvalue * v8.uvalue;
         commit v9;
-    } else static if ($1.bits == 8) {
-        renew $1 as v10;
+    } else static if ($0.bits == 8) {
+        renew $0 as v10;
         commit v10;
         renew $cpu.al as v11;
         commit v11;
@@ -5283,9 +5283,9 @@ pattern {
 // mwait();
 
 pattern {
-    asm neg $1;
+    asm neg $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.svalue := -v1.svalue;
@@ -5299,9 +5299,9 @@ pattern {
 }
 
 pattern {
-    asm not $1;
+    asm not $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew v1 as v2;
     v2.uvalue := ~v1.uvalue;
@@ -5309,11 +5309,11 @@ pattern {
 }
 
 pattern {
-    asm or $1, $2;
+    asm or $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     renew v2 as v3;
     v3.uvalue := (v1.uvalue | v2.uvalue);
@@ -5336,7 +5336,7 @@ pattern {
 // pause();
 
 pattern {
-    pop $1;
+    pop $0;
 } code {
     renew $cpu.rsp as v1;
     commit v1;
@@ -5344,7 +5344,7 @@ pattern {
     v2.addr := v1.pvalue;
     v2.bits := 64;
     commit v2;
-    renew $1 as v3;
+    renew $0 as v3;
     v3.value := v2.value;
     commit v3;
     renew v1 as v4;
@@ -5353,9 +5353,9 @@ pattern {
 }
 
 pattern {
-    asm pop $1;
+    asm pop $0;
 } code {
-    pop $1;
+    pop $0;
 }
 
 pattern {
@@ -5373,9 +5373,9 @@ pattern {
 
 
 pattern {
-    popcnt $1, $2;
+    popcnt $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
     new i1;
     i1.uvalue := 0;
@@ -5392,11 +5392,11 @@ pattern {
         renew i1 as i2;
         i2.uvalue := i1.uvalue + 1;
         commit i2;
-        if (i2.uvalue >= $1.bits) {
+        if (i2.uvalue >= $0.bits) {
             break;
         }
     }
-    renew $1 as v2;
+    renew $0 as v2;
     v2.uvalue := cnt1.uvalue;
     commit v2;
 }
@@ -5425,9 +5425,9 @@ pattern {
 }
 
 pattern {
-    push $1;
+    push $0;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
     renew $cpu.rsp as v2;
     commit v2;
@@ -5447,13 +5447,13 @@ pattern {
 // rcr(XSIGNED $dest, XSIGNED $src);
 
 pattern {
-    asm rol $1, $2;
+    asm rol $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
-    static if ($1.bits == 64) {
+    static if ($0.bits == 64) {
         renew v2 as v3;
         v3.uvalue := $fn._rotl64(v2.uvalue, v1.uvalue);
         commit v3;
@@ -5465,13 +5465,13 @@ pattern {
 }
 
 pattern {
-    asm ror $1, $2;
+    asm ror $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
-    static if ($1.bits == 64) {
+    static if ($0.bits == 64) {
         renew v2 as v3;
         v3.uvalue := $fn._rotr64(v2.uvalue, v1.uvalue);
         commit v3;
@@ -5492,11 +5492,11 @@ pattern {
 // sahf();
 
 pattern {
-    asm sal $1, $2;
+    asm sal $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     renew v2 as v3;
     v3.svalue := v2.svalue << v1.uvalue;
@@ -5510,11 +5510,11 @@ pattern {
 }
 
 pattern {
-    asm sar $1, $2;
+    asm sar $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     renew v2 as v3;
     v3.svalue := v2.svalue >> v1.uvalue;
@@ -5528,11 +5528,11 @@ pattern {
 }
 
 pattern {
-    asm shl $1, $2;
+    asm shl $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     renew v2 as v3;
     v3.uvalue := v2.uvalue << v1.uvalue;
@@ -5546,11 +5546,11 @@ pattern {
 }
 
 pattern {
-    asm shr $1, $2;
+    asm shr $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     renew v2 as v3;
     v3.uvalue := v2.uvalue >> v1.uvalue;
@@ -5564,11 +5564,11 @@ pattern {
 }
 
 pattern {
-    sbb $1, $2;
+    sbb $0, $1;
 } code {
-    renew $2 as v1;
+    renew $1 as v1;
     commit v1;
-    renew $1 as v2;
+    renew $0 as v2;
     commit v2;
     renew v2 as v3;
     if ($flags.CF == 1) {
@@ -6079,300 +6079,300 @@ alias asm repnz_scasd := asm repne_scasd;
 alias asm repnz_scasq := asm repne_scasq;
 
 pattern {
-    asm seta $1;
+    asm seta $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 0 && $flags.CF == 0;
     commit v1;
 }
 
 pattern {
-    asm setae $1;
+    asm setae $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.CF == 0;
     commit v1;
 }
 
 pattern {
-    asm setb $1;
+    asm setb $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.CF;
     commit v1;
 }
 
 pattern {
-    asm setbe $1;
+    asm setbe $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 1 || $flags.CF == 1;
     commit v1;
 }
 
 pattern {
-    asm setc $1;
+    asm setc $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.CF;
     commit v1;
 }
 
 pattern {
-    asm sete $1;
+    asm sete $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF;
     commit v1;
 }
 
 pattern {
-    asm setg $1;
+    asm setg $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 0 && $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setge $1;
+    asm setge $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setl $1;
+    asm setl $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setle $1;
+    asm setle $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF && $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setna $1;
+    asm setna $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF && $flags.CF;
     commit v1;
 }
 
 pattern {
-    asm setnae $1;
+    asm setnae $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.CF;
     commit v1;
 }
 
 pattern {
-    asm setnb $1;
+    asm setnb $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.CF == 0;
     commit v1;
 }
 
 pattern {
-    asm setnbe $1;
+    asm setnbe $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 0 && $flags.CF == 0;
     commit v1;
 }
 
 pattern {
-    asm setnc $1;
+    asm setnc $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.CF == 0;
     commit v1;
 }
 
 pattern {
-    asm setne $1;
+    asm setne $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 0;
     commit v1;
 }
 
 pattern {
-    asm setng $1;
+    asm setng $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF || $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setnge $1;
+    asm setnge $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setnl $1;
+    asm setnl $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setnle $1;
+    asm setnle $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 0 && $flags.SFeqOF;
     commit v1;
 }
 
 pattern {
-    asm setno $1;
+    asm setno $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.OF == 0;
     commit v1;
 }
 
 pattern {
-    asm setnp $1;
+    asm setnp $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.PF == 0;
     commit v1;
 }
 
 pattern {
-    asm setns $1;
+    asm setns $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.SF == 0;
     commit v1;
 }
 
 pattern {
-    asm setnz $1;
+    asm setnz $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF == 0;
     commit v1;
 }
 
 pattern {
-    asm seto $1;
+    asm seto $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.OF;
     commit v1;
 }
 
 pattern {
-    asm setp $1;
+    asm setp $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.PF;
     commit v1;
 }
 
 pattern {
-    asm setpe $1;
+    asm setpe $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.PF;
     commit v1;
 }
 
 pattern {
-    asm setpo $1;
+    asm setpo $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.PF == 0;
     commit v1;
 }
 
 pattern {
-    asm sets $1;
+    asm sets $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.SF;
     commit v1;
 }
 
 pattern {
-    asm setz $1;
+    asm setz $0;
 } code {
     new v1;
-    v1.addr := $1.addr;
+    v1.addr := $0.addr;
     v1.bits := 8;
     v1.value := $flags.ZF;
     commit v1;
@@ -6662,11 +6662,11 @@ pattern {
 // str($rm16);
 
 pattern {
-    sub $1, $2;
+    sub $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := v1.value - v2.value;
@@ -6676,18 +6676,18 @@ pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
-    update $1;
+    update $0;
 }
 
 // sysenter();
 // sysexit();
 
 pattern {
-    test $1, $2;
+    test $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     new v1 as v3;
     v3.value := (v1.value & v2.value);
@@ -6709,11 +6709,11 @@ pattern {
 // wrmsr();
 
 pattern {
-    xadd $1, $2;
+    xadd $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := v1.value + v2.value;
@@ -6727,20 +6727,20 @@ pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
+    update $0;
     update $1;
-    update $2;
 }
 
 pattern {
-    asm xchg $1, $2;
+    asm xchg $0, $1;
 } code {
-    swap $1, $2;
+    swap $0, $1;
 }
 
 // xgetbv();
 
 pattern {
-    asm xlat $1;
+    asm xlat $0;
 } code {
     asm xlatb;
 }
@@ -6763,11 +6763,11 @@ pattern {
 }
 
 pattern {
-    asm xor $1, $2;
+    asm xor $0, $1;
 } code {
-    renew $1 as v1;
+    renew $0 as v1;
     commit v1;
-    renew $2 as v2;
+    renew $1 as v2;
     commit v2;
     renew v1 as v3;
     v3.value := (v1.value ^ v2.value);
@@ -6777,7 +6777,7 @@ pattern {
     $flags.CF := 0;
     $flags.PF := unknown;
     $flags.AF := unknown;
-    update $1;
+    update $0;
 }
 
 // xrstor($mem);
