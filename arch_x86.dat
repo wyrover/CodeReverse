@@ -125,6 +125,16 @@ define $sse := {
 // level 0
 
 level(0) pattern {
+    asm nop;
+} code {
+}
+
+level(0) pattern {
+    asm nop $1;
+} code {
+}
+
+level(0) pattern {
     asm push $1;
     asm pop $1;
 } code {
@@ -282,22 +292,19 @@ level(0) pattern {
 } code {
     static if ($1.bits == 32) {
         renew $1 as v1;
-        v1.svalue := -1;
-        v1.uvalue := 0xFFFFFFFF;
+        v1.svalue := -1, v1.uvalue := 0xFFFFFFFF;
         commit v1;
         assert(v1.uvalue == 0xFFFFFFFF);
         assert(v1.svalue == -1);
     } else static if ($1.bits == 16) {
         renew $1 as v2;
-        v2.svalue := -1;
-        v2.uvalue := 0xFFFF;
+        v2.svalue := -1, v2.uvalue := 0xFFFF;
         commit v2;
         assert(v2.uvalue == 0xFFFF);
         assert(v2.svalue == -1);
     } else static if ($1.bits == 8) {
         renew $1 as v3;
-        v3.svalue := -1;
-        v3.uvalue := 0xFF;
+        v3.svalue := -1, v3.uvalue := 0xFF;
         commit v3;
         assert(v3.uvalue == 0xFF);
         assert(v3.svalue == -1);
@@ -330,22 +337,19 @@ level(0) pattern {
 } code {
     static if ($1.bits == 32) {
         renew $1 as v1;
-        v1.uvalue := 0xFFFFFFFF;
-        v1.svalue := -1;
+        v1.uvalue := 0xFFFFFFFF, v1.svalue := -1;
         commit v1;
         assert(v1.uvalue == 0xFFFFFFFF);
         assert(v1.svalue == -1);
     } else static if ($1.bits == 16) {
         renew $1 as v2;
-        v2.uvalue := 0xFFFF;
-        v2.svalue := -1;
+        v2.uvalue := 0xFFFF, v2.svalue := -1;
         commit v2;
         assert(v2.uvalue == 0xFFFFFFFF);
         assert(v2.svalue == -1);
     } else static if ($1.bits == 8) {
         renew $1 as v3;
-        v3.uvalue := 0xFF;
-        v3.svalue := -1;
+        v3.uvalue := 0xFF, v3.svalue := -1;
         commit v3;
         assert(v3.uvalue == 0xFFFFFFFF);
         assert(v3.svalue == -1);
@@ -2685,88 +2689,81 @@ alias asm repnz_cmpsd := asm repne_cmpsd;
 
 pattern {
     asm cmpxchg $1, $2;
-    assert($1.bits == 32);
 } code {
-    renew $cpu.eax as v1;
-    commit v1;
-    renew $1 as v2;
-    commit v2;
-    $flags.SF := v1.svalue < v2.svalue;
-    $flags.CF := v1.uvalue < v2.uvalue;
-    $flags.PF := unknown;
-    $flags.AF := unknown;
-    if (v1.value == v2.value) {
-        renew $2 as v3;
-        commit v3;
-        renew $1 as v4;
-        v4.value := v3.value;
-        commit v4;
-        $flags.ZF := 1;
+    static if ($1.bits == 32) {
+        renew $cpu.eax as v1;
+        commit v1;
+        renew $1 as v2;
+        commit v2;
+        $flags.SF := v1.svalue < v2.svalue;
+        $flags.CF := v1.uvalue < v2.uvalue;
+        $flags.PF := unknown;
+        $flags.AF := unknown;
+        if (v1.value == v2.value) {
+            renew $2 as v3;
+            commit v3;
+            renew $1 as v4;
+            v4.value := v3.value;
+            commit v4;
+            $flags.ZF := 1;
+        } else {
+            renew $1 as v5;
+            commit v5;
+            renew v1 as v6;
+            v6.value := v5.value;
+            commit v6;
+            $flags.ZF := 0;
+        }
+    } else static if ($1.bits == 16) {
+        renew $cpu.ax as v7;
+        commit v7;
+        renew $1 as v8;
+        commit v8;
+        $flags.SF := v7.svalue < v8.svalue;
+        $flags.CF := v7.uvalue < v8.uvalue;
+        $flags.PF := unknown;
+        $flags.AF := unknown;
+        if (v7.value == v8.value) {
+            renew $2 as v9;
+            commit v9;
+            renew $1 as v10;
+            v10.value := v9.value;
+            commit v10;
+            $flags.ZF := 1;
+        } else {
+            renew $1 as v11;
+            commit v11;
+            renew v7 as v12;
+            v12.value := v11.value;
+            commit v12;
+            $flags.ZF := 0;
+        }
+    } else static if ($1.bits == 8) {
+        renew $cpu.al as v13;
+        commit v13;
+        renew $1 as v14;
+        commit v14;
+        $flags.SF := v13.svalue < v14.svalue;
+        $flags.CF := v13.uvalue < v14.uvalue;
+        $flags.PF := unknown;
+        $flags.AF := unknown;
+        if (v13.value == v14.value) {
+            renew $2 as v15;
+            commit v15;
+            renew $1 as v16;
+            v16.value := v15.value;
+            commit v16;
+            $flags.ZF := 1;
+        } else {
+            renew $1 as v17;
+            commit v17;
+            renew v13 as v18;
+            v18.value := v17.value;
+            commit v18;
+            $flags.ZF := 0;
+        }
     } else {
-        renew $1 as v5;
-        commit v5;
-        renew $cpu.eax as v6;
-        v6.value := v5.value;
-        commit v6;
-        $flags.ZF := 0;
-    }
-}
-
-pattern {
-    asm cmpxchg $1, $2;
-    assert($1.bits == 16);
-} code {
-    renew $cpu.ax as v1;
-    commit v1;
-    renew $1 as v2;
-    commit v2;
-    $flags.SF := v1.svalue < v2.svalue;
-    $flags.CF := v1.uvalue < v2.uvalue;
-    $flags.PF := unknown;
-    $flags.AF := unknown;
-    if (v1.value == v2.value) {
-        renew $2 as v3;
-        commit v3;
-        renew $1 as v4;
-        v4.value := v3.value;
-        commit v4;
-        $flags.ZF := 1;
-    } else {
-        renew $1 as v5;
-        commit v5;
-        renew $cpu.ax as v6;
-        v6.value := v5.value;
-        commit v6;
-        $flags.ZF := 0;
-    }
-}
-
-pattern {
-    asm cmpxchg $1, $2
-    assert($1.bits == 8);
-} code {
-    renew $cpu.al as v1;
-    commit v1;
-    renew $1 as v2;
-    commit v2;
-    $flags.SF := v1.svalue < v2.svalue;
-    $flags.CF := v1.uvalue < v2.uvalue;
-    $flags.PF := unknown;
-    $flags.AF := unknown;
-    if (v1.value == v2.value) {
-        renew $2 as v3;
-        commit v3;
-        renew $1 as v4;
-        v4.value := v3.value;
-        commit v4;
-        $flags.ZF := 1;
-    } else {
-        renew $1 as v5;
-        commit v5;
-        renew $cpu.al as v6;
-        v6.value := v5.value;
-        commit v6;
-        $flags.ZF := 0;
+        assert(0);
     }
 }
 
@@ -3850,53 +3847,34 @@ pattern {
 
 pattern {
     asm mul $1;
-    assert($1.bits == 32);
 } code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.eax as v2;
-    commit v2;
-    renew $cpu.edx_eax as v3;
-    v3.uvalue := v1.uvalue * v2.uvalue;
-    commit v3;
-    $flags.OF := unknown;
-    $flags.CF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm mul $1;
-    assert($1.bits == 16);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    renew $cpu.dx_ax as v3;
-    v3.uvalue := v1.uvalue * v2.uvalue;
-    commit v3;
-    $flags.OF := unknown;
-    $flags.CF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm mul $1;
-    assert($1.bits == 8);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.al as v2;
-    commit v2;
-    renew $cpu.ax as v3;
-    v3.uvalue := v1.uvalue * v2.uvalue;
-    commit v3;
+    static if ($1.bits == 32) {
+        renew $1 as v1;
+        commit v1;
+        renew $cpu.eax as v2;
+        commit v2;
+        renew $cpu.edx_eax as v3;
+        v3.uvalue := v1.uvalue * v2.uvalue;
+        commit v3;
+    } else static if ($1.bits == 16) {
+        renew $1 as v4;
+        commit v4;
+        renew $cpu.ax as v5;
+        commit v5;
+        renew $cpu.dx_ax as v6;
+        v6.uvalue := v4.uvalue * v5.uvalue;
+        commit v6;
+    } else static if ($1.bits == 8) {
+        renew $1 as v7;
+        commit v7;
+        renew $cpu.al as v8;
+        commit v8;
+        renew $cpu.ax as v9;
+        v9.uvalue := v7.uvalue * v8.uvalue;
+        commit v9;
+    } else {
+        assert(0);
+    }
     $flags.OF := unknown;
     $flags.CF := unknown;
     $flags.SF := unknown;
