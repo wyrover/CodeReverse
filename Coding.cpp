@@ -935,7 +935,10 @@ void CR_OpCode32::ParseText(const char *text) {
 } // CR_OpCode32::ParseText
 
 void CR_OpCode32::DeductOperandSizes() {
-    if (Name() == "mov" || Name() == "cmp" ||
+    if (Name() == "push") {
+        Operand(0)->Size() = 4;
+    } else if (
+        Name() == "mov" || Name() == "cmp" ||
         Name() == "test" || Name() == "and" ||
         Name() == "or" || Name() == "xor" || 
         Name() == "add" || Name() == "adc" || 
@@ -1206,7 +1209,10 @@ void CR_OpCode64::ParseText(const char *text) {
 } // CR_OpCode64::ParseText
 
 void CR_OpCode64::DeductOperandSizes() {
-    if (Name() == "mov" || Name() == "cmp" ||
+    if (Name() == "push") {
+        Operand(0)->Size() = 8;
+    } else if (
+        Name() == "mov" || Name() == "cmp" ||
         Name() == "test" || Name() == "and" ||
         Name() == "or" || Name() == "xor" || 
         Name() == "add" || Name() == "adc" || 

@@ -172,6 +172,588 @@ define $sse := {
 };
 
 ////////////////////////////////////////////////////////////////////////////
+// level 0
+
+level(0) pattern {
+    asm push $1;
+    asm pop $1;
+} code {
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm pop $2;
+    asm pop $1;
+} code {
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm push $3;
+    asm pop $3;
+    asm pop $2;
+    asm pop $1;
+} code {
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm push $3;
+    asm push $4;
+    asm pop $4;
+    asm pop $3;
+    asm pop $2;
+    asm pop $1;
+} code {
+}
+
+level(0) pattern {
+    asm push $1;
+    asm pop $2;
+} code {
+    asm mov $2, $1;
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm pop $3;
+    asm pop $4;
+} code {
+    asm mov $3, $2;
+    asm mov $4, $1;
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm push $3;
+    asm pop $4;
+    asm pop $5;
+    asm pop $6;
+} code {
+    asm mov $4, $3;
+    asm mov $5, $2;
+    asm mov $6, $1;
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm push $3;
+    asm push $4;
+    asm pop $5;
+    asm pop $6;
+    asm pop $7;
+    asm pop $8;
+} code {
+    asm mov $5, $4;
+    asm mov $6, $3;
+    asm mov $7, $2;
+    asm mov $8, $1;
+}
+
+level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm push $3;
+    asm push $4;
+    asm push $5;
+    asm pop $6;
+    asm pop $7;
+    asm pop $8;
+    asm pop $9;
+    asm pop $10;
+} code {
+    asm mov $6, $5;
+    asm mov $7, $4;
+    asm mov $8, $3;
+    asm mov $9, $2;
+    asm mov $10, $1;
+}
+
+level(0) pattern {
+    asm cdq;
+    asm xor eax, edx;
+    asm sub eax, edx;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.svalue := $fn.abs(v1.svalue);
+    commit v2;
+    update $cpu.eax;
+    $cpu.dl.value := unknown;
+    $cpu.dh.value := unknown;
+    $cpu.dx.value := unknown;
+    $cpu.edx.value := unknown;
+}
+
+level(0) pattern {
+    asm cqo;
+    asm xor rax, rdx;
+    asm sub rax, rdx;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.svalue := $fn._abs64(v1.svalue);
+    commit v2;
+    update $cpu.rax;
+    $cpu.dl.value := unknown;
+    $cpu.dh.value := unknown;
+    $cpu.dx.value := unknown;
+    $cpu.edx.value := unknown;
+    $cpu.rdx.value := unknown;
+}
+
+level(0) pattern {
+    asm push rbp;
+    asm mov rbp, rsp;
+    asm sub rsp, $1;
+} code {
+    enter $1, 0;
+}
+
+level(0) pattern {
+    asm push rbp;
+    asm mov rbp, rsp;
+} code {
+    enter 0, 0;
+}
+
+level(0) pattern {
+    asm mov rsp, rbp;
+    asm pop rbp;
+} code {
+    leave;
+}
+
+level(0) pattern {
+    asm enter $1, $2;
+} code {
+    enter $1, $2;
+}
+
+level(0) pattern {
+    asm leave;
+} code {
+    leave;
+}
+
+level(0) pattern {
+    asm xor $1, $1;
+    asm not $1;
+} code {
+    static if ($1.bits == 64) {
+        renew $1 as v1;
+        v1.svalue := -1;
+        v1.uvalue := 0xFFFFFFFFFFFFFFFF;
+        commit v1;
+        assert(v1.uvalue == 0xFFFFFFFFFFFFFFFF);
+        assert(v1.svalue == -1);
+    } else static if ($1.bits == 32) {
+        renew $1 as v2;
+        v2.svalue := -1;
+        v2.uvalue := 0xFFFFFFFF;
+        commit v2;
+        assert(v2.uvalue == 0xFFFFFFFF);
+        assert(v2.svalue == -1);
+    } else static if ($1.bits == 16) {
+        renew $1 as v3;
+        v3.svalue := -1;
+        v3.uvalue := 0xFFFF;
+        commit v3;
+        assert(v3.uvalue == 0xFFFF);
+        assert(v3.svalue == -1);
+    } else static if ($1.bits == 8) {
+        renew $1 as v4;
+        v4.svalue := -1;
+        v4.uvalue := 0xFF;
+        commit v4;
+        assert(v4.uvalue == 0xFF);
+        assert(v4.svalue == -1);
+    } else {
+        assert(0);
+    }
+    update $1;
+}
+
+level(0) pattern {
+    asm xor $1, $1;
+    asm inc $1;
+} code {
+    renew $1 as v1;
+    v1.value := 1;
+    commit v1;
+    $flags.OF := 0;
+    $flags.SF := 0;
+    $flags.ZF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    assert(v1.uvalue == 1);
+    assert(v1.svalue == 1);
+    update $1;
+}
+
+level(0) pattern {
+    asm xor $1, $1;
+    asm dec $1;
+} code {
+    static if ($1.bits == 64) {
+        renew $1 as v1;
+        v1.uvalue := 0xFFFFFFFFFFFFFFFF;
+        v1.svalue := -1;
+        commit v1;
+        assert(v1.uvalue == 0xFFFFFFFFFFFFFFFF);
+        assert(v1.svalue == -1);
+    } else static if ($1.bits == 32) {
+        renew $1 as v2;
+        v2.uvalue := 0xFFFFFFFF;
+        v2.svalue := -1;
+        commit v2;
+        assert(v2.uvalue == 0xFFFFFFFF);
+        assert(v2.svalue == -1);
+    } else static if ($1.bits == 16) {
+        renew $1 as v3;
+        v3.uvalue := 0xFFFF;
+        v3.svalue := -1;
+        commit v3;
+        assert(v3.uvalue == 0xFFFFFFFF);
+        assert(v3.svalue == -1);
+    } else static if ($1.bits == 8) {
+        renew $1 as v4;
+        v4.uvalue := 0xFF;
+        v4.svalue := -1;
+        commit v4;
+        assert(v4.uvalue == 0xFFFFFFFF);
+        assert(v4.svalue == -1);
+    } else {
+        assert(0);
+    }
+    $flags.OF := 0;
+    $flags.SF := 1;
+    $flags.ZF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    update $1;
+}
+
+level(0) pattern {
+    asm mov $1, $1;
+} code {
+}
+
+level(0) pattern {
+    asm movnti $1, $1;
+} code {
+}
+
+level(0) pattern {
+    asm movnti $1, $2;
+} code {
+    asm mov $1, $2;
+}
+
+level(0) pattern {
+    asm lea $1, [$1];
+} code {
+}
+
+level(0) pattern {
+    asm shl $1, 1;
+    asm shl $1, 1;
+    asm shl $1, 1;
+    asm shl $1, 1;
+    asm shl $1, 1;
+} code {
+    asm shl $1, 5;
+}
+
+level(0) pattern {
+    asm shl $1, 1;
+    asm shl $1, 1;
+    asm shl $1, 1;
+    asm shl $1, 1;
+} code {
+    asm shl $1, 4;
+}
+
+level(0) pattern {
+    asm shl $1, 1;
+    asm shl $1, 1;
+    asm shl $1, 1;
+} code {
+    asm shl $1, 3;
+}
+
+level(0) pattern {
+    asm shl $1, 1;
+    asm shl $1, 1;
+} code {
+    asm shl $1, 2;
+}
+
+level(0) pattern {
+    asm shr $1, 1;
+    asm shr $1, 1;
+    asm shr $1, 1;
+    asm shr $1, 1;
+    asm shr $1, 1;
+} code {
+    asm shr $1, 5;
+}
+
+level(0) pattern {
+    asm shr $1, 1;
+    asm shr $1, 1;
+    asm shr $1, 1;
+    asm shr $1, 1;
+} code {
+    asm shr $1, 4;
+}
+
+level(0) pattern {
+    asm shr $1, 1;
+    asm shr $1, 1;
+    asm shr $1, 1;
+} code {
+    asm shr $1, 3;
+}
+
+level(0) pattern {
+    asm shr $1, 1;
+    asm shr $1, 1;
+} code {
+    asm shr $1, 2;
+}
+
+level(0) pattern {
+    asm sal $1, 1;
+    asm sal $1, 1;
+    asm sal $1, 1;
+    asm sal $1, 1;
+    asm sal $1, 1;
+} code {
+    asm sal $1, 5;
+}
+
+level(0) pattern {
+    asm sal $1, 1;
+    asm sal $1, 1;
+    asm sal $1, 1;
+    asm sal $1, 1;
+} code {
+    asm sal $1, 4;
+}
+
+level(0) pattern {
+    asm sal $1, 1;
+    asm sal $1, 1;
+    asm sal $1, 1;
+} code {
+    asm sal $1, 3;
+}
+
+level(0) pattern {
+    asm sal $1, 1;
+    asm sal $1, 1;
+} code {
+    asm sal $1, 2;
+}
+
+level(0) pattern {
+    asm sar $1, 1;
+    asm sar $1, 1;
+    asm sar $1, 1;
+    asm sar $1, 1;
+    asm sar $1, 1;
+} code {
+    asm sar $1, 5;
+}
+
+level(0) pattern {
+    asm sar $1, 1;
+    asm sar $1, 1;
+    asm sar $1, 1;
+    asm sar $1, 1;
+} code {
+    asm sar $1, 4;
+}
+
+level(0) pattern {
+    asm sar $1, 1;
+    asm sar $1, 1;
+    asm sar $1, 1;
+} code {
+    asm sar $1, 3;
+}
+
+level(0) pattern {
+    asm sar $1, 1;
+    asm sar $1, 1;
+} code {
+    asm sar $1, 2;
+}
+
+level(0) pattern {
+    asm jmp $label.1;
+$label.1:
+} code {
+$label.1:
+}
+
+////////////////////////////////////////////////////////////////////////////
+// level 1
+
+level(1) pattern {
+    asm xor $1, $1;
+} code {
+    renew $1 as v1;
+    v1.value := 0;
+    commit v1;
+    $flags.SF := 0;
+    $flags.ZF := 1;
+    $flags.OF := 0;
+    $flags.CF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
+    assert(v1.value == 0);
+    update $1;
+}
+
+level(1) pattern {
+    asm add $1, $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value := v1.value * 2;
+    commit v2;
+    $flags.ZF := v2.value == 0;
+    $flags.SF := v2.svalue < 0;
+    $flags.CF := v2.uvalue < v1.uvalue;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    update $1;
+}
+
+level(1) pattern {
+    asm and $1, $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    $flags.ZF := v1.value == 0;
+    $flags.SF := v1.svalue < 0;
+    $flags.CF := 0;
+    $flags.OF := 0;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+level(1) pattern {
+    asm or $1, $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    $flags.SF := 0;
+    $flags.ZF := v1.value == 0;
+    $flags.OF := 0;
+    $flags.CF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
+}
+
+level(1) pattern {
+    asm test $1, $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    $flags.ZF := v1.value == 0;
+    $flags.SF := v1.svalue < 0;
+    $flags.CF := 0;
+    $flags.OF := 0;
+    $flags.PF := unknown;
+    $flags.AF := unknown;
+}
+
+level(1) pattern {
+    asm dec $1;
+    asm dec $1;
+    asm dec $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value := v1.value - 3;
+    commit v2;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    update $1;
+}
+
+level(1) pattern {
+    asm dec $1;
+    asm dec $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value := v1.value - 2;
+    commit v2;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    update $1;
+}
+
+level(1) pattern {
+    asm inc $1;
+    asm inc $1;
+    asm inc $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value := v1.value + 3;
+    commit v2;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    update $1;
+}
+
+level(1) pattern {
+    asm inc $1;
+    asm inc $1;
+} code {
+    renew $1 as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value := v1.value + 2;
+    commit v2;
+    $flags.SF := v2.svalue < 0;
+    $flags.ZF := v2.value == 0;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+    update $1;
+}
+
+...
+
+////////////////////////////////////////////////////////////////////////////
 // update's
 
 //
@@ -1957,203 +2539,40 @@ pattern {
 // technical
 
 pattern {
-    asm push $1;
-    asm pop $1;
-} code {
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm pop $2;
-    asm pop $1;
-} code {
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm pop $3;
-    asm pop $2;
-    asm pop $1;
-} code {
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm push $4;
-    asm pop $4;
-    asm pop $3;
-    asm pop $2;
-    asm pop $1;
-} code {
-}
-
-pattern {
-    asm push $1;
-    asm pop $2;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $2 as v2;
-    v2.value := v1.value;
-    commit v2;
-    update $2;
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm pop $3;
-    asm pop $4;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $2 as v2;
-    commit v2;
-    renew $3 as v3;
-    v3.value := v2.value;
-    commit v3;
-    renew $4 as v4;
-    v4.value := v1.value;
-    commit v4;
-    update $3;
-    update $4;
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm pop $4;
-    asm pop $5;
-    asm pop $6;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $2 as v2;
-    commit v2;
-    renew $3 as v3;
-    commit v3;
-    renew $4 as v4;
-    v4.value := v3.value;
-    commit v4;
-    renew $5 as v5;
-    v5.value := v2.value;
-    commit v5;
-    renew $6 as v6;
-    v6.value := v1.value;
-    commit v6;
-    update $4;
-    update $5;
-    update $6;
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm push $4;
-    asm pop $5;
-    asm pop $6;
-    asm pop $7;
-    asm pop $8;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $2 as v2;
-    commit v2;
-    renew $3 as v3;
-    commit v3;
-    renew $4 as v4;
-    commit v4;
-    renew $5 as v5;
-    v5.value := v4.value;
-    commit v5;
-    renew $6 as v6;
-    v6.value := v3.value;
-    commit v6;
-    renew $7 as v7;
-    v7.value := v2.value;
-    commit v7;
-    renew $8 as v8;
-    v8.value := v1.value;
-    commit v8;
-    update $5;
-    update $6;
-    update $7;
-    update $8;
-}
-
-pattern {
-    asm push $1;
-    asm push $2;
-    asm push $3;
-    asm push $4;
-    asm push $5;
-    asm pop $6;
-    asm pop $7;
-    asm pop $8;
-    asm pop $9;
-    asm pop $10;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $2 as v2;
-    commit v2;
-    renew $3 as v3;
-    commit v3;
-    renew $4 as v4;
-    commit v4;
-    renew $5 as v5;
-    commit v5;
-    renew $6 as v6;
-    v6.value := v5.value;
-    commit v6;
-    renew $7 as v7;
-    v7.value := v4.value;
-    commit v7;
-    renew $8 as v8;
-    v8.value := v3.value;
-    commit v8;
-    renew $9 as v9;
-    v9.value := v2.value;
-    commit v9;
-    renew $10 as v10;
-    v10.value := v1.value;
-    commit v10;
-    update $6;
-    update $7;
-    update $8;
-    update $9;
-    update $10;
-}
-
-pattern {
-    assert($cpu.al.value == 0);
-    assert($cpu.rcx.uvalue == 0xFFFFFFFFFFFFFFFF);
     asm repne_scasb;
     asm not rcx;
     asm lea $1, [rcx-1];
 } code {
-    renew $cpu.rdi as v1;
-    v1.type := $type.ptr($type.s8);
-    commit v1;
-    new v2;
-    v2.addr := $1.addr;
-    v2.bits := 64;
-    v2.uvalue := $fn.strlen(v1.pvalue);
-    commit v2;
-    renew v1 as v3;
-    v3.pvalue := v1.pvalue + v2.value;
-    commit v3;
-    renew $cpu.ecx as v4;
-    v4.value := 0;
-    commit v4;
+    if ($cpu.al.value == 0 && 
+        ($cpu.rcx.svalue == -1 || $cpu.rcx.uvalue == 0xFFFFFFFFFFFFFFFF))
+    {
+        renew $cpu.rdi as v1;
+        v1.type := $type.ptr($type.s8);
+        commit v1;
+        renew $1 as v2;
+        v2.uvalue := $fn.strlen(v1.pvalue);
+        commit v2;
+        renew v1 as v3;
+        v3.pvalue := v1.pvalue + v2.value;
+        commit v3;
+        renew $cpu.rcx as v4;
+        v4.value := unknown;
+        commit v4;
+    } else {
+        asm repne_scasb;
+        renew $cpu.rcx as v5;
+        commit v5;
+        renew v5 as v6;
+        v6.uvalue := ~v5.uvalue;
+        commit v6;
+        renew $cpu.rcx as v7;
+        commit v7;
+        renew $1 as v8;
+        v8.value := v7.value - 1;
+        commit v8;
+    }
     update $cpu.rcx;
+    update $1;
 }
 
 pattern {
@@ -2208,440 +2627,6 @@ $label.1:
 }
 
 pattern {
-    asm cdq;
-    asm xor eax, edx;
-    asm sub eax, edx;
-} code {
-    renew $cpu.eax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := $fn.abs(v1.value);
-    commit v2;
-    update $cpu.eax;
-}
-
-pattern {
-    asm cqo;
-    asm xor rax, rdx;
-    asm sub rax, rdx;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := $fn.abs(v1.value);
-    commit v2;
-    update $cpu.rax;
-}
-
-pattern {
-    asm push rbp;
-    asm mov rbp, rsp;
-    asm sub rsp, $1;
-} code {
-    enter $1, 0;
-}
-
-pattern {
-    asm push rbp;
-    asm mov rbp, rsp;
-} code {
-    enter 0, 0;
-}
-
-pattern {
-    asm mov rsp, rbp;
-    asm pop rbp;
-} code {
-    leave;
-}
-
-} code {
-    asm enter $1, $2;
-}  else {
-    enter $1, $2;
-}
-
-} code {
-    asm leave;
-}  else {
-    leave;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm not $1;
-    assert($1.bits == 64);
-} code {
-    renew $1 as v1;
-    v1.svalue := -1;
-    v1.uvalue := 0xFFFFFFFFFFFFFFFF;
-    commit v1;
-    assert(v1.uvalue == 0xFFFFFFFFFFFFFFFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm not $1;
-    assert($1.bits == 32);
-} code {
-    renew $1 as v1;
-    v1.svalue := -1;
-    v1.uvalue := 0xFFFFFFFF;
-    commit v1;
-    assert(v1.uvalue == 0xFFFFFFFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm not $1;
-    assert($1.bits == 16);
-} code {
-    renew $1 as v1;
-    v1.svalue := -1;
-    v1.uvalue := 0xFFFF;
-    commit v1;
-    assert(v1.uvalue == 0xFFFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm not $1;
-    assert($1.bits == 8);
-} code {
-    renew $1 as v1;
-    v1.svalue := -1;
-    v1.uvalue := 0xFF;
-    commit v1;
-    assert(v1.uvalue == 0xFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm inc $1;
-} code {
-    renew $1 as v1;
-    v1.value := 1;
-    commit v1;
-    $flags.OF := 0;
-    $flags.SF := 0;
-    $flags.ZF := 0;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    assert(v1.uvalue == 1);
-    assert(v1.svalue == 1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm dec $1;
-    assert($1.bits == 64);
-} code {
-    renew $1 as v1;
-    v1.uvalue := 0xFFFFFFFFFFFFFFFF;
-    v1.svalue := -1;
-    commit v1;
-    $flags.OF := 0;
-    $flags.SF := 1;
-    $flags.ZF := 0;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    assert(v1.uvalue == 0xFFFFFFFFFFFFFFFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm dec $1;
-    assert($1.bits == 32);
-} code {
-    renew $1 as v1;
-    v1.uvalue := 0xFFFFFFFF;
-    v1.svalue := -1;
-    commit v1;
-    $flags.OF := 0;
-    $flags.SF := 1;
-    $flags.ZF := 0;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    assert(v1.uvalue == 0xFFFFFFFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm dec $1;
-    assert($1.bits == 16);
-} code {
-    renew $1 as v1;
-    v1.uvalue := 0xFFFF;
-    v1.svalue := -1;
-    commit v1;
-    $flags.OF := 0;
-    $flags.SF := 1;
-    $flags.ZF := 0;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    assert(v1.uvalue == 0xFFFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-    asm dec $1;
-    assert($1.bits == 8);
-} code {
-    renew $1 as v1;
-    v1.uvalue := 0xFF;
-    v1.svalue := -1;
-    commit v1;
-    $flags.OF := 0;
-    $flags.SF := 1;
-    $flags.ZF := 0;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    assert(v1.uvalue == 0xFF);
-    assert(v1.svalue == -1);
-    update $1;
-}
-
-pattern {
-    asm xor $1, $1;
-} code {
-    renew $1 as v1;
-    v1.value := 0;
-    commit v1;
-    assert($1.value == 0);
-    $flags.SF := 0;
-    $flags.ZF := 1;
-    $flags.OF := 0;
-    $flags.CF := 0;
-    $flags.PF := unknown;
-    $flags.AF := unknown;
-    assert(v1.uvalue == 0);
-    assert(v1.svalue == 0);
-    update $1;
-}
-
-pattern {
-    asm add $1, $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value * 2;
-    commit v2;
-    $flags.ZF := v2.value == 0;
-    $flags.SF := v2.svalue < 0;
-    $flags.CF := v2.uvalue < v1.uvalue;
-    $flags.OF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    update $1;
-}
-pattern {
-    asm and $1, $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    $flags.ZF := v1.value == 0;
-    $flags.SF := v1.svalue < 0;
-    $flags.CF := 0;
-    $flags.OF := 0;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm mov $1, $1;
-} code {
-}
-
-pattern {
-    asm movnti $1, $1;
-} code {
-}
-
-pattern {
-    asm or $1, $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    $flags.SF := 0;
-    $flags.ZF := v1.value == 0;
-    $flags.OF := 0;
-    $flags.CF := 0;
-    $flags.PF := unknown;
-    $flags.AF := unknown;
-}
-
-pattern {
-    asm test $1, $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    $flags.ZF := v1.value == 0;
-    $flags.SF := v1.svalue < 0;
-    $flags.CF := 0;
-    $flags.OF := 0;
-    $flags.PF := unknown;
-    $flags.AF := unknown;
-}
-
-pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-} code {
-    asm shr $1, 5;
-}
-
-pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-} code {
-    asm shr $1, 4;
-}
-
-pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-    asm shr $1, 1;
-} code {
-    asm shr $1, 3;
-}
-
-pattern {
-    asm shr $1, 1;
-    asm shr $1, 1;
-} code {
-    asm shr $1, 2;
-}
-
-pattern {
-    asm dec $1;
-    asm dec $1;
-    asm dec $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value - 3;
-    commit v2;
-    $flags.SF := v2.svalue < 0;
-    $flags.ZF := v2.value == 0;
-    $flags.OF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    update $1;
-}
-
-pattern {
-    asm dec $1;
-    asm dec $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value - 2;
-    commit v2;
-    $flags.SF := v2.svalue < 0;
-    $flags.ZF := v2.value == 0;
-    $flags.OF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    update $1;
-}
-
-pattern {
-    asm inc $1;
-    asm inc $1;
-    asm inc $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value + 3;
-    commit v2;
-    $flags.SF := v2.svalue < 0;
-    $flags.ZF := v2.value == 0;
-    $flags.OF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    update $1;
-}
-
-pattern {
-    asm inc $1;
-    asm inc $1;
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value + 2;
-    commit v2;
-    $flags.SF := v2.svalue < 0;
-    $flags.ZF := v2.value == 0;
-    $flags.OF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-    update $1;
-}
-
-pattern {
-    asm cdq;
-    asm xor eax, edx;
-    asm sub eax, edx;
-} code {
-    renew $cpu.eax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.svalue := $fn.abs(v1.svalue);
-    commit v2;
-    $cpu.dl.value := unknown;
-    $cpu.dh.value := unknown;
-    $cpu.dx.value := unknown;
-    $cpu.edx.value := unknown;
-}
-
-pattern {
-    asm cqo;
-    asm xor rax, rdx;
-    asm sub rax, rdx;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.svalue := $fn._abs64(v1.svalue);
-    commit v2;
-    $cpu.dl.value := unknown;
-    $cpu.dh.value := unknown;
-    $cpu.dx.value := unknown;
-    $cpu.edx.value := unknown;
-    $cpu.rdx.value := unknown;
-}
-
-pattern {
-    asm lea $1, [$1];
-} code {
-}
-
-pattern {
     asm lea $1, [$1+$2];
 } code {
     renew $1 as v1;
@@ -2665,7 +2650,6 @@ pattern {
 
 pattern {
     asm sub $1, rax;
-    asm lea $1, [$1];
 $label.1:
     asm movzx rcx, [rax];
     asm lea rax, [rax+0x2];
@@ -2687,28 +2671,6 @@ $label.1:
 
 pattern {
     asm sub $1, rax;
-$label.1:
-    asm movzx rcx, [rax];
-    asm lea rax, [rax+0x2];
-    asm mov [$1+rax-0x2], cx;
-    asm test cx, cx;
-    asm jnz $label.1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew $1 as v2;
-    commit v2;
-    $fn.wcscpy(v2.pvalue, v1.pvalue);
-    renew $cpu.cx as v3;
-    v3.uvalue := 0;
-    commit v3;
-    $1.value := unknown;
-    update $1;
-}
-
-pattern {
-    asm sub $1, rax;
-    asm lea $1, [$1];
 $label.1:
     asm movzx rcx, [rax];
     asm add rax, 0x2;
@@ -4096,84 +4058,52 @@ pattern {
 
 pattern {
     asm div $1;
-    assert($1.bits == 64);
 } code {
     renew $1 as v1;
     commit v1;
-    renew $cpu.rdx_rax as v2;
-    commit v2;
-    renew $cpu.rdx as v3;
-    v3.uvalue := v2.uvalue % v1.uvalue;
-    commit v3;
-    renew $cpu.rax as v4;
-    v4.uvalue := v2.uvalue / v1.uvalue;
-    commit v4;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm div $1;
-    assert($1.bits == 32);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.edx_eax as v2;
-    commit v2;
-    renew $cpu.edx as v3;
-    v3.uvalue := v2.uvalue % v1.uvalue;
-    commit v3;
-    renew $cpu.eax as v4;
-    v4.uvalue := v2.uvalue / v1.uvalue;
-    commit v4;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm div $1;
-    assert($1.bits == 16);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.dx_ax as v2;
-    commit v2;
-    renew $cpu.dx as v3;
-    v3.uvalue := v2.uvalue % v1.uvalue;
-    commit v3;
-    renew $cpu.ax as v4;
-    v4.uvalue := v2.uvalue / v1.uvalue;
-    commit v4;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm div $1;
-    assert($1.bits == 8);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    renew $cpu.ah as v3;
-    v3.uvalue := v2.uvalue % v1.uvalue;
-    commit v3;
-    renew $cpu.al as v4;
-    v4.uvalue := v2.uvalue / v1.uvalue;
-    commit v4;
+    static if ($1.bits == 64) {
+        renew $cpu.rdx_rax as v2;
+        commit v2;
+        renew $cpu.rdx as v3;
+        v3.uvalue := v2.uvalue % v1.uvalue;
+        commit v3;
+        renew $cpu.rax as v4;
+        v4.uvalue := v2.uvalue / v1.uvalue;
+        commit v4;
+        update $cpu.rdx, $cpu.rax;
+    } else static if ($1.bits == 32) {
+        renew $cpu.edx_eax as v5;
+        commit v5;
+        renew $cpu.edx as v6;
+        v6.uvalue := v5.uvalue % v1.uvalue;
+        commit v6;
+        renew $cpu.eax as v7;
+        v7.uvalue := v5.uvalue / v1.uvalue;
+        commit v7;
+        update $cpu.edx, $cpu.eax;
+    } else static if ($1.bits == 16) {
+        renew $cpu.dx_ax as v8;
+        commit v8;
+        renew $cpu.dx as v9;
+        v9.uvalue := v8.uvalue % v1.uvalue;
+        commit v9;
+        renew $cpu.ax as v10;
+        v10.uvalue := v8.uvalue / v1.uvalue;
+        commit v10;
+        update $cpu.dx, $cpu.ax;
+    } else static if ($1.bits == 8) {
+        renew $cpu.ax as v11;
+        commit v11;
+        renew $cpu.ah as v12;
+        v12.uvalue := v11.uvalue % v1.uvalue;
+        commit v12;
+        renew $cpu.al as v13;
+        v13.uvalue := v11.uvalue / v1.uvalue;
+        commit v13;
+        update $cpu.al, $cpu.ah;
+    } else {
+        assert(0);
+    }
     $flags.CF := unknown;
     $flags.OF := unknown;
     $flags.SF := unknown;
@@ -4188,84 +4118,52 @@ pattern {
 
 pattern {
     asm idiv $1;
-    assert($1.bits == 64);
 } code {
     renew $1 as v1;
     commit v1;
-    renew $cpu.rdx_rax as v2;
-    commit v2;
-    renew $cpu.rdx as v3;
-    v3.svalue := v2.svalue % v1.svalue;
-    commit v3;
-    renew $cpu.rax as v4;
-    v4.svalue := v2.svalue / v1.svalue;
-    commit v4;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm idiv $1;
-    assert($1.bits == 32);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.edx_eax as v2;
-    commit v2;
-    renew $cpu.edx as v3;
-    v3.svalue := v2.svalue % v1.svalue;
-    commit v3;
-    renew $cpu.eax as v4;
-    v4.svalue := v2.svalue / v1.svalue;
-    commit v4;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm idiv $1;
-    assert($1.bits == 16);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.dx_ax as v2;
-    commit v2;
-    renew $cpu.dx as v3;
-    v3.svalue := v2.svalue % v1.svalue;
-    commit v3;
-    renew $cpu.ax as v4;
-    v4.svalue := v2.svalue / v1.svalue;
-    commit v4;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm idiv $1;
-    assert($1.bits == 8);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    renew $cpu.ah as v3;
-    v3.svalue := v2.svalue % v1.svalue;
-    commit v3;
-    renew $cpu.al as v4;
-    v4.svalue := v2.svalue / v1.svalue;
-    commit v4;
+    static if ($1.bits == 64) {
+        renew $cpu.rdx_rax as v2;
+        commit v2;
+        renew $cpu.rdx as v3;
+        v3.svalue := v2.svalue % v1.svalue;
+        commit v3;
+        renew $cpu.rax as v4;
+        v4.svalue := v2.svalue / v1.svalue;
+        commit v4;
+        update $cpu.rdx, $cpu.rax;
+    } else static if ($1.bits == 32) {
+        renew $cpu.edx_eax as v5;
+        commit v5;
+        renew $cpu.edx as v6;
+        v6.svalue := v5.svalue % v1.svalue;
+        commit v6;
+        renew $cpu.eax as v7;
+        v7.svalue := v5.svalue / v1.svalue;
+        commit v7;
+        update $cpu.edx, $cpu.eax;
+    } else static if ($1.bits == 16) {
+        renew $cpu.dx_ax as v8;
+        commit v8;
+        renew $cpu.dx as v9;
+        v9.svalue := v8.svalue % v1.svalue;
+        commit v9;
+        renew $cpu.ax as v10;
+        v10.svalue := v8.svalue / v1.svalue;
+        commit v10;
+        update $cpu.dx, $cpu.ax;
+    } else static if ($1.bits == 8) {
+        renew $cpu.ax as v11;
+        commit v11;
+        renew $cpu.ah as v12;
+        v12.svalue := v11.svalue % v1.svalue;
+        commit v12;
+        renew $cpu.al as v13;
+        v13.svalue := v11.svalue / v1.svalue;
+        commit v13;
+        update $cpu.al, $cpu.ah;
+    } else {
+        assert(0);
+    }
     $flags.CF := unknown;
     $flags.OF := unknown;
     $flags.SF := unknown;
@@ -4276,53 +4174,30 @@ pattern {
 
 pattern {
     asm imul $1;
-    assert($1.bits == 64);
 } code {
     renew $1 as v1;
     commit v1;
-    renew $cpu.rax as v2;
-    commit v2;
-    renew $cpu.rax_rax as v3;
-    v3.svalue := v2.svalue * v1.svalue;
-    commit v3;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm imul $1;
-    assert($1.bits == 32);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.eax as v2;
-    commit v2;
-    renew $cpu.eax_eax as v3;
-    v3.svalue := v2.svalue * v1.svalue;
-    commit v3;
-    $flags.CF := unknown;
-    $flags.OF := unknown;
-    $flags.SF := unknown;
-    $flags.ZF := unknown;
-    $flags.AF := unknown;
-    $flags.PF := unknown;
-}
-
-pattern {
-    asm imul $1;
-    assert($1.bits == 16);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.ax as v2;
-    commit v2;
-    renew $cpu.ax_ax as v3;
-    v3.svalue := v2.svalue * v1.svalue;
-    commit v3;
+    static if ($1.bits == 64) {
+        renew $cpu.rax as v2;
+        commit v2;
+        renew $cpu.rax_rax as v3;
+        v3.svalue := v2.svalue * v1.svalue;
+        commit v3;
+    } else static if ($1.bits == 32) {
+        renew $cpu.eax as v4;
+        commit v4;
+        renew $cpu.eax_eax as v5;
+        v5.svalue := v4.svalue * v1.svalue;
+        commit v5;
+    } else static if ($1.bits == 16) {
+        renew $cpu.ax as v6;
+        commit v6;
+        renew $cpu.ax_ax as v7;
+        v7.svalue := v6.svalue * v1.svalue;
+        commit v7;
+    } else {
+        assert(0);
+    }
     $flags.CF := unknown;
     $flags.OF := unknown;
     $flags.SF := unknown;
@@ -5065,17 +4940,6 @@ pattern {
 }
 
 pattern {
-    movnti $1, $2;
-} code {
-    renew $2 as v1;
-    commit v1;
-    renew $1 as v2;
-    v2.value := v1.value;
-    commit v2;
-    assert(v1.value == v2.value);
-}
-
-pattern {
     asm movsb;
 } code {
     renew $cpu.rsi as v1;
@@ -5216,7 +5080,6 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF == 0);
     asm rep_movsb;
 } code {
     renew $cpu.rdi as v1;
@@ -5225,48 +5088,34 @@ pattern {
     commit v2;
     renew $cpu.rcx as v3;
     commit v3;
-    $fn.memcpy(v2.pvalue, v1.pvalue, v3.uvalue);
-    renew v1 as v4;
-    v4.pvalue := v1.pvalue + v3.uvalue;
-    commit v4;
-    renew v2 as v5;
-    v5.pvalue := v2.pvalue + v3.uvalue;
-    commit v5;
-    renew v3 as v6;
-    v6.uvalue := 0;
-    commit v6;
+    static if ($flags.DF == 0) {
+        $fn.memcpy(v2.pvalue, v1.pvalue, v3.uvalue);
+        renew v1 as v4;
+        v4.pvalue := v1.pvalue + v3.uvalue;
+        commit v4;
+        renew v2 as v5;
+        v5.pvalue := v2.pvalue + v3.uvalue;
+        commit v5;
+    } else static if ($flags.DF == 1) {
+        $fn.memcpy(v2.value - v3.uvalue, v1.value - v3.uvalue, v3.uvalue);
+        renew v1 as v6;
+        v6.pvalue := v1.pvalue - v3.uvalue;
+        commit v6;
+        renew v2 as v7;
+        v7.pvalue := v2.pvalue - v3.uvalue;
+        commit v7;
+    } else {
+        assert(0);
+    }
+    renew v3 as v8;
+    v8.uvalue := 0;
+    commit v8;
     update $cpu.rdi;
     update $cpu.rsi;
     update $cpu.rcx;
 }
 
 pattern {
-    assert($flags.DF == 1);
-    asm rep_movsb;
-} code {
-    renew $cpu.rsi as v1;
-    commit v1;
-    renew $cpu.rdi as v1;
-    commit v2;
-    renew $cpu.rcx as v3;
-    commit v3;
-    $fn.memcpy(v2.value - v3.uvalue, v1.value - v3.uvalue, v3.uvalue);
-    renew v1 as v4;
-    v4.pvalue := v1.pvalue - v3.uvalue;
-    commit v4;
-    renew v2 as v5;
-    v5.pvalue := v2.pvalue - v3.uvalue;
-    commit v5;
-    renew v3 as v6;
-    v6.uvalue := 0;
-    commit v6;
-    update $cpu.rdi;
-    update $cpu.rsi;
-    update $cpu.rcx;
-}
-
-pattern {
-    assert($flags.DF == 0);
     asm rep_movsw;
 } code {
     renew $cpu.rdi as v1;
@@ -5275,41 +5124,28 @@ pattern {
     commit v2;
     renew $cpu.rcx as v3;
     commit v3;
-    $fn.wmemcpy(v2.pvalue, v1.pvalue, v3.uvalue / 2);
-    renew v1 as v4;
-    v4.pvalue := v1.pvalue + v3.uvalue;
-    commit v4;
-    renew v2 as v5;
-    v5.pvalue := v2.pvalue + v3.uvalue;
-    commit v5;
-    renew v3 as v6;
-    v6.uvalue := 0;
-    commit v6;
-    update $cpu.rdi;
-    update $cpu.rsi;
-    update $cpu.rcx;
-}
-
-pattern {
-    assert($flags.DF == 1);
-    asm rep_movsw;
-} code {
-    renew $cpu.rdi as v1;
-    commit v1;
-    renew $cpu.rdi as v2;
-    commit v2;
-    renew $cpu.rcx as v3;
-    commit v3;
-    $fn.wmemcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue / 2);
-    renew v1 as v4;
-    v4.pvalue := v1.pvalue - v3.uvalue;
-    commit v4;
-    renew v2 as v5;
-    v5.pvalue := v2.pvalue - v3.uvalue;
-    commit v5;
-    renew v3 as v6;
-    v6.uvalue := 0;
-    commit v6;
+    static if ($flags.DF == 0) {
+        $fn.wmemcpy(v2.pvalue, v1.pvalue, v3.uvalue / 2);
+        renew v1 as v4;
+        v4.pvalue := v1.pvalue + v3.uvalue;
+        commit v4;
+        renew v2 as v5;
+        v5.pvalue := v2.pvalue + v3.uvalue;
+        commit v5;
+    } else static if ($flags.DF == 1) {
+        $fn.wmemcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue / 2);
+        renew v1 as v6;
+        v6.pvalue := v1.pvalue - v3.uvalue;
+        commit v6;
+        renew v2 as v7;
+        v7.pvalue := v2.pvalue - v3.uvalue;
+        commit v7;
+    } else {
+        assert(0);
+    }
+    renew v3 as v8;
+    v8.uvalue := 0;
+    commit v8;
     update $cpu.rdi;
     update $cpu.rsi;
     update $cpu.rcx;
@@ -5637,25 +5473,6 @@ pattern {
 
 pattern {
     push $1;
-    assert($1.bits < 64);
-} code {
-    renew $1 as v1;
-    commit v1;
-    renew $cpu.rsp as v2;
-    commit v2;
-    new v3;
-    v3.addr := v2.pvalue;
-    v3.bits := 64;
-    v3.svalue := v1.svalue;
-    commit v3;
-    renew v2 as v4;
-    v4.value := v2.value - 8;
-    commit v4;
-}
-
-pattern {
-    push $1;
-    assert($1.bits == 64);
 } code {
     renew $1 as v1;
     commit v1;
