@@ -191,7 +191,7 @@ public:
     DWORD&                  Size();
     CR_Addr32&              Value32();
     CR_Addr64&              Value64();
-    CR_Addr32&              Disp();
+    LONG&                   Disp();
     char&                   Scale();
     CR_TypeID&              TypeID();
     std::string&            ExprValue();
@@ -205,7 +205,7 @@ public:
     const DWORD&            Size() const;
     const CR_Addr32&        Value32() const;
     const CR_Addr64&        Value64() const;
-    const CR_Addr32&        Disp() const;
+    const LONG&             Disp() const;
     const char&             Scale() const;
     const CR_TypeID&        TypeID() const;
     const std::string&      ExprValue() const;
@@ -222,7 +222,7 @@ protected:
         CR_Addr64           m_value64;          // 64-bit value
         CR_Addr32           m_value32;          // 32-bit value
     };
-    CR_Addr32               m_disp;             // displacement
+    LONG                    m_disp;             // displacement
     char                    m_scale;            // scale
     CR_TypeID               m_type_id;          // type_id
     std::string             m_expr_value;       // expressed value
@@ -257,7 +257,6 @@ public:
     CR_OpCodeType&              OpCodeType();   // type of instruction
     CR_CondCode&                CondCode();     // condition type
     CR_Addr32Set&               FuncAddrs();
-
     // const accessors
     const CR_Addr32&            Addr() const;
     const std::string&          Name() const;
@@ -306,7 +305,6 @@ public:
     CR_OpCodeType&              OpCodeType();   // type of instruction
     CR_CondCode&                CondCode();     // condition type
     CR_Addr64Set&               FuncAddrs();
-
     // const accessors
     const CR_Addr64&            Addr() const;
     const std::string&          Name() const;

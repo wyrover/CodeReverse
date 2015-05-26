@@ -422,6 +422,12 @@ void CR_Operand::SetImm64(CR_Addr64 val, BOOL is_signed) {
 
 void CR_Operand::SetExprAddrOnMemIndex() {
     std::string expr;
+    if (BaseReg().size() && IndexReg().size()) {
+        if (BaseReg() == IndexReg()) {
+            BaseReg().clear();
+            Scale() += 1;
+        }
+    }
     if (BaseReg().size()) {
         expr += BaseReg();
     }
@@ -430,13 +436,15 @@ void CR_Operand::SetExprAddrOnMemIndex() {
             expr += "+";
         }
         expr += IndexReg();
-        expr += std::to_string(Scale());
+        if (Scale() != 1) {
+            expr += "*";
+            expr += std::to_string(Scale());
+        }
     }
     if (Disp() > 0) {
         expr += "+";
         expr += std::to_string(Disp());
     } else if (Disp() < 0) {
-        expr += "-";
         expr += std::to_string(Disp());
     }
     ExprAddr() = expr;

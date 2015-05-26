@@ -517,6 +517,17 @@ BOOL CR_Module::DisAsmAddr32(
             cf->FuncFlags() |= cr_FF_INVALID;
         } else {
             oc->ParseText(outbuf);
+            auto& opers = oc->Operands();
+            #if 0
+                for (auto& oper : opers) {
+                    if (oper.GetOperandType() == cr_DF_MEMINDEX) {
+                        fprintf(stdout,
+                            "!!!%s: %s\n",
+                            oper.Text().c_str(),
+                            oper.ExprAddr().c_str());
+                    }
+                }
+            #endif
         }
 
         // complement operand size
@@ -696,6 +707,17 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             cf->FuncFlags() |= cr_FF_INVALID;
         } else {
             oc->ParseText(outbuf);
+            auto& opers = oc->Operands();
+            #if 0
+                for (auto& oper : opers) {
+                    if (oper.GetOperandType() == cr_DF_MEMINDEX) {
+                        fprintf(stdout,
+                            "!!!%s: %s\n",
+                            oper.Text().c_str(),
+                            oper.ExprAddr().c_str());
+                    }
+                }
+            #endif
         }
 
         // complement operand size

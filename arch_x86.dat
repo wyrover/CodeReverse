@@ -236,6 +236,28 @@ level(0) pattern {
 }
 
 level(0) pattern {
+    asm push $1;
+    asm push $2;
+    asm push $3;
+    asm push $4;
+    asm push $5;
+    asm push $6;
+    asm pop $7;
+    asm pop $8;
+    asm pop $9;
+    asm pop $10;
+    asm pop $11;
+    asm pop $12;
+} code {
+    asm mov $7, $6;
+    asm mov $8, $5;
+    asm mov $9, $4;
+    asm mov $10, $3;
+    asm mov $11, $2;
+    asm mov $12, $1;
+}
+
+level(0) pattern {
     asm cdq;
     asm xor eax, edx;
     asm sub eax, edx;
@@ -245,11 +267,11 @@ level(0) pattern {
     renew v1 as v2;
     v2.svalue := $fn.abs(v1.svalue);
     commit v2;
+    renew $cpu.edx as v3;
+    v3.value := unknown;
+    commit v3;
     update $cpu.eax;
-    $cpu.dl.value := unknown;
-    $cpu.dh.value := unknown;
-    $cpu.dx.value := unknown;
-    $cpu.edx.value := unknown;
+    update $cpu.edx;
 }
 
 level(0) pattern {
@@ -672,6 +694,8 @@ level(1) pattern {
     $flags.PF := unknown;
     update $1;
 }
+
+...
 
 level(1) pattern {
     asm sub $1, eax;
@@ -3958,7 +3982,7 @@ pattern {
     v2.bits := 32;
     commit v2;
     renew $1 as v3;
-    v3.value := v2.value;
+    v3.pvalue := v2.pvalue;
     commit v3;
     renew v1 as v4;
     v4.value := v1.value + 4;
