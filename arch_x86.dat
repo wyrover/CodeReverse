@@ -3646,64 +3646,45 @@ pattern {
 
 pattern {
     asm movbe $0, $1;
-    assert($0.bits == 32);
 } code {
-    new v1;
-    v1.addr := $1.addr;
-    v1.bits := 32;
+    renew $1 as v1;
     commit v1;
-    new v2;
-    v2.bits := 8;
-    v2.uvalue := (v1 & 0xFF);
-    commit v2;
-    new v3;
-    v3.bits := 8;
-    v3.uvalue := ((v1 >> 8) & 0xFF);
-    commit v3;
-    new v4;
-    v4.bits := 8;
-    v4.uvalue := ((v1 >> 16) & 0xFF);
-    commit v4;
-    new v5;
-    v5.bits := 8;
-    v5.uvalue := ((v1 >> 24) & 0xFF);
-    commit v5;
-    new v6;
-    v6.bits := 16;
-    v6.uvalue := ((v2.uvalue << 8) | v3.uvalue)
-    commit v6;
-    new v7;
-    v7.bits := 16;
-    v7.uvalue := ((v4.uvalue << 8) | v5.uvalue)
-    commit v7;
-    new v8;
-    v8.addr := $0.addr;
-    v8.bits := 32;
-    v8.uvalue := ((v6.uvalue << 16) | v7.uvalue);
+    new b0;
+    b0.bits := 8;
+    b0.uvalue := (v1.uvalue & 0xFF);
+    commit b0;
+    new b1;
+    b1.bits := 8;
+    b1.uvalue := ((v1.uvalue >> 8) & 0xFF);
+    commit b1;
+    static if ($0.bits == 16) {
+        renew $0 as v16;
+        v16.uvalue := (b1.uvalue | (b0.uvalue << 8));
+        commit v16;
+    } else static if ($0.bits == 32) {
+        new b2;
+        b2.bits := 8;
+        b2.uvalue := ((v1.uvalue >> 16) & 0xFF);
+        commit b2;
+        new b3;
+        b3.bits := 8;
+        b3.uvalue := ((v1.uvalue >> 24) & 0xFF);
+        commit b3;
+        new w0;
+        w0.bits := 16;
+        w0.uvalue := ((b0.uvalue << 8) | b1.uvalue)
+        commit w0;
+        new w1;
+        w1.bits := 16;
+        w1.uvalue := ((b2.uvalue << 8) | b3.uvalue)
+        commit w1;
+        renew $0 as v32;
+        v32.uvalue := ((w0.uvalue << 16) | w1.uvalue);
+        commit v32;
+    } else {
+        assert(0);
+    }
     update $0;
-}
-
-pattern {
-    asm movbe $0, $1;
-    assert($0.bits == 16);
-} code {
-    new v1;
-    v1.addr := $1.addr;
-    v1.bits := 16;
-    commit v1;
-    new v2;
-    v2.bits := 8;
-    v2.uvalue := (v1 & 0xFF);
-    commit v2;
-    new v3;
-    v3.bits := 8;
-    v3.uvalue := ((v1 >> 8) & 0xFF);
-    commit v3;
-    new v4;
-    v4.addr := $0;
-    v4.bits := 16;
-    v4.uvalue := (v3.uvalue | (v2.uvalue << 8));
-    commit v4;
 }
 
 pattern {

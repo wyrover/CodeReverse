@@ -35,6 +35,12 @@
 //
 // [Functions]
 // $fn.fname:   a call of the function named fname
+//
+// [Parameters]
+// $0, $1, $2, ...:         parameters
+// $0N, $1N, $2N, ...:      numeric parameters
+// $0R, $1R, $2R, ...:      register parameters
+// $0M, $1M, $2M, ...:      memory parameters
 ////////////////////////////////////////////////////////////////////////////
 
 define $cpu := {
@@ -5123,9 +5129,83 @@ pattern {
 
 pattern {
     asm movbe $0, $1;
-    assert($0.bits == 64);
 } code {
-    ...
+    renew $1 as v1;
+    commit v1;
+    new b0;
+    b0.bits := 8;
+    b0.uvalue := (v1.uvalue & 0xFF);
+    commit b0;
+    new b1;
+    b1.bits := 8;
+    b1.uvalue := ((v1.uvalue >> 8) & 0xFF);
+    commit b1;
+    static if ($0.bits == 16) {
+        renew $0 as v16;
+        v16.uvalue := (b1.uvalue | (b0.uvalue << 8));
+        commit v16;
+    } else {
+        new b2;
+        b2.bits := 8;
+        b2.uvalue := ((v1.uvalue >> 16) & 0xFF);
+        commit b2;
+        new b3;
+        b3.bits := 8;
+        b3.uvalue := ((v1.uvalue >> 24) & 0xFF);
+        commit b3;
+        new w0;
+        w0.bits := 16;
+        w0.uvalue := ((b0.uvalue << 8) | b1.uvalue)
+        commit w0;
+        new w1;
+        w1.bits := 16;
+        w1.uvalue := ((b2.uvalue << 8) | b3.uvalue)
+        commit w1;
+        static if ($0.bits == 32) {
+            renew $0 as v32;
+            v32.uvalue := ((w0.uvalue << 16) | w1.uvalue);
+            commit v32;
+        } else static if ($0.bits == 64) {
+            new b4;
+            b4.bits := 8;
+            b4.uvalue := ((v1.uvalue >> 32) & 0xFF);
+            commit b4;
+            new b5;
+            b5.bits := 8;
+            b5.uvalue := ((v1.uvalue >> 40) & 0xFF);
+            commit b5;
+            new b6;
+            b6.bits := 8;
+            b6.uvalue := ((v1.uvalue >> 48) & 0xFF);
+            commit b6;
+            new b7;
+            b7.bits := 8;
+            b7.uvalue := ((v1.uvalue >> 56) & 0xFF);
+            commit b7;
+            new w2;
+            w2.bits := 16;
+            w2.uvalue := ((b4.uvalue << 8) | b5.uvalue)
+            commit w2;
+            new w3;
+            w3.bits := 16;
+            w3.uvalue := ((b6.uvalue << 8) | b7.uvalue)
+            commit w3;
+            new d0;
+            d0.bits = 32;
+            d0.uvalue := ((w0.uvalue << 16) | w1.uvalue);
+            commit d0;
+            new d1;
+            d1.bits = 32;
+            d1.uvalue := ((w2.uvalue << 16) | w3.uvalue);
+            commit d1;
+            renew $0 as v64;
+            v64.uvalue := ((d0.uvalue << 32) | d1.uvalue);
+            commit v64;
+        } else {
+            assert(0);
+        }
+    }
+    update $0;
 }
 
 pattern {
