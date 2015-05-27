@@ -32,6 +32,12 @@
 //
 // [Functions]
 // $fn.fname:   a call of the function named fname
+//
+// [Parameters]
+// $0, $1, $2, ...:         parameters
+// $0N, $1N, $2N, ...:      numeric parameters
+// $0R, $1R, $2R, ...:      register parameters
+// $0M, $1M, $2M, ...:      memory parameters
 ////////////////////////////////////////////////////////////////////////////
 
 define $cpu := {
@@ -983,18 +989,13 @@ pattern {
 pattern {
     update_upward $cpu.dx;
 } code {
-    renew $cpu.ax as v1;
+    renew $cpu.dx as v1;
     commit v1;
-    renew $cpu.dx as v2;
+    renew $cpu.edx as v2;
     commit v2;
-    renew $cpu.dx_ax as v3;
+    renew v2 as v3;
     v3.uvalue := (v1.uvalue | (v2.uvalue & 0xFFFF0000));
     commit v3;
-    renew $cpu.edx as v4;
-    commit v4;
-    renew v4 as v5;
-    v5.uvalue := (v1.uvalue | (v4.uvalue & 0xFFFF0000));
-    commit v5;
 }
 
 pattern {
@@ -1503,6 +1504,50 @@ pattern {
     update_downward $cpu.eflags;
 }
 
+pattern {
+    update $cpu.edx, $cpu.eax;
+} code {
+    update_downward $cpu.edx;
+    update_downward $cpu.eax;
+    renew $cpu.dx as v1;
+    commit v1;
+    renew $cpu.ax as v2;
+    commit v2;
+    renew $cpu.dx_ax as v3;
+    v3.uvalue := (v2.uvalue | (v1.uvalue << 16));
+    commit v3;
+    renew $cpu.edx as v4;
+    commit v4;
+    renew $cpu.eax as v5;
+    commit v5;
+    renew $cpu.edx_eax as v6;
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 32));
+    commit v6;
+}
+
+pattern {
+    update $cpu.dx, $cpu.ax;
+} code {
+    update_downward $cpu.dx;
+    update_downward $cpu.ax;
+    update_upward $cpu.dx;
+    update_upward $cpu.ax;
+    renew $cpu.dx as v1;
+    commit v1;
+    renew $cpu.ax as v2;
+    commit v2;
+    renew $cpu.dx_ax as v3;
+    v3.uvalue := (v2.uvalue | (v1.uvalue << 16));
+    commit v3;
+    renew $cpu.edx as v4;
+    commit v4;
+    renew $cpu.eax as v5;
+    commit v5;
+    renew $cpu.edx_eax as v6;
+    v6.uvalue := (v5.uvalue | (v4.uvalue << 32));
+    commit v6;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // technical
 
@@ -1568,24 +1613,71 @@ $label.1:
     update $0;
 }
 
-level(0) pattern {
-    asm lea $0, [$0+$1];
+pattern {
+    asm lea $0, [eax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add eax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub eax, $0;
 } code {
-    renew $0 as v1;
+    renew $cpu.eax as v1;
     commit v1;
     renew v1 as v2;
-    v2.value := v1.value + $1;
+    v2.uvalue := $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $0 as v3;
+    v3.value := unknown;
+    commit v3;
+    update $cpu.eax;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
+    update $0;
+}
+
+pattern {
+    asm lea $0, [eax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add eax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.eax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.pvalue := v1.pvalue + $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $0 as v3;
+    v3.value := unknown;
+    commit v3;
+    update $cpu.eax;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
+    update $0;
+}
+
+level(0) pattern {
+    asm lea $0R, [$0R+$1N];
+} code {
+    renew $0R as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.value := v1.value + $1N.value;
     commit v2;
     update $0;
 }
 
 level(0) pattern {
-    asm lea $0, [$0-$1];
+    asm lea $0R, [$0R-$1N];
 } code {
-    renew $0 as v1;
+    renew $0R as v1;
     commit v1;
     renew v1 as v2;
-    v2.value := v1.value - $1;
+    v2.value := v1.value - $1N.value;
     commit v2;
     update $0;
 }
