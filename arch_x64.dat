@@ -488,8 +488,20 @@ level(0) pattern {
 }
 
 level(0) pattern {
-    asm lea $0, [$0];
+    asm lea $0R, [$0R];
 } code {
+}
+
+level(0) pattern {
+    asm lea $0R, [$0R+$1N];
+} code {
+    asm addnf $0R, $1N;       // CodeReverse extension
+}
+
+level(0) pattern {
+    asm lea $0R, [$0R-$1N];
+} code {
+    asm subnf $0R, $1N;       // CodeReverse extension
 }
 
 level(0) pattern {
@@ -638,7 +650,615 @@ $label.1:
 ////////////////////////////////////////////////////////////////////////////
 // level 1
 
+// strlen #0
 level(1) pattern {
+    asm repne_scasb;
+    asm not rcx;
+    asm lea $0, [rcx-1];
+} code {
+    if ($cpu.al.value == 0 && 
+        ($cpu.rcx.svalue == -1 || $cpu.rcx.uvalue == 0xFFFFFFFFFFFFFFFF))
+    {
+        renew $cpu.rdi as v1;
+        v1.type := $type.ptr($type.s8);
+        commit v1;
+        renew $0 as v2;
+        v2.uvalue := $fn.strlen(v1.pvalue);
+        commit v2;
+        renew v1 as v3;
+        v3.pvalue := v1.pvalue + v2.value;
+        commit v3;
+        renew $cpu.rcx as v4;
+        v4.value := unknown;
+        commit v4;
+    } else {
+        asm repne_scasb;
+        renew $cpu.rcx as v5;
+        commit v5;
+        renew v5 as v6;
+        v6.uvalue := ~v5.uvalue;
+        commit v6;
+        renew $cpu.rcx as v7;
+        commit v7;
+        renew $0 as v8;
+        v8.value := v7.value - 1;
+        commit v8;
+    }
+    update $cpu.rcx;
+    update $0;
+}
+
+// wcslen #0
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm addnf rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+    asm sar rax, 1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    assert($cpu.cl.value == 0);
+    assert($cpu.ch.value == 0);
+    assert($cpu.cx.value == 0);
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen #1
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm addnf rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+    asm shr rax, 1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen #2
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+    asm sar rax, 1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen #3
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+    asm shr rax, 1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen #4
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm inc rax;
+    asm inc rax;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+    asm sar rax, 1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen #5
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm inc rax;
+    asm inc rax;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+    asm shr rax, 1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue);
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen * 2 #0
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm addnf rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen * 2 #1
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen * 2 #2
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm inc rax;
+    asm inc rax;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcslen * 2 #3
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm inc rax;
+    asm inc rax;
+    asm test cx, cx;
+    asm jnz $label.1;
+    asm sub rax, $0;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.uvalue := $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// ptr + wcslen * 2 #0
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm addnf rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.pvalue := v1.pvalue + $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// ptr + wcslen * 2 #1
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm add rax, 2;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.pvalue := v1.pvalue + $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// ptr + wcslen * 2 #2
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm inc rax;
+    asm inc rax;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.pvalue := v1.pvalue + $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// ptr + wcslen * 2 #3
+level(1) pattern {
+    asm lea $0, [rax+0x2];
+$label.1:
+    asm mov cx, [eax];
+    asm inc rax;
+    asm inc rax;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew v1 as v2;
+    v2.pvalue := v1.pvalue + $fn.wcslen(v1.pvalue) * 2;
+    commit v2;
+    renew $cpu.cx as v3;
+    v3.value := 0;
+    commit v3;
+    update $cpu.cx;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcscpy #0
+level(1) pattern {
+    asm sub $0, rax;
+$label.1:
+    asm movzx rcx, [rax];
+    asm addnf rax, 2;
+    asm mov [$0+rax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew $0 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue := 0;
+    commit v3;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcscpy #1
+level(1) pattern {
+    asm sub $0, rax;
+$label.1:
+    asm movzx rcx, [rax];
+    asm add rax, 0x2;
+    asm mov [$0+rax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew $0 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue := 0;
+    commit v3;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcscpy #2
+level(1) pattern {
+    asm sub $0, rax;
+$label.1:
+    asm movzx rcx, [rax];
+    asm inc rax;
+    asm inc rax;
+    asm mov [$0+rax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew $0 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue := 0;
+    commit v3;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+// wcscpy #3
+level(1) pattern {
+    asm sub $0, rax;
+$label.1:
+    asm movzx rcx, [rax];
+    asm inc rax;
+    asm inc rax;
+    asm mov [$0+rax-0x2], cx;
+    asm test cx, cx;
+    asm jnz $label.1;
+} code {
+    renew $cpu.rax as v1;
+    commit v1;
+    renew $0 as v2;
+    commit v2;
+    $fn.wcscpy(v2.pvalue, v1.pvalue);
+    renew $cpu.cx as v3;
+    v3.uvalue := 0;
+    commit v3;
+    renew $0 as v4;
+    v4.value := unknown;
+    commit v4;
+    update $0;
+    $flags.ZF := unknown;
+    $flags.SF := unknown;
+    $flags.CF := unknown;
+    $flags.OF := unknown;
+    $flags.AF := unknown;
+    $flags.PF := unknown;
+}
+
+////////////////////////////////////////////////////////////////////////////
+// level 2
+
+level(2) pattern {
     asm xor $0, $0;
 } code {
     renew $0 as v1;
@@ -654,7 +1274,7 @@ level(1) pattern {
     update $0;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm add $0, $0;
 } code {
     renew $0 as v1;
@@ -671,7 +1291,7 @@ level(1) pattern {
     update $0;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm and $0, $0;
 } code {
     renew $0 as v1;
@@ -684,7 +1304,7 @@ level(1) pattern {
     $flags.PF := unknown;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm or $0, $0;
 } code {
     renew $0 as v1;
@@ -697,7 +1317,7 @@ level(1) pattern {
     $flags.AF := unknown;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm test $0, $0;
 } code {
     renew $0 as v1;
@@ -710,7 +1330,7 @@ level(1) pattern {
     $flags.AF := unknown;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm dec $0;
     asm dec $0;
     asm dec $0;
@@ -728,7 +1348,7 @@ level(1) pattern {
     update $0;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm dec $0;
     asm dec $0;
 } code {
@@ -745,7 +1365,7 @@ level(1) pattern {
     update $0;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm inc $0;
     asm inc $0;
     asm inc $0;
@@ -763,7 +1383,7 @@ level(1) pattern {
     update $0;
 }
 
-level(1) pattern {
+level(2) pattern {
     asm inc $0;
     asm inc $0;
 } code {
@@ -779,8 +1399,6 @@ level(1) pattern {
     $flags.PF := unknown;
     update $0;
 }
-
-...
 
 ////////////////////////////////////////////////////////////////////////////
 // update's
@@ -2676,6 +3294,9 @@ pattern {
     update_downward $cpu.rflags;
 }
 
+//
+//
+//
 pattern {
     update $cpu.rdx, $cpu.rax;
 } code {
@@ -2757,252 +3378,20 @@ pattern {
     commit v6;
 }
 
-////////////////////////////////////////////////////////////////////////////
-// technical
-
 pattern {
-    asm repne_scasb;
-    asm not rcx;
-    asm lea $0, [rcx-1];
+    update $0M;
 } code {
-    if ($cpu.al.value == 0 && 
-        ($cpu.rcx.svalue == -1 || $cpu.rcx.uvalue == 0xFFFFFFFFFFFFFFFF))
-    {
-        renew $cpu.rdi as v1;
-        v1.type := $type.ptr($type.s8);
-        commit v1;
-        renew $0 as v2;
-        v2.uvalue := $fn.strlen(v1.pvalue);
-        commit v2;
-        renew v1 as v3;
-        v3.pvalue := v1.pvalue + v2.value;
-        commit v3;
-        renew $cpu.rcx as v4;
-        v4.value := unknown;
-        commit v4;
+    static if ($0M.bits == 64) {
+        continuous $1M.addr, $1M.addr + 8;
+    } else static if ($0M.bits == 32) {
+        continuous $1M.addr, $1M.addr + 4;
+    } else static if ($0M.bits == 16) {
+        continuous $1M.addr, $1M.addr + 2;
+    } else static if ($0M.bits == 8) {
+        continuous $1M.addr, $1M.addr + 1;
     } else {
-        asm repne_scasb;
-        renew $cpu.rcx as v5;
-        commit v5;
-        renew v5 as v6;
-        v6.uvalue := ~v5.uvalue;
-        commit v6;
-        renew $cpu.rcx as v7;
-        commit v7;
-        renew $0 as v8;
-        v8.value := v7.value - 1;
-        commit v8;
+        assert(0);
     }
-    update $cpu.rcx;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [rax+0x2];
-$label.1:
-    asm mov cx, [eax];
-    asm add rax, 2;
-    asm test cx, cx;
-    asm jnz $label.1;
-    asm sub rax, $0;
-    asm sar rax, 1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.uvalue := $fn.wcslen(v1.pvalue);
-    commit v2;
-    renew $cpu.cx as v3;
-    v3.value := 0;
-    commit v3;
-    update $cpu.cx;
-    renew $0 as v4;
-    v4.value := unknown;
-    commit v4;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [rax+0x2];
-$label.1:
-    asm mov cx, [eax];
-    asm add rax, 2;
-    asm test cx, cx;
-    asm jnz $label.1;
-    asm sub rax, $0;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.uvalue := $fn.wcslen(v1.pvalue) * 2;
-    commit v2;
-    renew $cpu.cx as v3;
-    v3.value := 0;
-    commit v3;
-    update $cpu.cx;
-    renew $0 as v4;
-    v4.value := unknown;
-    commit v4;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [rax+0x2];
-$label.1:
-    asm mov cx, [eax];
-    asm add rax, 2;
-    asm test cx, cx;
-    asm jnz $label.1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.pvalue := v1.pvalue + $fn.wcslen(v1.pvalue) * 2;
-    commit v2;
-    renew $cpu.cx as v3;
-    v3.value := 0;
-    commit v3;
-    update $cpu.cx;
-    renew $0 as v4;
-    v4.value := unknown;
-    commit v4;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [rax+0x2];
-    jmp $label.1;
-$label.1:
-    asm mov cx, [eax];
-    asm add rax, 2;
-    asm test cx, cx;
-    asm jnz $label.1;
-    asm sub rax, $0;
-    asm sar rax, 1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.uvalue := $fn.wcslen(v1.pvalue);
-    commit v2;
-    renew $cpu.cx as v3;
-    v3.value := 0;
-    commit v3;
-    update $cpu.cx;
-    renew $0 as v4;
-    v4.value := unknown;
-    commit v4;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [$0+$1];
-} code {
-    renew $0 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value + $1;
-    commit v2;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [$0-$1];
-} code {
-    renew $0 as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.value := v1.value - $1;
-    commit v2;
-    update $0;
-}
-
-pattern {
-    asm sub $0, rax;
-$label.1:
-    asm movzx rcx, [rax];
-    asm lea rax, [rax+0x2];
-    asm mov [$0+rax-0x2], cx;
-    asm test cx, cx;
-    asm jnz $label.1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew $0 as v2;
-    commit v2;
-    $fn.wcscpy(v2.pvalue, v1.pvalue);
-    renew $cpu.cx as v3;
-    v3.uvalue := 0;
-    commit v3;
-    $0.value := unknown;
-    update $0;
-}
-
-pattern {
-    asm sub $0, rax;
-$label.1:
-    asm movzx rcx, [rax];
-    asm add rax, 0x2;
-    asm mov [$0+rax-0x2], cx;
-    asm test cx, cx;
-    asm jnz $label.1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew $0 as v2;
-    commit v2;
-    $fn.wcscpy(v2.pvalue, v1.pvalue);
-    renew $cpu.cx as v3;
-    v3.uvalue := 0;
-    commit v3;
-    $0.value := unknown;
-    update $0;
-}
-
-pattern {
-    asm sub $0, rax;
-$label.1:
-    asm movzx rcx, [rax];
-    asm add rax, 0x2;
-    asm mov [$0+rax-0x2], cx;
-    asm test cx, cx;
-    asm jnz $label.1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew $0 as v2;
-    commit v2;
-    $fn.wcscpy(v2.pvalue, v1.pvalue);
-    renew $cpu.cx as v3;
-    v3.uvalue := 0;
-    commit v3;
-    $0.value := unknown;
-    update $0;
-}
-
-pattern {
-    asm lea $0, [rax+0x2];
-$label.1:
-    asm mov cx,[rax];
-    asm add rax, 2;
-    asm test cx, cx;
-    asm jnz $label.1;
-    asm sub rax, $0;
-    asm sar rax, 1;
-} code {
-    renew $cpu.rax as v1;
-    commit v1;
-    renew v1 as v2;
-    v2.uvalue := $fn.wcslen(v1.pvalue);
-    commit v2;
-    renew $0 as v3;
-    v3.value := unknown;
-    commit v3;
-    update $cpu.rax;
-    assert($cpu.cl.value == 0);
-    assert($cpu.ch.value == 0);
-    assert($cpu.cx.value == 0);
-    update $0;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -3043,6 +3432,19 @@ pattern {
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
+    update $0;
+}
+
+pattern {
+    addnf $0, $1;   // CodeReverse extension
+} code {
+    renew $0 as v1;
+    commit v1;
+    renew $1 as v2;
+    commit v2;
+    renew v1 as v3;
+    v3.value := v1.value + v2.value;
+    commit v3;
     update $0;
 }
 
@@ -5427,14 +5829,26 @@ pattern {
         renew v2 as v5;
         v5.pvalue := v2.pvalue + v3.uvalue;
         commit v5;
+        static if (v1.pvalue, v3.uvalue : constant) {
+            continuous v1.pvalue, v1.pvalue + v3.uvalue;
+        }
+        static if (v2.pvalue, v3.uvalue : constant) {
+            continuous v2.pvalue, v2.pvalue + v3.uvalue;
+        }
     } else static if ($flags.DF == 1) {
-        $fn.memcpy(v2.value - v3.uvalue, v1.value - v3.uvalue, v3.uvalue);
+        $fn.memcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue);
         renew v1 as v6;
         v6.pvalue := v1.pvalue - v3.uvalue;
         commit v6;
         renew v2 as v7;
         v7.pvalue := v2.pvalue - v3.uvalue;
         commit v7;
+        static if (v1.pvalue, v3.uvalue : constant) {
+            continuous v1.pvalue - v3.uvalue, v1.pvalue;
+        }
+        static if (v2.pvalue, v3.uvalue : constant) {
+            continuous v2.pvalue - v3.uvalue, v2.pvalue;
+        }
     } else {
         assert(0);
     }
@@ -5463,6 +5877,12 @@ pattern {
         renew v2 as v5;
         v5.pvalue := v2.pvalue + v3.uvalue;
         commit v5;
+        static if (v1.pvalue, v3.uvalue : constant) {
+            continuous v1.pvalue, v1.pvalue + v3.uvalue;
+        }
+        static if (v2.pvalue, v3.uvalue : constant) {
+            continuous v2.pvalue, v2.pvalue + v3.uvalue;
+        }
     } else static if ($flags.DF == 1) {
         $fn.wmemcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue / 2);
         renew v1 as v6;
@@ -5471,6 +5891,12 @@ pattern {
         renew v2 as v7;
         v7.pvalue := v2.pvalue - v3.uvalue;
         commit v7;
+        static if (v1.pvalue, v3.uvalue : constant) {
+            continuous v1.pvalue - v3.uvalue, v1.pvalue;
+        }
+        static if (v2.pvalue, v3.uvalue : constant) {
+            continuous v2.pvalue - v3.uvalue, v2.pvalue;
+        }
     } else {
         assert(0);
     }
@@ -6821,7 +7247,6 @@ pattern {
 }
 
 pattern {
-    assert($flags.DF == 0);
     asm rep_stosb;
 } code {
     renew $cpu.rdi as v1;
@@ -6830,35 +7255,27 @@ pattern {
     commit v2;
     renew $cpu.rcx as v3;
     commit v3;
-    $fn.memset(v1.pvalue, v2.value, v3.uvalue);
-    renew v1 as v4;
-    v4.pvalue := v1.pvalue + v3.uvalue;
-    commit v4;
+    static if ($flags.DF == 0) {
+        $fn.memset(v1.pvalue, v2.value, v3.uvalue);
+        renew v1 as v4;
+        v4.pvalue := v1.pvalue + v3.uvalue;
+        commit v4;
+        static if (v1.pvalue, v3.uvalue : constant) {
+            continuous v1.pvalue, v1.pvalue + v3.uvalue;
+        }
+    } else {
+        $fn.memset(v1.pvalue - v3.uvalue, v2.value, v3.uvalue);
+        renew v1 as v5;
+        v5.pvalue := v1.pvalue - v3.uvalue;
+        commit v5;
+        static if (v1.pvalue, v3.uvalue : constant) {
+            continuous v1.pvalue - v3.uvalue, v1.pvalue;
+        }
+    }
     update $cpu.rdi;
-    renew v3 as v5;
-    v5.value := 0;
-    commit v5;
-    update $cpu.rcx;
-}
-
-pattern {
-    assert($flags.DF == 1);
-    asm rep_stosb;
-} code {
-    renew $cpu.rdi as v1;
-    commit v1;
-    renew $cpu.al as v2;
-    commit v2;
-    renew $cpu.rcx as v3;
-    commit v3;
-    $fn.memset(v1.pvalue - v3.uvalue, v2.value, v3.uvalue);
-    renew v1 as v4;
-    v4.pvalue := v1.pvalue - v3.uvalue;
-    commit v4;
-    update $cpu.rdi;
-    renew v3 as v5;
-    v5.value := 0;
-    commit v5;
+    renew v3 as v6;
+    v6.value := 0;
+    commit v6;
     update $cpu.rcx;
 }
 
@@ -6990,12 +7407,26 @@ pattern {
     commit v2;
     renew v1 as v3;
     v3.value := v1.value - v2.value;
+    commit v3;
     $flags.SF := v1.svalue < v2.svalue;
     $flags.CF := v1.uvalue < v2.uvalue;
     $flags.ZF := v1.value == 0;
     $flags.OF := unknown;
     $flags.AF := unknown;
     $flags.PF := unknown;
+    update $0;
+}
+
+pattern {
+    subnf $0, $1;   // CodeReverse extension
+} code {
+    renew $0 as v1;
+    commit v1;
+    renew $1 as v2;
+    commit v2;
+    renew v1 as v3;
+    v3.value := v1.value - v2.value;
+    commit v3;
     update $0;
 }
 
