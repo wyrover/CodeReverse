@@ -5821,7 +5821,7 @@ pattern {
     commit v2;
     renew $cpu.rcx as v3;
     commit v3;
-    static if ($flags.DF == 0) {
+    if ($flags.DF == 0) {
         $fn.memcpy(v2.pvalue, v1.pvalue, v3.uvalue);
         renew v1 as v4;
         v4.pvalue := v1.pvalue + v3.uvalue;
@@ -5829,13 +5829,9 @@ pattern {
         renew v2 as v5;
         v5.pvalue := v2.pvalue + v3.uvalue;
         commit v5;
-        static if (v1.pvalue, v3.uvalue : constant) {
-            continuous v1.pvalue, v1.pvalue + v3.uvalue;
-        }
-        static if (v2.pvalue, v3.uvalue : constant) {
-            continuous v2.pvalue, v2.pvalue + v3.uvalue;
-        }
-    } else static if ($flags.DF == 1) {
+        continuous v1.pvalue, v1.pvalue + v3.uvalue;
+        continuous v2.pvalue, v2.pvalue + v3.uvalue;
+    } else if ($flags.DF == 1) {
         $fn.memcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue);
         renew v1 as v6;
         v6.pvalue := v1.pvalue - v3.uvalue;
@@ -5843,12 +5839,8 @@ pattern {
         renew v2 as v7;
         v7.pvalue := v2.pvalue - v3.uvalue;
         commit v7;
-        static if (v1.pvalue, v3.uvalue : constant) {
-            continuous v1.pvalue - v3.uvalue, v1.pvalue;
-        }
-        static if (v2.pvalue, v3.uvalue : constant) {
-            continuous v2.pvalue - v3.uvalue, v2.pvalue;
-        }
+        continuous v1.pvalue - v3.uvalue, v1.pvalue;
+        continuous v2.pvalue - v3.uvalue, v2.pvalue;
     } else {
         assert(0);
     }
@@ -5869,7 +5861,7 @@ pattern {
     commit v2;
     renew $cpu.rcx as v3;
     commit v3;
-    static if ($flags.DF == 0) {
+    if ($flags.DF == 0) {
         $fn.wmemcpy(v2.pvalue, v1.pvalue, v3.uvalue / 2);
         renew v1 as v4;
         v4.pvalue := v1.pvalue + v3.uvalue;
@@ -5877,13 +5869,9 @@ pattern {
         renew v2 as v5;
         v5.pvalue := v2.pvalue + v3.uvalue;
         commit v5;
-        static if (v1.pvalue, v3.uvalue : constant) {
-            continuous v1.pvalue, v1.pvalue + v3.uvalue;
-        }
-        static if (v2.pvalue, v3.uvalue : constant) {
-            continuous v2.pvalue, v2.pvalue + v3.uvalue;
-        }
-    } else static if ($flags.DF == 1) {
+        continuous v1.pvalue, v1.pvalue + v3.uvalue;
+        continuous v2.pvalue, v2.pvalue + v3.uvalue;
+    } else if ($flags.DF == 1) {
         $fn.wmemcpy(v2.pvalue - v3.uvalue, v1.pvalue - v3.uvalue, v3.uvalue / 2);
         renew v1 as v6;
         v6.pvalue := v1.pvalue - v3.uvalue;
@@ -5891,12 +5879,8 @@ pattern {
         renew v2 as v7;
         v7.pvalue := v2.pvalue - v3.uvalue;
         commit v7;
-        static if (v1.pvalue, v3.uvalue : constant) {
-            continuous v1.pvalue - v3.uvalue, v1.pvalue;
-        }
-        static if (v2.pvalue, v3.uvalue : constant) {
-            continuous v2.pvalue - v3.uvalue, v2.pvalue;
-        }
+        continuous v1.pvalue - v3.uvalue, v1.pvalue;
+        continuous v2.pvalue - v3.uvalue, v2.pvalue;
     } else {
         assert(0);
     }
@@ -7255,22 +7239,18 @@ pattern {
     commit v2;
     renew $cpu.rcx as v3;
     commit v3;
-    static if ($flags.DF == 0) {
+    if ($flags.DF == 0) {
         $fn.memset(v1.pvalue, v2.value, v3.uvalue);
         renew v1 as v4;
         v4.pvalue := v1.pvalue + v3.uvalue;
         commit v4;
-        static if (v1.pvalue, v3.uvalue : constant) {
-            continuous v1.pvalue, v1.pvalue + v3.uvalue;
-        }
+        continuous v1.pvalue, v1.pvalue + v3.uvalue;
     } else {
         $fn.memset(v1.pvalue - v3.uvalue, v2.value, v3.uvalue);
         renew v1 as v5;
         v5.pvalue := v1.pvalue - v3.uvalue;
         commit v5;
-        static if (v1.pvalue, v3.uvalue : constant) {
-            continuous v1.pvalue - v3.uvalue, v1.pvalue;
-        }
+        continuous v1.pvalue - v3.uvalue, v1.pvalue;
     }
     update $cpu.rdi;
     renew v3 as v6;
