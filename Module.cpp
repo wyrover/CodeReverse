@@ -516,9 +516,9 @@ BOOL CR_Module::DisAsmAddr32(
             // don't decompile if any unknown instruction.
             cf->FuncFlags() |= cr_FF_INVALID;
         } else {
-            oc->ParseText(outbuf);
-            auto& opers = oc->Operands();
+            oc->Parse(outbuf);
             #if 0
+                auto& opers = oc->Operands();
                 for (auto& oper : opers) {
                     if (oper.GetOperandType() == cr_DF_MEMINDEX) {
                         fprintf(stdout,
@@ -706,9 +706,9 @@ BOOL CR_Module::DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va
             // don't decompile if any unknown instruction.
             cf->FuncFlags() |= cr_FF_INVALID;
         } else {
-            oc->ParseText(outbuf);
-            auto& opers = oc->Operands();
+            oc->Parse(outbuf);
             #if 0
+                auto& opers = oc->Operands();
                 for (auto& oper : opers) {
                     if (oper.GetOperandType() == cr_DF_MEMINDEX) {
                         fprintf(stdout,

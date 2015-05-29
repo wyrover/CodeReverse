@@ -475,9 +475,9 @@ void CR_Operand::SetExprAddrOnMemIndex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_Operand::ParseText
+// CR_Operand::Parse
 
-void CR_Operand::ParseText(const char *text, int bits) {
+void CR_Operand::Parse(const char *text, int bits) {
     clear();
     Text() = text;
 
@@ -788,7 +788,7 @@ void CR_Operand::ParseText(const char *text, int bits) {
         fprintf(stderr, "ERROR for Operand %s\n", Text().c_str());
     #endif
     assert(0);
-} // CR_Operand::ParseText
+} // CR_Operand::Parse
 
 ////////////////////////////////////////////////////////////////////////////
 // cr_rep_insns, cr_ccentries
@@ -874,7 +874,7 @@ void CR_OpCode32::clear() {
     CondCode() = C_NONE;
 }
 
-void CR_OpCode32::ParseText(const char *text) {
+void CR_OpCode32::Parse(const char *text) {
     char buf[128];
     strcpy(buf, text);
 
@@ -934,7 +934,7 @@ void CR_OpCode32::ParseText(const char *text) {
             *p = '\0';
             CR_Operand opr;
             Operands().clear();
-            opr.ParseText(p + 1, 32);
+            opr.Parse(p + 1, 32);
             Operands().insert(opr);
         }
         Name() = q;
@@ -963,7 +963,7 @@ void CR_OpCode32::ParseText(const char *text) {
 
                 p++;
                 CR_Operand opr;
-                opr.ParseText(p, 32);
+                opr.Parse(p, 32);
                 Operands().clear();
                 Operands().insert(opr);
                 return;
@@ -1024,15 +1024,15 @@ void CR_OpCode32::ParseText(const char *text) {
 
     p = strtok(p, ",");
     if (p) {
-        opr.ParseText(p, 32);
+        opr.Parse(p, 32);
         Operands().insert(opr);
         p = strtok(NULL, ",");
         if (p) {
-            opr.ParseText(p, 32);
+            opr.Parse(p, 32);
             Operands().insert(opr);
             p = strtok(NULL, ",");
             if (p) {
-                opr.ParseText(p, 32);
+                opr.Parse(p, 32);
                 Operands().insert(opr);
             }
         }
@@ -1043,7 +1043,7 @@ void CR_OpCode32::ParseText(const char *text) {
             OpCodeType() = cr_OCT_STACKOP;
         }
     }
-} // CR_OpCode32::ParseText
+} // CR_OpCode32::Parse
 
 void CR_OpCode32::DeductOperandSizes() {
     if (Name() == "push") {
@@ -1151,7 +1151,7 @@ void CR_OpCode64::clear() {
     CondCode() = C_NONE;
 }
 
-void CR_OpCode64::ParseText(const char *text) {
+void CR_OpCode64::Parse(const char *text) {
     char buf[128];
     strcpy(buf, text);
 
@@ -1204,7 +1204,7 @@ void CR_OpCode64::ParseText(const char *text) {
             *p = '\0';
             CR_Operand opr;
             Operands().clear();
-            opr.ParseText(p + 1, 64);
+            opr.Parse(p + 1, 64);
             Operands().insert(opr);
         }
         Name() = q;
@@ -1233,7 +1233,7 @@ void CR_OpCode64::ParseText(const char *text) {
 
                 p++;
                 CR_Operand opr;
-                opr.ParseText(p, 64);
+                opr.Parse(p, 64);
                 Operands().clear();
                 Operands().insert(opr);
                 return;
@@ -1294,15 +1294,15 @@ void CR_OpCode64::ParseText(const char *text) {
 
     p = strtok(p, ",");
     if (p) {
-        opr.ParseText(p, 32);
+        opr.Parse(p, 32);
         Operands().insert(opr);
         p = strtok(NULL, ",");
         if (p) {
-            opr.ParseText(p, 32);
+            opr.Parse(p, 32);
             Operands().insert(opr);
             p = strtok(NULL, ",");
             if (p) {
-                opr.ParseText(p, 32);
+                opr.Parse(p, 32);
                 Operands().insert(opr);
             }
         }
@@ -1313,7 +1313,7 @@ void CR_OpCode64::ParseText(const char *text) {
             OpCodeType() = cr_OCT_STACKOP;
         }
     }
-} // CR_OpCode64::ParseText
+} // CR_OpCode64::Parse
 
 void CR_OpCode64::DeductOperandSizes() {
     if (Name() == "push") {
@@ -1512,7 +1512,7 @@ bool CrParamPatternMatch(
         } else if (type2 == cr_DF_MEMREGPARAM) {
             // [$1R]
             CR_Operand o;
-            o.ParseText(oper.BaseReg(), 0);
+            o.Parse(oper.BaseReg(), 0);
             return CrAddParamMatch(matches, pat.BaseReg(), o);
         }
     case cr_DF_MEMIMM:
@@ -1521,7 +1521,7 @@ bool CrParamPatternMatch(
         } else if (type2 == cr_DF_MEMIMMPARAM) {
             // [imm]
             CR_Operand o;
-            o.ParseText(oper.ExprAddr(), 0);
+            o.Parse(oper.ExprAddr(), 0);
             return CrAddParamMatch(matches, pat.BaseReg(), o);
         }
         break;
@@ -1540,7 +1540,7 @@ bool CrParamPatternMatch(
                     auto it = matches.find(text);
                     if (it == matches.end()) {
                         CR_Operand o;
-                        o.ParseText(text, 0);
+                        o.Parse(text, 0);
                         matches.emplace(text, o);
                     } else {
                         if (it->second.Text() != oper.Text()) {
@@ -1565,7 +1565,7 @@ bool CrParamPatternMatch(
                         return false;
                     }
                     CR_Operand o;
-                    o.ParseText(oper.BaseReg(), 0);
+                    o.Parse(oper.BaseReg(), 0);
                     matches.emplace(breg, o);
                 } else {
                     if (breg != oper.BaseReg()) {
@@ -1586,7 +1586,7 @@ bool CrParamPatternMatch(
                         return false;
                     }
                     CR_Operand o;
-                    o.ParseText(oper.IndexReg(), 0);
+                    o.Parse(oper.IndexReg(), 0);
                     matches.emplace(ireg, o);
                 } else {
                     if (ireg != oper.IndexReg()) {

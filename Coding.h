@@ -188,8 +188,8 @@ public:
     bool operator!=(const CR_Operand& oper) const;
 
 public:
-    void ParseText(const char *text, int bits);
-    void ParseText(const std::string& text, int bits);
+    void Parse(const char *text, int bits);
+    void Parse(const std::string& text, int bits);
     void SetMemImm(CR_Addr64 addr);
     void SetImm32(CR_Addr32 val, BOOL is_signed);
     void SetImm64(CR_Addr64 val, BOOL is_signed);
@@ -259,7 +259,7 @@ public:
     virtual ~CR_OpCode32();
     void clear();
 
-    void ParseText(const char *text);
+    void Parse(const char *text);
     void DeductOperandSizes();
 
 public:
@@ -307,7 +307,7 @@ public:
     virtual ~CR_OpCode64();
     void clear();
 
-    void ParseText(const char *text);
+    void Parse(const char *text);
     void DeductOperandSizes();
 
 public:
