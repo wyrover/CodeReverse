@@ -920,11 +920,11 @@ inline std::string& CR_ICode32::Name() {
     return OpCode().Name();
 }
 
-inline CR_Operands& CR_ICode32::Params() {
+inline CR_Operands& CR_ICode32::Operands() {
     return OpCode().Operands();
 }
 
-inline CR_Operand* CR_ICode32::Param(std::size_t index) {
+inline CR_Operand* CR_ICode32::Operand(std::size_t index) {
     return OpCode().Operand(index);
 }
 
@@ -944,11 +944,11 @@ inline const std::string& CR_ICode32::Name() const {
     return OpCode().Name();
 }
 
-inline const CR_Operands& CR_ICode32::Params() const {
+inline const CR_Operands& CR_ICode32::Operands() const {
     return OpCode().Operands();
 }
 
-inline const CR_Operand* CR_ICode32::Param(std::size_t index) const {
+inline const CR_Operand* CR_ICode32::Operand(std::size_t index) const {
     return OpCode().Operand(index);
 }
 
@@ -1004,11 +1004,11 @@ inline std::string& CR_ICode64::Name() {
     return OpCode().Name();
 }
 
-inline CR_Operands& CR_ICode64::Params() {
+inline CR_Operands& CR_ICode64::Operands() {
     return OpCode().Operands();
 }
 
-inline CR_Operand* CR_ICode64::Param(std::size_t index) {
+inline CR_Operand* CR_ICode64::Operand(std::size_t index) {
     return OpCode().Operand(index);
 }
 
@@ -1028,11 +1028,11 @@ inline const std::string& CR_ICode64::Name() const {
     return OpCode().Name();
 }
 
-inline const CR_Operands& CR_ICode64::Params() const {
+inline const CR_Operands& CR_ICode64::Operands() const {
     return OpCode().Operands();
 }
 
-inline const CR_Operand* CR_ICode64::Param(std::size_t index) const {
+inline const CR_Operand* CR_ICode64::Operand(std::size_t index) const {
     return OpCode().Operand(index);
 }
 

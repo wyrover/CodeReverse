@@ -1312,7 +1312,7 @@ void CR_BasicBlock32::AddLeaderLabel(CR_Addr32 addr) {
 
     CR_ICode32 icode;
     icode.IcType() = cr_ICT_LABEL;
-    icode.Params().insert(o);
+    icode.Operands().insert(o);
     m_icodes.emplace_back(icode);
 }
 
@@ -1325,7 +1325,7 @@ void CR_BasicBlock64::AddLeaderLabel(CR_Addr64 addr) {
 
     CR_ICode64 icode;
     icode.IcType() = cr_ICT_LABEL;
-    icode.Params().insert(o);
+    icode.Operands().insert(o);
     m_icodes.emplace_back(icode);
 }
 

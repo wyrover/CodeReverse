@@ -376,15 +376,15 @@ public:
     CR_OpCode32&            OpCode();
     std::string&            AttrName();
     std::string&            Name();
-    CR_Operands&            Params();
-    CR_Operand*             Param(std::size_t index);
+    CR_Operands&            Operands();
+    CR_Operand*             Operand(std::size_t index);
     // const accessors
     const CR_ICodeType&     IcType() const;
     const CR_OpCode32&      OpCode() const;
     const std::string&      AttrName() const;
     const std::string&      Name() const;
-    const CR_Operands&      Params() const;
-    const CR_Operand*       Param(std::size_t index) const;
+    const CR_Operands&      Operands() const;
+    const CR_Operand*       Operand(std::size_t index) const;
 protected:
     CR_ICodeType            m_ic_type;
     CR_OpCode32             m_oc;
@@ -406,15 +406,15 @@ public:
     CR_OpCode64&            OpCode();
     std::string&            AttrName();
     std::string&            Name();
-    CR_Operands&            Params();
-    CR_Operand*             Param(std::size_t index);
+    CR_Operands&            Operands();
+    CR_Operand*             Operand(std::size_t index);
     // const accessors
     const CR_ICodeType&     IcType() const;
     const CR_OpCode64&      OpCode() const;
     const std::string&      AttrName() const;
     const std::string&      Name() const;
-    const CR_Operands&      Params() const;
-    const CR_Operand*       Param(std::size_t index) const;
+    const CR_Operands&      Operands() const;
+    const CR_Operand*       Operand(std::size_t index) const;
 protected:
     CR_ICodeType            m_ic_type;
     CR_OpCode64             m_oc;
