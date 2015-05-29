@@ -874,15 +874,12 @@ inline void CR_DecompInfo64::clear() {
 inline CR_ICode32::CR_ICode32() : m_ic_type(cr_ICT_NONE) { }
 
 inline CR_ICode32::CR_ICode32(const CR_ICode32& ic) :
-    m_ic_type(ic.m_ic_type), m_oc(ic.m_oc), m_name(ic.m_name),
-    m_attr(ic.m_attr), m_params(ic.m_params) { }
+    m_ic_type(ic.m_ic_type), m_oc(ic.m_oc), m_attr_name(ic.m_attr_name) { }
 
 inline CR_ICode32& CR_ICode32::operator=(const CR_ICode32& ic) {
-    m_ic_type = ic.m_ic_type;
-    m_oc = ic.m_oc;
-    m_name = ic.m_name;
-    m_attr = ic.m_attr;
-    m_params = ic.m_params;
+    IcType() = ic.IcType();
+    OpCode() = ic.OpCode();
+    AttrName() = ic.AttrName();
     return *this;
 }
 
@@ -890,23 +887,69 @@ inline CR_ICode32::CR_ICode32(const CR_OpCode32& oc) :
     m_ic_type(cr_ICT_ASM), m_oc(oc) { }
 
 inline CR_ICode32& CR_ICode32::operator=(const CR_OpCode32& oc) {
-    m_ic_type = cr_ICT_ASM;
-    m_oc = oc;
+    IcType() = cr_ICT_ASM;
+    OpCode() = oc;
     return *this;
 }
 
 inline /*virtual*/ CR_ICode32::~CR_ICode32() { }
 
 inline void CR_ICode32::clear() {
-    m_ic_type = cr_ICT_NONE;
-    m_oc.clear();
-    m_name.clear();
-    m_attr.clear();
-    m_params.clear();
+    IcType() = cr_ICT_NONE;
+    OpCode().clear();
+    AttrName().clear();
 }
 
 inline bool CR_ICode32::is_asm() const {
-    return m_ic_type == cr_ICT_ASM;
+    return IcType() == cr_ICT_ASM;
+}
+
+inline CR_ICodeType& CR_ICode32::IcType() {
+    return m_ic_type;
+}
+
+inline CR_OpCode32& CR_ICode32::OpCode() {
+    return m_oc;
+}
+
+inline std::string& CR_ICode32::AttrName() {
+    return m_attr_name;
+}
+
+inline std::string& CR_ICode32::Name() {
+    return OpCode().Name();
+}
+
+inline CR_Operands& CR_ICode32::Params() {
+    return OpCode().Operands();
+}
+
+inline CR_Operand* CR_ICode32::Param(std::size_t index) {
+    return OpCode().Operand(index);
+}
+
+inline const CR_ICodeType& CR_ICode32::IcType() const {
+    return m_ic_type;
+}
+
+inline const CR_OpCode32& CR_ICode32::OpCode() const {
+    return m_oc;
+}
+
+inline const std::string& CR_ICode32::AttrName() const {
+    return m_attr_name;
+}
+
+inline const std::string& CR_ICode32::Name() const {
+    return OpCode().Name();
+}
+
+inline const CR_Operands& CR_ICode32::Params() const {
+    return OpCode().Operands();
+}
+
+inline const CR_Operand* CR_ICode32::Param(std::size_t index) const {
+    return OpCode().Operand(index);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -915,15 +958,12 @@ inline bool CR_ICode32::is_asm() const {
 inline CR_ICode64::CR_ICode64() : m_ic_type(cr_ICT_NONE) { }
 
 inline CR_ICode64::CR_ICode64(const CR_ICode64& ic) :
-    m_ic_type(ic.m_ic_type), m_oc(ic.m_oc), m_name(ic.m_name),
-    m_attr(ic.m_attr), m_params(ic.m_params) { }
+    m_ic_type(ic.m_ic_type), m_oc(ic.m_oc), m_attr_name(ic.m_attr_name) { }
 
 inline CR_ICode64& CR_ICode64::operator=(const CR_ICode64& ic) {
-    m_ic_type = ic.m_ic_type;
-    m_oc = ic.m_oc;
-    m_name = ic.m_name;
-    m_attr = ic.m_attr;
-    m_params = ic.m_params;
+    IcType() = ic.IcType();
+    OpCode() = ic.OpCode();
+    AttrName() = ic.AttrName();
     return *this;
 }
 
@@ -931,23 +971,69 @@ inline CR_ICode64::CR_ICode64(const CR_OpCode64& oc) :
     m_ic_type(cr_ICT_ASM), m_oc(oc) { }
 
 inline CR_ICode64& CR_ICode64::operator=(const CR_OpCode64& oc) {
-    m_ic_type = cr_ICT_ASM;
-    m_oc = oc;
+    IcType() = cr_ICT_ASM;
+    OpCode() = oc;
     return *this;
 }
 
 inline /*virtual*/ CR_ICode64::~CR_ICode64() { }
 
 inline void CR_ICode64::clear() {
-    m_ic_type = cr_ICT_NONE;
-    m_oc.clear();
-    m_name.clear();
-    m_attr.clear();
-    m_params.clear();
+    IcType() = cr_ICT_NONE;
+    OpCode().clear();
+    AttrName().clear();
 }
 
 inline bool CR_ICode64::is_asm() const {
-    return m_ic_type == cr_ICT_ASM;
+    return IcType() == cr_ICT_ASM;
+}
+
+inline CR_ICodeType& CR_ICode64::IcType() {
+    return m_ic_type;
+}
+
+inline CR_OpCode64& CR_ICode64::OpCode() {
+    return m_oc;
+}
+
+inline std::string& CR_ICode64::AttrName() {
+    return m_attr_name;
+}
+
+inline std::string& CR_ICode64::Name() {
+    return OpCode().Name();
+}
+
+inline CR_Operands& CR_ICode64::Params() {
+    return OpCode().Operands();
+}
+
+inline CR_Operand* CR_ICode64::Param(std::size_t index) {
+    return OpCode().Operand(index);
+}
+
+inline const CR_ICodeType& CR_ICode64::IcType() const {
+    return m_ic_type;
+}
+
+inline const CR_OpCode64& CR_ICode64::OpCode() const {
+    return m_oc;
+}
+
+inline const std::string& CR_ICode64::AttrName() const {
+    return m_attr_name;
+}
+
+inline const std::string& CR_ICode64::Name() const {
+    return OpCode().Name();
+}
+
+inline const CR_Operands& CR_ICode64::Params() const {
+    return OpCode().Operands();
+}
+
+inline const CR_Operand* CR_ICode64::Param(std::size_t index) const {
+    return OpCode().Operand(index);
 }
 
 ////////////////////////////////////////////////////////////////////////////

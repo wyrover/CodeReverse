@@ -1166,6 +1166,10 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
         block.m_addr = addr1;
         CR_Addr32 next_addr = cr_invalid_addr32;
         for (auto addr = addr1; addr < addr2; ) {
+            if (cf->Leaders().count(addr)) {
+                // set label at each leader
+                block.AddLeaderLabel(addr);
+            }
             // op.code from addr
             auto op_code = info.OpCodeFromAddr(addr);
             if (op_code == NULL) {
@@ -1199,6 +1203,8 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance) {
             // go to next addr
             addr += static_cast<CR_Addr32>(op_code->Codes().size());
         }
+        // add label at last
+        block.AddLeaderLabel(addr2);
         // set next addr
         block.m_next_addr = next_addr;
         // add block
@@ -1251,6 +1257,10 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
         block.m_addr = addr1;
         CR_Addr64 next_addr = cr_invalid_addr64;
         for (auto addr = addr1; addr < addr2; ) {
+            if (cf->Leaders().count(addr)) {
+                // set label at each leader
+                block.AddLeaderLabel(addr);
+            }
             // op.code from addr
             auto op_code = info.OpCodeFromAddr(addr);
             if (op_code == NULL) {
@@ -1284,11 +1294,39 @@ void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance) {
             // go to next addr
             addr += static_cast<CR_Addr64>(op_code->Codes().size());
         }
+        // add label at last
+        block.AddLeaderLabel(addr2);
         // set next addr
         block.m_next_addr = next_addr;
         // add block
         cf->BasicBlocks().emplace_back(block);
     }
+}
+
+void CR_BasicBlock32::AddLeaderLabel(CR_Addr32 addr) {
+    CR_Operand o;
+    o.SetImm64(addr, false);
+    char buf[32];
+    std::sprintf(buf, "L%08lX", addr);
+    o.Text() = buf;
+
+    CR_ICode32 icode;
+    icode.IcType() = cr_ICT_LABEL;
+    icode.Params().insert(o);
+    m_icodes.emplace_back(icode);
+}
+
+void CR_BasicBlock64::AddLeaderLabel(CR_Addr64 addr) {
+    CR_Operand o;
+    o.SetImm64(addr, false);
+    char buf[64];
+    std::sprintf(buf, "L%08lX%08lX", HILONG(addr), LOLONG(addr));
+    o.Text() = buf;
+
+    CR_ICode64 icode;
+    icode.IcType() = cr_ICT_LABEL;
+    icode.Params().insert(o);
+    m_icodes.emplace_back(icode);
 }
 
 ////////////////////////////////////////////////////////////////////////////

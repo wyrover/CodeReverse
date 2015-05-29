@@ -357,6 +357,7 @@ enum CR_ICodeType {
     cr_ICT_ACTION,  // (action) (param1),(param2),...
     cr_ICT_CONTROL, // if, else, return, ...
     cr_ICT_ATTR,    // name.attribute = ...
+    cr_ICT_LABEL,   // label:
     cr_ICT_ASSERT   // assert(...)
 };
 
@@ -369,12 +370,25 @@ struct CR_ICode32 {
     virtual ~CR_ICode32();
     bool is_asm() const;
     void clear();
+public:
+    // accessors
+    CR_ICodeType&           IcType();
+    CR_OpCode32&            OpCode();
+    std::string&            AttrName();
+    std::string&            Name();
+    CR_Operands&            Params();
+    CR_Operand*             Param(std::size_t index);
+    // const accessors
+    const CR_ICodeType&     IcType() const;
+    const CR_OpCode32&      OpCode() const;
+    const std::string&      AttrName() const;
+    const std::string&      Name() const;
+    const CR_Operands&      Params() const;
+    const CR_Operand*       Param(std::size_t index) const;
 protected:
     CR_ICodeType            m_ic_type;
     CR_OpCode32             m_oc;
-    std::string             m_name;
-    std::string             m_attr;
-    std::vector<CR_Operand> m_params;
+    std::string             m_attr_name;
 };
 
 struct CR_ICode64 {
@@ -386,12 +400,25 @@ struct CR_ICode64 {
     virtual ~CR_ICode64();
     bool is_asm() const;
     void clear();
+public:
+    // accessors
+    CR_ICodeType&           IcType();
+    CR_OpCode64&            OpCode();
+    std::string&            AttrName();
+    std::string&            Name();
+    CR_Operands&            Params();
+    CR_Operand*             Param(std::size_t index);
+    // const accessors
+    const CR_ICodeType&     IcType() const;
+    const CR_OpCode64&      OpCode() const;
+    const std::string&      AttrName() const;
+    const std::string&      Name() const;
+    const CR_Operands&      Params() const;
+    const CR_Operand*       Param(std::size_t index) const;
 protected:
     CR_ICodeType            m_ic_type;
     CR_OpCode64             m_oc;
-    std::string             m_name;
-    std::string             m_attr;
-    std::vector<CR_Operand> m_params;
+    std::string             m_attr_name;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -439,6 +466,8 @@ struct CR_BasicBlock32 {
         m_next_addr(cr_invalid_addr32),
         m_jump_to(cr_invalid_addr32),
         m_cond_code(C_NONE) { }
+
+    void AddLeaderLabel(CR_Addr32 addr);
 };
 
 struct CR_BasicBlock64 {
@@ -453,6 +482,8 @@ struct CR_BasicBlock64 {
         m_next_addr(cr_invalid_addr64),
         m_jump_to(cr_invalid_addr64),
         m_cond_code(C_NONE) { }
+
+    void AddLeaderLabel(CR_Addr64 addr);
 };
 
 ////////////////////////////////////////////////////////////////////////////

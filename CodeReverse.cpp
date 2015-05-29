@@ -12,9 +12,9 @@
 const char * const cr_logo =
     "///////////////////////////////////////////////\n"
 #ifdef _WIN64
-    "// CodeReverse 0.2.5 (64-bit)                //\n"
+    "// CodeReverse 0.2.6 (64-bit)                //\n"
 #else   // ndef _WIN64
-    "// CodeReverse 0.2.5 (32-bit)                //\n"
+    "// CodeReverse 0.2.6 (32-bit)                //\n"
 #endif  // ndef _WIN64
     "// https://github.com/katahiromz/CodeReverse //\n"
     "// katayama.hirofumi.mz@gmail.com            //\n"
