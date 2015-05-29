@@ -81,7 +81,7 @@ inline CR_Addr64& CR_Operand::Value64() {
     return m_value64;
 }
 
-inline LONG& CR_Operand::Disp() {
+inline std::string& CR_Operand::Disp() {
     return m_disp;
 }
 
@@ -136,7 +136,7 @@ inline const CR_Addr64& CR_Operand::Value64() const {
     return m_value64;
 }
 
-inline const LONG& CR_Operand::Disp() const {
+inline const std::string& CR_Operand::Disp() const {
     return m_disp;
 }
 

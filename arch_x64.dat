@@ -1135,26 +1135,26 @@ $label.1:
 
 // wcscpy #0
 level(1) pattern {
-    asm sub $0, rax;
+    asm sub $0R, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm addnf rax, 2;
-    asm mov [$0+rax-0x2], cx;
+    asm mov [$0R+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $0 as v2;
+    renew $0R as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    renew $0 as v4;
+    renew $0R as v4;
     v4.value := unknown;
     commit v4;
-    update $0;
+    update $0R;
     $flags.ZF := unknown;
     $flags.SF := unknown;
     $flags.CF := unknown;
@@ -1165,26 +1165,26 @@ $label.1:
 
 // wcscpy #1
 level(1) pattern {
-    asm sub $0, rax;
+    asm sub $0R, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm add rax, 0x2;
-    asm mov [$0+rax-0x2], cx;
+    asm mov [$0R+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $0 as v2;
+    renew $0R as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    renew $0 as v4;
+    renew $0R as v4;
     v4.value := unknown;
     commit v4;
-    update $0;
+    update $0R;
     $flags.ZF := unknown;
     $flags.SF := unknown;
     $flags.CF := unknown;
@@ -1195,27 +1195,27 @@ $label.1:
 
 // wcscpy #2
 level(1) pattern {
-    asm sub $0, rax;
+    asm sub $0R, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm inc rax;
     asm inc rax;
-    asm mov [$0+rax-0x2], cx;
+    asm mov [$0R+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $0 as v2;
+    renew $0R as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    renew $0 as v4;
+    renew $0R as v4;
     v4.value := unknown;
     commit v4;
-    update $0;
+    update $0R;
     $flags.ZF := unknown;
     $flags.SF := unknown;
     $flags.CF := unknown;
@@ -1226,27 +1226,27 @@ $label.1:
 
 // wcscpy #3
 level(1) pattern {
-    asm sub $0, rax;
+    asm sub $0R, rax;
 $label.1:
     asm movzx rcx, [rax];
     asm inc rax;
     asm inc rax;
-    asm mov [$0+rax-0x2], cx;
+    asm mov [$0R+rax-0x2], cx;
     asm test cx, cx;
     asm jnz $label.1;
 } code {
     renew $cpu.rax as v1;
     commit v1;
-    renew $0 as v2;
+    renew $0R as v2;
     commit v2;
     $fn.wcscpy(v2.pvalue, v1.pvalue);
     renew $cpu.cx as v3;
     v3.uvalue := 0;
     commit v3;
-    renew $0 as v4;
+    renew $0R as v4;
     v4.value := unknown;
     commit v4;
-    update $0;
+    update $0R;
     $flags.ZF := unknown;
     $flags.SF := unknown;
     $flags.CF := unknown;

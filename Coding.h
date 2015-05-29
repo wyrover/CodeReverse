@@ -60,14 +60,19 @@ enum CR_RegType {
     cr_x86_SEGREG,
     cr_x86_XMMREG,
     cr_x86_YMMREG,
-    cr_x86_COMPREG32,      // compound registry
-    cr_x86_COMPREG64,      // compound registry
-    cr_x86_COMPREG128,     // compound registry
-    cr_x86_FLAG,           // flag
+    cr_x86_COMPREG32,       // compound registry
+    cr_x86_COMPREG64,       // compound registry
+    cr_x86_COMPREG128,      // compound registry
+    cr_x86_FLAG,            // flag
+    cr_x86_PARAM,           // parameter $0, $1, $2, ...
+    cr_x86_PARAMNUM,        // numeric parameter $0N, $1N, $2N, ...
+    cr_x86_PARAMREG,        // register parameter $0R, $1R, $2R, ...
+    cr_x86_PARAMMEM,        // memory parameter $0M, $1M, $2M, ...
     cr_x86_REGNONE = -1
 };
 
 CR_RegType  CrRegGetType(const char *name, int bits);
+DWORD       CrRegGetSize(CR_RegType type, int bits);
 DWORD       CrRegGetSize(const char *name, int bits);
 BOOL        CrRegInReg(const char *reg1, const char *reg2);
 BOOL        CrRegOverlapsReg(const char *reg1, const char *reg2);
@@ -138,23 +143,30 @@ enum CR_OpCodeType {
 
 typedef unsigned long CR_DataFlags;
 static const CR_DataFlags
-    cr_DF_REG           = 0x01,         // registry
-    cr_DF_MEMREG        = 0x02,         // memory access by register
-    cr_DF_MEMIMM        = 0x03,         // memory access by immediate
-    cr_DF_MEMINDEX      = 0x04,         // memory access by index
-    cr_DF_IMM           = 0x05,         // immediate
-    cr_DF_IEXPR         = 0x06,         // intermediate expression
-    cr_DF_CEXPR         = 0x07,         // C expression
-    cr_DF_TYPEMASK      = 0x07,         // the mask bits of type
-    cr_DF_ISIMMEDIATE   = (1 << 3),     // is an immediate value?
-    cr_DF_ISINTEGER     = (1 << 4),     // is an integer?
-    cr_DF_ISDATAPOINTER = (1 << 5),     // is a pointer to data?
-    cr_DF_ISFUNCPOINTER = (1 << 6),     // is a pointer to a function?
-    cr_DF_ISMAGIC       = (1 << 7),     // is a magic pointer?
-    cr_DF_ISCONTINUOUS  = (1 << 8),     // is continuous to the next byte?
-    cr_DF_ISREADONLY    = (1 << 9),     // is read-only?
-    cr_DF_INPUTTED      = (1 << 10),    // is inputted?
-    cr_DF_OUTPUTTED     = (1 << 11);    // is outputted?
+    cr_DF_REG               = 0x01,         // registry
+    cr_DF_MEMREG            = 0x02,         // memory access by register
+    cr_DF_MEMIMM            = 0x03,         // memory access by immediate
+    cr_DF_MEMINDEX          = 0x04,         // memory access by index
+    cr_DF_IMM               = 0x05,         // immediate
+    cr_DF_IEXPR             = 0x06,         // intermediate expression
+    cr_DF_CEXPR             = 0x07,         // C expression
+    cr_DF_PARAM             = 0x08,         // parameter $0, $1, ...
+    cr_DF_PARAMNUM          = 0x08,         // numeric parameter $0N, $1N, ...
+    cr_DF_PARAMREG          = 0x09,         // register parameter $0R, $1R, ...
+    cr_DF_PARAMMEM          = 0x0A,         // memory parameter $0M, $1M, ...
+    cr_DF_MEMIMMPARAM       = 0x0B,         // [$0N]
+    cr_DF_MEMREGPARAM       = 0x0C,         // [$0R]
+    cr_DF_MEMINDEXPARAM     = 0x0D,         // [$0R+$1*2+$2N]
+    cr_DF_TYPEMASK          = 0x0F,         // the mask bits of type
+    cr_DF_ISIMMEDIATE       = (1 << 4),     // is an immediate value?
+    cr_DF_ISINTEGER         = (1 << 5),     // is an integer?
+    cr_DF_ISDATAPOINTER     = (1 << 6),     // is a pointer to data?
+    cr_DF_ISFUNCPOINTER     = (1 << 7),     // is a pointer to a function?
+    cr_DF_ISMAGIC           = (1 << 8),     // is a magic pointer?
+    cr_DF_ISCONTINUOUS      = (1 << 9),     // is continuous to the next byte?
+    cr_DF_ISREADONLY        = (1 << 10),    // is read-only?
+    cr_DF_INPUTTED          = (1 << 11),    // is inputted?
+    cr_DF_OUTPUTTED         = (1 << 12);    // is outputted?
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand - operand
@@ -174,7 +186,7 @@ public:
     void ModifyFlags(CR_DataFlags add, CR_DataFlags remove);
 
 public:
-    void ParseText(int bits);
+    void ParseText(const char *text, int bits);
     void SetMemImm(CR_Addr64 addr);
     void SetImm32(CR_Addr32 val, BOOL is_signed);
     void SetImm64(CR_Addr64 val, BOOL is_signed);
@@ -191,7 +203,7 @@ public:
     DWORD&                  Size();
     CR_Addr32&              Value32();
     CR_Addr64&              Value64();
-    LONG&                   Disp();
+    std::string&            Disp();
     char&                   Scale();
     CR_TypeID&              TypeID();
     std::string&            ExprValue();
@@ -205,7 +217,7 @@ public:
     const DWORD&            Size() const;
     const CR_Addr32&        Value32() const;
     const CR_Addr64&        Value64() const;
-    const LONG&             Disp() const;
+    const std::string&      Disp() const;
     const char&             Scale() const;
     const CR_TypeID&        TypeID() const;
     const std::string&      ExprValue() const;
@@ -222,7 +234,7 @@ protected:
         CR_Addr64           m_value64;          // 64-bit value
         CR_Addr32           m_value32;          // 32-bit value
     };
-    LONG                    m_disp;             // displacement
+    std::string             m_disp;             // displacement
     char                    m_scale;            // scale
     CR_TypeID               m_type_id;          // type_id
     std::string             m_expr_value;       // expressed value

@@ -273,17 +273,35 @@ static const CR_X86RegInfo cr_reg_entries[] = {
 
 CR_RegType CrRegGetType(const char *name, int bits) {
     for (auto& entry : cr_reg_entries) {
-        if (bits >= entry.bits &&
-            _stricmp(entry.name, name) == 0)
-        {
+        if (bits >= entry.bits && _stricmp(entry.name, name) == 0) {
             return entry.type;
+        }
+    }
+    if (*name == '$') {
+        ++name;
+        while (isdigit(*name)) {
+            ++name;
+        }
+        if (*name == 0) {
+            return cr_x86_PARAM;
+        }
+        if (name[1] == 0) {
+            if (*name == 'N') {
+                return cr_x86_PARAMNUM;
+            }
+            if (*name == 'R') {
+                return cr_x86_PARAMREG;
+            }
+            if (*name == 'M') {
+                return cr_x86_PARAMMEM;
+            }
         }
     }
     return cr_x86_REGNONE;
 }
 
-DWORD CrRegGetSize(const char *name, int bits) {
-    switch (CrRegGetType(name, bits)) {
+DWORD CrRegGetSize(CR_RegType type, int bits) {
+    switch (type) {
     case cr_x86_CRREG:
         if (bits == 64)
             return 64 / 8;
@@ -308,6 +326,10 @@ DWORD CrRegGetSize(const char *name, int bits) {
         ;
     }
     return 0;
+}
+
+DWORD CrRegGetSize(const char *name, int bits) {
+    return CrRegGetSize(CrRegGetType(name, bits), bits);
 }
 
 BOOL CrRegInReg(const char *reg1, const char *reg2) {
@@ -400,7 +422,7 @@ void CR_Operand::clear() {
     DataFlags() = 0;
     Size() = 0;
     Value64() = 0;
-    Disp() = 0;
+    Disp().clear();
     Scale() = 0;
     TypeID() = cr_invalid_id;
     ExprValue().clear();
@@ -441,11 +463,13 @@ void CR_Operand::SetExprAddrOnMemIndex() {
             expr += std::to_string(Scale());
         }
     }
-    if (Disp() > 0) {
-        expr += "+";
-        expr += std::to_string(Disp());
-    } else if (Disp() < 0) {
-        expr += std::to_string(Disp());
+    if (Disp().size() && Disp() != "0") {
+        if (Disp()[0] == '-') {
+            expr += Disp();
+        } else {
+            expr += "+";
+            expr += Disp();
+        }
     }
     ExprAddr() = expr;
 }
@@ -453,20 +477,46 @@ void CR_Operand::SetExprAddrOnMemIndex() {
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand::ParseText
 
-void CR_Operand::ParseText(int bits) {
+void CR_Operand::ParseText(const char *text, int bits) {
+    clear();
+    Text() = text;
+
     char buf[64];
-    strcpy(buf, Text().c_str());
+    strcpy(buf, text);
     char *p = buf;
 
-    DWORD size = CrRegGetSize(p, bits);
-    if (size != 0) {
-        BaseReg() = p;
-        ExprAddr().clear();
-        SetOperandType(cr_DF_REG);
-        Size() = size;
-        return;
+    // a register or a parameter?
+    CR_RegType type = CrRegGetType(p, bits);
+    if (type != cr_x86_REGNONE) {
+        DWORD size = CrRegGetSize(type, bits);
+        if (size != 0) {
+            BaseReg() = p;
+            ExprAddr().clear();
+            SetOperandType(cr_DF_REG);
+            Size() = size;
+            return;
+        }
+        switch (type) {
+        case cr_x86_PARAM:
+            BaseReg() = p;
+            SetOperandType(cr_DF_PARAM);
+            return;
+        case cr_x86_PARAMNUM:
+            SetOperandType(cr_DF_PARAMNUM);
+            return;
+        case cr_x86_PARAMREG:
+            BaseReg() = p;
+            SetOperandType(cr_DF_PARAMREG);
+            return;
+        case cr_x86_PARAMMEM:
+            SetOperandType(cr_DF_PARAMMEM);
+            return;
+        default:
+            break;
+        }
     }
 
+    // size spec
     if (strncmp(p, "byte ", 5) == 0) {
         p += 5;
         Size() = 1;
@@ -503,6 +553,7 @@ void CR_Operand::ParseText(int bits) {
         p += 4;
     }
 
+    // an immediate?
     if (p[0] == '+' || p[0] == '-') {
         long long value = std::strtoll(p, NULL, 0);
         SetImm64(value, true);
@@ -513,11 +564,13 @@ void CR_Operand::ParseText(int bits) {
         SetImm64(value, false);
         return;
     }
+
+    // memory addressing?
     if (p[0] == '[') {
         ++p;
         *strchr(p, ']') = '\0';
 
-        // is there segment register?
+        // is there segment register in addressing?
         char *q = strchr(p, ':');
         if (q) {
             *q++ = 0;
@@ -537,12 +590,38 @@ void CR_Operand::ParseText(int bits) {
             p += 4;
         }
 
-        DWORD size;
-        if ((size = CrRegGetSize(p, bits)) != 0) {
-            BaseReg() = p;
-            SetOperandType(cr_DF_MEMREG);
-            ExprAddr() = BaseReg();
-            return;
+        // a register or a parameter for addressing?
+        CR_RegType type = CrRegGetType(p, bits);
+        if (type != cr_x86_REGNONE) {
+            DWORD size = CrRegGetSize(type, bits);
+            if (size) {
+                BaseReg() = p;
+                SetOperandType(cr_DF_MEMREG);
+                ExprAddr() = "&" + BaseReg();
+                return;
+            }
+            switch (type) {
+            case cr_x86_PARAM:
+                assert(0);
+                return;
+            case cr_x86_PARAMNUM:
+                // [$1N]
+                BaseReg().clear();
+                SetOperandType(cr_DF_MEMIMMPARAM);
+                ExprAddr() = p;
+                return;
+            case cr_x86_PARAMREG:
+                // [$1R]
+                BaseReg() = p;
+                SetOperandType(cr_DF_MEMREGPARAM);
+                ExprAddr() = BaseReg();
+                return;
+            case cr_x86_PARAMMEM:
+                assert(0);
+                return;
+            default:
+                break;
+            }
         }
 
         // find '+' or '-'
@@ -550,6 +629,7 @@ void CR_Operand::ParseText(int bits) {
         q = p + strcspn(p, "+-");
         if (*q == 0) {
             if (isdigit(*p)) {
+                // an immediate for addressing
                 CR_Addr64 addr = std::strtoull(p, NULL, 0);
                 Value64() = addr;
                 SetOperandType(cr_DF_MEMIMM);
@@ -569,20 +649,24 @@ void CR_Operand::ParseText(int bits) {
         // find '*'
         char *r = strchr(p, '*');
         if (r) {
-            // eax*4+0x1e
-            // eax*4+0x4
-            // ebx*4+0x402800
-            // edi*4+0x0
             *r++ = 0;
             BaseReg().clear();
             IndexReg() = p;
-            Scale() = char(strtol(r, NULL, 0));
-            if (minus1) {
-                Disp() = -strtol(q, NULL, 0);
+            if (*p == '$') {
+                // $1*4+0x402800
+                SetOperandType(cr_DF_MEMINDEXPARAM);
             } else {
-                Disp() = strtol(q, NULL, 0);
+                // eax*4+0x1e
+                // eax*4+0x4
+                // ebx*4+0x402800
+                Scale() = char(strtol(r, NULL, 0));
+                if (minus1) {
+                    Disp() = std::to_string(-strtol(q, NULL, 0));
+                } else {
+                    Disp() = std::to_string(strtol(q, NULL, 0));
+                }
+                SetOperandType(cr_DF_MEMINDEX);
             }
-            SetOperandType(cr_DF_MEMINDEX);
             SetExprAddrOnMemIndex();
             return;
         }
@@ -593,16 +677,28 @@ void CR_Operand::ParseText(int bits) {
         if (*r == 0) {
             char *s = strchr(q, '*');
             if (s) {
-                // ebx+ebx*2
+                // eax+ebx*2
                 *s++ = 0;
                 BaseReg() = p;
                 IndexReg() = q;
                 Scale() = char(strtol(s, NULL, 0));
-                Disp() = 0;
-                SetOperandType(cr_DF_MEMINDEX);
-                if (BaseReg() == IndexReg()) {
-                    BaseReg().clear();
-                    Scale() += 1;
+                Disp() = "0";
+                if (*p == '$') {
+                    // $1+ebx+2
+                    SetOperandType(cr_DF_MEMINDEXPARAM);
+                    if (BaseReg() == IndexReg()) {
+                        // $1+$1*2
+                        BaseReg().clear();
+                        Scale() += 1;
+                    }
+                } else {
+                    // eax+ebx+2
+                    SetOperandType(cr_DF_MEMINDEX);
+                    if (BaseReg() == IndexReg()) {
+                        // ebx+ebx*2
+                        BaseReg().clear();
+                        Scale() += 1;
+                    }
                 }
                 SetExprAddrOnMemIndex();
                 return;
@@ -613,27 +709,38 @@ void CR_Operand::ParseText(int bits) {
                     IndexReg().clear();
                     Scale() = 0;
                     if (minus1) {
-                        Disp() = -strtol(q, NULL, 0);
+                        Disp() = std::to_string(-strtol(q, NULL, 0));
                     } else {
-                        Disp() = strtol(q, NULL, 0);
+                        Disp() = std::to_string(strtol(q, NULL, 0));
                     }
                     SetOperandType(cr_DF_MEMINDEX);
-                    SetExprAddrOnMemIndex();
-                    return;
+                } else if (*q == '$') {
+                    // esp-$1
+                    // $1+$2
+                    BaseReg() = p;
+                    IndexReg().clear();
+                    Scale() = 0;
+                    if (minus1) {
+                        Disp() = "-";
+                        Disp() += q;
+                    } else {
+                        Disp() = q;
+                    }
+                    SetOperandType(cr_DF_MEMINDEXPARAM);
                 } else {
                     // esi+eax
                     BaseReg() = p;
                     IndexReg() = q;
                     Scale() = 1;
-                    Disp() = 0;
+                    Disp() = "0";
                     SetOperandType(cr_DF_MEMINDEX);
                     if (BaseReg() == IndexReg()) {
                         BaseReg().clear();
                         Scale() = 2;
                     }
-                    SetExprAddrOnMemIndex();
-                    return;
                 }
+                SetExprAddrOnMemIndex();
+                return;
             }
         } else {
             minus2 = (*r == '-');
@@ -646,35 +753,33 @@ void CR_Operand::ParseText(int bits) {
                 IndexReg() = q;
                 Scale() = char(strtol(s, NULL, 0));
                 if (minus2) {
-                    Disp() = -strtol(r, NULL, 0);
+                    Disp() = std::to_string(-strtol(r, NULL, 0));
                 } else {
-                    Disp() = strtol(r, NULL, 0);
+                    Disp() = std::to_string(strtol(r, NULL, 0));
                 }
                 SetOperandType(cr_DF_MEMINDEX);
                 if (BaseReg() == IndexReg()) {
                     BaseReg().clear();
                     Scale() += 1;
                 }
-                SetExprAddrOnMemIndex();
-                return;
             } else {
                 // rbp+rax+0x0
                 BaseReg() = p;
                 IndexReg() = q;
                 Scale() = 1;
                 if (minus2) {
-                    Disp() = -strtol(r, NULL, 0);
+                    Disp() = std::to_string(-strtol(r, NULL, 0));
                 } else {
-                    Disp() = strtol(r, NULL, 0);
+                    Disp() = std::to_string(strtol(r, NULL, 0));
                 }
                 SetOperandType(cr_DF_MEMINDEX);
                 if (BaseReg() == IndexReg()) {
                     BaseReg().clear();
                     Scale() += 1;
                 }
-                SetExprAddrOnMemIndex();
-                return;
             }
+            SetExprAddrOnMemIndex();
+            return;
         }
     }
     #ifdef _DEBUG
@@ -826,9 +931,8 @@ void CR_OpCode32::ParseText(const char *text) {
         if (p) {
             *p = '\0';
             CR_Operand opr;
-            opr.Text() = p + 1;
             Operands().clear();
-            opr.ParseText(32);
+            opr.ParseText(p + 1, 32);
             Operands().insert(opr);
         }
         Name() = q;
@@ -857,8 +961,7 @@ void CR_OpCode32::ParseText(const char *text) {
 
                 p++;
                 CR_Operand opr;
-                opr.Text() = p;
-                opr.ParseText(32);
+                opr.ParseText(p, 32);
                 Operands().clear();
                 Operands().insert(opr);
                 return;
@@ -915,24 +1018,22 @@ void CR_OpCode32::ParseText(const char *text) {
     }
 
     Operands().clear();
+    CR_Operand opr;
+
     p = strtok(p, ",");
     if (p) {
-        CR_Operand opr;
-        opr.Text() = p;
+        opr.ParseText(p, 32);
         Operands().insert(opr);
         p = strtok(NULL, ",");
         if (p) {
-            opr.Text() = p;
+            opr.ParseText(p, 32);
             Operands().insert(opr);
             p = strtok(NULL, ",");
             if (p) {
-                opr.Text() = p;
+                opr.ParseText(p, 32);
                 Operands().insert(opr);
-                Operand(2)->ParseText(32);
             }
-            Operand(1)->ParseText(32);
         }
-        Operand(0)->ParseText(32);
     }
 
     if (_stricmp(q, "mov") == 0 && Operands().size()) {
@@ -1100,9 +1201,8 @@ void CR_OpCode64::ParseText(const char *text) {
         if (p) {
             *p = '\0';
             CR_Operand opr;
-            opr.Text() = p + 1;
             Operands().clear();
-            opr.ParseText(64);
+            opr.ParseText(p + 1, 64);
             Operands().insert(opr);
         }
         Name() = q;
@@ -1131,8 +1231,7 @@ void CR_OpCode64::ParseText(const char *text) {
 
                 p++;
                 CR_Operand opr;
-                opr.Text() = p;
-                opr.ParseText(64);
+                opr.ParseText(p, 64);
                 Operands().clear();
                 Operands().insert(opr);
                 return;
@@ -1189,24 +1288,22 @@ void CR_OpCode64::ParseText(const char *text) {
     }
 
     Operands().clear();
+    CR_Operand opr;
+
     p = strtok(p, ",");
     if (p) {
-        CR_Operand opr;
-        opr.Text() = p;
+        opr.ParseText(p, 32);
         Operands().insert(opr);
         p = strtok(NULL, ",");
         if (p) {
-            opr.Text() = p;
+            opr.ParseText(p, 32);
             Operands().insert(opr);
             p = strtok(NULL, ",");
             if (p) {
-                opr.Text() = p;
+                opr.ParseText(p, 32);
                 Operands().insert(opr);
-                Operand(2)->ParseText(64);
             }
-            Operand(1)->ParseText(64);
         }
-        Operand(0)->ParseText(64);
     }
 
     if (_stricmp(q, "mov") == 0 && Operands().size()) {
