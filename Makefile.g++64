@@ -27,6 +27,7 @@ OBJS = \
 	CodeReverse64$(DOTOBJ) \
 	Dumping64$(DOTOBJ) \
 	Module64$(DOTOBJ) \
+	Testing64$(DOTOBJ) \
 	TypeSystem64$(DOTOBJ) \
 	CodeReverse_res64$(DOTOBJ) \
 	h-ndisasm\disasm64$(DOTOBJ) \
@@ -75,6 +76,8 @@ Dumping64$(DOTOBJ): $(CR_HEADERS) Dumping.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Dumping64$(DOTOBJ) Dumping.cpp
 Module64$(DOTOBJ): $(CR_HEADERS) Module.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Module64$(DOTOBJ) Module.cpp
+Testing64$(DOTOBJ): $(CR_HEADERS) Testing.cpp
+	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Testing64$(DOTOBJ) Testing.cpp
 TypeSystem64$(DOTOBJ): $(CR_HEADERS) TypeSystem.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o TypeSystem64$(DOTOBJ) TypeSystem.cpp
 

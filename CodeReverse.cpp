@@ -352,6 +352,10 @@ int main(int argc, char **argv) {
         module->Decompile64(info);
         //fprintf(stderr, "Decompiled.\n");
 
+#ifdef _DEBUG
+        CrDoTest64(*module.get(), info);
+#endif
+
         if (modes[MODE_DUMP_DISASM]) {
             fprintf(stderr, "Dumping disassembly...\n");
             module->DumpDisAsm64(stdout, info);
@@ -383,6 +387,10 @@ int main(int argc, char **argv) {
         //module->FixupAsm32(info);
         module->Decompile32(info);
         //fprintf(stderr, "Decompiled.\n");
+
+#ifdef _DEBUG
+        CrDoTest32(*module.get(), info);
+#endif
 
         if (modes[MODE_DUMP_DISASM]) {
             fprintf(stderr, "Dumping disassembly...\n");

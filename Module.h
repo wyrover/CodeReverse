@@ -229,6 +229,13 @@ void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance);
 void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance);
 
 ////////////////////////////////////////////////////////////////////////////
+
+#ifdef _DEBUG
+    void CrDoTest32(CR_Module& module, CR_DecompInfo32& info);
+    void CrDoTest64(CR_Module& module, CR_DecompInfo64& info);
+#endif  // def _DEBUG
+
+////////////////////////////////////////////////////////////////////////////
 // Dumping.cpp
 
 const char *CrGetTimeStampString(DWORD TimeStamp);

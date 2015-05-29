@@ -1450,32 +1450,31 @@ bool CR_Operand::operator!=(const CR_Operand& oper) const {
     return false;   // TODO & FIXME
 }
 
-CR_DataFlags CrIsTextParam(const std::string& text, int *index/* = NULL*/) {
-    if (index) {
-        *index = -1;
+CR_DataFlags CrIsTextParam(const std::string& text, int *pindex/* = NULL*/) {
+	int index = -1;
+    if (pindex == NULL) {
+		pindex = &index;
     }
     if (text.empty() || text[0] != '$') {
         return 0;
     }
     char *ptr;
-    if (index) {
-        *index = std::strtol(text.c_str() + 1, &ptr, 0);
-    }
-    if (*ptr && ptr[1] == 0) {
-        if (*ptr == 'N') {
-            return cr_DF_PARAMNUM;
-        }
-        if (*ptr == 'R') {
-            return cr_DF_PARAMREG;
-        }
-        if (*ptr == 'M') {
-            return cr_DF_PARAMMEM;
-        }
-        return 0;
-    }
-    if (*ptr == 0) {
-        return cr_DF_PARAM;
-    }
+	*pindex = std::strtol(text.c_str() + 1, &ptr, 0);
+	if (*ptr && ptr[1] == 0) {
+		if (*ptr == 'N') {
+			return cr_DF_PARAMNUM;
+		}
+		if (*ptr == 'R') {
+			return cr_DF_PARAMREG;
+		}
+		if (*ptr == 'M') {
+			return cr_DF_PARAMMEM;
+		}
+		return 0;
+	}
+	if (*ptr == 0) {
+		return cr_DF_PARAM;
+	}
     return 0;
 }
 

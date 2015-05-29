@@ -143,6 +143,7 @@
     <ClCompile Include="h-ndisasm\regs.c" />
     <ClCompile Include="h-ndisasm\ver.c" />
     <ClCompile Include="Module.cpp" />
+    <ClCompile Include="Testing.cpp" />
     <ClCompile Include="TypeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
