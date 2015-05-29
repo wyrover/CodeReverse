@@ -654,6 +654,8 @@ void CR_Operand::ParseText(const char *text, int bits) {
             IndexReg() = p;
             if (*p == '$') {
                 // $1*4+0x402800
+                Scale() = char(strtol(r, NULL, 0));
+                Disp() = q;
                 SetOperandType(cr_DF_MEMINDEXPARAM);
             } else {
                 // eax*4+0x1e
@@ -1435,6 +1437,221 @@ CR_CodeFunc64::BasicBlockFromAddr(CR_Addr64 addr) const {
         }
     }
     return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////
+// operand parameter pattern matching
+
+bool CR_Operand::operator==(const CR_Operand& oper) const {
+    return false;   // TODO & FIXME
+}
+
+bool CR_Operand::operator!=(const CR_Operand& oper) const {
+    return false;   // TODO & FIXME
+}
+
+CR_DataFlags CrIsTextParam(const std::string& text, int *index/* = NULL*/) {
+    if (index) {
+        *index = -1;
+    }
+    if (text.empty() || text[0] != '$') {
+        return 0;
+    }
+    char *ptr;
+    if (index) {
+        *index = std::strtol(text.c_str() + 1, &ptr, 0);
+    }
+    if (*ptr && ptr[1] == 0) {
+        if (*ptr == 'N') {
+            return cr_DF_PARAMNUM;
+        }
+        if (*ptr == 'R') {
+            return cr_DF_PARAMREG;
+        }
+        if (*ptr == 'M') {
+            return cr_DF_PARAMMEM;
+        }
+        return 0;
+    }
+    if (*ptr == 0) {
+        return cr_DF_PARAM;
+    }
+    return 0;
+}
+
+bool CrAddParamMatch(CR_ParamMatch& matches,
+    const std::string text, const CR_Operand& oper)
+{
+    auto it = matches.find(text);
+    if (it == matches.end()) {
+        matches.emplace(text, oper);
+        return true;
+    } else {
+        return it->second == oper;
+    }
+}
+
+bool CrParamPatternMatch(
+    const CR_Operand& oper, const CR_Operand& pat,
+    CR_ParamMatch& matches)
+{
+    auto type1 = oper.GetOperandType();
+    auto type2 = pat.GetOperandType();
+    if (type1 == type2) {
+        return oper.Text() == pat.Text();
+    }
+    switch (type1) {
+    case cr_DF_REG:
+        if (type2 == cr_DF_PARAM || type2 == cr_DF_PARAMREG) {
+            return CrAddParamMatch(matches, pat.Text(), oper);
+        }
+        break;
+    case cr_DF_MEMREG:
+        if (type2 == cr_DF_PARAM || type2 == cr_DF_PARAMMEM) {
+            return CrAddParamMatch(matches, pat.Text(), oper);
+        } else if (type2 == cr_DF_MEMREGPARAM) {
+            // [$1R]
+            CR_Operand o;
+            o.ParseText(oper.BaseReg(), 0);
+            return CrAddParamMatch(matches, pat.BaseReg(), o);
+        }
+    case cr_DF_MEMIMM:
+        if (type2 == cr_DF_PARAM) {
+            return CrAddParamMatch(matches, pat.Text(), oper);
+        } else if (type2 == cr_DF_MEMIMMPARAM) {
+            // [imm]
+            CR_Operand o;
+            o.ParseText(oper.ExprAddr(), 0);
+            return CrAddParamMatch(matches, pat.BaseReg(), o);
+        }
+        break;
+    case cr_DF_MEMINDEX:
+        if (type2 == cr_DF_PARAM || type2 == cr_DF_PARAMMEM) {
+            return CrAddParamMatch(matches, pat.Text(), oper);
+        } else if (type2 == cr_DF_MEMINDEXPARAM) {
+            // check disp
+            auto& disp = pat.Disp();
+            if (disp.size()) {
+                auto text = disp;
+                if (text[0] == '-') {
+                    text = text.substr(1);
+                }
+                if (text[0] == '$') {
+                    auto it = matches.find(text);
+                    if (it == matches.end()) {
+                        CR_Operand o;
+                        o.ParseText(text, 0);
+                        matches.emplace(text, o);
+                    } else {
+                        if (it->second.Text() != oper.Text()) {
+                            return false;
+                        }
+                    }
+                } else {
+                    if (disp != oper.Disp()) {
+                        return false;
+                    }
+                }
+            } else {
+                if (oper.Disp().size() && oper.Disp() != "0") {
+                    return false;
+                }
+            }
+            // check base reg
+            auto& breg = pat.BaseReg();
+            if (breg.size()) {
+                if (breg[0] == '$') {
+                    if (oper.BaseReg().empty()) {
+                        return false;
+                    }
+                    CR_Operand o;
+                    o.ParseText(oper.BaseReg(), 0);
+                    matches.emplace(breg, o);
+                } else {
+                    if (breg != oper.BaseReg()) {
+                        return false;
+                    }
+                }
+            }
+            // check scale
+            auto scale = pat.Scale();
+            if (scale != oper.Scale()) {
+                return false;
+            }
+            // check index reg
+            auto& ireg = pat.IndexReg();
+            if (ireg.size()) {
+                if (ireg[0] == '$') {
+                    if (oper.IndexReg().empty()) {
+                        return false;
+                    }
+                    CR_Operand o;
+                    o.ParseText(oper.IndexReg(), 0);
+                    matches.emplace(ireg, o);
+                } else {
+                    if (ireg != oper.IndexReg()) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    case cr_DF_IEXPR:
+        return oper.Text() == pat.Text();
+    case cr_DF_CEXPR:
+        return oper.Text() == pat.Text();
+    default:
+        break;
+    }
+    return false;
+}
+
+bool CrParamPatternMatch(
+    const CR_OpCode32& oc,
+    const CR_OpCode32& pat, CR_ParamMatch& matches)
+{
+    if (oc.Name() != pat.Name()) {
+        return false;
+    }
+    if (oc.Operands().size() != pat.Operands().size()) {
+        return false;
+    }
+    const size_t siz = oc.Operands().size();
+    for (size_t i = 0; i < siz; ++i) {
+        auto& oper1 = oc.Operands()[i];
+        auto& oper2 = pat.Operands()[i];
+        if (!CrParamPatternMatch(oper1, oper2, matches)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool CrParamPatternMatch(
+    const CR_OpCode64& oc,
+    const CR_OpCode64& pat, CR_ParamMatch& matches)
+{
+    if (oc.Name() != pat.Name()) {
+        return false;
+    }
+    if (oc.Operands().size() != pat.Operands().size()) {
+        return false;
+    }
+    const size_t siz = oc.Operands().size();
+    for (size_t i = 0; i < siz; ++i) {
+        auto& oper1 = oc.Operands()[i];
+        auto& oper2 = pat.Operands()[i];
+        if (!CrParamPatternMatch(oper1, oper2, matches)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void CrApplyMatch(CR_OpCode32& oc, const CR_ParamMatch& matches) {
+}
+
+void CrApplyMatch(CR_OpCode64& oc, const CR_ParamMatch& matches) {
 }
 
 ////////////////////////////////////////////////////////////////////////////

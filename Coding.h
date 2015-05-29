@@ -184,9 +184,12 @@ public:
     void SetOperandType(CR_DataFlags flags);
 
     void ModifyFlags(CR_DataFlags add, CR_DataFlags remove);
+    bool operator==(const CR_Operand& oper) const;
+    bool operator!=(const CR_Operand& oper) const;
 
 public:
     void ParseText(const char *text, int bits);
+    void ParseText(const std::string& text, int bits);
     void SetMemImm(CR_Addr64 addr);
     void SetImm32(CR_Addr32 val, BOOL is_signed);
     void SetImm64(CR_Addr64 val, BOOL is_signed);
@@ -390,6 +393,24 @@ protected:
     std::string             m_attr;
     std::vector<CR_Operand> m_params;
 };
+
+////////////////////////////////////////////////////////////////////////////
+// operand parameter pattern matching
+
+typedef std::map<std::string,CR_Operand> CR_ParamMatch;
+
+CR_DataFlags CrIsTextParam(const std::string& text, int *index = NULL);
+bool CrAddParamMatch(CR_ParamMatch& matches,
+    const std::string text, const CR_Operand& oper);
+
+bool CrParamPatternMatch(
+    const CR_Operand& oper, const CR_Operand& pat, CR_ParamMatch& matches);
+bool CrParamPatternMatch(
+    const CR_OpCode32& oc, const CR_OpCode32& pat, CR_ParamMatch& matches);
+bool CrParamPatternMatch(
+    const CR_OpCode64& oc, const CR_OpCode64& pat, CR_ParamMatch& matches);
+void CrApplyMatch(CR_OpCode32& oc, const CR_ParamMatch& matches);
+void CrApplyMatch(CR_OpCode64& oc, const CR_ParamMatch& matches);
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_DataMemberEntry, CR_DataMemberEntries

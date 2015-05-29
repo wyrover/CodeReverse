@@ -42,6 +42,10 @@ inline void CR_Operand::SetMemImm(CR_Addr64 addr) {
     SetOperandType(cr_DF_MEMIMM);
 }
 
+inline void CR_Operand::ParseText(const std::string& text, int bits) {
+    return ParseText(text.c_str(), bits);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_Operand accessors
 
