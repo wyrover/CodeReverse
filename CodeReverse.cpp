@@ -27,10 +27,10 @@ const char * const cr_logo =
 void CrShowHelp(void) {
 #ifdef _WIN64
     fprintf(stderr,
-        " Usage: coderev64 [options] exefile.exe\n");
+        " Usage: coderev64 [options] file1.exe [file2.dll ...]\n");
 #else
     fprintf(stderr,
-        " Usage: coderev [options] exefile.exe\n");
+        " Usage: coderev [options] file1.exe [file2.dll ...]\n");
 #endif
     fprintf(stderr, "\n");
     fprintf(stderr, "Options:\n");
