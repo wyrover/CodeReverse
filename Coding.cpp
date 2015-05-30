@@ -483,7 +483,7 @@ void CR_Operand::Parse(const char *text, int bits) {
     katahiromz::trim(Text());
 
     char buf[64];
-    strcpy(buf, text);
+    strcpy(buf, Text().c_str());
     char *p = buf;
 
     // a register or a parameter?
