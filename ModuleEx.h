@@ -124,8 +124,8 @@ public:
     void CreateFlowGraph64(CR_Addr64 entrance);
 
 public:
-    shared_ptr<CR_DecompInfo32>&        Info32();
-    shared_ptr<CR_DecompInfo64>&        Info64();
+          shared_ptr<CR_DecompInfo32>&  Info32();
+          shared_ptr<CR_DecompInfo64>&  Info64();
     const shared_ptr<CR_DecompInfo32>&  Info32() const;
     const shared_ptr<CR_DecompInfo64>&  Info64() const;
 
@@ -139,8 +139,8 @@ protected:
     BOOL _DisAsmAddr64(CR_Addr64 func, CR_Addr64 va);
     BOOL _DumpDisAsmFunc32(std::FILE *fp, CR_Addr32 func);
     BOOL _DumpDisAsmFunc64(std::FILE *fp, CR_Addr64 func);
-    bool _CreateInfo32();
-    bool _CreateInfo64();
+    void _CreateInfo32();
+    void _CreateInfo64();
 }; // class CR_ModuleEx
 
 ////////////////////////////////////////////////////////////////////////////
