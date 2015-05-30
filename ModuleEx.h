@@ -117,9 +117,6 @@ public:
     BOOL DumpDisAsm32(std::FILE *fp);
     BOOL DumpDisAsm64(std::FILE *fp);
 
-    BOOL _DumpDisAsmFunc32(std::FILE *fp, CR_Addr32 func);
-    BOOL _DumpDisAsmFunc64(std::FILE *fp, CR_Addr64 func);
-
     BOOL DumpDecompile32(std::FILE *fp);
     BOOL DumpDecompile64(std::FILE *fp);
 
@@ -140,8 +137,10 @@ protected:
     BOOL _PrepareForDisAsm64();
     BOOL _DisAsmAddr32(CR_Addr32 func, CR_Addr32 va);
     BOOL _DisAsmAddr64(CR_Addr64 func, CR_Addr64 va);
-    bool CreateInfo32();
-    bool CreateInfo64();
+    BOOL _DumpDisAsmFunc32(std::FILE *fp, CR_Addr32 func);
+    BOOL _DumpDisAsmFunc64(std::FILE *fp, CR_Addr64 func);
+    bool _CreateInfo32();
+    bool _CreateInfo64();
 }; // class CR_ModuleEx
 
 ////////////////////////////////////////////////////////////////////////////

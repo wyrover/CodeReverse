@@ -256,14 +256,14 @@ inline CR_ModuleEx::CR_ModuleEx() {
 inline /*virtual*/ CR_ModuleEx::~CR_ModuleEx() {
 }
 
-inline bool CR_ModuleEx::CreateInfo32() {
+inline bool CR_ModuleEx::_CreateInfo32() {
     if (!Info32()) {
         Info32() = make_shared<CR_DecompInfo32>();
     }
     return true;
 }
 
-inline bool CR_ModuleEx::CreateInfo64() {
+inline bool CR_ModuleEx::_CreateInfo64() {
     if (!Info64()) {
         Info64() = make_shared<CR_DecompInfo64>();
     }

@@ -50,7 +50,7 @@ BOOL CR_ModuleEx::_PrepareForDisAsm32() {
     if (!IsModuleLoaded() || !Is32Bit())
         return FALSE;
 
-	CreateInfo32();
+    _CreateInfo32();
 
     if (Info32()->Entrances().size()) {
         return TRUE;
@@ -89,13 +89,11 @@ BOOL CR_ModuleEx::_PrepareForDisAsm64() {
     if (!IsModuleLoaded() || !Is64Bit())
         return FALSE;
 
-	CreateInfo64();
+    _CreateInfo64();
 
     if (Info64()->Entrances().size()) {
         return TRUE;
     }
-
-    CreateInfo64();
 
     // register entrances
     auto RVA = RVAOfEntryPoint();
@@ -509,7 +507,7 @@ BOOL CR_ModuleEx::DisAsm32() {
     if (!IsModuleLoaded() || !Is32Bit())
         return FALSE;
 
-	CreateInfo32();
+    _CreateInfo32();
 
     if (Info32()->Entrances().empty()) {
         _PrepareForDisAsm32();
@@ -554,7 +552,7 @@ BOOL CR_ModuleEx::DisAsm64() {
     if (!IsModuleLoaded() || !Is64Bit())
         return FALSE;
 
-	CreateInfo64();
+    _CreateInfo64();
 
     if (Info64()->Entrances().empty()) {
         _PrepareForDisAsm64();
