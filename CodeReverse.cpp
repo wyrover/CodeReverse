@@ -54,7 +54,7 @@ void CrShowHelp(void) {
     fprintf(stderr, " --suffix SUFFIX   Wonders API suffix\n");
     fprintf(stderr, " --wonders VER     Wonders API version (98/Me/2000/XP/Vista/7/8.1)\n");
     fprintf(stderr, " --stack SIZE      stack size (default: " cr_default_stack_size ")\n");
-}
+} // CrShowHelp
 
 void CrDumpCommandLine(int argc, char **argv) {
     printf("Command Line:");
@@ -75,7 +75,7 @@ void CrDumpCommandLine(int argc, char **argv) {
     }
     printf("\n");
     fflush(stdout);
-}
+} // CrDumpCommandLine
 
 std::string CrFormatBytes(CR_Addr64 size) {
     if (size >= 1024 * 1024 * 1024) {
@@ -172,7 +172,7 @@ struct CR_CodeReverse {
     int ParseCommandLine(int argc, char **argv);
     int JustDoIt();
     int DoModule(const std::string& file);
-};
+}; // struct CR_CodeReverse
 
 int CR_CodeReverse::ParseCommandLine(int argc, char **argv) {
     const char *arg = NULL;
@@ -283,7 +283,7 @@ int CR_CodeReverse::ParseCommandLine(int argc, char **argv) {
     fprintf(stderr, "Wonders API suffix: %s\n", m_suffix.c_str());
 
     return 0;
-}
+} // CR_CodeReverse::ParseCommandLine
 
 int CR_CodeReverse::DoModule(const std::string& file) {
     const char *pszModule = file.c_str();
@@ -401,7 +401,7 @@ int CR_CodeReverse::DoModule(const std::string& file) {
 
     m_modules.emplace_back(module);
     return 0;
-}
+} // CR_CodeReverse::DoModule
 
 int CR_CodeReverse::JustDoIt() {
     for (auto& file : m_files) {
@@ -449,6 +449,6 @@ int main(int argc, char **argv) {
     }
 
     return cr_exit_ok;
-}
+} // main
 
 ////////////////////////////////////////////////////////////////////////////

@@ -685,7 +685,7 @@ void CR_ModuleEx::CreateFlowGraph32(CR_Addr32 entrance) {
         // add block
         cf->BasicBlocks().emplace_back(block);
     }
-}
+} // CR_ModuleEx::CreateFlowGraph32
 
 void CR_ModuleEx::CreateFlowGraph64(CR_Addr64 entrance) {
     auto cf = Info64()->CodeFuncFromAddr(entrance);
@@ -776,7 +776,7 @@ void CR_ModuleEx::CreateFlowGraph64(CR_Addr64 entrance) {
         // add block
         cf->BasicBlocks().emplace_back(block);
     }
-}
+} // CR_ModuleEx::CreateFlowGraph64
 
 ////////////////////////////////////////////////////////////////////////////
 // decompiling
