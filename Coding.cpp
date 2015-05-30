@@ -786,7 +786,7 @@ void CR_Operand::Parse(const char *text, int bits) {
         }
     }
     #ifdef _DEBUG
-        fprintf(stderr, "ERROR for Operand %s\n", Text().c_str());
+        fprintf(stderr, "ERROR for Operand \"%s\"\n", Text().c_str());
     #endif
     assert(0);
 } // CR_Operand::Parse
@@ -1476,38 +1476,57 @@ CR_CodeFunc64::BasicBlockFromAddr(CR_Addr64 addr) const {
 // operand parameter pattern matching
 
 bool CR_Operand::operator==(const CR_Operand& oper) const {
-    return false;   // TODO & FIXME
+    if (GetOperandType() == oper.GetOperandType()) {
+        switch (GetOperandType()) {
+        case cr_DF_REG:
+        case cr_DF_MEMREG:
+            return BaseReg() == oper.BaseReg();
+        case cr_DF_MEMIMM:
+            return Value64() == oper.Value64();
+        case cr_DF_MEMINDEX:
+            return
+                BaseReg() == oper.BaseReg() &&
+                IndexReg() == oper.IndexReg() &&
+                Scale() == oper.Scale() &&
+                Disp() == oper.Disp();
+        case cr_DF_IMM:
+            return Value64() == oper.Value64();
+        default:
+            break;
+        }
+    }
+    return false;
 }
 
 bool CR_Operand::operator!=(const CR_Operand& oper) const {
-    return false;   // TODO & FIXME
+    return !CR_Operand::operator==(oper);
 }
 
 CR_DataFlags CrIsTextParam(const std::string& text, int *pindex/* = NULL*/) {
-	int index = -1;
+    int index = -1;
     if (pindex == NULL) {
-		pindex = &index;
+        pindex = &index;
     }
     if (text.empty() || text[0] != '$') {
         return 0;
     }
     char *ptr;
-	*pindex = std::strtol(text.c_str() + 1, &ptr, 0);
-	if (*ptr && ptr[1] == 0) {
-		if (*ptr == 'N') {
-			return cr_DF_PARAMNUM;
-		}
-		if (*ptr == 'R') {
-			return cr_DF_PARAMREG;
-		}
-		if (*ptr == 'M') {
-			return cr_DF_PARAMMEM;
-		}
-		return 0;
-	}
-	if (*ptr == 0) {
-		return cr_DF_PARAM;
-	}
+    *pindex = std::strtol(text.c_str() + 1, &ptr, 0);
+    if (*ptr && ptr[1] == 0) {
+        if (*ptr == 'N') {
+            return cr_DF_PARAMNUM;
+        }
+        if (*ptr == 'R') {
+            return cr_DF_PARAMREG;
+        }
+        if (*ptr == 'M') {
+            return cr_DF_PARAMMEM;
+        }
+        return 0;
+    }
+    if (*ptr == 0) {
+        return cr_DF_PARAM;
+    }
     return 0;
 }
 
@@ -1525,7 +1544,7 @@ bool CrAddParamMatch(CR_ParamMatch& matches,
 
 bool CrParamPatternMatch(
     const CR_Operand& oper, const CR_Operand& pat,
-    CR_ParamMatch& matches)
+    CR_ParamMatch& matches, int bits)
 {
     auto type1 = oper.GetOperandType();
     auto type2 = pat.GetOperandType();
@@ -1544,7 +1563,7 @@ bool CrParamPatternMatch(
         } else if (type2 == cr_DF_MEMREGPARAM) {
             // [$1R]
             CR_Operand o;
-            o.Parse(oper.BaseReg(), 0);
+            o.Parse(oper.BaseReg(), bits);
             return CrAddParamMatch(matches, pat.BaseReg(), o);
         }
     case cr_DF_MEMIMM:
@@ -1553,7 +1572,7 @@ bool CrParamPatternMatch(
         } else if (type2 == cr_DF_MEMIMMPARAM) {
             // [imm]
             CR_Operand o;
-            o.Parse(oper.ExprAddr(), 0);
+            o.Parse(oper.ExprAddr(), bits);
             return CrAddParamMatch(matches, pat.BaseReg(), o);
         }
         break;
@@ -1572,7 +1591,7 @@ bool CrParamPatternMatch(
                     auto it = matches.find(text);
                     if (it == matches.end()) {
                         CR_Operand o;
-                        o.Parse(text, 0);
+                        o.Parse(oper.Disp(), bits);
                         matches.emplace(text, o);
                     } else {
                         if (it->second.Text() != oper.Text()) {
@@ -1597,7 +1616,7 @@ bool CrParamPatternMatch(
                         return false;
                     }
                     CR_Operand o;
-                    o.Parse(oper.BaseReg(), 0);
+                    o.Parse(oper.BaseReg(), bits);
                     matches.emplace(breg, o);
                 } else {
                     if (breg != oper.BaseReg()) {
@@ -1618,7 +1637,7 @@ bool CrParamPatternMatch(
                         return false;
                     }
                     CR_Operand o;
-                    o.Parse(oper.IndexReg(), 0);
+                    o.Parse(oper.IndexReg(), bits);
                     matches.emplace(ireg, o);
                 } else {
                     if (ireg != oper.IndexReg()) {
@@ -1652,7 +1671,7 @@ bool CrParamPatternMatch(
     for (size_t i = 0; i < siz; ++i) {
         auto& oper1 = oc.Operands()[i];
         auto& oper2 = pat.Operands()[i];
-        if (!CrParamPatternMatch(oper1, oper2, matches)) {
+        if (!CrParamPatternMatch(oper1, oper2, matches, 32)) {
             return false;
         }
     }
@@ -1673,7 +1692,7 @@ bool CrParamPatternMatch(
     for (size_t i = 0; i < siz; ++i) {
         auto& oper1 = oc.Operands()[i];
         auto& oper2 = pat.Operands()[i];
-        if (!CrParamPatternMatch(oper1, oper2, matches)) {
+        if (!CrParamPatternMatch(oper1, oper2, matches, 64)) {
             return false;
         }
     }

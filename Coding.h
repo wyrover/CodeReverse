@@ -438,8 +438,8 @@ CR_DataFlags CrIsTextParam(const std::string& text, int *index = NULL);
 bool CrAddParamMatch(CR_ParamMatch& matches,
     const std::string text, const CR_Operand& oper);
 
-bool CrParamPatternMatch(
-    const CR_Operand& oper, const CR_Operand& pat, CR_ParamMatch& matches);
+bool CrParamPatternMatch(const CR_Operand& oper,
+    const CR_Operand& pat, CR_ParamMatch& matches, int bits);
 bool CrParamPatternMatch(
     const CR_OpCode32& oc, const CR_OpCode32& pat, CR_ParamMatch& matches);
 bool CrParamPatternMatch(
