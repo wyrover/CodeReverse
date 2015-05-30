@@ -1029,13 +1029,13 @@ void CrDumpFuncExtra64(std::FILE *fp, CR_CodeFunc64 *cf) {
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_Module::DumpDisAsm32
+// CR_ModuleEx::DumpDisAsm32
 
-BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
+BOOL CR_ModuleEx::DumpDisAsm32(std::FILE *fp) {
     printf("\n### DISASSEMBLY ###\n\n");
 
-    for (auto& entrance : info.Entrances()) {
-        CR_CodeFunc32 *cf = info.CodeFuncFromAddr(entrance);
+    for (auto& entrance : Info32()->Entrances()) {
+        CR_CodeFunc32 *cf = Info32()->CodeFuncFromAddr(entrance);
         assert(cf);
         if (cf->FuncFlags() & cr_FF_IGNORE)
             continue;
@@ -1055,7 +1055,7 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
 
         CrDumpFuncExtra32(fp, cf);
 
-        _DumpDisAsmFunc32(fp, info, entrance);
+        _DumpDisAsmFunc32(fp, entrance);
 
         if (pszName)
             fprintf(fp, ";; End of Function %s @ L%08lX\n\n", pszName, cf->Addr());
@@ -1063,12 +1063,12 @@ BOOL CR_Module::DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info) {
             fprintf(fp, ";; End of Function L%08lX\n\n", cf->Addr());
     }
     return TRUE;
-} // CR_Module::DumpDisAsm32
+} // CR_ModuleEx::DumpDisAsm32
 
-BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr32 func) {
-    auto cf = info.CodeFuncFromAddr(func);
-    auto end = info.MapAddrToOpCode().end();
-    for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
+BOOL CR_ModuleEx::_DumpDisAsmFunc32(std::FILE *fp, CR_Addr32 func) {
+    auto cf = Info32()->CodeFuncFromAddr(func);
+    auto end = Info32()->MapAddrToOpCode().end();
+    for (auto it = Info32()->MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode32 *oc = it->second.get();
         assert(oc);
 
@@ -1136,16 +1136,16 @@ BOOL CR_Module::_DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr3
     }
 
     return TRUE;
-} // CR_Module::_DumpDisAsmFunc32
+} // CR_ModuleEx::_DumpDisAsmFunc32
 
 ////////////////////////////////////////////////////////////////////////////
-// CR_Module::DumpDisAsm64
+// CR_ModuleEx::DumpDisAsm64
 
-BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
+BOOL CR_ModuleEx::DumpDisAsm64(std::FILE *fp) {
     printf("\n### DISASSEMBLY ###\n\n");
 
-    for (auto& entrance : info.Entrances()) {
-        CR_CodeFunc64 *cf = info.CodeFuncFromAddr(entrance);
+    for (auto& entrance : Info64()->Entrances()) {
+        CR_CodeFunc64 *cf = Info64()->CodeFuncFromAddr(entrance);
         assert(cf);
         if (cf->FuncFlags() & cr_FF_IGNORE)
             continue;
@@ -1167,7 +1167,7 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
 
         CrDumpFuncExtra64(fp, cf);
 
-        _DumpDisAsmFunc64(fp, info, entrance);
+        _DumpDisAsmFunc64(fp, entrance);
 
         if (pszName)
             fprintf(fp, ";; End of Function %s @ L%08lX%08lX\n\n", pszName,
@@ -1177,12 +1177,12 @@ BOOL CR_Module::DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info) {
                 HILONG(cf->Addr()), LOLONG(cf->Addr()));
     }
     return TRUE;
-} // CR_Module::DumpDisAsm64
+} // CR_ModuleEx::DumpDisAsm64
 
-BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr64 func) {
-    auto cf = info.CodeFuncFromAddr(func);
-    auto end = info.MapAddrToOpCode().end();
-    for (auto it = info.MapAddrToOpCode().begin(); it != end; it++) {
+BOOL CR_ModuleEx::_DumpDisAsmFunc64(std::FILE *fp, CR_Addr64 func) {
+    auto cf = Info64()->CodeFuncFromAddr(func);
+    auto end = Info64()->MapAddrToOpCode().end();
+    for (auto it = Info64()->MapAddrToOpCode().begin(); it != end; it++) {
         CR_OpCode64 *oc = it->second.get();
         assert(oc);
 
@@ -1252,15 +1252,15 @@ BOOL CR_Module::_DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr6
     }
 
     return TRUE;
-} // CR_Module::_DumpDisAsmFunc64
+} // CR_ModuleEx::_DumpDisAsmFunc64
 
 ////////////////////////////////////////////////////////////////////////////
 
-BOOL CR_Module::DumpDecompile32(std::FILE *fp, CR_DecompInfo32& info) {
+BOOL CR_ModuleEx::DumpDecompile32(std::FILE *fp) {
     return TRUE;
 }
 
-BOOL CR_Module::DumpDecompile64(std::FILE *fp, CR_DecompInfo64& info) {
+BOOL CR_ModuleEx::DumpDecompile64(std::FILE *fp) {
     return TRUE;
 }
 

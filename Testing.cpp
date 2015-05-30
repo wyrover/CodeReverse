@@ -10,11 +10,11 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #ifdef _DEBUG
-    void CrDoTest32(CR_Module& module, CR_DecompInfo32& info) {
+    void CrDoTest32(CR_ModuleEx& module) {
         
     }
 
-    void CrDoTest64(CR_Module& module, CR_DecompInfo64& info) {
+    void CrDoTest64(CR_ModuleEx& module) {
         
     }
 #endif  // def _DEBUG

@@ -27,6 +27,7 @@ OBJS = \
 	CodeReverse$(DOTOBJ) \
 	Dumping$(DOTOBJ) \
 	Module$(DOTOBJ) \
+	ModuleEx$(DOTOBJ) \
 	Testing$(DOTOBJ) \
 	TypeSystem$(DOTOBJ) \
 	CodeReverse_res$(DOTOBJ) \
@@ -75,6 +76,8 @@ Dumping$(DOTOBJ): $(CR_HEADERS) Dumping.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Dumping$(DOTOBJ) Dumping.cpp
 Module$(DOTOBJ): $(CR_HEADERS) Module.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Module$(DOTOBJ) Module.cpp
+ModuleEx$(DOTOBJ): $(CR_HEADERS) ModuleEx.cpp
+	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o ModuleEx$(DOTOBJ) ModuleEx.cpp
 Testing$(DOTOBJ): $(CR_HEADERS) Testing.cpp
 	$(CXX) -c $(CXXFLAGS) $(OPTIONS) -o Testing$(DOTOBJ) Testing.cpp
 TypeSystem$(DOTOBJ): $(CR_HEADERS) TypeSystem.cpp

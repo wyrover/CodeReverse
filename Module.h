@@ -1,5 +1,5 @@
-#ifndef MODULE_H_
-#define MODULE_H_
+#ifndef CR_MODULE_H_
+#define CR_MODULE_H_
 
 ////////////////////////////////////////////////////////////////////////////
 // Module.h
@@ -152,18 +152,6 @@ public:
     const char *FuncNameFromVA64(CR_Addr64 addr) const;
 
 public:
-    BOOL PrepareForDisAsm32(CR_DecompInfo32& info);
-    BOOL PrepareForDisAsm64(CR_DecompInfo64& info);
-    
-    BOOL DisAsmAddr32(CR_DecompInfo32& info, CR_Addr32 func, CR_Addr32 va);
-    BOOL DisAsmAddr64(CR_DecompInfo64& info, CR_Addr64 func, CR_Addr64 va);
-    BOOL DisAsm32(CR_DecompInfo32& info);
-    BOOL DisAsm64(CR_DecompInfo64& info);
-
-    BOOL Decompile32(CR_DecompInfo32& info);
-    BOOL Decompile64(CR_DecompInfo64& info);
-
-public:
     void DumpHeaders(std::FILE *fp);
     void DumpImportSymbols(std::FILE *fp);
     void DumpExportSymbols(std::FILE *fp);
@@ -176,15 +164,6 @@ public:
     void _DumpExportSymbols64(std::FILE *fp);
     void _DumpDelayLoad32(std::FILE *fp);
     void _DumpDelayLoad64(std::FILE *fp);
-
-    BOOL DumpDisAsm32(std::FILE *fp, CR_DecompInfo32& info);
-    BOOL DumpDisAsm64(std::FILE *fp, CR_DecompInfo64& info);
-
-    BOOL _DumpDisAsmFunc32(std::FILE *fp, CR_DecompInfo32& info, CR_Addr32 func);
-    BOOL _DumpDisAsmFunc64(std::FILE *fp, CR_DecompInfo64& info, CR_Addr64 func);
-
-    BOOL DumpDecompile32(std::FILE *fp, CR_DecompInfo32& info);
-    BOOL DumpDecompile64(std::FILE *fp, CR_DecompInfo64& info);
 
 protected:
     tstring                         m_strFileName;
@@ -224,18 +203,6 @@ protected:
 }; // class CR_Module
 
 ////////////////////////////////////////////////////////////////////////////
-
-void CrCreateFlowGraph32(CR_DecompInfo32& info, CR_Addr32 entrance);
-void CrCreateFlowGraph64(CR_DecompInfo64& info, CR_Addr64 entrance);
-
-////////////////////////////////////////////////////////////////////////////
-
-#ifdef _DEBUG
-    void CrDoTest32(CR_Module& module, CR_DecompInfo32& info);
-    void CrDoTest64(CR_Module& module, CR_DecompInfo64& info);
-#endif  // def _DEBUG
-
-////////////////////////////////////////////////////////////////////////////
 // Dumping.cpp
 
 const char *CrGetTimeStampString(DWORD TimeStamp);
@@ -257,4 +224,4 @@ void CrDumpCodes(std::FILE *fp, const CR_DataBytes& codes, int bits);
 // inline functions
 #include "Module_inl.h"
 
-#endif  // ndef MODULE_H_
+#endif  // ndef CR_MODULE_H_

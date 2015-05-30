@@ -49,10 +49,11 @@ using std::make_shared;
 #define EXTENDS_MOBJECT
 
 #include "Location.h"       // CR_Location
-#include "CodeReverse.h"
+#include "Common.h"
 #include "TypeSystem.h"
 #include "Coding.h"
 #include "Module.h"
+#include "ModuleEx.h"
 
 #include "TextToText.hpp"
 #include "StringAssortNew.h"

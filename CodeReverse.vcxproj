@@ -143,6 +143,7 @@
     <ClCompile Include="h-ndisasm\regs.c" />
     <ClCompile Include="h-ndisasm\ver.c" />
     <ClCompile Include="Module.cpp" />
+    <ClCompile Include="ModuleEx.cpp" />
     <ClCompile Include="Testing.cpp" />
     <ClCompile Include="TypeSystem.cpp" />
   </ItemGroup>
@@ -165,6 +166,8 @@
     <ClInclude Include="Location.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="Module_inl.h" />
+    <ClInclude Include="ModuleEx.h" />
+    <ClInclude Include="ModuleEx_inl.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringAssortNew.h" />
     <ClInclude Include="TextToText.hpp" />

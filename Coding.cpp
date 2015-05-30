@@ -1294,15 +1294,15 @@ void CR_OpCode64::Parse(const char *text) {
 
     p = strtok(p, ",");
     if (p) {
-        opr.Parse(p, 32);
+        opr.Parse(p, 64);
         Operands().insert(opr);
         p = strtok(NULL, ",");
         if (p) {
-            opr.Parse(p, 32);
+            opr.Parse(p, 64);
             Operands().insert(opr);
             p = strtok(NULL, ",");
             if (p) {
-                opr.Parse(p, 32);
+                opr.Parse(p, 64);
                 Operands().insert(opr);
             }
         }
@@ -1651,42 +1651,6 @@ void CrApplyMatch(CR_OpCode32& oc, const CR_ParamMatch& matches) {
 }
 
 void CrApplyMatch(CR_OpCode64& oc, const CR_ParamMatch& matches) {
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-int CR_DecompInfo32::GetFuncStage(CR_Addr32 func) const {
-    auto it = MapAddrToCodeFunc().find(func);
-    if (it == MapAddrToCodeFunc().end()) {
-        return 0;
-    }
-    if (OpCodeFromAddr(func) == NULL) {
-        return 0;
-    }
-    auto cf = it->second;
-    assert(cf);
-    auto block = cf->BasicBlockFromAddr(func);
-    if (block == NULL) {
-        return 1;
-    }
-    return 2;
-}
-
-int CR_DecompInfo64::GetFuncStage(CR_Addr64 func) const {
-    auto it = MapAddrToCodeFunc().find(func);
-    if (it == MapAddrToCodeFunc().end()) {
-        return 0;
-    }
-    if (OpCodeFromAddr(func) == NULL) {
-        return 0;
-    }
-    auto cf = it->second;
-    assert(cf);
-    auto block = cf->BasicBlockFromAddr(func);
-    if (block == NULL) {
-        return 1;
-    }
-    return 2;
 }
 
 ////////////////////////////////////////////////////////////////////////////
