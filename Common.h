@@ -1,8 +1,8 @@
-#ifndef CODEREVERSE_H_
-#define CODEREVERSE_H_
+#ifndef CR_COMMON_H_
+#define CR_COMMON_H_
 
 ////////////////////////////////////////////////////////////////////////////
-// CodeReverse.h
+// Common.h
 // Copyright (C) 2013-2015 Katayama Hirofumi MZ.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////
 // This file is part of CodeReverse.
@@ -318,7 +318,4 @@ protected:
 
 ////////////////////////////////////////////////////////////////////////////
 
-// inline functions
-#include "CodeReverse_inl.h"
-
-#endif  // ndef CODEREVERSE_H_
+#endif  // ndef CR_COMMON_H_

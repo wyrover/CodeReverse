@@ -147,8 +147,7 @@
     <ClCompile Include="TypeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CodeReverse.h" />
-    <ClInclude Include="CodeReverse_inl.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="Coding.h" />
     <ClInclude Include="Coding_inl.h" />
     <ClInclude Include="h-ndisasm\compiler.h" />

@@ -43,8 +43,7 @@ CR_HEADERS = \
 	stdafx.h \
 	Coding.h \
 	Coding_inl.h \
-	CodeReverse.h \
-	CodeReverse_inl.h \
+	Common.h \
 	Module.h \
 	Module_inl.h \
 	TypeSystem.h \
