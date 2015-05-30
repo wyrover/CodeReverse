@@ -149,13 +149,15 @@ enum CR_MODE_INDEXES {
 };
 
 struct CR_CodeReverse {
-    bool m_modes[9];
-    std::vector<std::string> m_files;
-    std::vector<shared_ptr<CR_ModuleEx>> m_modules;
-    std::string m_prefix;
-    std::string m_suffix;
-    std::string m_wonders_ver;
-    unsigned long long m_stack_size;
+    bool                                    m_modes[9];
+    std::vector<std::string>                m_files;
+    std::vector<shared_ptr<CR_ModuleEx>>    m_modules;
+    std::string                             m_prefix;
+    std::string                             m_suffix;
+    std::string                             m_wonders_ver;
+    unsigned long long                      m_stack_size;
+    shared_ptr<CR_ErrorInfo>                m_error_info;
+    shared_ptr<CR_NameScope>                m_namescope;
 
     CR_CodeReverse() : m_wonders_ver("8.1") {
         memset(m_modes, 0, sizeof(m_modes));
@@ -277,11 +279,6 @@ int CR_CodeReverse::ParseCommandLine(int argc, char **argv) {
         }
     }
 
-    fprintf(stderr, "stack size: %s (%llu)\n",
-            CrFormatBytes(m_stack_size).c_str(), m_stack_size);
-    fprintf(stderr, "Wonders API prefix: %s\n", m_prefix.c_str());
-    fprintf(stderr, "Wonders API suffix: %s\n", m_suffix.c_str());
-
     return 0;
 } // CR_CodeReverse::ParseCommandLine
 
@@ -330,16 +327,6 @@ int CR_CodeReverse::DoFile(const std::string& file) {
     }
 
     if (m_modes[cr_MODE_64BIT]) {
-#if 0
-        fprintf(stderr, "Loading type info...\n");
-        if (!info.NameScope().LoadFromFiles(prefix, suffix)) {
-            fprintf(stderr, "WARNING: It requires Wonders API.\n");
-            fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
-        } else {
-            fprintf(stderr, "Loaded.\n");
-        }
-#endif
-
         fprintf(stderr, "Disassembling...\n");
         module->DisAsm64();
         fprintf(stderr, "Disassembled.\n");
@@ -364,16 +351,6 @@ int CR_CodeReverse::DoFile(const std::string& file) {
             fprintf(stderr, "Dumped.\n");
         }
     } else {
-#if 0
-        fprintf(stderr, "Loading type info...\n");
-        if (!info.NameScope().LoadFromFiles(prefix, suffix)) {
-            fprintf(stderr, "WARNING: It requires Wonders API.\n");
-            fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
-        } else {
-            fprintf(stderr, "Loaded.\n");
-        }
-#endif
-
         fprintf(stderr, "Disassembling...\n");
         module->DisAsm32();
         fprintf(stderr, "Disassembled.\n");
@@ -404,6 +381,36 @@ int CR_CodeReverse::DoFile(const std::string& file) {
 } // CR_CodeReverse::DoFile
 
 int CR_CodeReverse::JustDoIt() {
+    fprintf(stderr, "stack size: %s (%llu)\n",
+            CrFormatBytes(m_stack_size).c_str(), m_stack_size);
+    fprintf(stderr, "Wonders API prefix: %s\n", m_prefix.c_str());
+    fprintf(stderr, "Wonders API suffix: %s\n", m_suffix.c_str());
+
+#if 1
+    m_error_info = make_shared<CR_ErrorInfo>();
+    if (m_modes[cr_MODE_64BIT]) {
+        fprintf(stderr, "Loading type info...\n");
+        m_namescope = make_shared<CR_NameScope>(m_error_info, true);
+        if (!m_namescope->LoadFromFiles(m_prefix, m_suffix)) {
+            fprintf(stderr, "WARNING: It requires Wonders API.\n");
+            fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
+        } else {
+            fprintf(stderr, "Loaded.\n");
+        }
+    } else {
+        fprintf(stderr, "Loading type info...\n");
+        m_namescope = make_shared<CR_NameScope>(m_error_info, false);
+        if (!m_namescope->LoadFromFiles(m_prefix, m_suffix)) {
+            fprintf(stderr, "WARNING: It requires Wonders API.\n");
+            fprintf(stderr, "Please download it from http://katahiromz.esy.es/wonders/\n");
+        } else {
+            fprintf(stderr, "Loaded.\n");
+        }
+    }
+#else
+    fprintf(stderr, "Type info is not available.\n");
+#endif
+
     for (auto& file : m_files) {
         int ret = DoFile(file);
         if (ret) {

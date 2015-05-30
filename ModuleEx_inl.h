@@ -8,16 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo32
 
-inline CR_DecompInfo32::CR_DecompInfo32() :
-    m_error_info(make_shared<CR_ErrorInfo>()),
-    m_namescope(m_error_info, false) { }
+inline CR_DecompInfo32::CR_DecompInfo32() { }
 
 inline CR_DecompInfo32::CR_DecompInfo32(const CR_DecompInfo32& info) :
     m_mAddrToOpCode(info.m_mAddrToOpCode),
     m_sEntrances(info.m_sEntrances),
-    m_mAddrToCodeFunc(info.m_mAddrToCodeFunc),
-    m_error_info(info.m_namescope.ErrorInfo()),
-    m_namescope(info.m_namescope)
+    m_mAddrToCodeFunc(info.m_mAddrToCodeFunc)
 {
 }
 
@@ -25,8 +21,6 @@ inline CR_DecompInfo32& CR_DecompInfo32::operator=(const CR_DecompInfo32& info) 
     MapAddrToOpCode() = info.MapAddrToOpCode();
     Entrances() = info.Entrances();
     MapAddrToCodeFunc() = info.MapAddrToCodeFunc();
-    ErrorInfo() = info.ErrorInfo();
-    NameScope() = info.NameScope();
     return *this;
 }
 
@@ -49,14 +43,6 @@ CR_DecompInfo32::MapAddrToCodeFunc() {
     return m_mAddrToCodeFunc;
 }
 
-inline CR_NameScope& CR_DecompInfo32::NameScope() {
-    return m_namescope;
-}
-
-inline shared_ptr<CR_ErrorInfo>& CR_DecompInfo32::ErrorInfo() {
-    return m_error_info;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo32 const accessors
 
@@ -74,27 +60,15 @@ CR_DecompInfo32::MapAddrToCodeFunc() const {
     return m_mAddrToCodeFunc;
 }
 
-inline const CR_NameScope& CR_DecompInfo32::NameScope() const {
-    return m_namescope;
-}
-
-inline const shared_ptr<CR_ErrorInfo>& CR_DecompInfo32::ErrorInfo() const {
-    return m_error_info;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo64
 
-inline CR_DecompInfo64::CR_DecompInfo64() :
-    m_error_info(make_shared<CR_ErrorInfo>()),
-    m_namescope(m_error_info, true) { }
+inline CR_DecompInfo64::CR_DecompInfo64() { }
 
 inline CR_DecompInfo64::CR_DecompInfo64(const CR_DecompInfo64& info) :
     m_mAddrToOpCode(info.m_mAddrToOpCode),
     m_sEntrances(info.m_sEntrances),
-    m_mAddrToCodeFunc(info.m_mAddrToCodeFunc),
-    m_error_info(info.m_namescope.ErrorInfo()),
-    m_namescope(info.m_namescope)
+    m_mAddrToCodeFunc(info.m_mAddrToCodeFunc)
 {
 }
 
@@ -102,8 +76,6 @@ inline CR_DecompInfo64& CR_DecompInfo64::operator=(const CR_DecompInfo64& info) 
     MapAddrToOpCode() = info.MapAddrToOpCode();
     Entrances() = info.Entrances();
     MapAddrToCodeFunc() = info.MapAddrToCodeFunc();
-    ErrorInfo() = info.ErrorInfo();
-    NameScope() = info.NameScope();
     return *this;
 }
 
@@ -126,14 +98,6 @@ CR_DecompInfo64::MapAddrToCodeFunc() {
     return m_mAddrToCodeFunc;
 }
 
-inline CR_NameScope& CR_DecompInfo64::NameScope() {
-    return m_namescope;
-}
-
-inline shared_ptr<CR_ErrorInfo>& CR_DecompInfo64::ErrorInfo() {
-    return m_error_info;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 // CR_DecompInfo64 const accessors
 
@@ -149,14 +113,6 @@ inline const CR_Addr64Set& CR_DecompInfo64::Entrances() const {
 inline const std::map<CR_Addr64, CR_ShdCodeFunc64>&
 CR_DecompInfo64::MapAddrToCodeFunc() const {
     return m_mAddrToCodeFunc;
-}
-
-inline const CR_NameScope& CR_DecompInfo64::NameScope() const {
-    return m_namescope;
-}
-
-inline const shared_ptr<CR_ErrorInfo>& CR_DecompInfo64::ErrorInfo() const {
-    return m_error_info;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -200,7 +156,6 @@ inline void CR_DecompInfo32::clear() {
     MapAddrToOpCode().clear();
     Entrances().clear();
     MapAddrToCodeFunc().clear();
-    NameScope().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -244,7 +199,6 @@ inline void CR_DecompInfo64::clear() {
     MapAddrToOpCode().clear();
     Entrances().clear();
     MapAddrToCodeFunc().clear();
-    NameScope().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////

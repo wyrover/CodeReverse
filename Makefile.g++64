@@ -47,6 +47,8 @@ CR_HEADERS = \
 	Common.h \
 	Module.h \
 	Module_inl.h \
+	ModuleEx.h \
+	ModuleEx_inl.h \
 	TypeSystem.h \
 	TextToText.hpp \
 	TextToText_inl.hpp \

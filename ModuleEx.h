@@ -30,16 +30,12 @@ public:
     addr_to_shdcodefunc&            MapAddrToCodeFunc();
     CR_OpCode32 *                   OpCodeFromAddr(CR_Addr32 addr);
     CR_CodeFunc32 *                 CodeFuncFromAddr(CR_Addr32 addr);
-    shared_ptr<CR_ErrorInfo>&       ErrorInfo();
-    CR_NameScope&                   NameScope();
     // const accessors
     const addr_to_shdopcode&        MapAddrToOpCode() const;
     const CR_Addr32Set&             Entrances() const;
     const addr_to_shdcodefunc&      MapAddrToCodeFunc() const;
     const CR_OpCode32 *             OpCodeFromAddr(CR_Addr32 addr) const;
     const CR_CodeFunc32 *           CodeFuncFromAddr(CR_Addr32 addr) const;
-    const shared_ptr<CR_ErrorInfo>& ErrorInfo() const;
-    const CR_NameScope&             NameScope() const;
 
 protected:
     // map virtual address to asm code
@@ -48,10 +44,6 @@ protected:
     CR_Addr32Set                    m_sEntrances;
     // map addr to code function
     addr_to_shdcodefunc             m_mAddrToCodeFunc;
-    // error info
-    shared_ptr<CR_ErrorInfo>        m_error_info;
-    // name scope
-    CR_NameScope                    m_namescope;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -76,16 +68,12 @@ public:
     addr_to_shdcodefunc&            MapAddrToCodeFunc();
     CR_OpCode64 *                   OpCodeFromAddr(CR_Addr64 addr);
     CR_CodeFunc64 *                 CodeFuncFromAddr(CR_Addr64 addr);
-    shared_ptr<CR_ErrorInfo>&       ErrorInfo();
-    CR_NameScope&                   NameScope();
     // const accessors
     const addr_to_shdopcode&        MapAddrToOpCode() const;
     const CR_Addr64Set&             Entrances() const;
     const addr_to_shdcodefunc&      MapAddrToCodeFunc() const;
     const CR_OpCode64 *             OpCodeFromAddr(CR_Addr64 addr) const;
     const CR_CodeFunc64 *           CodeFuncFromAddr(CR_Addr64 addr) const;
-    const shared_ptr<CR_ErrorInfo>& ErrorInfo() const;
-    const CR_NameScope&             NameScope() const;
 
 protected:
     // map virtual address to asm code
@@ -94,10 +82,6 @@ protected:
     CR_Addr64Set                    m_sEntrances;
     // map addr to code function
     addr_to_shdcodefunc             m_mAddrToCodeFunc;
-    // error info
-    shared_ptr<CR_ErrorInfo>        m_error_info;
-    // name scope
-    CR_NameScope                    m_namescope;
 };
 
 ////////////////////////////////////////////////////////////////////////////
