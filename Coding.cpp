@@ -480,6 +480,7 @@ void CR_Operand::SetExprAddrOnMemIndex() {
 void CR_Operand::Parse(const char *text, int bits) {
     clear();
     Text() = text;
+    katahiromz::trim(Text());
 
     char buf[64];
     strcpy(buf, text);
