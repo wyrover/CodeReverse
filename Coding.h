@@ -258,6 +258,7 @@ public:
     CR_OpCode32& operator=(const CR_OpCode32& oc);
     virtual ~CR_OpCode32();
     void clear();
+    void clear_contents();
 
     void Parse(const char *text);
     void DeductOperandSizes();
@@ -292,7 +293,7 @@ protected:
     CR_DataBytes                m_codes;
     CR_OpCodeType               m_oct;
     CR_CondCode                 m_ccode;
-    CR_Addr32Set                m_funcaddrs;
+    CR_Addr32Set                m_func_addrs;
 
     void Copy(const CR_OpCode32& oc);
 }; // class CR_OpCode32
@@ -309,6 +310,7 @@ public:
     CR_OpCode64& operator=(const CR_OpCode64& oc);
     virtual ~CR_OpCode64();
     void clear();
+    void clear_contents();
 
     void Parse(const char *text);
     void DeductOperandSizes();
@@ -343,7 +345,7 @@ protected:
     CR_DataBytes                m_codes;
     CR_OpCodeType               m_oct;
     CR_CondCode                 m_ccode;
-    CR_Addr64Set                m_funcaddrs;
+    CR_Addr64Set                m_func_addrs;
 
     void Copy(const CR_OpCode64& oc);
 }; // class CR_OpCode64

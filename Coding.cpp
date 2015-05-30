@@ -877,7 +877,18 @@ void CR_OpCode32::clear() {
     CondCode() = C_NONE;
 }
 
+void CR_OpCode32::clear_contents() {
+    Text().clear();
+    Addr() = 0;
+    Name().clear();
+    Operands().clear();
+    Codes().clear();
+    OpCodeType() = cr_OCT_MISC;
+    CondCode() = C_NONE;
+}
+
 void CR_OpCode32::Parse(const char *text) {
+    clear_contents();
     Text() = text;
     katahiromz::trim(Text());
 
@@ -1159,7 +1170,18 @@ void CR_OpCode64::clear() {
     CondCode() = C_NONE;
 }
 
+void CR_OpCode64::clear_contents() {
+    Text().clear();
+    Addr() = 0;
+    Name().clear();
+    Operands().clear();
+    Codes().clear();
+    OpCodeType() = cr_OCT_MISC;
+    CondCode() = C_NONE;
+}
+
 void CR_OpCode64::Parse(const char *text) {
+    clear_contents();
     Text() = text;
     katahiromz::trim(Text());
 

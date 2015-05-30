@@ -182,7 +182,7 @@ inline std::string& CR_OpCode32::Text() {
 }
 
 inline CR_Addr32Set& CR_OpCode32::FuncAddrs() {
-    return m_funcaddrs;
+    return m_func_addrs;
 }
 
 inline CR_Addr32& CR_OpCode32::Addr() {
@@ -225,7 +225,7 @@ inline const std::string& CR_OpCode32::Text() const {
 }
 
 inline const CR_Addr32Set& CR_OpCode32::FuncAddrs() const {
-    return m_funcaddrs;
+    return m_func_addrs;
 }
 
 inline const CR_Addr32& CR_OpCode32::Addr() const {
@@ -286,7 +286,7 @@ inline std::string& CR_OpCode64::Text() {
 }
 
 inline CR_Addr64Set& CR_OpCode64::FuncAddrs() {
-    return m_funcaddrs;
+    return m_func_addrs;
 }
 
 inline CR_Addr64& CR_OpCode64::Addr() {
@@ -329,7 +329,7 @@ inline const std::string& CR_OpCode64::Text() const {
 }
 
 inline const CR_Addr64Set& CR_OpCode64::FuncAddrs() const {
-    return m_funcaddrs;
+    return m_func_addrs;
 }
 
 inline const CR_Addr64& CR_OpCode64::Addr() const {

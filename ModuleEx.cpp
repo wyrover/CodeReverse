@@ -158,13 +158,12 @@ BOOL CR_ModuleEx::_DisAsmAddr32(CR_Addr32 func, CR_Addr32 va) {
         if (oc == NULL) {
             Info32()->MapAddrToOpCode().emplace(va, make_shared<CR_OpCode32>());
             oc = Info32()->OpCodeFromAddr(va);
+            // set op.code address
+            oc->Addr() = va;
         }
         assert(oc);
-        if (oc->FuncAddrs().count(func) > 0)
-            break;
-
-        // set op.code address
-        oc->Addr() = va;
+        //if (oc->FuncAddrs().count(func) > 0)
+        //    break;
 
         // add function address for this op.code
         oc->FuncAddrs().emplace(func);
@@ -172,38 +171,28 @@ BOOL CR_ModuleEx::_DisAsmAddr32(CR_Addr32 func, CR_Addr32 va) {
             cf->FuncFlags() |= cr_FF_FUNCINFUNC;   // function in function
         }
 
-        // disassemble
-        len = disasm(input, outbuf, sizeof(outbuf), 32, va, false, 0);
-
-        // parse insn
-        if (!len || input + len > iend) {
-            len = 1;
-            oc->Name() = "???";
-            oc->OpCodeType() = cr_OCT_UNKNOWN;
-            // don't decompile if any unknown instruction.
-            cf->FuncFlags() |= cr_FF_INVALID;
-        } else {
-            oc->Parse(outbuf);
-            #if 0
-                auto& opers = oc->Operands();
-                for (auto& oper : opers) {
-                    if (oper.GetOperandType() == cr_DF_MEMINDEX) {
-                        fprintf(stdout,
-                            "!!!%s: %s\n",
-                            oper.Text().c_str(),
-                            oper.ExprAddr().c_str());
-                    }
-                }
-            #endif
-        }
-
-        // complement operand size
-        oc->DeductOperandSizes();
-
-        // add asm codes to op.code
         if (oc->Codes().empty()) {
-            for (int i = 0; i < len; ++i)
-                oc->Codes().emplace_back(input[i]);
+            // disassemble
+            len = disasm(input, outbuf, sizeof(outbuf), 32, va, false, 0);
+
+            // parse insn
+            if (!len || input + len > iend) {
+                len = 1;
+                oc->Name() = "???";
+                oc->OpCodeType() = cr_OCT_UNKNOWN;
+                // don't decompile if any unknown instruction.
+                cf->FuncFlags() |= cr_FF_INVALID;
+            } else {
+                oc->Parse(outbuf);
+            }
+
+            // complement operand size
+            oc->DeductOperandSizes();
+
+            // add asm codes to op.code
+            oc->Codes().insert(oc->Codes().end(), input, &input[len]);
+        } else {
+            len = int(oc->Codes().size());
         }
 
         BOOL bBreak = FALSE;
@@ -348,13 +337,13 @@ BOOL CR_ModuleEx::_DisAsmAddr64(CR_Addr64 func, CR_Addr64 va) {
         if (oc == NULL) {
             Info64()->MapAddrToOpCode().emplace(va, make_shared<CR_OpCode64>());
             oc = Info64()->OpCodeFromAddr(va);
+            // set op.code address
+            oc->Addr() = va;
         }
         assert(oc);
         if (oc->FuncAddrs().count(func) > 0)
             break;
 
-        // set op.code address
-        oc->Addr() = va;
 
         // add function address for this op.code
         oc->FuncAddrs().emplace(func);
@@ -362,38 +351,28 @@ BOOL CR_ModuleEx::_DisAsmAddr64(CR_Addr64 func, CR_Addr64 va) {
             cf->FuncFlags() |= cr_FF_FUNCINFUNC;   // function in function
         }
 
-        // disassemble
-        len = disasm(input, outbuf, sizeof(outbuf), 64, va, false, 0);
-
-        // parse insn
-        if (!len || input + len > iend) {
-            len = 1;
-            oc->Name() = "???";
-            oc->OpCodeType() = cr_OCT_UNKNOWN;
-            // don't decompile if any unknown instruction.
-            cf->FuncFlags() |= cr_FF_INVALID;
-        } else {
-            oc->Parse(outbuf);
-            #if 0
-                auto& opers = oc->Operands();
-                for (auto& oper : opers) {
-                    if (oper.GetOperandType() == cr_DF_MEMINDEX) {
-                        fprintf(stdout,
-                            "!!!%s: %s\n",
-                            oper.Text().c_str(),
-                            oper.ExprAddr().c_str());
-                    }
-                }
-            #endif
-        }
-
-        // complement operand size
-        oc->DeductOperandSizes();
-
-        // add asm codes to op.code
         if (oc->Codes().empty()) {
-            for (int i = 0; i < len; ++i)
-                oc->Codes().emplace_back(input[i]);
+            // disassemble
+            len = disasm(input, outbuf, sizeof(outbuf), 64, va, false, 0);
+
+            // parse insn
+            if (!len || input + len > iend) {
+                len = 1;
+                oc->Name() = "???";
+                oc->OpCodeType() = cr_OCT_UNKNOWN;
+                // don't decompile if any unknown instruction.
+                cf->FuncFlags() |= cr_FF_INVALID;
+            } else {
+                oc->Parse(outbuf);
+            }
+
+            // complement operand size
+            oc->DeductOperandSizes();
+
+            // add asm codes to op.code
+            oc->Codes().insert(oc->Codes().end(), input, &input[len]);
+        } else {
+            len = int(oc->Codes().size());
         }
 
         BOOL bBreak = FALSE;
