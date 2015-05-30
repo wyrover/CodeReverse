@@ -1072,7 +1072,7 @@ BOOL CR_ModuleEx::_DumpDisAsmFunc32(std::FILE *fp, CR_Addr32 func) {
         CR_OpCode32 *oc = it->second.get();
         assert(oc);
 
-        if (func != 0 && !oc->FuncAddrs().count(func))
+        if (oc->FuncAddrs().count(func) == 0)
             continue;
 
         if (cf && cf->Leaders().count(it->first)) {
@@ -1186,7 +1186,7 @@ BOOL CR_ModuleEx::_DumpDisAsmFunc64(std::FILE *fp, CR_Addr64 func) {
         CR_OpCode64 *oc = it->second.get();
         assert(oc);
 
-        if (func != 0 && !oc->FuncAddrs().count(func))
+        if (oc->FuncAddrs().count(func) == 0)
             continue;
 
         if (cf && cf->Leaders().count(it->first)) {

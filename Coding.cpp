@@ -9,25 +9,25 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-std::string Cr2Hex(unsigned char value) {
+std::string Cr8BitHex(unsigned char value) {
     char buf[32];
     sprintf(buf, "%02X", value);
     return buf;
 }
 
-std::string Cr4Hex(unsigned short value) {
+std::string Cr16BitHex(unsigned short value) {
     char buf[32];
     sprintf(buf, "%04X", value);
     return buf;
 }
 
-std::string Cr8Hex(unsigned long value) {
+std::string Cr32BitHex(unsigned long value) {
     char buf[32];
     sprintf(buf, "%08lX", value);
     return buf;
 }
 
-std::string Cr16Hex(unsigned long long value) {
+std::string Cr64BitHex(unsigned long long value) {
     char buf[32];
     sprintf(buf, "%08lX%08lX", HILONG(value), LOLONG(value));
     return buf;
@@ -878,7 +878,6 @@ void CR_OpCode32::clear() {
 }
 
 void CR_OpCode32::Parse(const char *text) {
-    clear();
     Text() = text;
     katahiromz::trim(Text());
 
@@ -1161,7 +1160,6 @@ void CR_OpCode64::clear() {
 }
 
 void CR_OpCode64::Parse(const char *text) {
-    clear();
     Text() = text;
     katahiromz::trim(Text());
 

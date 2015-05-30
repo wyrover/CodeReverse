@@ -577,9 +577,7 @@ void CR_Module::DumpResource(std::FILE *fp) {
 void CR_BasicBlock32::AddLeaderLabel(CR_Addr32 addr) {
     CR_Operand o;
     o.SetImm64(addr, false);
-    char buf[32];
-    std::sprintf(buf, "L%08lX", addr);
-    o.Text() = buf;
+    o.Text() = "L" + Cr32BitHex(addr);
 
     CR_ICode32 icode;
     icode.IcType() = cr_ICT_LABEL;
@@ -590,9 +588,7 @@ void CR_BasicBlock32::AddLeaderLabel(CR_Addr32 addr) {
 void CR_BasicBlock64::AddLeaderLabel(CR_Addr64 addr) {
     CR_Operand o;
     o.SetImm64(addr, false);
-    char buf[64];
-    std::sprintf(buf, "L%08lX%08lX", HILONG(addr), LOLONG(addr));
-    o.Text() = buf;
+    o.Text() = "L" + Cr64BitHex(addr);
 
     CR_ICode64 icode;
     icode.IcType() = cr_ICT_LABEL;

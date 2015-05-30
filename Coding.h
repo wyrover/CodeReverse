@@ -8,10 +8,10 @@
 // This file is part of CodeReverse.
 ////////////////////////////////////////////////////////////////////////////
 
-std::string Cr2Hex(unsigned char value);
-std::string Cr4Hex(unsigned short value);
-std::string Cr8Hex(unsigned long value);
-std::string Cr16Hex(unsigned long long value);
+std::string Cr8BitHex(unsigned char value);
+std::string Cr16BitHex(unsigned short value);
+std::string Cr32BitHex(unsigned long value);
+std::string Cr64BitHex(unsigned long long value);
 std::string CrValue32(unsigned long value, BOOL is_signed);
 std::string CrValue64(unsigned long long value, BOOL is_signed);
 
