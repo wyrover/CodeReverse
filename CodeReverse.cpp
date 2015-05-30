@@ -171,7 +171,7 @@ struct CR_CodeReverse {
 
     int ParseCommandLine(int argc, char **argv);
     int JustDoIt();
-    int DoModule(const std::string& file);
+    int DoFile(const std::string& file);
 }; // struct CR_CodeReverse
 
 int CR_CodeReverse::ParseCommandLine(int argc, char **argv) {
@@ -285,7 +285,7 @@ int CR_CodeReverse::ParseCommandLine(int argc, char **argv) {
     return 0;
 } // CR_CodeReverse::ParseCommandLine
 
-int CR_CodeReverse::DoModule(const std::string& file) {
+int CR_CodeReverse::DoFile(const std::string& file) {
     const char *pszModule = file.c_str();
     fprintf(stderr, "Loading module %s...\n", pszModule);
 
@@ -401,11 +401,11 @@ int CR_CodeReverse::DoModule(const std::string& file) {
 
     m_modules.emplace_back(module);
     return 0;
-} // CR_CodeReverse::DoModule
+} // CR_CodeReverse::DoFile
 
 int CR_CodeReverse::JustDoIt() {
     for (auto& file : m_files) {
-        int ret = DoModule(file);
+        int ret = DoFile(file);
         if (ret) {
             return ret;
         }
@@ -434,21 +434,13 @@ int main(int argc, char **argv) {
 
     CrDumpCommandLine(argc, argv);
 
-    {
-        int ret = cr.ParseCommandLine(argc, argv);
-        if (ret) {
-            return ret;
-        }
+    int ret = cr.ParseCommandLine(argc, argv);
+    if (ret) {
+        return ret;
     }
 
-    {
-        int ret = cr.JustDoIt();
-        if (ret) {
-            return ret;
-        }
-    }
-
-    return cr_exit_ok;
+    ret = cr.JustDoIt();
+    return ret;
 } // main
 
 ////////////////////////////////////////////////////////////////////////////
