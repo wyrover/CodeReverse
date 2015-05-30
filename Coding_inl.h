@@ -177,6 +177,10 @@ inline CR_OpCode32& CR_OpCode32::operator=(const CR_OpCode32& oc) {
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode32 accessors
 
+inline std::string& CR_OpCode32::Text() {
+    return m_text;
+}
+
 inline CR_Addr32Set& CR_OpCode32::FuncAddrs() {
     return m_funcaddrs;
 }
@@ -215,6 +219,10 @@ inline CR_CondCode& CR_OpCode32::CondCode() {
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode32 const accessors
+
+inline const std::string& CR_OpCode32::Text() const {
+    return m_text;
+}
 
 inline const CR_Addr32Set& CR_OpCode32::FuncAddrs() const {
     return m_funcaddrs;
@@ -273,6 +281,10 @@ inline CR_OpCode64& CR_OpCode64::operator=(const CR_OpCode64& oc) {
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64 accessors
 
+inline std::string& CR_OpCode64::Text() {
+    return m_text;
+}
+
 inline CR_Addr64Set& CR_OpCode64::FuncAddrs() {
     return m_funcaddrs;
 }
@@ -311,6 +323,10 @@ inline CR_CondCode& CR_OpCode64::CondCode() {
 
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode64 const accessors
+
+inline const std::string& CR_OpCode64::Text() const {
+    return m_text;
+}
 
 inline const CR_Addr64Set& CR_OpCode64::FuncAddrs() const {
     return m_funcaddrs;

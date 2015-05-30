@@ -856,6 +856,7 @@ static const CR_CCEntry cr_ccentries[] = {
 // CR_OpCode32
 
 void CR_OpCode32::Copy(const CR_OpCode32& oc) {
+    Text() = oc.Text();
     FuncAddrs() = oc.FuncAddrs();
     Addr() = oc.Addr();
     Name() = oc.Name();
@@ -866,6 +867,7 @@ void CR_OpCode32::Copy(const CR_OpCode32& oc) {
 }
 
 void CR_OpCode32::clear() {
+    Text().clear();
     FuncAddrs().clear();
     Addr() = 0;
     Name().clear();
@@ -876,8 +878,12 @@ void CR_OpCode32::clear() {
 }
 
 void CR_OpCode32::Parse(const char *text) {
+    clear();
+    Text() = text;
+    katahiromz::trim(Text());
+
     char buf[128];
-    strcpy(buf, text);
+    strcpy(buf, Text().c_str());
 
     char *q = buf;
 
@@ -1133,6 +1139,7 @@ void CR_OpCode32::DeductOperandSizes() {
 // CR_OpCode64
 
 void CR_OpCode64::Copy(const CR_OpCode64& oc) {
+    Text() = oc.Text();
     FuncAddrs() = oc.FuncAddrs();
     Addr() = oc.Addr();
     Name() = oc.Name();
@@ -1143,6 +1150,7 @@ void CR_OpCode64::Copy(const CR_OpCode64& oc) {
 }
 
 void CR_OpCode64::clear() {
+    Text().clear();
     FuncAddrs().clear();
     Addr() = 0;
     Name().clear();
@@ -1153,8 +1161,12 @@ void CR_OpCode64::clear() {
 }
 
 void CR_OpCode64::Parse(const char *text) {
+    clear();
+    Text() = text;
+    katahiromz::trim(Text());
+
     char buf[128];
-    strcpy(buf, text);
+    strcpy(buf, Text().c_str());
 
     char *q = buf;
     if (strncmp(q, "a16 ", 4) == 0 || strncmp(q, "o16 ", 4) == 0 ||

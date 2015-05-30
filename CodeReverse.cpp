@@ -386,7 +386,7 @@ int CR_CodeReverse::JustDoIt() {
     fprintf(stderr, "Wonders API prefix: %s\n", m_prefix.c_str());
     fprintf(stderr, "Wonders API suffix: %s\n", m_suffix.c_str());
 
-#if 1
+#if 0
     m_error_info = make_shared<CR_ErrorInfo>();
     if (m_modes[cr_MODE_64BIT]) {
         fprintf(stderr, "Loading type info...\n");

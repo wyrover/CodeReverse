@@ -264,6 +264,7 @@ public:
 
 public:
     // accessors
+    std::string&                Text();
     CR_Addr32&                  Addr();         // address of assembly
     std::string&                Name();         // name of instruction
     CR_Operands&                Operands();     // operands
@@ -273,6 +274,7 @@ public:
     CR_CondCode&                CondCode();     // condition type
     CR_Addr32Set&               FuncAddrs();
     // const accessors
+    const std::string&          Text() const;
     const CR_Addr32&            Addr() const;
     const std::string&          Name() const;
     const CR_Operands&          Operands() const;
@@ -283,6 +285,7 @@ public:
     const CR_Addr32Set&         FuncAddrs() const;
 
 protected:
+    std::string                 m_text;
     CR_Addr32                   m_addr;
     std::string                 m_name;
     CR_Operands                 m_operands;
@@ -312,6 +315,7 @@ public:
 
 public:
     // accessors
+    std::string&                Text();
     CR_Addr64&                  Addr();         // address of assembly
     std::string&                Name();         // name of instruction
     CR_Operands&                Operands();     // operands
@@ -321,6 +325,7 @@ public:
     CR_CondCode&                CondCode();     // condition type
     CR_Addr64Set&               FuncAddrs();
     // const accessors
+    const std::string&          Text() const;
     const CR_Addr64&            Addr() const;
     const std::string&          Name() const;
     const CR_Operands&          Operands() const;
@@ -331,6 +336,7 @@ public:
     const CR_Addr64Set&         FuncAddrs() const;
 
 protected:
+    std::string                 m_text;
     CR_Addr64                   m_addr;
     std::string                 m_name;
     CR_Operands                 m_operands;
