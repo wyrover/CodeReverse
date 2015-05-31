@@ -174,6 +174,10 @@ inline CR_OpCode32& CR_OpCode32::operator=(const CR_OpCode32& oc) {
     return *this;
 }
 
+inline void CR_OpCode32::Parse(const std::string& text) {
+    Parse(text.c_str());
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // CR_OpCode32 accessors
 
@@ -276,6 +280,10 @@ inline /*virtual*/ CR_OpCode64::~CR_OpCode64() { }
 inline CR_OpCode64& CR_OpCode64::operator=(const CR_OpCode64& oc) {
     Copy(oc);
     return *this;
+}
+
+inline void CR_OpCode64::Parse(const std::string& text) {
+    Parse(text.c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////

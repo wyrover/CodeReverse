@@ -62,10 +62,27 @@
             assert(matches["$1N"].Text() == "0x03");
 
             matches.clear();
+            oc1.Parse("lea edx, [edx-3]");
+            oc2.Parse("lea $0R, [$0R-$1N]");
+            flag = CrParamPatternMatch(oc1, oc2, matches);
+            assert(flag);
+            assert(matches.size() == 2);
+            assert(matches["$0R"].Text() == "edx");
+            assert(matches["$1N"].Text() == "0x03");
+
+            matches.clear();
             oc1.Parse("lea edx, [edx+3]");
             oc2.Parse("lea eax, [$0R+$1N]");
             flag = CrParamPatternMatch(oc1, oc2, matches);
             assert(!flag);
+
+            matches.clear();
+            oc1.Parse("mov ecx, [edx]");
+            oc2.Parse("mov ecx, $0M");
+            flag = CrParamPatternMatch(oc1, oc2, matches);
+            assert(flag);
+            assert(matches.size() == 1);
+            assert(matches["$0M"].Text() == "[edx]");
         #endif
         fprintf(stderr, "Tested.\n");
     }
@@ -121,10 +138,27 @@
             assert(matches["$1N"].Text() == "0x03");
 
             matches.clear();
+            oc1.Parse("lea rdx, [rdx-3]");
+            oc2.Parse("lea $0R, [$0R-$1N]");
+            flag = CrParamPatternMatch(oc1, oc2, matches);
+            assert(flag);
+            assert(matches.size() == 2);
+            assert(matches["$0R"].Text() == "rdx");
+            assert(matches["$1N"].Text() == "0x03");
+
+            matches.clear();
             oc1.Parse("lea rdx, [rdx+3]");
             oc2.Parse("lea rax, [$0R+$1N]");
             flag = CrParamPatternMatch(oc1, oc2, matches);
             assert(!flag);
+
+            matches.clear();
+            oc1.Parse("mov rcx, [rdx]");
+            oc2.Parse("mov rcx, $0M");
+            flag = CrParamPatternMatch(oc1, oc2, matches);
+            assert(flag);
+            assert(matches.size() == 1);
+            assert(matches["$0M"].Text() == "[rdx]");
         #endif
         fprintf(stderr, "Tested.\n");
     }

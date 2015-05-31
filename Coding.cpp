@@ -1583,19 +1583,36 @@ bool CrParamPatternMatch(
             // check disp
             auto& disp = pat.Disp();
             if (disp.size()) {
+                bool minus = false;
                 auto text = disp;
                 if (text[0] == '-') {
                     text = text.substr(1);
+                    minus = true;
                 }
                 if (text[0] == '$') {
                     auto it = matches.find(text);
                     if (it == matches.end()) {
-                        CR_Operand o;
-                        o.Parse(oper.Disp(), bits);
-                        matches.emplace(text, o);
+                        if (minus) {
+                            if (oper.Disp().empty() || oper.Disp()[0] != '-') {
+                                return false;
+                            }
+                            CR_Operand o;
+                            o.Parse(oper.Disp().substr(1), bits);
+                            matches.emplace(text, o);
+                        } else {
+                            CR_Operand o;
+                            o.Parse(oper.Disp(), bits);
+                            matches.emplace(text, o);
+                        }
                     } else {
-                        if (it->second.Text() != oper.Text()) {
-                            return false;
+                        if (minus) {
+                            if (it->second.Text() != oper.Text().substr(1)) {
+                                return false;
+                            }
+                        } else {
+                            if (it->second.Text() != oper.Text()) {
+                                return false;
+                            }
                         }
                     }
                 } else {
@@ -1700,9 +1717,21 @@ bool CrParamPatternMatch(
 }
 
 void CrApplyMatch(CR_OpCode32& oc, const CR_ParamMatch& matches) {
+    std::string text = oc.Text();
+    for (auto& pair : matches) {
+        katahiromz::replace_string(text, pair.first, pair.second.Text());
+    }
+    oc.Parse(text);
+    oc.DeductOperandSizes();
 }
 
 void CrApplyMatch(CR_OpCode64& oc, const CR_ParamMatch& matches) {
+    std::string text = oc.Text();
+    for (auto& pair : matches) {
+        katahiromz::replace_string(text, pair.first, pair.second.Text());
+    }
+    oc.Parse(text);
+    oc.DeductOperandSizes();
 }
 
 ////////////////////////////////////////////////////////////////////////////

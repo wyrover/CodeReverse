@@ -261,6 +261,7 @@ public:
     void clear_contents();
 
     void Parse(const char *text);
+    void Parse(const std::string& text);
     void DeductOperandSizes();
 
 public:
@@ -313,6 +314,7 @@ public:
     void clear_contents();
 
     void Parse(const char *text);
+    void Parse(const std::string& text);
     void DeductOperandSizes();
 
 public:
