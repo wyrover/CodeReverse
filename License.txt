@@ -1,5 +1,5 @@
 Copyright (C) 1996-2011 the NASM Authors. All rights reserved.
-Copyright (C) 2014-2015 Katayama Hirofumi MZ. All rights reserved.
+Copyright (C) 2014-2015 katahiromz and collaborators. All Rights Reserved.
 
                     The BSD 2-Clause License
 
